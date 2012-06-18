@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include <type_traits>
 #include <lcms2.h>
 
@@ -46,12 +47,28 @@ public:
     _width(w),
     _height(h),
     _channels(T_CHANNELS(t) + T_EXTRA(t)),
+    rowdata(NULL),
     _profile(p),
     _cmsType(t)
   {
     rowdata = (P**)malloc(_height * sizeof(P*));
     for (unsigned int y = 0; y < _height; y++)
       rowdata[y] = (P*)malloc(_width * _channels * sizeof(P));
+  }
+
+  Image(Image<P>& other) :
+    _width(other._width),
+    _height(other._height),
+    _channels(other._channels),
+    rowdata(NULL),
+    _profile(other._profile),
+    _cmsType(other._cmsType)
+  {
+    rowdata = (P**)malloc(_height * sizeof(P*));
+    for (unsigned int y = 0; y < _height; y++) {
+      rowdata[y] = (P*)malloc(_width * _channels * sizeof(P));
+      memcpy(rowdata[y], other.rowdata[y], _width * _channels * sizeof(P));
+    }
   }
 
   // In Image_png.hh
