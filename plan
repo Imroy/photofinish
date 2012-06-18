@@ -1,0 +1,27 @@
+This will be a port of 'process' from Perl to C++.
+
+== Differences ==
+
+* Written in C/C++
+* Use various low-level libraries instead of going through ImageMagick
+* Do proper processing in a linear colour space
+
+== Libraries ==
+
+* LibPNG for reading scans and optionally producing final output
+* IJG's LibJPEG for writing JPEG's
+* Little CMS (LCMS) for converting between colour profiles
+* libyaml for reading YAML data files
+* EXIV for EXIF data
+* Boost?
+
+== Process ==
+
+# Read list of destination configuration from 'destinations.yml'
+# Read input image
+# Read tag data for the input image
+# Decide on which 'target' to use for scaling
+# Scale the image
+# Scale image for thumbnail
+# Save output image with metadata
+
