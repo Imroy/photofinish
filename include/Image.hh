@@ -32,7 +32,7 @@ public:
     _cmsType(t)
   {
     rowdata = (P**)malloc(_height * sizeof(P*));
-    for (int y = 0; y < _height; y++)
+    for (unsigned int y = 0; y < _height; y++)
       rowdata[y] = (P*)malloc(_width * _channels * sizeof(P));
   }
 
@@ -40,7 +40,7 @@ public:
   Image(const char* filepath);
 
   ~Image() {
-    for (int y = 0; y < _height; y++)
+    for (unsigned int y = 0; y < _height; y++)
       free(rowdata[y]);
     free(rowdata);
   }
