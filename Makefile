@@ -1,7 +1,7 @@
 PROGRAMS=photofinish
 
-CFLAGS += -Wall -Iinclude
-CXXFLAGS += -Wall -std=c++11 -Iinclude
+CFLAGS += -Wall -Iinclude -g
+CXXFLAGS += -Wall -std=c++11 -Iinclude -g
 
 INCLUDES = $(wildcard include/*.hh)
 OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc)) $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
