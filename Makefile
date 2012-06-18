@@ -1,7 +1,9 @@
 PROGRAMS=photofinish
 
-CXXFLAGS += -std=c++11
+CFLAGS += -Wall -Iinclude
+CXXFLAGS += -Wall -std=c++11 -Iinclude
 
+INCLUDES = $(wildcard include/*.hh)
 OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc)) $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 CLASSES = $(patsubst %.hh,%.o,$(wildcard include/*.hh))
 
@@ -16,7 +18,7 @@ clean:
 $(PROGRAMS): %: %.o
 	$(CXX) $(LDFLAGS) $(LIBS) $^ -o $@
 
-%.o: %.cc
+%.o: %.cc $(INCLUDES)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(CLASSES): %.o: %.cc %.hh
