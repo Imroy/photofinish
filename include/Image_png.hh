@@ -118,5 +118,8 @@ Image<P>::Image(const char* filepath) {
   png_bytep profile;
   unsigned int profile_len;
   png_get_iCCP(png, info, &profile_name, NULL, &profile, &profile_len);
-  
+  _profile = cmsOpenProfileFromMem(profile, profile_len);
+
+  png_destroy_read_struct(&png, &info, NULL);
+  fclose(fp);
 }

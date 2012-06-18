@@ -61,6 +61,8 @@ public:
     for (unsigned int y = 0; y < _height; y++)
       free(rowdata[y]);
     free(rowdata);
+    if (_profile)
+      cmsCloseProfile(_profile);
   }
 
   inline unsigned int width(void) {
@@ -75,11 +77,15 @@ public:
     return _channels;
   }
 
-  inline P* at(unsigned int x, unsigned y) {
+  inline P* row(unsigned int y) {
+    return &rowdata[y];
+  }
+
+  inline P* at(unsigned int x, unsigned int y) {
     return &rowdata[y][x * _channels];
   }
 
-  inline P& at(unsigned int x, unsigned y, unsigned char c) {
+  inline P& at(unsigned int x, unsigned int y, unsigned char c) {
     return rowdata[y][c + (x * _channels)];
   }
 
@@ -91,7 +97,26 @@ public:
     return _cmsType;
   }
 
-  
+  template <typename Q>
+  inline void transform_from(Image<Q>& other, cmsUInt32Number intent, cmsUInt32Number flags) {
+    if (_width != other._width) {
+      fprintf(stderr, "transform_from: Image widths do not match.\n");
+      exit(4);
+    }
+    if (_height != other._height) {
+      fprintf(stderr, "transform_from: Image widths do not match.\n");
+      exit(4);
+    }
+    cmsHTRANSFORM t = cmsCreateTransform(other._profile,
+					 other._cmsType,
+					 _profile,
+					 _cmsType,
+					 intent, flags);
+    for (unsigned int y = 0; y < _height; y++)
+      cmsDoTransform(t, other.rowdata[y], rowdata[y], _width);
+  }
+					 
+
 
 };
 
