@@ -5,6 +5,7 @@
 #include <math.h>
 #include <string.h>
 #include <type_traits>
+#include <lcms2.h>
 
 inline double lanczos(double a, double x) {
   return (a * sin(x / a) * sin(M_PI * x / a)) / (M_PI * M_PI * x * x);
@@ -45,6 +46,9 @@ public:
   inline double& at(unsigned int x, unsigned int y, unsigned char c) {
     return rowdata[y][c + (x * 3)];
   }
+
+  void write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent);
+  void write_jpeg(const char* filepath, cmsHPROFILE profile, cmsUInt32Number intent);
 
 };
 
