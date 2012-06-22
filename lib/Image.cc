@@ -1,10 +1,11 @@
-#include "Image.hh"
 #include <errno.h>
 #include <png.h>
 #include <zlib.h>
 #include <lcms2.h>
 #include <time.h>
 #include <omp.h>
+#include "Image.hh"
+#include "Resampler.hh"
 
 Image::Image(unsigned int w, unsigned int h) :
   _width(w),
@@ -168,103 +169,19 @@ Image::~Image() {
   }
 }
 
-#define sqr(x) ((x) * (x))
-
-inline double lanczos(double a, double ra, double x) {
-  if (fabs(x) < 1e-6)
-    return 1.0;
-  double pix = M_PI * x;
-  return (a * sin(pix) * sin(pix * ra)) / (sqr(M_PI) * sqr(x));
-}
-
 Image& Image::resize(double nw, double nh, double a) {
-  double wscale = nw / _width;
-  double hscale = nh / _height;
   if (nw < 0) {
-    wscale = hscale;
-    nw = _width * wscale;
+    nw = _width * nh / _height;
   } else if (nh < 0) {
-    hscale = wscale;
-    nh = _height * hscale;
-  }
-  double wdivide = 1.0 / wscale;
-  double hdivide = 1.0 / hscale;
-  unsigned int nwi = ceil(nw);
-  unsigned int nhi = ceil(nh);
-  double ra = 1.0 / a;
-
-  fprintf(stderr, "nw=%f, nh=%f, nwi=%d, nhi=%d, wscale=%f, hscale=%f, wdivide=%f, hdivide=%f\n",
-	  nw, nh, nwi, nhi, wscale, hscale, wdivide, hdivide);
-
-  Image *ni = new Image(nwi, nhi);
-
-#pragma omp parallel
-  {
-#pragma omp master
-    {
-      fprintf(stderr, "Resizing image using %d threads...\n", omp_get_num_threads());
-    }
-  }
-#pragma omp parallel for schedule(dynamic, 1)
-  for (unsigned int ny = 0; ny < nhi; ny++) {
-    double ry = ny * hdivide;
-    unsigned start_y, end_y = ceil(ry + a);
-    if (floor(ry - a) < 0)
-      start_y = 0;
-    else
-      start_y = floor(ry - a);
-    if (end_y > _height)
-      end_y = _height;
-    double *npix = ni->row(ny);
-
-    for (unsigned int nx = 0; nx < nwi; nx++) {
-      double rx = nx * wdivide;
-      unsigned start_x, end_x = ceil(rx + a);
-      if (floor(rx - a) < 0)
-	start_x = 0;
-      else
-	start_x = floor(rx - a);
-      if (end_x > _width)
-	end_x = _width;
-
-      if ((nx == 500) && (ny == 500))
-	fprintf(stderr, "nx=%d, ny=%d, rx=%f, ry=%f, start_x=%d, end_x=%d, start_y=%d, end_y=%d\n",
-		nx, ny, rx, ry, start_x, end_x, start_y, end_y);
-
-      double total_weight = 0, total_value[3] = { 0, 0, 0 };
-      for (unsigned int y = start_y; y < end_y; y++) {
-	double dy = y - ry;
-	if ((dy < -a) || (dy > a))
-	  continue;
-	double weight_y = lanczos(a, ra, dy);
-	double *pix = this->at(start_x, y);
-	for (unsigned int x = start_x; x < end_x; x++) {
-	  double dx = x - rx;
-	  if ((dx < -a) || (dx > a))
-	    continue;
-	  double weight = weight_y * lanczos(a, ra, dx);
-	  if ((nx == 500) && (ny == 500))
-	    fprintf(stderr, "x=%d, y=%d, dx=%f, dy=%f, weight_y=%f, weight=%f\n",
-		    x, y, dx, dy, weight_y, weight);
-	  total_weight += weight;
-	  total_value[0] += weight * *pix++;
-	  total_value[1] += weight * *pix++;
-	  total_value[2] += weight * *pix++;
-	}
-      }
-      if (total_weight > 1e-6) {
-	double rweight = 1.0 / total_weight;
-	total_value[0] *= rweight;
-	total_value[1] *= rweight;
-	total_value[2] *= rweight;
-      }
-      *npix++ = total_value[0];
-      *npix++ = total_value[1];
-      *npix++ = total_value[2];
-    }
+    nh = _height * nw / _width;
   }
 
-  return *ni;
+  // First resize horizontally
+  Image *ni = _resize_w(nw, a);
+  Image *ni2 = ni->_resize_h(nh, a);
+  delete ni;
+
+  return *ni2;
 }
 
 void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent) {
@@ -391,4 +308,72 @@ void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, 
 }
 
 void Image::write_jpeg(const char* filepath, cmsHPROFILE profile, cmsUInt32Number intent) {
+}
+
+Image* Image::_resize_w(double nw, double a) {
+  unsigned int nwi = ceil(nw);
+  Image *ni = new Image(nwi, _height);
+  Resampler s(a, _width, nw);
+
+#pragma omp parallel
+  {
+#pragma omp master
+    {
+      fprintf(stderr, "Resizing image horizontally using %d threads...\n", omp_get_num_threads());
+    }
+  }
+#pragma omp parallel for schedule(dynamic, 1)
+  for (unsigned int y = 0; y < _height; y++) {
+    for (unsigned int nx = 0; nx < nwi; nx++) {
+      int max = s.N(nx);
+
+      double *out = ni->at(nx, y);
+      out[0] = out[1] = out[2] = 0.0;
+      for (int j = 0; j < max; j++) {
+	double weight = s.Weight(j, nx);
+	unsigned int x = s.Position(j, nx);
+	double *in = at(x, y);
+
+	out[0] += in[0] * weight;
+	out[1] += in[1] * weight;
+	out[2] += in[2] * weight;
+      }
+    }
+  }
+
+  return ni;
+}
+
+Image* Image::_resize_h(double nh, double a) {
+  unsigned int nhi = ceil(nh);
+  Image *ni = new Image(_width, nhi);
+  Resampler s(a, _height, nh);
+
+#pragma omp parallel
+  {
+#pragma omp master
+    {
+      fprintf(stderr, "Resizing image vertically using %d threads...\n", omp_get_num_threads());
+    }
+  }
+#pragma omp parallel for schedule(dynamic, 1)
+  for (unsigned int x = 0; x < _width; x++) {
+    for (unsigned int ny = 0; ny < nhi; ny++) {
+      int max = s.N(ny);
+
+      double *out = ni->at(x, ny);
+      out[0] = out[1] = out[2] = 0.0;
+      for (int j = 0; j < max; j++) {
+	double weight = s.Weight(j, ny);
+	unsigned int y = s.Position(j, ny);
+	double *in = at(x, y);
+
+	out[0] += in[0] * weight;
+	out[1] += in[1] * weight;
+	out[2] += in[2] * weight;
+      }
+    }
+  }
+
+  return ni;
 }

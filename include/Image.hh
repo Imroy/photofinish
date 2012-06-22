@@ -47,6 +47,10 @@ public:
   void write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent);
   void write_jpeg(const char* filepath, cmsHPROFILE profile, cmsUInt32Number intent);
 
+private:
+  Image* _resize_w(double nw, double a);
+  Image* _resize_h(double nh, double a);
+
 };
 
 #endif // __IMAGE_HH__
