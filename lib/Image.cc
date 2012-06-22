@@ -142,7 +142,13 @@ Image::Image(const char* filepath) :
   cmsCloseProfile(lab);
   cmsCloseProfile(profile);
 
-  fprintf(stderr, "Transforming image data...\n");
+#pragma omp parallel
+  {
+#pragma omp master
+    {
+      fprintf(stderr, "Transforming image data using %d threads...\n", omp_get_num_threads());
+    }
+  }
 #pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++)
     cmsDoTransform(transform, png_rows[y], rowdata[y], _width);
@@ -192,6 +198,13 @@ Image& Image::resize(double nw, double nh, double a) {
 
   Image *ni = new Image(nwi, nhi);
 
+#pragma omp parallel
+  {
+#pragma omp master
+    {
+      fprintf(stderr, "Resizing image using %d threads...\n", omp_get_num_threads());
+    }
+  }
 #pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int ny = 0; ny < nhi; ny++) {
     double ry = ny * hdivide;
@@ -357,7 +370,13 @@ void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, 
   cmsCloseProfile(lab);
   cmsCloseProfile(profile);
 
-  fprintf(stderr, "Transforming image data...\n");
+#pragma omp parallel
+  {
+#pragma omp master
+    {
+      fprintf(stderr, "Transforming image data using %d threads...\n", omp_get_num_threads());
+    }
+  }
 #pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++)
     cmsDoTransform(transform, rowdata[y], png_rows[y], _width);
