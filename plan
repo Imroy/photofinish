@@ -4,13 +4,13 @@ This will be a port of 'process' from Perl to C++.
 
 * Written in C/C++
 * Use various low-level libraries instead of going through ImageMagick
-* Do proper processing in a linear colour space
+* Do proper scaling in a linear colour space
 
 == Libraries ==
 
 * LibPNG for reading scans and optionally producing final output
 * IJG's LibJPEG for writing JPEG's
-* Little CMS (LCMS) for converting between colour profiles
+* Little CMS (LCMS) for transforming between colour profiles
 * libyaml for reading YAML data files
 * EXIV for EXIF data
 * Boost?
