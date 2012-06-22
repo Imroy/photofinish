@@ -16,18 +16,27 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "Image.hh"
+#include <omp.h>
 #include "ImageFile.hh"
-#include <stdio.h>
 
-int main(int argc, char* argv[]) {
-  PNGFile infile("test3.png");
-  Image image1 = infile.read();
+JPEGFile::JPEGFile(const char* filepath) :
+  _ImageFile(filepath)
+{}
 
-  Image image2 = image1.resize(800, -1, 3);
-  PNGFile outfile("test3.scaled.png");
-  outfile.set_bit_depth(8);
-  outfile.write(image2);
-
-  return 0;
+bool JPEGFile::set_bit_depth(int bit_depth) {
+  if (bit_depth == 8)
+    return true;
+  return false;
 }
+
+bool JPEGFile::set_profile(cmsHPROFILE profile, cmsUInt32Number intent) {
+  return true;
+}
+
+Image& JPEGFile::read(void) {
+}
+
+bool JPEGFile::write(Image& img) {
+  return true;
+}
+

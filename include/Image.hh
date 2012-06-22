@@ -34,7 +34,6 @@ private:
 public:
   Image(unsigned int w, unsigned int h);
   Image(Image& other);
-  Image(const char* filepath);	// Load a PNG image
   ~Image();
 
   // Methods for accessing the private data
@@ -61,11 +60,8 @@ public:
   // Resize the image using a Lanczos filter
   Image& resize(double nw, double nh, double a);
 
-  // Write the image out to a PNG or JPEG file
-  void write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent);
-  void write_jpeg(const char* filepath, cmsHPROFILE profile, cmsUInt32Number intent);
-
 private:
+  // Private methods for 1-dimensional scaling
   Image* _resize_w(double nw, double a);
   Image* _resize_h(double nh, double a);
 
