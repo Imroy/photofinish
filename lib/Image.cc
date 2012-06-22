@@ -166,7 +166,7 @@ Image::Image(const char* filepath) :
   {
 #pragma omp master
     {
-      fprintf(stderr, "Transforming image data using %d threads...\n", omp_get_num_threads());
+      fprintf(stderr, "Transforming image data to L*a*b* using %d threads...\n", omp_get_num_threads());
     }
   }
 #pragma omp parallel for schedule(dynamic, 1)
@@ -195,12 +195,17 @@ Image& Image::resize(double nw, double nh, double a) {
     nh = _height * nw / _width;
   }
 
-  // First resize horizontally
-  Image *ni = _resize_w(nw, a);
-  Image *ni2 = ni->_resize_h(nh, a);
-  delete ni;
+  Image *temp, *result;
+  if (nw * _height < _width * nh) {
+    temp = _resize_w(nw, a);
+    result = temp->_resize_h(nh, a);
+  } else {
+    temp = _resize_h(nh, a);
+    result = temp->_resize_w(nw, a);
+  }
+  delete temp;
 
-  return *ni2;
+  return *result;
 }
 
 void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent) {
@@ -310,7 +315,7 @@ void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, 
   {
 #pragma omp master
     {
-      fprintf(stderr, "Transforming image data using %d threads...\n", omp_get_num_threads());
+      fprintf(stderr, "Transforming image data from L*a*b* using %d threads...\n", omp_get_num_threads());
     }
   }
 #pragma omp parallel for schedule(dynamic, 1)
@@ -343,19 +348,19 @@ Image* Image::_resize_w(double nw, double a) {
   }
 #pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++) {
-    for (unsigned int nx = 0; nx < nwi; nx++) {
-      int max = s.N(nx);
+    double *out = ni->row(y);
+    for (unsigned int nx = 0; nx < nwi; nx++, out += 3) {
+      unsigned int max = s.N(nx);
 
-      double *out = ni->at(nx, y);
       out[0] = out[1] = out[2] = 0.0;
-      for (int j = 0; j < max; j++) {
-	double weight = s.Weight(j, nx);
-	unsigned int x = s.Position(j, nx);
-	double *in = at(x, y);
+      double *weight = s.Weight(nx);
+      unsigned int *x = s.Position(nx);
+      for (unsigned int j = 0; j < max; j++, weight++, x++) {
+	double *in = at(*x, y);
 
-	out[0] += in[0] * weight;
-	out[1] += in[1] * weight;
-	out[2] += in[2] * weight;
+	out[0] += in[0] * *weight;
+	out[1] += in[1] * *weight;
+	out[2] += in[2] * *weight;
       }
     }
   }
@@ -376,20 +381,20 @@ Image* Image::_resize_h(double nh, double a) {
     }
   }
 #pragma omp parallel for schedule(dynamic, 1)
-  for (unsigned int x = 0; x < _width; x++) {
-    for (unsigned int ny = 0; ny < nhi; ny++) {
-      int max = s.N(ny);
+  for (unsigned int ny = 0; ny < nhi; ny++) {
+    unsigned int max = s.N(ny);
 
-      double *out = ni->at(x, ny);
+    double *out = ni->row(ny);
+    for (unsigned int x = 0; x < _width; x++, out += 3) {
       out[0] = out[1] = out[2] = 0.0;
-      for (int j = 0; j < max; j++) {
-	double weight = s.Weight(j, ny);
-	unsigned int y = s.Position(j, ny);
-	double *in = at(x, y);
+      double *weight = s.Weight(ny);
+      unsigned int *y = s.Position(ny);
+      for (unsigned int j = 0; j < max; j++, weight++, y++) {
+	double *in = at(x, *y);
 
-	out[0] += in[0] * weight;
-	out[1] += in[1] * weight;
-	out[2] += in[2] * weight;
+	out[0] += in[0] * *weight;
+	out[1] += in[1] * *weight;
+	out[2] += in[2] * *weight;
       }
     }
   }
