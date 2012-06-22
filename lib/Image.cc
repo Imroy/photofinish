@@ -4,6 +4,7 @@
 #include <zlib.h>
 #include <lcms2.h>
 #include <time.h>
+#include <omp.h>
 
 Image::Image(unsigned int w, unsigned int h) :
   _width(w),
@@ -142,6 +143,7 @@ Image::Image(const char* filepath) :
   cmsCloseProfile(profile);
 
   fprintf(stderr, "Transforming image data...\n");
+#pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++)
     cmsDoTransform(transform, png_rows[y], rowdata[y], _width);
 
@@ -158,6 +160,98 @@ Image::~Image() {
       free(rowdata[y]);
     free(rowdata);
   }
+}
+
+#define sqr(x) ((x) * (x))
+
+inline double lanczos(double a, double ra, double x) {
+  if (fabs(x) < 1e-6)
+    return 1.0;
+  double pix = M_PI * x;
+  return (a * sin(pix) * sin(pix * ra)) / (sqr(M_PI) * sqr(x));
+}
+
+Image& Image::resize(double nw, double nh, double a) {
+  double wscale = nw / _width;
+  double hscale = nh / _height;
+  if (nw < 0) {
+    wscale = hscale;
+    nw = _width * wscale;
+  } else if (nh < 0) {
+    hscale = wscale;
+    nh = _height * hscale;
+  }
+  double wdivide = 1.0 / wscale;
+  double hdivide = 1.0 / hscale;
+  unsigned int nwi = ceil(nw);
+  unsigned int nhi = ceil(nh);
+  double ra = 1.0 / a;
+
+  fprintf(stderr, "nw=%f, nh=%f, nwi=%d, nhi=%d, wscale=%f, hscale=%f, wdivide=%f, hdivide=%f\n",
+	  nw, nh, nwi, nhi, wscale, hscale, wdivide, hdivide);
+
+  Image *ni = new Image(nwi, nhi);
+
+#pragma omp parallel for schedule(dynamic, 1)
+  for (unsigned int ny = 0; ny < nhi; ny++) {
+    double ry = ny * hdivide;
+    unsigned start_y, end_y = ceil(ry + a);
+    if (floor(ry - a) < 0)
+      start_y = 0;
+    else
+      start_y = floor(ry - a);
+    if (end_y > _height)
+      end_y = _height;
+    double *npix = ni->row(ny);
+
+    for (unsigned int nx = 0; nx < nwi; nx++) {
+      double rx = nx * wdivide;
+      unsigned start_x, end_x = ceil(rx + a);
+      if (floor(rx - a) < 0)
+	start_x = 0;
+      else
+	start_x = floor(rx - a);
+      if (end_x > _width)
+	end_x = _width;
+
+      if ((nx == 500) && (ny == 500))
+	fprintf(stderr, "nx=%d, ny=%d, rx=%f, ry=%f, start_x=%d, end_x=%d, start_y=%d, end_y=%d\n",
+		nx, ny, rx, ry, start_x, end_x, start_y, end_y);
+
+      double total_weight = 0, total_value[3] = { 0, 0, 0 };
+      for (unsigned int y = start_y; y < end_y; y++) {
+	double dy = y - ry;
+	if ((dy < -a) || (dy > a))
+	  continue;
+	double weight_y = lanczos(a, ra, dy);
+	double *pix = this->at(start_x, y);
+	for (unsigned int x = start_x; x < end_x; x++) {
+	  double dx = x - rx;
+	  if ((dx < -a) || (dx > a))
+	    continue;
+	  double weight = weight_y * lanczos(a, ra, dx);
+	  if ((nx == 500) && (ny == 500))
+	    fprintf(stderr, "x=%d, y=%d, dx=%f, dy=%f, weight_y=%f, weight=%f\n",
+		    x, y, dx, dy, weight_y, weight);
+	  total_weight += weight;
+	  total_value[0] += weight * *pix++;
+	  total_value[1] += weight * *pix++;
+	  total_value[2] += weight * *pix++;
+	}
+      }
+      if (total_weight > 1e-6) {
+	double rweight = 1.0 / total_weight;
+	total_value[0] *= rweight;
+	total_value[1] *= rweight;
+	total_value[2] *= rweight;
+      }
+      *npix++ = total_value[0];
+      *npix++ = total_value[1];
+      *npix++ = total_value[2];
+    }
+  }
+
+  return *ni;
 }
 
 void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent) {
@@ -194,6 +288,7 @@ void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, 
   //  fprintf(stderr, "Initialising PNG IO...\n");
   png_init_io(png, fp);
 
+  fprintf(stderr, "writing header for %dx%d %d-bit RGB PNG image...\n", _width, _height, bit_depth);
   png_set_IHDR(png, info,
 	       _width, _height, bit_depth, PNG_COLOR_TYPE_RGB,
 	       PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
@@ -263,6 +358,7 @@ void Image::write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, 
   cmsCloseProfile(profile);
 
   fprintf(stderr, "Transforming image data...\n");
+#pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++)
     cmsDoTransform(transform, rowdata[y], png_rows[y], _width);
 

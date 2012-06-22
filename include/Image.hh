@@ -7,14 +7,6 @@
 #include <type_traits>
 #include <lcms2.h>
 
-inline double lanczos(double a, double x) {
-  return (a * sin(x / a) * sin(M_PI * x / a)) / (M_PI * M_PI * x * x);
-}
-
-inline double lanczos(double a, double x, double y) {
-  return lanczos(a, x) * lanczos(a, y);
-}
-
 // A floating-point, L*a*b* image class
 class Image {
 private:
@@ -27,6 +19,7 @@ public:
   Image(const char* filepath);	// Load a PNG image
   ~Image();
 
+  // Methods for accessing the private data
   inline unsigned int width(void) {
     return _width;
   }
@@ -47,6 +40,10 @@ public:
     return rowdata[y][c + (x * 3)];
   }
 
+  // Resize the image using a Lanczos filter
+  Image& resize(double nw, double nh, double a);
+
+  // Write the image out to a PNG or JPEG file
   void write_png(const char* filepath, int bit_depth, cmsHPROFILE profile, cmsUInt32Number intent);
   void write_jpeg(const char* filepath, cmsHPROFILE profile, cmsUInt32Number intent);
 

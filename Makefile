@@ -1,14 +1,14 @@
 PROGRAMS=photofinish
 
-CFLAGS += -Wall -Iinclude -g
-CXXFLAGS += -Wall -std=c++11 -Iinclude -g
+CFLAGS += -Wall -Iinclude -g -fopenmp
+CXXFLAGS += -Wall -std=c++11 -Iinclude -g -fopenmp
 
 INCLUDES = $(wildcard include/*.hh)
 OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc)) $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 CLASSES = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
 LDFLAGS=
-LIBS = -lm -lstdc++ -lpng -llcms2 -lexiv2
+LIBS = -lm -lstdc++ -lpng -llcms2 -lexiv2 -lgomp
 
 all: $(OBJS) $(PROGRAMS)
 
