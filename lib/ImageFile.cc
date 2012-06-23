@@ -8,8 +8,10 @@ _ImageFile::_ImageFile(const char* filepath) {
 }
 
 _ImageFile::~_ImageFile() {
-  if (_filepath != NULL)
+  if (_filepath != NULL) {
     free((void*)_filepath);
+    _filepath = NULL;
+  }
 }
 
 _ImageFile* ImageFile(const char* filepath) {

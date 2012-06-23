@@ -15,10 +15,11 @@ bool JPEGFile::set_profile(cmsHPROFILE profile, cmsUInt32Number intent) {
   return true;
 }
 
-Image& JPEGFile::read(void) {
+Image* JPEGFile::read(void) {
+  return NULL;
 }
 
-bool JPEGFile::write(Image& img) {
-  return true;
+bool JPEGFile::write(Image* img) {
+  return false;
 }
 

@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <type_traits>
-#include <lcms2.h>
 
 // A floating-point, L*a*b* image class
 class Image {
@@ -40,7 +38,7 @@ public:
   }
 
   // Resize the image using a Lanczos filter
-  Image& resize(double nw, double nh, double a);
+  Image* resize(double nw, double nh, double a);
 
 private:
   // Private methods for 1-dimensional scaling
