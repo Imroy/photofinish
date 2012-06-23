@@ -236,6 +236,7 @@ bool PNGFile::write(Image* img) {
 
   png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
 
+#pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < img->height(); y++)
     png_rows[y] = (png_bytep)malloc(img->width() * 3 * (_bit_depth >> 3));
 

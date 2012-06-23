@@ -9,6 +9,7 @@ Image::Image(unsigned int w, unsigned int h) :
   rowdata(NULL)
 {
   rowdata = (double**)malloc(_height * sizeof(double*));
+#pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++)
     rowdata[y] = (double*)malloc(_width * 3 * sizeof(double));
 }
@@ -19,6 +20,7 @@ Image::Image(Image& other) :
   rowdata(NULL)
 {
   rowdata = (double**)malloc(_height * sizeof(double*));
+#pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++) {
     rowdata[y] = (double*)malloc(_width * 3 * sizeof(double));
     memcpy(rowdata[y], other.rowdata[y], _width * 3 * sizeof(double));
@@ -27,6 +29,7 @@ Image::Image(Image& other) :
 
 Image::~Image() {
   if (rowdata != NULL) {
+#pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++)
       free(rowdata[y]);
     free(rowdata);

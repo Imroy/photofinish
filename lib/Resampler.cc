@@ -60,12 +60,24 @@ Resampler::Resampler(double a, unsigned int from_size, double to_size)
 }
 
 Resampler::~Resampler() {
-#pragma omp parallel for schedule(dynamic, 1)
-  for (unsigned int i = 0; i < _to_size_i; i++) {
-    free(_Position[i]);
-    free(_Weight[i]);
+  if (_N != NULL) {
+    free(_N);
+    _N = NULL;
   }
-  free(_N);
-  free(_Position);
-  free(_Weight);
+
+  if (_Position != NULL) {
+#pragma omp parallel for schedule(dynamic, 1)
+    for (unsigned int i = 0; i < _to_size_i; i++)
+      free(_Position[i]);
+    free(_Position);
+    _Position = NULL;
+  }
+
+  if (_Weight != NULL) {
+#pragma omp parallel for schedule(dynamic, 1)
+    for (unsigned int i = 0; i < _to_size_i; i++)
+      free(_Weight[i]);
+    free(_Weight);
+    _Weight = NULL;
+  }
 }
