@@ -33,14 +33,16 @@ public:
   virtual bool set_bit_depth(int bit_depth) = 0;
   virtual bool set_profile(cmsHPROFILE profile, cmsUInt32Number intent) = 0;
 
-  virtual Image& read(void) = 0;
-  virtual bool write(Image& i) = 0;
+  virtual Image* read(void) = 0;
+  virtual bool write(Image* i) = 0;
+  inline bool write(Image& i) { return write(&i); }
 };
 
 class PNGFile : private _ImageFile {
 private:
   int _bit_depth;
   cmsHPROFILE _profile;
+  bool _own_profile;
   cmsUInt32Number _intent;
 
 public:
@@ -50,8 +52,8 @@ public:
   bool set_bit_depth(int bit_depth);
   bool set_profile(cmsHPROFILE profile, cmsUInt32Number intent);
 
-  Image& read(void);
-  bool write(Image& img);
+  Image* read(void);
+  bool write(Image* img);
 };
 
 class JPEGFile : private _ImageFile {
@@ -63,8 +65,8 @@ public:
   bool set_bit_depth(int bit_depth);
   bool set_profile(cmsHPROFILE profile, cmsUInt32Number intent);
 
-  Image& read(void);
-  bool write(Image& img);
+  Image* read(void);
+  bool write(Image* img);
 };
 
 // Factory function

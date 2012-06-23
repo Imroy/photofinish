@@ -22,6 +22,7 @@
 #include <zlib.h>
 #include <lcms2.h>
 #include <time.h>
+#include <stdio.h>
 #include <omp.h>
 #include "Image.hh"
 #include "Resampler.hh"
@@ -53,10 +54,12 @@ Image::~Image() {
     for (unsigned int y = 0; y < _height; y++)
       free(rowdata[y]);
     free(rowdata);
+    rowdata = NULL;
   }
+  _width = _height = 0;
 }
 
-Image& Image::resize(double nw, double nh, double a) {
+Image* Image::resize(double nw, double nh, double a) {
   if (nw < 0) {
     nw = _width * nh / _height;
   } else if (nh < 0) {
@@ -73,7 +76,7 @@ Image& Image::resize(double nw, double nh, double a) {
   }
   delete temp;
 
-  return *result;
+  return result;
 }
 
 Image* Image::_resize_w(double nw, double a) {

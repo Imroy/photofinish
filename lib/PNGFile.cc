@@ -29,13 +29,19 @@ PNGFile::PNGFile(const char* filepath) :
   _ImageFile(filepath),
   _bit_depth(8),
   _profile(NULL),
+  _own_profile(false),
   _intent(INTENT_PERCEPTUAL)
 {}
 
 PNGFile::~PNGFile() {
-  if (_filepath != NULL)
+  if (_filepath != NULL) {
     free((void*)_filepath);
-  cmsCloseProfile(_profile);
+    _filepath = NULL;
+  }
+  if (_own_profile && (_profile != NULL)) {
+    cmsCloseProfile(_profile);
+    _profile = NULL;
+  }
 }
 
 bool PNGFile::set_bit_depth(int bit_depth) {
@@ -48,11 +54,12 @@ bool PNGFile::set_bit_depth(int bit_depth) {
 
 bool PNGFile::set_profile(cmsHPROFILE profile, cmsUInt32Number intent) {
   _profile = profile;
+  _own_profile = false;
   _intent = intent;
   return true;
 }
 
-Image& PNGFile::read(void) {
+Image* PNGFile::read(void) {
   fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
   FILE *fp = fopen(_filepath, "r");
   if (!fp) {
@@ -169,10 +176,10 @@ Image& PNGFile::read(void) {
   png_destroy_read_struct(&png, &info, NULL);
   fclose(fp);
 
-  return *img;
+  return img;
 }
 
-bool PNGFile::write(Image& img) {
+bool PNGFile::write(Image* img) {
   fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
   FILE *fp = fopen(_filepath, "wb");
   if (!fp) {
@@ -206,9 +213,9 @@ bool PNGFile::write(Image& img) {
   //  fprintf(stderr, "Initialising PNG IO...\n");
   png_init_io(png, fp);
 
-  fprintf(stderr, "writing header for %dx%d %d-bit RGB PNG image...\n", img.width(), img.height(), _bit_depth);
+  fprintf(stderr, "writing header for %dx%d %d-bit RGB PNG image...\n", img->width(), img->height(), _bit_depth);
   png_set_IHDR(png, info,
-	       img.width(), img.height(), _bit_depth, PNG_COLOR_TYPE_RGB,
+	       img->width(), img->height(), _bit_depth, PNG_COLOR_TYPE_RGB,
 	       PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
   png_set_filter(png, 0, PNG_ALL_FILTERS);
   png_set_compression_level(png, Z_BEST_COMPRESSION);
@@ -216,6 +223,7 @@ bool PNGFile::write(Image& img) {
   if (_profile == NULL) {
     fprintf(stderr, "Using default sRGB profile...\n");
     _profile = cmsCreate_sRGBProfile();
+    _own_profile = true;
     png_set_sRGB_gAMA_and_cHRM(png, info, _intent);
   } else {
     cmsUInt32Number len;
@@ -244,13 +252,10 @@ bool PNGFile::write(Image& img) {
     }
   }
 
-  png_bytepp png_rows = (png_bytepp)malloc(img.height() * sizeof(png_bytep));
+  png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
 
-  for (unsigned int y = 0; y < img.height(); y++)
-    png_rows[y] = NULL;  /* security precaution */
-
-  for (unsigned int y = 0; y < img.height(); y++)
-    png_rows[y] = (png_bytep)malloc(img.width() * 3 * (_bit_depth >> 3));
+  for (unsigned int y = 0; y < img->height(); y++)
+    png_rows[y] = (png_bytep)malloc(img->width() * 3 * (_bit_depth >> 3));
 
   png_set_rows(png, info, png_rows);
 
@@ -270,8 +275,8 @@ bool PNGFile::write(Image& img) {
     }
   }
 #pragma omp parallel for schedule(dynamic, 1)
-  for (unsigned int y = 0; y < img.height(); y++)
-    cmsDoTransform(transform, img.row(y), png_rows[y], img.width());
+  for (unsigned int y = 0; y < img->height(); y++)
+    cmsDoTransform(transform, img->row(y), png_rows[y], img->width());
 
   cmsDeleteTransform(transform);
 
