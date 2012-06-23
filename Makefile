@@ -1,13 +1,15 @@
 PROGRAMS=photofinish
 
-CFLAGS += -Wall -Iinclude -g -fopenmp
-CXXFLAGS += -Wall -std=c++11 -Iinclude -g -fopenmp
+#PRECISION=double
+PRECISION=float
+
+CFLAGS += -Wall -Iinclude -fopenmp -g -DSAMPLE=$(PRECISION)
+CXXFLAGS += -Wall -std=c++11 -Iinclude -fopenmp -g -DSAMPLE=$(PRECISION)
 
 INCLUDES = $(wildcard include/*.hh)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
-LDFLAGS=
 LIBS = -lm -lstdc++ -lpng -llcms2 -lexiv2 -lgomp
 
 all: $(PROGRAMS)

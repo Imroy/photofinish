@@ -26,7 +26,7 @@
 class Resampler {
 private:
   unsigned int *_N, **_Position;
-  double **_Weight;
+  SAMPLE **_Weight;
   unsigned int _to_size_i;
 
 public:
@@ -46,11 +46,11 @@ public:
     return _Position[i][f];
   }
 
-  inline double* Weight(unsigned int i) {
+  inline SAMPLE* Weight(unsigned int i) {
     return _Weight[i];
   }
 
-  inline double& Weight(unsigned int f, unsigned int i) {
+  inline SAMPLE& Weight(unsigned int f, unsigned int i) {
     return _Weight[i][f];
   }
 

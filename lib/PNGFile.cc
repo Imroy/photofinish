@@ -25,6 +25,8 @@
 #include "ImageFile.hh"
 #include "Image.hh"
 
+#define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
+
 PNGFile::PNGFile(const char* filepath) :
   _ImageFile(filepath),
   _bit_depth(8),
@@ -154,7 +156,7 @@ Image* PNGFile::read(void) {
 
   //  fprintf(stderr, "Creating colour transform...\n");
   cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
-					       lab, TYPE_Lab_DBL,
+					       lab, IMAGE_TYPE,
 					       INTENT_PERCEPTUAL, 0);
   cmsCloseProfile(lab);
   cmsCloseProfile(profile);
@@ -254,7 +256,6 @@ bool PNGFile::write(Image* img) {
 
   png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
 
-#pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < img->height(); y++)
     png_rows[y] = (png_bytep)malloc(img->width() * 3 * (_bit_depth >> 3));
 
@@ -263,7 +264,7 @@ bool PNGFile::write(Image* img) {
   cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
   //  fprintf(stderr, "Creating colour transform...\n");
   cmsUInt32Number format = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(_bit_depth >> 3);
-  cmsHTRANSFORM transform = cmsCreateTransform(lab, TYPE_Lab_DBL,
+  cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 					       _profile, format,
 					       _intent, 0);
   cmsCloseProfile(lab);

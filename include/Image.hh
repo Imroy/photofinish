@@ -27,7 +27,7 @@
 class Image {
 private:
   unsigned int _width, _height;
-  double **rowdata;
+  SAMPLE **rowdata;
 
 public:
   Image(unsigned int w, unsigned int h);
@@ -43,15 +43,15 @@ public:
     return _height;
   }
 
-  inline double* row(unsigned int y) {
+  inline SAMPLE* row(unsigned int y) {
     return rowdata[y];
   }
 
-  inline double* at(unsigned int x, unsigned int y) {
+  inline SAMPLE* at(unsigned int x, unsigned int y) {
     return &rowdata[y][x * 3];
   }
 
-  inline double& at(unsigned int x, unsigned int y, unsigned char c) {
+  inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) {
     return rowdata[y][c + (x * 3)];
   }
 

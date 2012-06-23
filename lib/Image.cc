@@ -32,10 +32,9 @@ Image::Image(unsigned int w, unsigned int h) :
   _height(h),
   rowdata(NULL)
 {
-  rowdata = (double**)malloc(_height * sizeof(double*));
-#pragma omp parallel for schedule(dynamic, 1)
+  rowdata = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
   for (unsigned int y = 0; y < _height; y++)
-    rowdata[y] = (double*)malloc(_width * 3 * sizeof(double));
+    rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
 }
 
 Image::Image(Image& other) :
@@ -43,17 +42,15 @@ Image::Image(Image& other) :
   _height(other._height),
   rowdata(NULL)
 {
-  rowdata = (double**)malloc(_height * sizeof(double*));
-#pragma omp parallel for schedule(dynamic, 1)
+  rowdata = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
   for (unsigned int y = 0; y < _height; y++) {
-    rowdata[y] = (double*)malloc(_width * 3 * sizeof(double));
-    memcpy(rowdata[y], other.rowdata[y], _width * 3 * sizeof(double));
+    rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
+    memcpy(rowdata[y], other.rowdata[y], _width * 3 * sizeof(SAMPLE));
   }
 }
 
 Image::~Image() {
   if (rowdata != NULL) {
-#pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++)
       free(rowdata[y]);
     free(rowdata);
@@ -96,15 +93,15 @@ Image* Image::_resize_w(double nw, double a) {
   }
 #pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int y = 0; y < _height; y++) {
-    double *out = ni->row(y);
+    SAMPLE *out = ni->row(y);
     for (unsigned int nx = 0; nx < nwi; nx++, out += 3) {
       unsigned int max = s.N(nx);
 
       out[0] = out[1] = out[2] = 0.0;
-      double *weight = s.Weight(nx);
+      SAMPLE *weight = s.Weight(nx);
       unsigned int *x = s.Position(nx);
       for (unsigned int j = 0; j < max; j++, weight++, x++) {
-	double *in = at(*x, y);
+	SAMPLE *in = at(*x, y);
 
 	out[0] += in[0] * *weight;
 	out[1] += in[1] * *weight;
@@ -132,13 +129,13 @@ Image* Image::_resize_h(double nh, double a) {
   for (unsigned int ny = 0; ny < nhi; ny++) {
     unsigned int max = s.N(ny);
 
-    double *out = ni->row(ny);
+    SAMPLE *out = ni->row(ny);
     for (unsigned int x = 0; x < _width; x++, out += 3) {
       out[0] = out[1] = out[2] = 0.0;
-      double *weight = s.Weight(ny);
+      SAMPLE *weight = s.Weight(ny);
       unsigned int *y = s.Position(ny);
       for (unsigned int j = 0; j < max; j++, weight++, y++) {
-	double *in = at(x, *y);
+	SAMPLE *in = at(x, *y);
 
 	out[0] += in[0] * *weight;
 	out[1] += in[1] * *weight;
