@@ -3,14 +3,18 @@ PROGRAMS=photofinish
 #PRECISION=double
 PRECISION=float
 
-CFLAGS += -Wall -Iinclude -fopenmp -g -DSAMPLE=$(PRECISION)
-CXXFLAGS += -Wall -std=c++11 -Iinclude -fopenmp -g -DSAMPLE=$(PRECISION)
+# Libraries with pkg-config data
+PKGS=libpng lcms2 exiv2
+
+COMMON_FLAGS = -Wall -Iinclude `pkg-config --cflags $(PKGS)` -fopenmp -g -DSAMPLE=$(PRECISION)
+CFLAGS += $(COMMON_FLAGS)
+CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
 
 INCLUDES = $(wildcard include/*.hh)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
-LIBS = -lm -lstdc++ -lpng -llcms2 -lexiv2 -lgomp
+LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)`
 
 all: $(PROGRAMS)
 
