@@ -154,21 +154,25 @@ void end_callback(png_structp png, png_infop info) {
   //  callback_state *cs = (callback_state*)png_get_progressive_ptr(png);
 }
 
-void worker(callback_state* cs) {
+void process_row(callback_state* cs) {
+  if (!cs->rowqueue.empty()) {
+    omp_set_lock(cs->queue_lock);
+    pngrow_t *row = cs->rowqueue.front();
+    cs->rowqueue.pop();
+    omp_unset_lock(cs->queue_lock);
+
+    cmsDoTransform(cs->transform, row->row_data, cs->img->row(row->row_num), cs->width);
+    free(row->row_data);
+    delete row;
+  }
+}
+
+void process_workqueue(callback_state* cs) {
   //  int th_id = omp_get_thread_num();
   while (!(cs->rowqueue.empty() && cs->finished)) {
     while (cs->rowqueue.empty() && !cs->finished)
       usleep(100);
-    if (!cs->rowqueue.empty()) {
-      omp_set_lock(cs->queue_lock);
-      pngrow_t *row = cs->rowqueue.front();
-      cs->rowqueue.pop();
-      omp_unset_lock(cs->queue_lock);
-
-      cmsDoTransform(cs->transform, row->row_data, cs->img->row(row->row_num), cs->width);
-      free(row->row_data);
-      delete row;
-    }
+    process_row(cs);
   }
 }
 
@@ -214,16 +218,6 @@ Image* PNGFile::read(void) {
     exit(4);
   }
 
-#pragma omp parallel
-  {
-#pragma omp master
-    {
-      // We need at least two threads, so force it on uniprocessor systems
-      if (omp_get_num_threads() < 2)
-	omp_set_num_threads(2);
-    }
-  }
-
   callback_state cs;
   cs.queue_lock = (omp_lock_t*)malloc(sizeof(omp_lock_t));
   omp_init_lock(cs.queue_lock);
@@ -233,17 +227,20 @@ Image* PNGFile::read(void) {
 #pragma omp parallel shared(cs)
   {
     int th_id = omp_get_thread_num();
-    if (th_id == 0) {	// Master thread
+    if (th_id == 0) {		// Master thread
       fprintf(stderr, "%d: Reading PNG image and transforming into L*a*b* using %d threads...\n", th_id, omp_get_num_threads());
       png_set_progressive_read_fn(png, (void *)&cs, info_callback, row_callback, end_callback);
       png_byte buffer[1048576];
       size_t length;
-      while ((length = fread(buffer, 1, 1048576, fp)))
+      while ((length = fread(buffer, 1, 1048576, fp))) {
 	png_process_data(png, info, buffer, length);
+	while (cs.rowqueue.size() > 100)
+	  process_row(&cs);
+      }
       cs.finished = true;
-      worker(&cs);	// Help finish off the transforming of image data
-    } else {	// Worker threads
-      worker(&cs);
+      process_workqueue(&cs);	// Help finish off the transforming of image data
+    } else {
+      process_workqueue(&cs);	// Worker threads just process the workqueue
     }
   }
   omp_destroy_lock(cs.queue_lock);
@@ -331,7 +328,6 @@ bool PNGFile::write(Image* img) {
   }
 
   png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
-
   for (unsigned int y = 0; y < img->height(); y++)
     png_rows[y] = (png_bytep)malloc(img->width() * 3 * (_bit_depth >> 3));
 
@@ -360,6 +356,10 @@ bool PNGFile::write(Image* img) {
 
   fprintf(stderr, "Writing PNG image data...\n");
   png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
+
+  for (unsigned int y = 0; y < img->height(); y++)
+    free(png_rows[y]);
+  free(png_rows);
 
   fprintf(stderr, "Done.\n");
   fclose(fp);
