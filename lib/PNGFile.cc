@@ -144,7 +144,6 @@ void row_callback(png_structp png, png_bytep row_data, png_uint_32 row_num, int 
   memcpy(new_row, row_data, cs->rowlen);
   pngrow_t *row = new pngrow_t(row_num, new_row);
 
-  //  int th_id = omp_get_thread_num();
   omp_set_lock(cs->queue_lock);
   cs->rowqueue.push(row);
   omp_unset_lock(cs->queue_lock);
@@ -168,7 +167,6 @@ void process_row(callback_state* cs) {
 }
 
 void process_workqueue(callback_state* cs) {
-  //  int th_id = omp_get_thread_num();
   while (!(cs->rowqueue.empty() && cs->finished)) {
     while (cs->rowqueue.empty() && !cs->finished)
       usleep(100);
@@ -228,7 +226,7 @@ Image* PNGFile::read(void) {
   {
     int th_id = omp_get_thread_num();
     if (th_id == 0) {		// Master thread
-      fprintf(stderr, "%d: Reading PNG image and transforming into L*a*b* using %d threads...\n", th_id, omp_get_num_threads());
+      fprintf(stderr, "Reading PNG image and transforming into L*a*b* using %d threads...\n", omp_get_num_threads());
       png_set_progressive_read_fn(png, (void *)&cs, info_callback, row_callback, end_callback);
       png_byte buffer[1048576];
       size_t length;
