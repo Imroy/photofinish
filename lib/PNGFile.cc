@@ -9,8 +9,6 @@
 #include "ImageFile.hh"
 #include "Image.hh"
 
-#define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
-
 PNGFile::PNGFile(const char* filepath) :
   _ImageFile(filepath),
   _bit_depth(8),

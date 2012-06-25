@@ -14,7 +14,7 @@ INCLUDES = $(wildcard include/*.hh)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
-LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)`
+LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)` -ljpeg
 
 all: $(PROGRAMS)
 

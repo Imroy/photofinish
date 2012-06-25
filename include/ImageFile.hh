@@ -4,6 +4,8 @@
 #include <lcms2.h>
 #include "Image.hh"
 
+#define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
+
 class _ImageFile {
 protected:
   const char *_filepath;
