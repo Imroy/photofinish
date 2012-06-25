@@ -28,11 +28,7 @@
 #include "Image.hh"
 
 PNGFile::PNGFile(const char* filepath) :
-  _ImageFile(filepath),
-  _bit_depth(8),
-  _profile(NULL),
-  _own_profile(false),
-  _intent(INTENT_PERCEPTUAL)
+  _ImageFile(filepath)
 {}
 
 PNGFile::~PNGFile() {
@@ -40,25 +36,6 @@ PNGFile::~PNGFile() {
     free((void*)_filepath);
     _filepath = NULL;
   }
-  if (_own_profile && (_profile != NULL)) {
-    cmsCloseProfile(_profile);
-    _profile = NULL;
-  }
-}
-
-bool PNGFile::set_bit_depth(int bit_depth) {
-  if ((bit_depth == 8) || (bit_depth == 16)) {
-    _bit_depth = bit_depth;
-    return true;
-  }
-  return false;
-}
-
-bool PNGFile::set_profile(cmsHPROFILE profile, cmsUInt32Number intent) {
-  _profile = profile;
-  _own_profile = false;
-  _intent = intent;
-  return true;
 }
 
 struct pngrow_t {
@@ -250,7 +227,7 @@ Image* PNGFile::read(void) {
   return cs.img;
 }
 
-bool PNGFile::write(Image* img) {
+bool PNGFile::write(Image* img, const Destination &d) {
   fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
   FILE *fp = fopen(_filepath, "wb");
   if (!fp) {
@@ -284,33 +261,29 @@ bool PNGFile::write(Image* img) {
   //  fprintf(stderr, "Initialising PNG IO...\n");
   png_init_io(png, fp);
 
-  fprintf(stderr, "writing header for %dx%d %d-bit RGB PNG image...\n", img->width(), img->height(), _bit_depth);
+  fprintf(stderr, "writing header for %dx%d %d-bit RGB PNG image...\n", img->width(), img->height(), d.depth());
   png_set_IHDR(png, info,
-	       img->width(), img->height(), _bit_depth, PNG_COLOR_TYPE_RGB,
+	       img->width(), img->height(), d.depth(), PNG_COLOR_TYPE_RGB,
 	       PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
   png_set_filter(png, 0, PNG_ALL_FILTERS);
   png_set_compression_level(png, Z_BEST_COMPRESSION);
 
-  if (_profile == NULL) {
-    fprintf(stderr, "Using default sRGB profile...\n");
-    _profile = cmsCreate_sRGBProfile();
-    _own_profile = true;
-    png_set_sRGB_gAMA_and_cHRM(png, info, _intent);
-  } else {
+  cmsHPROFILE profile;
+  if (d.has_profile()) {
+    profile = d.profile().profile();
     cmsUInt32Number len;
-    len = cmsGetProfileInfoASCII(_profile, cmsInfoDescription, cmsNoLanguage, cmsNoCountry, NULL, 0);
+    cmsSaveProfileToMem(profile, NULL, &len);
     if (len > 0) {
-      char *profile_name = (char *)malloc(len);
-      cmsGetProfileInfoASCII(_profile, cmsInfoDescription, cmsNoLanguage, cmsNoCountry, profile_name, len);
-      cmsSaveProfileToMem(_profile, NULL, &len);
-      if (len > 0) {
-	png_bytep profile_data = (png_bytep)malloc(len);
-	if (cmsSaveProfileToMem(_profile, profile_data, &len)) {
-	  fprintf(stderr, "Embedding profile \"%s\" (%d bytes)...\n", profile_name, len);
-	  png_set_iCCP(png, info, profile_name, 0, profile_data, len);
-	}
+      png_bytep profile_data = (png_bytep)malloc(len);
+      if (cmsSaveProfileToMem(profile, profile_data, &len)) {
+	fprintf(stderr, "Embedding profile \"%s\" (%d bytes)...\n", d.profile().name().c_str(), len);
+	png_set_iCCP(png, info, d.profile().name().c_str(), 0, profile_data, len);
       }
     }
+  } else {
+    fprintf(stderr, "Using default sRGB profile...\n");
+    profile = cmsCreate_sRGBProfile();
+    png_set_sRGB_gAMA_and_cHRM(png, info, d.intent());
   }
 
   {
@@ -325,17 +298,19 @@ bool PNGFile::write(Image* img) {
 
   png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
   for (unsigned int y = 0; y < img->height(); y++)
-    png_rows[y] = (png_bytep)malloc(img->width() * 3 * (_bit_depth >> 3));
+    png_rows[y] = (png_bytep)malloc(img->width() * 3 * (d.depth() >> 3));
 
   png_set_rows(png, info, png_rows);
 
   cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
   //  fprintf(stderr, "Creating colour transform...\n");
-  cmsUInt32Number format = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(_bit_depth >> 3);
+  cmsUInt32Number format = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(d.depth() >> 3);
   cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-					       _profile, format,
-					       _intent, 0);
+					       profile, format,
+					       d.intent(), 0);
   cmsCloseProfile(lab);
+  if (!d.has_profile())
+    cmsCloseProfile(profile);
 
 #pragma omp parallel
   {
