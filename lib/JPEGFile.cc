@@ -52,8 +52,16 @@ bool JPEGFile::write(Image* img, const Destination &d) {
   cinfo.in_color_space = JCS_RGB;
   jpeg_set_defaults(&cinfo);
   if (d.has_jpeg()) {
-    fprintf(stderr, "JPEGFile: Got quality of %d.\n", d.jpeg().quality());
-    jpeg_set_quality(&cinfo, d.jpeg().quality(), TRUE);
+    D_JPEG jpeg = d.jpeg();
+    fprintf(stderr, "JPEGFile: Got quality of %d.\n", jpeg.quality());
+    jpeg_set_quality(&cinfo, jpeg.quality(), TRUE);
+    if (jpeg.progressive()) {
+      fprintf(stderr, "JPEGFile: Progressive.\n");
+      jpeg_simple_progression(&cinfo);	// TODO: Custom scan sequence
+    }
+    fprintf(stderr, "JPEGFile: %dx%d chroma sub-sampling.\n", jpeg.sample_h(), jpeg.sample_v());
+    cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
+    cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
   } else {
     jpeg_set_quality(&cinfo, 95, TRUE);
   }
