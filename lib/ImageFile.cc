@@ -16,10 +16,10 @@ _ImageFile::~_ImageFile() {
 
 _ImageFile* ImageFile(const char* filepath) {
   int len = strlen(filepath);
-  if ((len > 3) && (strcasecmp(filepath + len - 3, ".png") == 0))
+  if ((len > 4) && (strcasecmp(filepath + len - 4, ".png") == 0))
     return (_ImageFile*)new PNGFile(filepath);
-  if (((len > 4) && (strcasecmp(filepath + len - 4, ".jpeg") == 0))
-      || ((len > 3) && (strcasecmp(filepath + len - 3, ".jpg") == 0)))
+  if (((len > 5) && (strcasecmp(filepath + len - 5, ".jpeg") == 0))
+      || ((len > 4) && (strcasecmp(filepath + len - 4, ".jpg") == 0)))
     return (_ImageFile*)new JPEGFile(filepath);
 
   return NULL;
