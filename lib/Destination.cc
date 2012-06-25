@@ -76,14 +76,14 @@ void operator >> (const YAML::Node& node, D_target& dt) {
 
 D_JPEG::D_JPEG() :
   _quality(90),
-  _sample_x(2), _sample_y(2),
+  _sample_h(2), _sample_v(2),
   _progressive(true)
 {}
 
 D_JPEG::D_JPEG(const D_JPEG& other) :
   _quality(other._quality),
-  _sample_x(other._sample_x),
-  _sample_y(other._sample_y),
+  _sample_h(other._sample_h),
+  _sample_v(other._sample_v),
   _progressive(other._progressive)
 {}
 
@@ -100,19 +100,19 @@ void operator >> (const YAML::Node& node, D_JPEG& dj) {
     const char *sample_c = sample.c_str();
     const char *xpos = strchr(sample_c, 'x');
     if (xpos != NULL) {
-      int xlen = xpos - sample_c;
-      int ylen = strlen(sample_c) - xlen - 1;
-      char *xstr = (char*)malloc(xlen), *ystr = (char*)malloc(ylen);
+      int hlen = xpos - sample_c;
+      int vlen = strlen(sample_c) - hlen - 1;
+      char *hstr = (char*)malloc(hlen), *vstr = (char*)malloc(vlen);
 
-      strncpy(xstr, sample_c, xlen);
-      xstr[xlen] = 0;
-      dj._sample_x = atoi(xstr);
-      free(xstr);
+      strncpy(hstr, sample_c, hlen);
+      hstr[hlen] = 0;
+      dj._sample_h = atoi(hstr);
+      free(hstr);
 
-      strncpy(ystr, xpos + 1, ylen);
-      ystr[ylen] = 0;
-      dj._sample_y = atoi(ystr);
-      free(ystr);
+      strncpy(vstr, xpos + 1, vlen);
+      vstr[vlen] = 0;
+      dj._sample_v = atoi(vstr);
+      free(vstr);
     }
   } catch(YAML::RepresentationException& e) {}
   try {

@@ -59,7 +59,7 @@ public:
 class D_JPEG {
 private:
   int _quality;
-  char _sample_x, _sample_y;
+  char _sample_h, _sample_v;
   bool _progressive;
 
 public:
@@ -68,8 +68,8 @@ public:
   ~D_JPEG();
 
   inline int quality(void) const { return _quality; }
-  inline double sample_x(void) const { return _sample_x; }
-  inline double sample_y(void) const { return _sample_y; }
+  inline char sample_h(void) const { return _sample_h; }
+  inline char sample_v(void) const { return _sample_v; }
   inline bool progressive(void) const { return _progressive; }
 
   friend void operator >> (const YAML::Node& node, D_JPEG& dj);
