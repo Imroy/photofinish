@@ -4,7 +4,7 @@ PROGRAMS=photofinish
 PRECISION=float
 
 # Libraries with pkg-config data
-PKGS=libpng lcms2 exiv2
+PKGS=libpng lcms2 exiv2 yaml-cpp
 
 COMMON_FLAGS = -Wall -Iinclude `pkg-config --cflags $(PKGS)` -fopenmp -g -DSAMPLE=$(PRECISION)
 CFLAGS += $(COMMON_FLAGS)
@@ -22,7 +22,7 @@ clean:
 	@rm -fv $(PROG_OBJS) $(LIB_OBJS) $(PROGRAMS)
 
 $(PROGRAMS): %: %.o $(LIB_OBJS)
-	$(CXX) $(LDFLAGS) $(LIBS) $^ -o $@
+	$(CXX) $(LDFLAGS) $^ $(LIBS) -o $@
 
 %.o: %.cc $(INCLUDES)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
