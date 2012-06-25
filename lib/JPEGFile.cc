@@ -10,21 +10,11 @@ JPEGFile::JPEGFile(const char* filepath) :
   _ImageFile(filepath)
 {}
 
-bool JPEGFile::set_bit_depth(int bit_depth) {
-  if (bit_depth == 8)
-    return true;
-  return false;
-}
-
-bool JPEGFile::set_profile(cmsHPROFILE profile, cmsUInt32Number intent) {
-  return true;
-}
-
 Image* JPEGFile::read(void) {
   return NULL;
 }
 
-bool JPEGFile::write(Image* img) {
+bool JPEGFile::write(Image* img, const Destination &d) {
   jpeg_compress_struct cinfo;
   jpeg_error_mgr jerr;
   cinfo.err = jpeg_std_error(&jerr);
@@ -43,7 +33,12 @@ bool JPEGFile::write(Image* img) {
   cinfo.input_components = 3;
   cinfo.in_color_space = JCS_RGB;
   jpeg_set_defaults(&cinfo);
-  jpeg_set_quality(&cinfo, 95, TRUE);
+  if (d.has_jpeg()) {
+    fprintf(stderr, "JPEGFile: Got quality of %d.\n", d.jpeg().quality());
+    jpeg_set_quality(&cinfo, d.jpeg().quality(), TRUE);
+  } else {
+    jpeg_set_quality(&cinfo, 95, TRUE);
+  }
 
   cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
   cmsHPROFILE sRGB = cmsCreate_sRGBProfile();
