@@ -17,6 +17,7 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <strings.h>
+#include <string.h>
 #include "Destination.hh"
 
 D_sharpen::D_sharpen() :
@@ -111,7 +112,27 @@ void operator >> (const YAML::Node& node, D_JPEG& dj) {
   try {
     node["qual"] >> dj._quality;
   } catch(YAML::RepresentationException& e) {}
-  // TODO: how to parse the sample parameter?
+  try {
+    string sample;
+    node["sample"] >> sample;
+    const char *sample_c = sample.c_str();
+    const char *xpos = strchr(sample_c, 'x');
+    if (xpos != NULL) {
+      int xlen = xpos - sample_c;
+      int ylen = strlen(sample_c) - xlen - 1;
+      char *xstr = (char*)malloc(xlen), *ystr = (char*)malloc(ylen);
+
+      strncpy(xstr, sample_c, xlen);
+      xstr[xlen] = 0;
+      dj._sample_x = atoi(xstr);
+      free(xstr);
+
+      strncpy(ystr, xpos + 1, ylen);
+      ystr[ylen] = 0;
+      dj._sample_y = atoi(ystr);
+      free(ystr);
+    }
+  } catch(YAML::RepresentationException& e) {}
   try {
     int pro;
     node["pro"] >> pro;
