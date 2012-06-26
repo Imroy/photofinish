@@ -6,7 +6,7 @@
 #include "ImageFile.hh"
 #include "Image.hh"
 
-JPEGFile::JPEGFile(const char* filepath) :
+JPEGFile::JPEGFile(const string filepath) :
   _ImageFile(filepath)
 {}
 
@@ -20,10 +20,10 @@ bool JPEGFile::write(Image* img, const Destination &d) {
   cinfo.err = jpeg_std_error(&jerr);
   jpeg_create_compress(&cinfo);
 
-  fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
-  FILE *fp = fopen(_filepath, "wb");
+  fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
+  FILE *fp = fopen(_filepath.c_str(), "wb");
   if (!fp) {
-    fprintf(stderr, "can't open file \"%s\"\n", _filepath);
+    fprintf(stderr, "can't open file \"%s\"\n", _filepath.c_str());
     return false;
   }
   jpeg_stdio_dest(&cinfo, fp);

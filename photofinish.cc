@@ -12,19 +12,21 @@
 #include "Destination.hh"
 
 int main(int argc, char* argv[]) {
-  std::ifstream fin("destinations.yml");
-  YAML::Parser parser(fin);
-  YAML::Node doc;
-
-  parser.GetNextDocument(doc);
   map<std::string, Destination*> destinations;
-  for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
-    std::string destname;
-    it.first() >> destname;
-    fprintf(stderr, "Destination \"%s\".\n", destname.c_str());
-    Destination *destination = new Destination;
-    it.second() >> *destination;
-    destinations[destname] = destination;
+  {
+    std::ifstream fin("destinations.yml");
+    YAML::Parser parser(fin);
+    YAML::Node doc;
+
+    parser.GetNextDocument(doc);
+    for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
+      std::string destname;
+      it.first() >> destname;
+      fprintf(stderr, "Destination \"%s\".\n", destname.c_str());
+      Destination *destination = new Destination;
+      it.second() >> *destination;
+      destinations[destname] = destination;
+    }
   }
 
   deque<std::string> arg_destinations;
@@ -40,7 +42,7 @@ int main(int argc, char* argv[]) {
   }
 
   for (deque<std::string>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
-    _ImageFile *infile = ImageFile(fi->c_str());
+    _ImageFile *infile = ImageFile(*fi);
     if (infile == NULL) {
       fprintf(stderr, "Could not determine the type of file \"%s\".\n", fi->c_str());
       continue;
@@ -57,13 +59,7 @@ int main(int argc, char* argv[]) {
       Frame *frame = destination->best_frame(image);
       Image *outimage = frame->crop_resize(image, 3);
 
-      char *outname = (char*)malloc(fi->length() + di->length() + 7);
-      strcpy(outname, fi->c_str());
-      strcat(outname, ".");
-      strcat(outname, di->c_str());
-      strcat(outname, ".jpeg");
-      JPEGFile outfile(outname);
-      free(outname);
+      JPEGFile outfile(*fi + "." + *di + ".jpeg");
       outfile.write(outimage, *destination);
       delete outimage;
     }

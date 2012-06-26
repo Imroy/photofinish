@@ -1,6 +1,7 @@
 #ifndef __IMAGEFILE_HH__
 #define __IMAGEFILE_HH__
 
+#include <string>
 #include <lcms2.h>
 #include "Image.hh"
 #include "Destination.hh"
@@ -9,11 +10,13 @@
 
 class _ImageFile {
 protected:
-  const char *_filepath;
+  const string _filepath;
 
 public:
-  _ImageFile(const char* filepath);
-  virtual ~_ImageFile();
+  _ImageFile(const string filepath) :
+    _filepath(filepath)
+  {}
+  virtual ~_ImageFile() {}
 
   virtual Image* read(void) = 0;
   virtual bool write(Image* i, const Destination &d) = 0;
@@ -24,8 +27,7 @@ class PNGFile : public _ImageFile {
 private:
 
 public:
-  PNGFile(const char* filepath);
-  ~PNGFile();
+  PNGFile(const string filepath);
 
   Image* read(void);
   bool write(Image* img, const Destination &d);
@@ -35,13 +37,13 @@ class JPEGFile : public _ImageFile {
 private:
 
 public:
-  JPEGFile(const char* filepath);
+  JPEGFile(const string filepath);
 
   Image* read(void);
   bool write(Image* img, const Destination &d);
 };
 
 // Factory function
-_ImageFile* ImageFile(const char* filepath);
+_ImageFile* ImageFile(const string filepath);
 
 #endif // __IMAGEFILE_HH__
