@@ -97,22 +97,9 @@ void operator >> (const YAML::Node& node, D_JPEG& dj) {
   try {
     string sample;
     node["sample"] >> sample;
-    const char *sample_c = sample.c_str();
-    const char *xpos = strchr(sample_c, 'x');
-    if (xpos != NULL) {
-      int hlen = xpos - sample_c;
-      int vlen = strlen(sample_c) - hlen - 1;
-      char *hstr = (char*)malloc(hlen), *vstr = (char*)malloc(vlen);
-
-      strncpy(hstr, sample_c, hlen);
-      hstr[hlen] = 0;
-      dj._sample_h = atoi(hstr);
-      free(hstr);
-
-      strncpy(vstr, xpos + 1, vlen);
-      vstr[vlen] = 0;
-      dj._sample_v = atoi(vstr);
-      free(vstr);
+    int rc = sscanf(sample.c_str(), "%hhdx%hhd", &dj._sample_h, &dj._sample_v);
+    if (rc < 2) {
+      fprintf(stderr, "D_JPEG: Failed to parse sample \"%s\".\n", sample.c_str());
     }
   } catch(YAML::RepresentationException& e) {}
   try {
