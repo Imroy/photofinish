@@ -20,7 +20,7 @@ public:
   inline bool write(Image& i, const Destination &d) { return write(&i, d); }
 };
 
-class PNGFile : private _ImageFile {
+class PNGFile : public _ImageFile {
 private:
 
 public:
@@ -31,7 +31,7 @@ public:
   bool write(Image* img, const Destination &d);
 };
 
-class JPEGFile : private _ImageFile {
+class JPEGFile : public _ImageFile {
 private:
 
 public:
