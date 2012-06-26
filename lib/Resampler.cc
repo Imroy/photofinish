@@ -12,33 +12,31 @@ inline SAMPLE lanczos(double a, double ra, double x) {
   return (a * sin(pix) * sin(pix * ra)) / (sqr(M_PI) * sqr(x));
 }
 
-Resampler::Resampler(double a, unsigned int from_size, double to_size)
+Resampler::Resampler(double a, double from_start, double from_size, unsigned int from_max, double to_size)
   : _to_size_i(ceil(to_size))
 {
   double ra = 1.0 / a;
-  double scale = to_size / from_size;
+  double scale = from_size / to_size;
   _N = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
   _Position = (unsigned int**)malloc(_to_size_i * sizeof(unsigned int*));
   _Weight = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
 
-  double centre_offset = 0.5 / scale;
-
   double range = a;
   double norm_fact = 1.0;
-  if (scale < 1.0) {
-    range = a / scale;
+  if (scale >= 1.0) {
+    range = a * scale;
     norm_fact = a / ceil(range);
   }
 
 #pragma omp parallel for schedule(dynamic, 1)
   for (unsigned int i = 0; i < _to_size_i; i++) {
-    double centre = i / scale + centre_offset;
+    double centre = from_start + (i * scale);
     int left = floor(centre - range);
     if (left < 0)
       left = 0;
     unsigned int right = ceil(centre + range);
-    if (right >= from_size)
-      right = from_size - 1;
+    if (right >= from_max)
+      right = from_max - 1;
     _N[i] = right - left + 1;
     _Position[i] = (unsigned int*)malloc(_N[i] * sizeof(unsigned int));
     _Weight[i] = (SAMPLE*)malloc(_N[i] * sizeof(SAMPLE));
