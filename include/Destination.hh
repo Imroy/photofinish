@@ -23,6 +23,7 @@
 #include <string>
 #include <map>
 #include <lcms2.h>
+#include "Image.hh"
 
 using namespace std;
 
@@ -58,7 +59,7 @@ public:
 };
 
 class D_target {
-private:
+protected:
   string _name;
   double _width, _height;
 
@@ -72,6 +73,26 @@ public:
   inline double height(void) const { return _height; }
 
   friend void operator >> (const YAML::Node& node, D_target& dt);
+};
+
+class Frame : public D_target {
+private:
+  // width and height attributes inherited from D_target are the final size of the image
+  double _crop_x, _crop_y, _crop_w, _crop_h;	// coordinates for cropping from the original image
+  double _resolution;				// PPI
+
+public:
+  Frame(const D_target& target, double x, double y, double w, double h, double r);
+  ~Frame();
+
+  // Resize the image using a Lanczos filter
+  Image* crop_resize(Image* img, double a);
+
+  inline double crop_x(void) const { return _crop_x; }
+  inline double crop_y(void) const { return _crop_y; }
+  inline double crop_w(void) const { return _crop_w; }
+  inline double crop_h(void) const { return _crop_h; }
+  inline double resolution(void) const { return _resolution; }
 };
 
 class D_JPEG {
@@ -144,6 +165,8 @@ public:
   Destination();
   Destination(const Destination& other);
   ~Destination();
+
+  Frame* best_frame(const Image* img);
 
   inline string name(void) const { return _name; }
   inline string dir(void) const { return _dir; }

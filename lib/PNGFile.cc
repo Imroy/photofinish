@@ -27,16 +27,9 @@
 #include "ImageFile.hh"
 #include "Image.hh"
 
-PNGFile::PNGFile(const char* filepath) :
+PNGFile::PNGFile(const string filepath) :
   _ImageFile(filepath)
 {}
-
-PNGFile::~PNGFile() {
-  if (_filepath != NULL) {
-    free((void*)_filepath);
-    _filepath = NULL;
-  }
-}
 
 struct pngrow_t {
   png_uint_32 row_num;
@@ -150,10 +143,10 @@ void process_workqueue(callback_state* cs) {
 }
 
 Image* PNGFile::read(void) {
-  fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
-  FILE *fp = fopen(_filepath, "r");
+  fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
+  FILE *fp = fopen(_filepath.c_str(), "r");
   if (!fp) {
-    fprintf(stderr, "PNGFile::read(): Could not open file \"%s\": %s\n", _filepath, strerror(errno));
+    fprintf(stderr, "PNGFile::read(): Could not open file \"%s\": %s\n", _filepath.c_str(), strerror(errno));
     return NULL;
   }
 
@@ -162,7 +155,7 @@ Image* PNGFile::read(void) {
     //    fprintf(stderr, "Reading header...\n");
     fread(header, 1, 8, fp);
     if (png_sig_cmp(header, 0, 8)) {
-      fprintf(stderr, "PNGFile::read(): File \"%s\" is not a PNG file.\n", _filepath);
+      fprintf(stderr, "PNGFile::read(): File \"%s\" is not a PNG file.\n", _filepath.c_str());
       return NULL;
     }
     fseek(fp, 0, SEEK_SET);
@@ -229,10 +222,10 @@ Image* PNGFile::read(void) {
 }
 
 bool PNGFile::write(Image* img, const Destination &d) {
-  fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
-  FILE *fp = fopen(_filepath, "wb");
+  fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
+  FILE *fp = fopen(_filepath.c_str(), "wb");
   if (!fp) {
-    fprintf(stderr, "Could not open file \"%s\": %s\n", _filepath, strerror(errno));
+    fprintf(stderr, "Could not open file \"%s\": %s\n", _filepath.c_str(), strerror(errno));
     return false;
   }
 

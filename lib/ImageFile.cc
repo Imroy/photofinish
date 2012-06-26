@@ -17,27 +17,15 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <string.h>
+#include <boost/algorithm/string.hpp>
 #include "ImageFile.hh"
 
-_ImageFile::_ImageFile(const char* filepath) {
-  int len = strlen(filepath);
-  _filepath = (const char *)malloc(len * sizeof(char));
-  strcpy((char*)_filepath, filepath);
-}
-
-_ImageFile::~_ImageFile() {
-  if (_filepath != NULL) {
-    free((void*)_filepath);
-    _filepath = NULL;
-  }
-}
-
-_ImageFile* ImageFile(const char* filepath) {
-  int len = strlen(filepath);
-  if ((len > 4) && (strcasecmp(filepath + len - 4, ".png") == 0))
+_ImageFile* ImageFile(const string filepath) {
+  int len = filepath.length();
+  if ((len > 4) && (boost::iequals(filepath.substr(len - 4, 4), ".png")))
     return (_ImageFile*)new PNGFile(filepath);
-  if (((len > 5) && (strcasecmp(filepath + len - 5, ".jpeg") == 0))
-      || ((len > 4) && (strcasecmp(filepath + len - 4, ".jpg") == 0)))
+  if (((len > 5) && (boost::iequals(filepath.substr(len - 5, 5), ".jpeg")))
+      || ((len > 4) && (boost::iequals(filepath.substr(len - 4, 4), ".jpg"))))
     return (_ImageFile*)new JPEGFile(filepath);
 
   return NULL;
