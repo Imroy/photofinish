@@ -1,5 +1,6 @@
 #include <strings.h>
 #include <string.h>
+#include <math.h>
 #include "Destination.hh"
 
 D_sharpen::D_sharpen() :
@@ -180,6 +181,42 @@ Destination::Destination(const Destination& other) :
 Destination::~Destination() {
   for (map<string, D_target*>::iterator ti = _targets.begin(); ti != _targets.end(); ti++)
     delete ti->second;
+}
+
+Frame* Destination::best_frame(const Image* img) {
+  Frame *best_frame = NULL;
+  double best_waste = 0;
+  for (map<string, D_target*>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
+    D_target *target = ti->second;
+    double waste;
+    double x, y;
+    double width, height;
+
+    if (target->width() * img->height() > target->height() * img->width()) {
+      width = img->width();
+      height = img->width() * target->height() / target->width();
+      x = 0;
+      double gap = waste = img->height() - height;
+      y = gap * 0.5;
+    } else {
+      height = img->height();
+      width = img->height() * target->width() / target->height();
+      y = 0;
+      double gap = waste = img->width() - width;
+      x = gap * 0.5;
+    }
+    Frame *frame = new Frame(*target, x, y, width, height, 0);
+    fprintf(stderr, "Waste from frame \"%s\" (%d,%d)+(%dx%d) = %f.\n", target->name().c_str(), (int)floor(x), (int)floor(y), (int)ceil(width), (int)ceil(height), waste);
+    if ((best_frame == NULL) || (waste < best_waste)) {
+      if (best_frame != NULL)
+	delete best_frame;
+      best_frame = frame;
+      best_waste = waste;
+    }
+  }
+  fprintf(stderr, "Best waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
+
+  return best_frame;
 }
 
 void operator >> (const YAML::Node& node, Destination& d) {

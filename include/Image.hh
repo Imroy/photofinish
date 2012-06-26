@@ -17,33 +17,27 @@ public:
   ~Image();
 
   // Methods for accessing the private data
-  inline unsigned int width(void) {
+  inline unsigned int width(void) const {
     return _width;
   }
 
-  inline unsigned int height(void) {
+  inline unsigned int height(void) const {
     return _height;
   }
 
-  inline SAMPLE* row(unsigned int y) {
+  inline SAMPLE* row(unsigned int y) const {
     return rowdata[y];
   }
 
-  inline SAMPLE* at(unsigned int x, unsigned int y) {
+  inline SAMPLE* at(unsigned int x, unsigned int y) const {
     return &rowdata[y][x * 3];
   }
 
-  inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) {
+  inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) const {
     return rowdata[y][c + (x * 3)];
   }
 
-  // Resize the image using a Lanczos filter
-  Image* resize(double nw, double nh, double a);
-
 private:
-  // Private methods for 1-dimensional scaling
-  Image* _resize_w(double nw, double a);
-  Image* _resize_h(double nh, double a);
 
 };
 
