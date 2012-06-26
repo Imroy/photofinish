@@ -65,7 +65,7 @@ void info_callback(png_structp png, png_infop info) {
   callback_state *cs = (callback_state*)png_get_progressive_ptr(png);
 
   int bit_depth, colour_type;
-  fprintf(stderr, "info_callback: Getting header information...\n");
+  //  fprintf(stderr, "info_callback: Getting header information...\n");
   png_get_IHDR(png, info, &cs->width, &cs->height, &bit_depth, &colour_type, NULL, NULL, NULL);
   fprintf(stderr, "%dx%d, %d bpp, type %d.\n", cs->width, cs->height, bit_depth, colour_type);
 
@@ -105,7 +105,7 @@ void info_callback(png_structp png, png_infop info) {
     profile = cmsCreate_sRGBProfile();
   }
 
-  fprintf(stderr, "Creating colour transform...\n");
+  //  fprintf(stderr, "Creating colour transform...\n");
   cs->transform = cmsCreateTransform(profile, cmsType,
 				     lab, IMAGE_TYPE,
 				     INTENT_PERCEPTUAL, 0);
@@ -153,8 +153,8 @@ Image* PNGFile::read(void) {
   fprintf(stderr, "Opening file \"%s\"...\n", _filepath);
   FILE *fp = fopen(_filepath, "r");
   if (!fp) {
-    fprintf(stderr, "Could not open file \"%s\": %s\n", _filepath, strerror(errno));
-    exit(1);
+    fprintf(stderr, "PNGFile::read(): Could not open file \"%s\": %s\n", _filepath, strerror(errno));
+    return NULL;
   }
 
   {
@@ -162,33 +162,34 @@ Image* PNGFile::read(void) {
     //    fprintf(stderr, "Reading header...\n");
     fread(header, 1, 8, fp);
     if (png_sig_cmp(header, 0, 8)) {
-      fprintf(stderr, "File \"%s\" is not a PNG file.\n", _filepath);
-      exit(2);
+      fprintf(stderr, "PNGFile::read(): File \"%s\" is not a PNG file.\n", _filepath);
+      return NULL;
     }
     fseek(fp, 0, SEEK_SET);
   }
 
-  fprintf(stderr, "Creating read structure...\n");
+  //  fprintf(stderr, "Creating read structure...\n");
   png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
 					   NULL, NULL, NULL);
   if (!png) {
-    fprintf(stderr, "Could not initialize PNG read structure.\n");
-    exit(3);
+    fprintf(stderr, "PNGFile::read(): Could not create PNG read structure.\n");
+    return NULL;
   }
 
-  fprintf(stderr, "Creating info structure...\n");
+  //  fprintf(stderr, "Creating info structure...\n");
   png_infop info = png_create_info_struct(png);
   if (!info) {
     png_destroy_read_struct(&png, (png_infopp)NULL, (png_infopp)NULL);
-    exit(3);
+    fprintf(stderr, "PNGFile::read(): Could not create PNG info structure.\n");
+    return NULL;
   }
 
-  fprintf(stderr, "Setting jump point...\n");
+  //  fprintf(stderr, "Setting jump point...\n");
   if (setjmp(png_jmpbuf(png))) {
     png_destroy_read_struct(&png, &info, NULL);
     fclose(fp);
-    fprintf(stderr, "something went wrong reading the PNG.\n");
-    exit(4);
+    fprintf(stderr, "PNGFile::read(): something went wrong reading the PNG.\n");
+    return NULL;
   }
 
   callback_state cs;
