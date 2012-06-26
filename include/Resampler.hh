@@ -30,7 +30,7 @@ private:
   unsigned int _to_size_i;
 
 public:
-  Resampler(double a, unsigned int from_size, double to_size);
+  Resampler(double a, double from_start, double from_size, unsigned int from_max, double to_size);
   ~Resampler();
 
   // Methods for accessing the private data
