@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include "Filter.hh"
 
 // Currently only using Lanczos sampling
 class Resampler {
@@ -30,7 +31,7 @@ private:
   unsigned int _to_size_i;
 
 public:
-  Resampler(double a, double from_start, double from_size, unsigned int from_max, double to_size);
+  Resampler(_Filter* filter, double from_start, double from_size, unsigned int from_max, double to_size);
   ~Resampler();
 
   // Methods for accessing the private data

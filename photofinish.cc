@@ -75,7 +75,8 @@ int main(int argc, char* argv[]) {
 
       Destination *destination = destinations[*di];
       Frame *frame = destination->best_frame(image);
-      Image *outimage = frame->crop_resize(image, 3);
+      Lanczos lanczos(3);
+      Image *outimage = frame->crop_resize(image, &lanczos);
 
       JPEGFile outfile(*fi + "." + *di + ".jpeg");
       outfile.write(outimage, *destination);

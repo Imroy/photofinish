@@ -31,10 +31,10 @@ Frame::~Frame() {
 }
 
 // Private functions for 1-dimensional scaling
-Image* _crop_resize_w(Image* img, double x, double cw, double nw, double a) {
+Image* _crop_resize_w(Image* img, _Filter* filter, double x, double cw, double nw) {
   unsigned int nwi = ceil(nw);
   Image *ni = new Image(nwi, img->height());
-  Resampler s(a, x, cw, img->width(), nw);
+  Resampler s(filter, x, cw, img->width(), nw);
 
 #pragma omp parallel
   {
@@ -65,10 +65,10 @@ Image* _crop_resize_w(Image* img, double x, double cw, double nw, double a) {
   return ni;
 }
 
-Image* _crop_resize_h(Image* img, double y, double ch, double nh, double a) {
+Image* _crop_resize_h(Image* img, _Filter* filter, double y, double ch, double nh) {
   unsigned int nhi = ceil(nh);
   Image *ni = new Image(img->width(), nhi);
-  Resampler s(a, y, ch, img->height(), nh);
+  Resampler s(filter, y, ch, img->height(), nh);
 
 #pragma omp parallel
   {
@@ -99,14 +99,14 @@ Image* _crop_resize_h(Image* img, double y, double ch, double nh, double a) {
   return ni;
 }
 
-Image* Frame::crop_resize(Image* img, double a) {
+Image* Frame::crop_resize(Image* img, _Filter* filter) {
   Image *temp, *result;
   if (_width * img->height() < img->width() * _height) {
-    temp = _crop_resize_w(img, _crop_x, _crop_w, _width, a);
-    result = _crop_resize_h(temp, _crop_y, _crop_h, _height, a);
+    temp = _crop_resize_w(img, filter, _crop_x, _crop_w, _width);
+    result = _crop_resize_h(temp, filter, _crop_y, _crop_h, _height);
   } else {
-    temp = _crop_resize_h(img, _crop_y, _crop_h, _height, a);
-    result = _crop_resize_w(temp, _crop_x, _crop_w, _width, a);
+    temp = _crop_resize_h(img, filter, _crop_y, _crop_h, _height);
+    result = _crop_resize_w(temp, filter, _crop_x, _crop_w, _width);
   }
   delete temp;
 
