@@ -23,38 +23,28 @@
 #include <math.h>
 #include "Filter.hh"
 
-// Currently only using Lanczos sampling
-class Resampler {
-private:
-  unsigned int *_N, **_Position;
-  SAMPLE **_Weight;
-  unsigned int _to_size_i;
+namespace PhotoFinish {
 
-public:
-  Resampler(_Filter* filter, double from_start, double from_size, unsigned int from_max, double to_size);
-  ~Resampler();
+  // Currently only using Lanczos sampling
+  class Resampler {
+  private:
+    unsigned int *_N, **_Position;
+    SAMPLE **_Weight;
+    unsigned int _to_size_i;
 
-  // Methods for accessing the private data
-  inline unsigned int& N(unsigned int i) {
-    return _N[i];
-  }
+  public:
+    Resampler(_Filter* filter, double from_start, double from_size, unsigned int from_max, double to_size);
+    ~Resampler();
 
-  inline unsigned int* Position(unsigned int i) {
-    return _Position[i];
-  }
+    // Methods for accessing the private data
+    inline unsigned int& N(unsigned int i) { return _N[i]; }
+    inline unsigned int* Position(unsigned int i) { return _Position[i]; }
+    inline unsigned int& Position(unsigned int f, unsigned int i) { return _Position[i][f]; }
+    inline SAMPLE* Weight(unsigned int i) { return _Weight[i]; }
+    inline SAMPLE& Weight(unsigned int f, unsigned int i) { return _Weight[i][f]; }
 
-  inline unsigned int& Position(unsigned int f, unsigned int i) {
-    return _Position[i][f];
-  }
+  };
 
-  inline SAMPLE* Weight(unsigned int i) {
-    return _Weight[i];
-  }
-
-  inline SAMPLE& Weight(unsigned int f, unsigned int i) {
-    return _Weight[i][f];
-  }
-
-};
+}
 
 #endif // __RESAMPLER_HH__

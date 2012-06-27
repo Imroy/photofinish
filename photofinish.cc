@@ -29,8 +29,10 @@
 #include "ImageFile.hh"
 #include "Destination.hh"
 
+using namespace PhotoFinish;
+
 int main(int argc, char* argv[]) {
-  map<std::string, Destination*> destinations;
+  std::map<std::string, Destination*> destinations;
   {
     std::ifstream fin("destinations.yml");
     YAML::Parser parser(fin);
@@ -47,8 +49,8 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  deque<std::string> arg_destinations;
-  deque<std::string> arg_filenames;
+  std::deque<std::string> arg_destinations;
+  std::deque<std::string> arg_filenames;
   for (int i = 1; i < argc; i++) {
     struct stat s;
     if (destinations.count(argv[i]))
@@ -59,7 +61,7 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "Argument \"%s\" is neither a destination name, nor a filename.\n", argv[i]);
   }
 
-  for (deque<std::string>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
+  for (std::deque<std::string>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     _ImageFile *infile = ImageFile(*fi);
     if (infile == NULL) {
       fprintf(stderr, "Could not determine the type of file \"%s\".\n", fi->c_str());
@@ -70,7 +72,7 @@ int main(int argc, char* argv[]) {
     if (image == NULL)
       continue;
 
-    for (deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
+    for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
       fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
 
       Destination *destination = destinations[*di];
@@ -92,7 +94,7 @@ int main(int argc, char* argv[]) {
     delete infile;
   }
 
-  for (map<string, Destination*>::iterator di = destinations.begin(); di != destinations.end(); di++)
+  for (std::map<std::string, Destination*>::iterator di = destinations.begin(); di != destinations.end(); di++)
     delete di->second;
 
   return 0;
