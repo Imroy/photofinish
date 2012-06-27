@@ -6,6 +6,7 @@
 #include <map>
 #include <lcms2.h>
 #include "Image.hh"
+#include "Filter.hh"
 
 using namespace std;
 
@@ -68,7 +69,7 @@ public:
   ~Frame();
 
   // Resize the image using a Lanczos filter
-  Image* crop_resize(Image* img, double a);
+  Image* crop_resize(Image* img, _Filter* filter);
 
   inline double crop_x(void) const { return _crop_x; }
   inline double crop_y(void) const { return _crop_y; }
