@@ -17,7 +17,8 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <omp.h>
-#include "Destination.hh"
+#include "Frame.hh"
+#include "Destination_items.hh"
 #include "Resampler.hh"
 
 Frame::Frame(const D_target& target, double x, double y, double w, double h, double r) :

@@ -75,8 +75,14 @@ int main(int argc, char* argv[]) {
 
       Destination *destination = destinations[*di];
       Frame *frame = destination->best_frame(image);
-      Lanczos lanczos(3);
-      Image *outimage = frame->crop_resize(image, &lanczos);
+      _Filter *filter = Filter(destination->resize());
+      if (filter == NULL) {
+	fprintf(stderr, "Could not create filter.\n");
+	continue;
+      }
+
+      Image *outimage = frame->crop_resize(image, filter);
+      delete filter;
 
       JPEGFile outfile(*fi + "." + *di + ".jpeg");
       outfile.write(outimage, *destination);
