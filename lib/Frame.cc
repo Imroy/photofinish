@@ -1,5 +1,6 @@
 #include <omp.h>
-#include "Destination.hh"
+#include "Frame.hh"
+#include "Destination_items.hh"
 #include "Resampler.hh"
 
 Frame::Frame(const D_target& target, double x, double y, double w, double h, double r) :

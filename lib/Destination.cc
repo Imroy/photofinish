@@ -1,6 +1,7 @@
 #include <strings.h>
 #include <string.h>
 #include <math.h>
+#include "Destination_items.hh"
 #include "Destination.hh"
 
 D_sharpen::D_sharpen() :
@@ -28,12 +29,16 @@ void operator >> (const YAML::Node& node, D_sharpen& ds) {
 
 
 D_resize::D_resize() :
+  _has_filter(false),
   _filter("Lanczos"),
+  _has_support(false),
   _support(3)
 {}
 
 D_resize::D_resize(const D_resize& other) :
+  _has_filter(other._has_filter),
   _filter(other._filter),
+  _has_support(other._has_support),
   _support(other._support)
 {}
 
@@ -43,9 +48,11 @@ D_resize::~D_resize() {
 void operator >> (const YAML::Node& node, D_resize& dr) {
   try {
     node["filter"] >> dr._filter;
+    dr._has_filter = true;
   } catch(YAML::RepresentationException& e) {}
   try {
     node["support"] >> dr._support;
+    dr._has_support = true;
   } catch(YAML::RepresentationException& e) {}
 }
 
