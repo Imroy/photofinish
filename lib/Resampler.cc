@@ -3,67 +3,71 @@
 #include <stdio.h>
 #include <math.h>
 
-Resampler::Resampler(_Filter* filter, double from_start, double from_size, unsigned int from_max, double to_size)
-  : _to_size_i(ceil(to_size))
-{
-  double scale = from_size / to_size;
-  _N = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
-  _Position = (unsigned int**)malloc(_to_size_i * sizeof(unsigned int*));
-  _Weight = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
+namespace PhotoFinish {
 
-  double range = filter->radius();
-  double norm_fact = 1.0;
-  if (scale >= 1.0) {
-    range = filter->radius() * scale;
-    norm_fact = filter->radius() / ceil(range);
-  }
+  Resampler::Resampler(_Filter* filter, double from_start, double from_size, unsigned int from_max, double to_size)
+    : _to_size_i(ceil(to_size))
+  {
+    double scale = from_size / to_size;
+    _N = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
+    _Position = (unsigned int**)malloc(_to_size_i * sizeof(unsigned int*));
+    _Weight = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
+
+    double range = filter->radius();
+    double norm_fact = 1.0;
+    if (scale >= 1.0) {
+      range = filter->radius() * scale;
+      norm_fact = filter->radius() / ceil(range);
+    }
 
 #pragma omp parallel for schedule(dynamic, 1)
-  for (unsigned int i = 0; i < _to_size_i; i++) {
-    double centre = from_start + (i * scale);
-    int left = floor(centre - range);
-    if (left < 0)
-      left = 0;
-    unsigned int right = ceil(centre + range);
-    if (right >= from_max)
-      right = from_max - 1;
-    _N[i] = right - left + 1;
-    _Position[i] = (unsigned int*)malloc(_N[i] * sizeof(unsigned int));
-    _Weight[i] = (SAMPLE*)malloc(_N[i] * sizeof(SAMPLE));
-    unsigned int k = 0;
-    for (unsigned int j = left; j <= right; j++, k++) {
-      _Position[i][k] = j;
-      _Weight[i][k] = filter->eval((centre - j) * norm_fact);
-    }
-    // normalize the filter's weight's so the sum equals to 1.0, very important for avoiding box type of artifacts
-    unsigned int max = _N[i];
-    SAMPLE tot = 0.0;
-    for (unsigned int k = 0; k < max; k++)
-      tot += _Weight[i][k];
-    if (tot != 0) // 0 should never happen except bug in filter
+    for (unsigned int i = 0; i < _to_size_i; i++) {
+      double centre = from_start + (i * scale);
+      int left = floor(centre - range);
+      if (left < 0)
+	left = 0;
+      unsigned int right = ceil(centre + range);
+      if (right >= from_max)
+	right = from_max - 1;
+      _N[i] = right - left + 1;
+      _Position[i] = (unsigned int*)malloc(_N[i] * sizeof(unsigned int));
+      _Weight[i] = (SAMPLE*)malloc(_N[i] * sizeof(SAMPLE));
+      unsigned int k = 0;
+      for (unsigned int j = left; j <= right; j++, k++) {
+	_Position[i][k] = j;
+	_Weight[i][k] = filter->eval((centre - j) * norm_fact);
+      }
+      // normalize the filter's weight's so the sum equals to 1.0, very important for avoiding box type of artifacts
+      unsigned int max = _N[i];
+      SAMPLE tot = 0.0;
       for (unsigned int k = 0; k < max; k++)
-	_Weight[i][k] /= tot;
+	tot += _Weight[i][k];
+      if (tot != 0) // 0 should never happen except bug in filter
+	for (unsigned int k = 0; k < max; k++)
+	  _Weight[i][k] /= tot;
+    }
+
   }
 
-}
+  Resampler::~Resampler() {
+    if (_N != NULL) {
+      free(_N);
+      _N = NULL;
+    }
 
-Resampler::~Resampler() {
-  if (_N != NULL) {
-    free(_N);
-    _N = NULL;
+    if (_Position != NULL) {
+      for (unsigned int i = 0; i < _to_size_i; i++)
+	free(_Position[i]);
+      free(_Position);
+      _Position = NULL;
+    }
+
+    if (_Weight != NULL) {
+      for (unsigned int i = 0; i < _to_size_i; i++)
+	free(_Weight[i]);
+      free(_Weight);
+      _Weight = NULL;
+    }
   }
 
-  if (_Position != NULL) {
-    for (unsigned int i = 0; i < _to_size_i; i++)
-      free(_Position[i]);
-    free(_Position);
-    _Position = NULL;
-  }
-
-  if (_Weight != NULL) {
-    for (unsigned int i = 0; i < _to_size_i; i++)
-      free(_Weight[i]);
-    free(_Weight);
-    _Weight = NULL;
-  }
 }

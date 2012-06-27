@@ -3,38 +3,42 @@
 
 #include "Destination_items.hh"
 
-class _Filter {
-protected:
-  double _radius;
+namespace PhotoFinish {
 
-public:
-  _Filter(const D_resize& dr) :
-    _radius(dr.has_support() ? dr.support() : 3)
-  {}
-  virtual ~_Filter()
-  {}
+  class _Filter {
+  protected:
+    double _radius;
 
-  inline double radius(void) const { return _radius; }
+  public:
+    _Filter(const D_resize& dr) :
+      _radius(dr.has_support() ? dr.support() : 3)
+    {}
+    virtual ~_Filter()
+    {}
 
-  virtual SAMPLE eval(double x) = 0;
-};
+    inline double radius(void) const { return _radius; }
 
-class Lanczos : public _Filter {
-private:
-  double _r_radius;	// Reciprocal of the radius
+    virtual SAMPLE eval(double x) = 0;
+  };
 
-public:
-  Lanczos(const D_resize& dr) :
-    _Filter(dr),
-    _r_radius(1.0 / _radius)
-  {}
-  ~Lanczos()
-  {}
+  class Lanczos : public _Filter {
+  private:
+    double _r_radius;	// Reciprocal of the radius
 
-  SAMPLE eval(double x);
-};
+  public:
+    Lanczos(const D_resize& dr) :
+      _Filter(dr),
+      _r_radius(1.0 / _radius)
+    {}
+    ~Lanczos()
+    {}
 
-// Factory function
-_Filter* Filter(const D_resize& resize);
+    SAMPLE eval(double x);
+  };
+
+  // Factory function
+  _Filter* Filter(const D_resize& resize);
+
+}
 
 #endif /* __FILTER_HH__ */
