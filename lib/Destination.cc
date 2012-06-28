@@ -217,12 +217,11 @@ namespace PhotoFinish {
 	double gap = waste = img.width() - width;
 	x = gap * 0.5;
       }
-      Frame *frame = new Frame(*target, x, y, width, height, 0);
-      fprintf(stderr, "Waste from frame \"%s\" (%d,%d)+(%dx%d) = %f.\n", target->name().c_str(), (int)floor(x), (int)floor(y), (int)ceil(width), (int)ceil(height), waste);
+      fprintf(stderr, "Waste from target \"%s\" (%0.1f,%0.1f)+(%0.1fx%0.1f) = %0.2f.\n", target->name().c_str(), x, y, width, height, waste);
       if ((best_frame == NULL) || (waste < best_waste)) {
-	if (best_frame != NULL)
+	if (best_frame != NULL)	// delete previous best
 	  delete best_frame;
-	best_frame = frame;
+	best_frame = new Frame(*target, x, y, width, height, 0);
 	best_waste = waste;
       }
     }
