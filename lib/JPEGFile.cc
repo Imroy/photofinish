@@ -12,11 +12,11 @@ namespace PhotoFinish {
     _ImageFile(filepath)
   {}
 
-  Image* JPEGFile::read(void) {
-    return NULL;
+  const Image& JPEGFile::read(void) {
+    throw Unimplemented("JPEGFile", "read()");
   }
 
-  bool JPEGFile::write(Image* img, const Destination &d) {
+  void JPEGFile::write(const Image& img, const Destination &d) {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
@@ -24,14 +24,12 @@ namespace PhotoFinish {
 
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     FILE *fp = fopen(_filepath.c_str(), "wb");
-    if (!fp) {
-      fprintf(stderr, "can't open file \"%s\"\n", _filepath.c_str());
-      return false;
-    }
+    if (!fp)
+      throw FileOpenError(_filepath, strerror(errno));
     jpeg_stdio_dest(&cinfo, fp);
 
-    cinfo.image_width = img->width();
-    cinfo.image_height = img->height();
+    cinfo.image_width = img.width();
+    cinfo.image_height = img.height();
     cinfo.input_components = 3;
     cinfo.in_color_space = JCS_RGB;
     jpeg_set_defaults(&cinfo);
@@ -59,20 +57,18 @@ namespace PhotoFinish {
     cmsCloseProfile(sRGB);
 
     JSAMPROW row[1];
-    row[0] = (JSAMPROW)malloc(img->width() * 3 * sizeof(JSAMPLE));
+    row[0] = (JSAMPROW)malloc(img.width() * 3 * sizeof(JSAMPLE));
 
     fprintf(stderr, "Writing JPEG file...\n");
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
-      cmsDoTransform(transform, img->row(cinfo.next_scanline), row[0], img->width());
+      cmsDoTransform(transform, img.row(cinfo.next_scanline), row[0], img.width());
       jpeg_write_scanlines(&cinfo, row, 1);
     }
 
     jpeg_finish_compress(&cinfo);
     fclose(fp);
     jpeg_destroy_compress(&cinfo);
-
-    return true;
   }
 
 }
