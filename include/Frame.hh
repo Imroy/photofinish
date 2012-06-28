@@ -35,7 +35,7 @@ namespace PhotoFinish {
     ~Frame();
 
     // Resize the image using a Lanczos filter
-    Image* crop_resize(Image* img, _Filter* filter);
+    const Image& crop_resize(const Image& img, const _Filter* filter);
 
     inline double crop_x(void) const { return _crop_x; }
     inline double crop_y(void) const { return _crop_y; }

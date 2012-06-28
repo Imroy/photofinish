@@ -51,7 +51,7 @@ namespace PhotoFinish {
     Destination(const Destination& other);
     ~Destination();
 
-    Frame* best_frame(const Image* img);
+    const Frame& best_frame(const Image& img);
 
     inline std::string name(void) const { return _name; }
     inline std::string dir(void) const { return _dir; }

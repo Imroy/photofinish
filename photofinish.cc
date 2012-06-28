@@ -27,6 +27,7 @@
 #include "yaml-cpp/yaml.h"
 #include "Image.hh"
 #include "ImageFile.hh"
+#include "Exception.hh"
 #include "Destination.hh"
 
 using namespace PhotoFinish;
@@ -62,36 +63,39 @@ int main(int argc, char* argv[]) {
   }
 
   for (std::deque<std::string>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
-    _ImageFile *infile = ImageFile(*fi);
-    if (infile == NULL) {
-      fprintf(stderr, "Could not determine the type of file \"%s\".\n", fi->c_str());
-      continue;
-    }
+    try {
+      _ImageFile *infile = ImageFile(*fi);
 
-    Image *image = infile->read();
-    if (image == NULL)
-      continue;
+      try {
+	Image image = infile->read();
+	delete infile;
 
-    for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
-      fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
+	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
+	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
 
-      Destination *destination = destinations[*di];
-      Frame *frame = destination->best_frame(image);
-      _Filter *filter = Filter(destination->resize());
-      if (filter == NULL) {
-	fprintf(stderr, "Could not create filter.\n");
-	continue;
+	  Destination *destination = destinations[*di];
+	  Frame frame = destination->best_frame(image);
+	  try {
+	    _Filter *filter = Filter(destination->resize());
+
+	    Image outimage = frame.crop_resize(image, filter);
+	    delete filter;
+
+	    JPEGFile outfile(*fi + "." + *di + ".jpeg");
+	    outfile.write(outimage, *destination);
+	  } catch (DestinationError& ex) {
+	    std::cout << ex.what() << std::endl;
+	    continue;
+	  }
+	}
+      } catch (std::exception& ex) {
+	std::cout << ex.what() << std::endl;
       }
-
-      Image *outimage = frame->crop_resize(image, filter);
-      delete filter;
-
-      JPEGFile outfile(*fi + "." + *di + ".jpeg");
-      outfile.write(outimage, *destination);
-      delete outimage;
+    } catch (std::exception& ex) {
+      std::cout << ex.what() << std::endl;
+      continue;
     }
-    delete image;
-    delete infile;
+
   }
 
   for (std::map<std::string, Destination*>::iterator di = destinations.begin(); di != destinations.end(); di++)

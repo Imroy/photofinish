@@ -23,6 +23,7 @@
 #include <lcms2.h>
 #include "Image.hh"
 #include "Destination.hh"
+#include "Exception.hh"
 
 #define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
 
@@ -38,9 +39,8 @@ namespace PhotoFinish {
     {}
     virtual ~_ImageFile() {}
 
-    virtual Image* read(void) = 0;
-    virtual bool write(Image* i, const Destination &d) = 0;
-    inline bool write(Image& i, const Destination &d) { return write(&i, d); }
+    virtual const Image& read(void) = 0;
+    virtual void write(const Image& img, const Destination &d) = 0;
   };
 
   class PNGFile : public _ImageFile {
@@ -49,8 +49,8 @@ namespace PhotoFinish {
   public:
     PNGFile(const std::string filepath);
 
-    Image* read(void);
-    bool write(Image* img, const Destination &d);
+    const Image& read(void);
+    void write(const Image& img, const Destination &d);
   };
 
   class JPEGFile : public _ImageFile {
@@ -59,12 +59,12 @@ namespace PhotoFinish {
   public:
     JPEGFile(const std::string filepath);
 
-    Image* read(void);
-    bool write(Image* img, const Destination &d);
+    const Image& read(void);
+    void write(const Image& img, const Destination &d);
   };
 
   // Factory function
-  _ImageFile* ImageFile(const std::string filepath);
+  _ImageFile* ImageFile(const std::string filepath) throw(UnknownFileType);
 
 }
 

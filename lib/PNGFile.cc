@@ -45,7 +45,7 @@ namespace PhotoFinish {
     std::queue<pngrow_t*> rowqueue;
     size_t rowlen;
     omp_lock_t *queue_lock;
-    unsigned int width, height;
+    png_uint_32 width, height;
     Image *img;
     cmsHTRANSFORM transform;
   };
@@ -144,47 +144,39 @@ namespace PhotoFinish {
     }
   }
 
-  Image* PNGFile::read(void) {
+  const Image& PNGFile::read(void) {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     FILE *fp = fopen(_filepath.c_str(), "r");
-    if (!fp) {
-      fprintf(stderr, "PNGFile::read(): Could not open file \"%s\": %s\n", _filepath.c_str(), strerror(errno));
-      return NULL;
-    }
+    if (!fp)
+      throw FileOpenError(_filepath, strerror(errno));
 
     {
       unsigned char header[8];
       //    fprintf(stderr, "Reading header...\n");
       fread(header, 1, 8, fp);
-      if (png_sig_cmp(header, 0, 8)) {
-	fprintf(stderr, "PNGFile::read(): File \"%s\" is not a PNG file.\n", _filepath.c_str());
-	return NULL;
-      }
+      if (png_sig_cmp(header, 0, 8))
+	throw FileContentError(_filepath, "is not a PNG file");
       fseek(fp, 0, SEEK_SET);
     }
 
     //  fprintf(stderr, "Creating read structure...\n");
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
 					     NULL, NULL, NULL);
-    if (!png) {
-      fprintf(stderr, "PNGFile::read(): Could not create PNG read structure.\n");
-      return NULL;
-    }
+    if (!png)
+      throw LibraryError("libpng", "Could not create PNG read structure");
 
     //  fprintf(stderr, "Creating info structure...\n");
     png_infop info = png_create_info_struct(png);
     if (!info) {
       png_destroy_read_struct(&png, (png_infopp)NULL, (png_infopp)NULL);
-      fprintf(stderr, "PNGFile::read(): Could not create PNG info structure.\n");
-      return NULL;
+      throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
     //  fprintf(stderr, "Setting jump point...\n");
     if (setjmp(png_jmpbuf(png))) {
       png_destroy_read_struct(&png, &info, NULL);
       fclose(fp);
-      fprintf(stderr, "PNGFile::read(): something went wrong reading the PNG.\n");
-      return NULL;
+      throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
     callback_state cs;
@@ -220,46 +212,41 @@ namespace PhotoFinish {
     png_destroy_read_struct(&png, &info, NULL);
     fclose(fp);
 
-    return cs.img;
+    return *cs.img;
   }
 
-  bool PNGFile::write(Image* img, const Destination &d) {
+  void PNGFile::write(const Image& img, const Destination &d) {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     FILE *fp = fopen(_filepath.c_str(), "wb");
-    if (!fp) {
-      fprintf(stderr, "Could not open file \"%s\": %s\n", _filepath.c_str(), strerror(errno));
-      return false;
-    }
+    if (!fp)
+      throw FileOpenError(_filepath, strerror(errno));
 
     //  fprintf(stderr, "Creating write structure...\n");
     png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 					      NULL, NULL, NULL);
-    if (!png) {
-      fprintf(stderr, "Could not initialize PNG write structure.\n");
-      return false;
-    }
+    if (!png)
+      throw LibraryError("libpng", "Could not create PNG write structure");
 
     //  fprintf(stderr, "Creating info structure...\n");
     png_infop info = png_create_info_struct(png);
     if (!info) {
       png_destroy_write_struct(&png, (png_infopp)NULL);
-      return false;
+      throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
     //  fprintf(stderr, "Setting jump point...\n");
     if (setjmp(png_jmpbuf(png))) {
       png_destroy_write_struct(&png, &info);
       fclose(fp);
-      fprintf(stderr, "something went wrong reading the PNG.\n");
-      return false;
+      throw LibraryError("libpng", "Something went wrong writing the PNG");
     }
 
     //  fprintf(stderr, "Initialising PNG IO...\n");
     png_init_io(png, fp);
 
-    fprintf(stderr, "writing header for %dx%d %d-bit RGB PNG image...\n", img->width(), img->height(), d.depth());
+    fprintf(stderr, "writing header for %ldx%ld %d-bit RGB PNG image...\n", img.width(), img.height(), d.depth());
     png_set_IHDR(png, info,
-		 img->width(), img->height(), d.depth(), PNG_COLOR_TYPE_RGB,
+		 img.width(), img.height(), d.depth(), PNG_COLOR_TYPE_RGB,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
@@ -292,9 +279,9 @@ namespace PhotoFinish {
       }
     }
 
-    png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
-    for (unsigned int y = 0; y < img->height(); y++)
-      png_rows[y] = (png_bytep)malloc(img->width() * 3 * (d.depth() >> 3));
+    png_bytepp png_rows = (png_bytepp)malloc(img.height() * sizeof(png_bytep));
+    for (long int y = 0; y < img.height(); y++)
+      png_rows[y] = (png_bytep)malloc(img.width() * 3 * (d.depth() >> 3));
 
     png_set_rows(png, info, png_rows);
 
@@ -316,22 +303,20 @@ namespace PhotoFinish {
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)
-    for (unsigned int y = 0; y < img->height(); y++)
-      cmsDoTransform(transform, img->row(y), png_rows[y], img->width());
+    for (long int y = 0; y < img.height(); y++)
+      cmsDoTransform(transform, img.row(y), png_rows[y], img.width());
 
     cmsDeleteTransform(transform);
 
     fprintf(stderr, "Writing PNG image data...\n");
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
 
-    for (unsigned int y = 0; y < img->height(); y++)
+    for (long int y = 0; y < img.height(); y++)
       free(png_rows[y]);
     free(png_rows);
 
     fprintf(stderr, "Done.\n");
     fclose(fp);
-
-    return true;
   }
 
 }

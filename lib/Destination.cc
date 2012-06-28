@@ -210,7 +210,10 @@ namespace PhotoFinish {
       delete ti->second;
   }
 
-  Frame* Destination::best_frame(const Image* img) {
+  const Frame& Destination::best_frame(const Image& img) {
+    if (_targets.size() == 0)
+      throw NoTargets(_name);
+
     Frame *best_frame = NULL;
     double best_waste = 0;
     for (std::map<std::string, D_target*>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
@@ -219,17 +222,17 @@ namespace PhotoFinish {
       double x, y;
       double width, height;
 
-      if (target->width() * img->height() > target->height() * img->width()) {
-	width = img->width();
-	height = img->width() * target->height() / target->width();
+      if (target->width() * img.height() > target->height() * img.width()) {
+	width = img.width();
+	height = img.width() * target->height() / target->width();
 	x = 0;
-	double gap = waste = img->height() - height;
+	double gap = waste = img.height() - height;
 	y = gap * 0.5;
       } else {
-	height = img->height();
-	width = img->height() * target->width() / target->height();
+	height = img.height();
+	width = img.height() * target->width() / target->height();
 	y = 0;
-	double gap = waste = img->width() - width;
+	double gap = waste = img.width() - width;
 	x = gap * 0.5;
       }
       Frame *frame = new Frame(*target, x, y, width, height, 0);
@@ -241,9 +244,12 @@ namespace PhotoFinish {
 	best_waste = waste;
       }
     }
-    fprintf(stderr, "Best waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
 
-    return best_frame;
+    if (best_frame == NULL)
+      throw NoResults("Destination", "best_frame");
+
+    fprintf(stderr, "Best waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
+    return *best_frame;
   }
 
   void operator >> (const YAML::Node& node, Destination& d) {

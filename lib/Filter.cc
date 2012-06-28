@@ -25,19 +25,19 @@
 
 namespace PhotoFinish {
 
-  SAMPLE Lanczos::eval(double x) {
+  SAMPLE Lanczos::eval(double x) const {
     if (fabs(x) < 1e-6)
       return 1.0;
     double pix = M_PI * x;
     return (_radius * sin(pix) * sin(pix * _r_radius)) / (sqr(M_PI) * sqr(x));
   }
 
-  _Filter* Filter(const D_resize& dr) {
+  _Filter* Filter(const D_resize& dr) throw(DestinationError) {
     std::string filter = dr.filter();
     if (boost::iequals(filter.substr(0, min(filter.length(), 7)), "lanczos"))
-      return (_Filter*)new Lanczos(dr);
+      return new Lanczos(dr);
 
-    return NULL;
+    throw DestinationError("resize.filter", filter);
   }
 
 }

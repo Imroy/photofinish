@@ -20,6 +20,7 @@
 #define __FILTER_HH__
 
 #include "Destination_items.hh"
+#include "Exception.hh"
 
 namespace PhotoFinish {
 
@@ -36,7 +37,7 @@ namespace PhotoFinish {
 
     inline double radius(void) const { return _radius; }
 
-    virtual SAMPLE eval(double x) = 0;
+    virtual SAMPLE eval(double x) const = 0;
   };
 
   class Lanczos : public _Filter {
@@ -51,11 +52,11 @@ namespace PhotoFinish {
     ~Lanczos()
     {}
 
-    SAMPLE eval(double x);
+    SAMPLE eval(double x) const;
   };
 
   // Factory function
-  _Filter* Filter(const D_resize& resize);
+  _Filter* Filter(const D_resize& resize) throw(DestinationError);
 
 }
 
