@@ -251,9 +251,10 @@ namespace PhotoFinish {
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
 
-    cmsHPROFILE profile;
-    if (d.has_profile()) {
-      profile = d.profile().profile();
+    cmsHPROFILE profile = NULL;
+    if (d.has_profile() && d.profile().has_filepath())
+      profile = cmsOpenProfileFromFile(d.profile().filepath().c_str(), "r");
+    if (profile != NULL) {
       cmsUInt32Number len;
       cmsSaveProfileToMem(profile, NULL, &len);
       if (len > 0) {
@@ -292,8 +293,7 @@ namespace PhotoFinish {
 						 profile, format,
 						 d.intent(), 0);
     cmsCloseProfile(lab);
-    if (!d.has_profile())
-      cmsCloseProfile(profile);
+    cmsCloseProfile(profile);
 
 #pragma omp parallel
     {
