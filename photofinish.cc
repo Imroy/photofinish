@@ -24,11 +24,14 @@
 #include <fstream>
 #include <string>
 #include <deque>
+#include <boost/filesystem.hpp>
 #include "yaml-cpp/yaml.h"
 #include "Image.hh"
 #include "ImageFile.hh"
 #include "Exception.hh"
 #include "Destination.hh"
+
+namespace fs = boost::filesystem;
 
 using namespace PhotoFinish;
 
@@ -51,7 +54,7 @@ int main(int argc, char* argv[]) {
   }
 
   std::deque<std::string> arg_destinations;
-  std::deque<std::string> arg_filenames;
+  std::deque<fs::path> arg_filenames;
   for (int i = 1; i < argc; i++) {
     struct stat s;
     if (destinations.count(argv[i]))
@@ -62,7 +65,7 @@ int main(int argc, char* argv[]) {
       fprintf(stderr, "Argument \"%s\" is neither a destination name, nor a filename.\n", argv[i]);
   }
 
-  for (std::deque<std::string>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
+  for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
       ImageFile infile(*fi);
 
@@ -78,7 +81,14 @@ int main(int argc, char* argv[]) {
 	    Filter filter(destination->resize());
 	    Image outimage = frame.crop_resize(image, filter);
 
-	    JPEGFile outfile(*fi + "." + *di + ".jpeg");
+	    std::string infile_name = (*fi).filename().string();
+	    std::string infile_ext = (*fi).extension().string();
+	    std::string outfile_name = infile_name.substr(0, infile_name.length() - infile_ext.length()) + ".jpeg";
+	    if (!exists(destination->dir())) {
+	      fprintf(stderr, "Creating directory \"%s\".\n", destination->dir().string().c_str());
+	      create_directory(destination->dir());
+	    }
+	    JPEGFile outfile(destination->dir() / outfile_name);
 	    outfile.write(outimage, *destination);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
