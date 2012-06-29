@@ -16,6 +16,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream>
+#include <fstream>
 #include <strings.h>
 #include <string.h>
 #include <math.h>
@@ -221,7 +223,6 @@ namespace PhotoFinish {
     _has_size(other._has_size), _size(other._size),
     _has_sharpen(other._has_sharpen), _has_resize(other._has_resize),
     _sharpen(other._sharpen), _resize(other._resize),
-    _targets(other._targets),
     _has_format(other._has_format), _format(other._format),
     _has_depth(other._has_depth), _depth(other._depth),
     _has_noresize(other._has_noresize), _noresize(other._noresize),
@@ -229,7 +230,10 @@ namespace PhotoFinish {
     _jpeg(other._jpeg), _png(other._png),
     _has_intent(other._has_intent), _intent(other._intent),
     _has_profile(other._has_profile), _profile(other._profile)
-  {}
+  {
+    for (std::map<std::string, D_target*>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
+      _targets.insert(std::pair<std::string, D_target*>(ti->first, new D_target(*(ti->second))));
+  }
 
   Destination::~Destination() {
     for (std::map<std::string, D_target*>::iterator ti = _targets.begin(); ti != _targets.end(); ti++)
@@ -351,6 +355,34 @@ namespace PhotoFinish {
 	d._targets[name] = target;
       }
     }
+  }
+
+
+  Destinations::Destinations(std::string filepath) {
+    std::ifstream fin(filepath);
+    YAML::Parser parser(fin);
+    YAML::Node doc;
+
+    parser.GetNextDocument(doc);
+    for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
+      std::string destname;
+      it.first() >> destname;
+      fprintf(stderr, "Destination \"%s\".\n", destname.c_str());
+      Destination *destination = new Destination;
+      it.second() >> *destination;
+      _destinations[destname] = destination;
+    }
+  }
+
+
+  Destinations::Destinations(const Destinations& other) {
+    for (const_iterator di = other._destinations.begin(); di != other._destinations.end(); di++)
+      _destinations.insert(std::pair<std::string, Destination*>(di->first, new Destination(*(di->second))));
+  }
+
+  Destinations::~Destinations() {
+    for (iterator di = _destinations.begin(); di != _destinations.end(); di++)
+      delete di->second;
   }
 
 }

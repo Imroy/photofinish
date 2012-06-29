@@ -158,7 +158,7 @@ namespace PhotoFinish {
       //    fprintf(stderr, "Reading header...\n");
       fb.read((char*)header, 8);
       if (png_sig_cmp(header, 0, 8))
-	throw FileContentError(_filepath, "is not a PNG file");
+	throw FileContentError(_filepath.string(), "is not a PNG file");
       fb.seekg(0, std::ios_base::beg);
     }
 

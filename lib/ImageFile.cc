@@ -44,7 +44,24 @@ namespace PhotoFinish {
       return;
     }
 
-    throw UnknownFileType(filepath);
+    throw UnknownFileType(filepath.generic_string());
+  }
+
+  ImageFile::ImageFile(fs::path filepath, const std::string format) throw(UnknownFileType) :
+    _imagefile(NULL)
+  {
+    if (boost::iequals(format, "png")) {
+      _imagefile = new PNGFile(filepath.replace_extension(".png"));
+      return;
+    }
+
+    if (boost::iequals(format, "jpeg")
+	|| boost::iequals(format, "jpg")) {
+      _imagefile = new JPEGFile(filepath.replace_extension(".jpeg"));
+      return;
+    }
+
+    throw UnknownFileType(format);
   }
 
   ImageFile::ImageFile(const ImageFile& other) :

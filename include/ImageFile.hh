@@ -77,6 +77,7 @@ namespace PhotoFinish {
   public:
     ImageFile();
     ImageFile(const fs::path filepath) throw(UnknownFileType);
+    ImageFile(fs::path filepath, const std::string format) throw(UnknownFileType);
     ImageFile(const ImageFile& other);
     ~ImageFile();
 

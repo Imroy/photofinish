@@ -113,6 +113,29 @@ namespace PhotoFinish {
     friend void operator >> (const YAML::Node& node, Destination& d);
   };
 
+  class Destinations {
+  private:
+    std::map<std::string, Destination*> _destinations;
+
+  public:
+    Destinations(std::string filepath);
+    Destinations(const Destinations& other);
+    ~Destinations();
+
+    typedef std::map<std::string, Destination*>::iterator iterator;
+    typedef std::map<std::string, Destination*>::const_iterator const_iterator;
+
+    inline std::map<std::string, Destination*>::size_type count(const std::string& key) const { return _destinations.count(key); }
+
+    inline iterator begin(void) { return _destinations.begin(); }
+    inline const_iterator begin(void) const { return _destinations.begin(); }
+
+    inline iterator end(void) { return _destinations.end(); }
+    inline const_iterator end(void) const { return _destinations.end(); }
+
+    inline const Destination& operator[] (const std::string& key) { return *(_destinations[key]); }
+  };
+
 }
 
 #endif // __DESTINATION_HH__
