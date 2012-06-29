@@ -15,7 +15,7 @@ namespace PhotoFinish {
     long int _to_size_i;
 
   public:
-    Resampler(const _Filter* filter, double from_start, double from_size, long int from_max, double to_size);
+    Resampler(const Filter& filter, double from_start, double from_size, long int from_max, double to_size);
     ~Resampler();
 
     // Methods for accessing the private data

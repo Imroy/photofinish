@@ -4,6 +4,27 @@
 #include <exception>
 
 namespace PhotoFinish {
+  class Uninitialised : public std::exception {
+  protected:
+    const std::string _class, _attribute;
+
+  public:
+    Uninitialised(const std::string& c, const std::string& a) :
+      _class(c), _attribute(a)
+    {}
+
+    Uninitialised(const std::string& c) :
+      _class(c)
+    {}
+
+    virtual const char* what() const throw() {
+      std::string w = _class;
+      if (_attribute.length() > 0)
+	w += "::" + _attribute;
+      return (w + " is uninitialised.").c_str();
+    }
+  };
+
   class Unimplemented : public std::exception {
   protected:
     const std::string _class, _method;

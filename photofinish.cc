@@ -46,11 +46,10 @@ int main(int argc, char* argv[]) {
 
   for (std::deque<std::string>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
-      _ImageFile *infile = ImageFile(*fi);
+      ImageFile infile(*fi);
 
       try {
-	Image image = infile->read();
-	delete infile;
+	Image image = infile.read();
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
@@ -58,10 +57,8 @@ int main(int argc, char* argv[]) {
 	  Destination *destination = destinations[*di];
 	  Frame frame = destination->best_frame(image);
 	  try {
-	    _Filter *filter = Filter(destination->resize());
-
+	    Filter filter(destination->resize());
 	    Image outimage = frame.crop_resize(image, filter);
-	    delete filter;
 
 	    JPEGFile outfile(*fi + "." + *di + ".jpeg");
 	    outfile.write(outimage, *destination);

@@ -16,7 +16,7 @@ namespace PhotoFinish {
   }
 
   // Private functions for 1-dimensional scaling
-  const Image& _crop_resize_w(const Image& img, const _Filter* filter, double x, double cw, double nw) {
+  const Image& _crop_resize_w(const Image& img, const Filter& filter, double x, double cw, double nw) {
     long int nwi = ceil(nw);
     Image *ni = new Image(nwi, img.height());
     Resampler s(filter, x, cw, img.width(), nw);
@@ -50,7 +50,7 @@ namespace PhotoFinish {
     return *ni;
   }
 
-  const Image& _crop_resize_h(const Image& img, const _Filter* filter, double y, double ch, double nh) {
+  const Image& _crop_resize_h(const Image& img, const Filter& filter, double y, double ch, double nh) {
     long int nhi = ceil(nh);
     Image *ni = new Image(img.width(), nhi);
     Resampler s(filter, y, ch, img.height(), nh);
@@ -84,7 +84,7 @@ namespace PhotoFinish {
     return *ni;
   }
 
-  const Image& Frame::crop_resize(const Image& img, const _Filter* filter) {
+  const Image& Frame::crop_resize(const Image& img, const Filter& filter) {
     if (_width * img.height() < img.width() * _height) {
       Image temp = _crop_resize_w(img, filter, _crop_x, _crop_w, _width);
       return _crop_resize_h(temp, filter, _crop_y, _crop_h, _height);

@@ -16,6 +16,9 @@ namespace PhotoFinish {
     const std::string _filepath;
 
   public:
+    _ImageFile() :
+      _filepath()
+    {}
     _ImageFile(const std::string filepath) :
       _filepath(filepath)
     {}
@@ -45,8 +48,20 @@ namespace PhotoFinish {
     void write(const Image& img, const Destination &d);
   };
 
-  // Factory function
-  _ImageFile* ImageFile(const std::string filepath) throw(UnknownFileType);
+  // Factory/wrapper class
+  class ImageFile : public _ImageFile {
+  private:
+    _ImageFile *_imagefile;
+
+  public:
+    ImageFile();
+    ImageFile(const std::string filepath) throw(UnknownFileType);
+    ImageFile(const ImageFile& other);
+    ~ImageFile();
+
+    const Image& read(void);
+    void write(const Image& img, const Destination &d);
+  };
 
 }
 
