@@ -29,6 +29,9 @@ namespace PhotoFinish {
     double _radius;
 
   public:
+    _Filter() :
+      _radius(3)
+    {}
     _Filter(const D_resize& dr) :
       _radius(dr.has_support() ? dr.support() : 3)
     {}
@@ -49,14 +52,30 @@ namespace PhotoFinish {
       _Filter(dr),
       _r_radius(1.0 / _radius)
     {}
+
     ~Lanczos()
     {}
 
     SAMPLE eval(double x) const;
   };
 
-  // Factory function
-  _Filter* Filter(const D_resize& resize) throw(DestinationError);
+  // Factory/wrapper class
+  class Filter : public _Filter {
+  private:
+    _Filter *_filter;
+
+  public:
+    Filter();
+    Filter(const D_resize& resize) throw(DestinationError);
+    Filter(const Filter& other);
+    ~Filter();
+
+    inline SAMPLE eval(double x) const {
+      if (_filter == NULL)
+	throw Uninitialised("Filter");
+      return _filter->eval(x);
+    }
+  };
 
 }
 

@@ -21,20 +21,26 @@
 
 #include <string>
 #include <lcms2.h>
+#include <boost/filesystem.hpp>
 #include "Image.hh"
 #include "Destination.hh"
 #include "Exception.hh"
 
 #define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
 
+namespace fs = boost::filesystem;
+
 namespace PhotoFinish {
 
   class _ImageFile {
   protected:
-    const std::string _filepath;
+    const fs::path _filepath;
 
   public:
-    _ImageFile(const std::string filepath) :
+    _ImageFile() :
+      _filepath()
+    {}
+    _ImageFile(const fs::path filepath) :
       _filepath(filepath)
     {}
     virtual ~_ImageFile() {}
@@ -47,7 +53,7 @@ namespace PhotoFinish {
   private:
 
   public:
-    PNGFile(const std::string filepath);
+    PNGFile(const fs::path filepath);
 
     const Image& read(void);
     void write(const Image& img, const Destination &d);
@@ -57,14 +63,26 @@ namespace PhotoFinish {
   private:
 
   public:
-    JPEGFile(const std::string filepath);
+    JPEGFile(const fs::path filepath);
 
     const Image& read(void);
     void write(const Image& img, const Destination &d);
   };
 
-  // Factory function
-  _ImageFile* ImageFile(const std::string filepath) throw(UnknownFileType);
+  // Factory/wrapper class
+  class ImageFile : public _ImageFile {
+  private:
+    _ImageFile *_imagefile;
+
+  public:
+    ImageFile();
+    ImageFile(const fs::path filepath) throw(UnknownFileType);
+    ImageFile(const ImageFile& other);
+    ~ImageFile();
+
+    const Image& read(void);
+    void write(const Image& img, const Destination &d);
+  };
 
 }
 

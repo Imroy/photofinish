@@ -24,12 +24,17 @@
 #include <lcms2.h>
 #include <queue>
 #include <unistd.h>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
 
+namespace fs = boost::filesystem;
+
 namespace PhotoFinish {
 
-  PNGFile::PNGFile(const std::string filepath) :
+  PNGFile::PNGFile(const fs::path filepath) :
     _ImageFile(filepath)
   {}
 
@@ -146,17 +151,15 @@ namespace PhotoFinish {
 
   const Image& PNGFile::read(void) {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
-    FILE *fp = fopen(_filepath.c_str(), "r");
-    if (!fp)
-      throw FileOpenError(_filepath, strerror(errno));
+    fs::ifstream fb(_filepath, std::ios_base::in);
 
     {
       unsigned char header[8];
       //    fprintf(stderr, "Reading header...\n");
-      fread(header, 1, 8, fp);
+      fb.read((char*)header, 8);
       if (png_sig_cmp(header, 0, 8))
 	throw FileContentError(_filepath, "is not a PNG file");
-      fseek(fp, 0, SEEK_SET);
+      fb.seekg(0, std::ios_base::beg);
     }
 
     //  fprintf(stderr, "Creating read structure...\n");
@@ -175,7 +178,7 @@ namespace PhotoFinish {
     //  fprintf(stderr, "Setting jump point...\n");
     if (setjmp(png_jmpbuf(png))) {
       png_destroy_read_struct(&png, &info, NULL);
-      fclose(fp);
+      fb.close();
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
@@ -193,11 +196,13 @@ namespace PhotoFinish {
 	png_set_progressive_read_fn(png, (void *)&cs, info_callback, row_callback, end_callback);
 	png_byte buffer[1048576];
 	size_t length;
-	while ((length = fread(buffer, 1, 1048576, fp))) {
+	do {
+	  fb.read((char*)buffer, 1048576);
+	  length = fb.gcount();
 	  png_process_data(png, info, buffer, length);
 	  while (cs.rowqueue.size() > 100)
 	    process_row(&cs);
-	}
+	} while (length > 0);
 	cs.finished = true;
 	process_workqueue(&cs);	// Help finish off the transforming of image data
       } else {
@@ -210,16 +215,25 @@ namespace PhotoFinish {
 
     fprintf(stderr, "Done.\n");
     png_destroy_read_struct(&png, &info, NULL);
-    fclose(fp);
+    fb.close();
 
     return *cs.img;
   }
 
+  void write_png(png_structp png, png_bytep buffer, png_size_t length) {
+    fs::ofstream *fb = (fs::ofstream*)png_get_io_ptr(png);
+    fb->write((char*)buffer, length);
+  }
+
+  void flush_png(png_structp png) {
+    fs::ofstream *fb = (fs::ofstream*)png_get_io_ptr(png);
+    fb->flush();
+  }
+
   void PNGFile::write(const Image& img, const Destination &d) {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
-    FILE *fp = fopen(_filepath.c_str(), "wb");
-    if (!fp)
-      throw FileOpenError(_filepath, strerror(errno));
+    fs::ofstream fb;
+    fb.open(_filepath, std::ios_base::out);
 
     //  fprintf(stderr, "Creating write structure...\n");
     png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
@@ -237,12 +251,12 @@ namespace PhotoFinish {
     //  fprintf(stderr, "Setting jump point...\n");
     if (setjmp(png_jmpbuf(png))) {
       png_destroy_write_struct(&png, &info);
-      fclose(fp);
+      fb.close();
       throw LibraryError("libpng", "Something went wrong writing the PNG");
     }
 
     //  fprintf(stderr, "Initialising PNG IO...\n");
-    png_init_io(png, fp);
+    png_set_write_fn(png, &fb, write_png, flush_png);
 
     fprintf(stderr, "writing header for %ldx%ld %d-bit RGB PNG image...\n", img.width(), img.height(), d.depth());
     png_set_IHDR(png, info,
@@ -316,7 +330,7 @@ namespace PhotoFinish {
     free(png_rows);
 
     fprintf(stderr, "Done.\n");
-    fclose(fp);
+    fb.close();
   }
 
 }

@@ -283,7 +283,9 @@ namespace PhotoFinish {
       d._has_name = true;
     } catch(YAML::RepresentationException& e) {}
     try {
-      node["dir"] >> d._dir;
+      std::string dir;
+      node["dir"] >> dir;
+      d._dir = dir;
       d._has_dir = true;
     } catch(YAML::RepresentationException& e) {}
     try {

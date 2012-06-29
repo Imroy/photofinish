@@ -23,6 +23,7 @@
 #include <lcms2.h>
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "Image.hh"
 
 namespace PhotoFinish {
