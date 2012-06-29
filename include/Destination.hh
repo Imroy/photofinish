@@ -4,16 +4,20 @@
 #include "yaml-cpp/yaml.h"
 #include <string>
 #include <map>
+#include <boost/filesystem.hpp>
 #include "Destination_items.hh"
 #include "Image.hh"
 #include "Frame.hh"
+
+namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
   class Destination {
   private:
     bool _has_name, _has_dir;
-    std::string _name, _dir;		// Name of this destination and the destination directory
+    std::string _name;		// Name of this destination
+    fs::path _dir;		// Destination directory
 
     bool _has_size;
     double _size;			// Size in inches (yuck)
@@ -52,7 +56,7 @@ namespace PhotoFinish {
     inline std::string name(void) const { return _name; }
 
     inline bool has_dir(void) const { return _has_dir; }
-    inline std::string dir(void) const { return _dir; }
+    inline const fs::path& dir(void) const { return _dir; }
 
     inline bool has_size(void) const { return _has_size; }
     inline double size(void) const { return _size; }

@@ -2,6 +2,9 @@
 #define __EXCEPTION_HH__
 
 #include <exception>
+#include <boost/filesystem.hpp>
+
+namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
   class Uninitialised : public std::exception {
@@ -79,16 +82,27 @@ namespace PhotoFinish {
     virtual const char* what() const throw() = 0;
   };
 
+  class MemAllocError : public ErrorMsg {
+  public:
+    MemAllocError(const std::string& m) :
+      ErrorMsg(m)
+    {}
+
+    const char* what() const throw() {
+      return _msg.c_str();
+    }
+  };
+
   class FileError : public ErrorMsg {
   protected:
-    const std::string _filepath;
+    const fs::path _filepath;
 
   public:
-    FileError(const std::string& fp, const std::string& m) :
+    FileError(const fs::path& fp, const std::string& m) :
       ErrorMsg(m), _filepath(fp)
     {}
 
-    FileError(const std::string& fp) :
+    FileError(const fs::path& fp) :
       ErrorMsg(""), _filepath(fp)
     {}
 
@@ -97,16 +111,16 @@ namespace PhotoFinish {
 
   class UnknownFileType : public FileError {
   public:
-    UnknownFileType(const std::string& fp, const std::string& m) :
+    UnknownFileType(const fs::path& fp, const std::string& m) :
       FileError(fp, m)
     {}
 
-    UnknownFileType(const std::string& fp) :
+    UnknownFileType(const fs::path& fp) :
       FileError(fp)
     {}
 
     virtual const char* what() const throw() {
-      std::string w = "Could not determine type for filepath \"" + _filepath + "\"";
+      std::string w = "Could not determine type for filepath \"" + _filepath.string() + "\"";
       if (_msg.length() > 0)
 	w += ": " + _msg;
       w += ".";
@@ -116,16 +130,16 @@ namespace PhotoFinish {
 
   class FileOpenError : public FileError {
   public:
-    FileOpenError(const std::string& fp, const std::string& m) :
+    FileOpenError(const fs::path& fp, const std::string& m) :
       FileError(fp, m)
     {}
 
-    FileOpenError(const std::string& fp) :
+    FileOpenError(const fs::path& fp) :
       FileError(fp)
     {}
 
     virtual const char* what() const throw() {
-      std::string w = "Could not open filepath \"" + _filepath + "\"";
+      std::string w = "Could not open filepath \"" + _filepath.string() + "\"";
       if (_msg.length() > 0)
 	w += ": " + _msg;
       w += ".";
@@ -135,16 +149,16 @@ namespace PhotoFinish {
 
   class FileContentError : public FileError {
   public:
-    FileContentError(const std::string& fp, const std::string& m) :
+    FileContentError(const fs::path& fp, const std::string& m) :
       FileError(fp, m)
     {}
 
-    FileContentError(const std::string& fp) :
+    FileContentError(const fs::path& fp) :
       FileError(fp)
     {}
 
     virtual const char* what() const throw() {
-      std::string w = "Something is wrong with the contents of filepath \"" + _filepath + "\"";
+      std::string w = "Something is wrong with the contents of filepath \"" + _filepath.string() + "\"";
       if (_msg.length() > 0)
 	w += ": " + _msg;
       w += ".";
