@@ -63,14 +63,11 @@ int main(int argc, char* argv[]) {
 	    Filter filter(destination->resize());
 	    Image outimage = frame.crop_resize(image, filter);
 
-	    std::string infile_name = (*fi).filename().string();
-	    std::string infile_ext = (*fi).extension().string();
-	    std::string outfile_name = infile_name.substr(0, infile_name.length() - infile_ext.length()) + ".jpeg";
 	    if (!exists(destination->dir())) {
 	      fprintf(stderr, "Creating directory \"%s\".\n", destination->dir().string().c_str());
 	      create_directory(destination->dir());
 	    }
-	    JPEGFile outfile(destination->dir() / outfile_name);
+	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
 	    outfile.write(outimage, *destination);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
