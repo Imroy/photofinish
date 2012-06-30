@@ -2,12 +2,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <deque>
 #include <boost/filesystem.hpp>
-#include "yaml-cpp/yaml.h"
 #include "Image.hh"
 #include "ImageFile.hh"
 #include "Exception.hh"
@@ -18,22 +15,7 @@ namespace fs = boost::filesystem;
 using namespace PhotoFinish;
 
 int main(int argc, char* argv[]) {
-  std::map<std::string, Destination*> destinations;
-  {
-    std::ifstream fin("destinations.yml");
-    YAML::Parser parser(fin);
-    YAML::Node doc;
-
-    parser.GetNextDocument(doc);
-    for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
-      std::string destname;
-      it.first() >> destname;
-      fprintf(stderr, "Destination \"%s\".\n", destname.c_str());
-      Destination *destination = new Destination;
-      it.second() >> *destination;
-      destinations[destname] = destination;
-    }
-  }
+  Destinations destinations("destinations.yml");
 
   std::deque<std::string> arg_destinations;
   std::deque<fs::path> arg_filenames;
@@ -57,18 +39,18 @@ int main(int argc, char* argv[]) {
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
 
-	  Destination *destination = destinations[*di];
-	  Frame frame = destination->best_frame(image);
+	  Destination destination = destinations[*di];
+	  Frame frame = destination.best_frame(image);
 	  try {
-	    Filter filter(destination->resize());
+	    Filter filter(destination.resize());
 	    Image outimage = frame.crop_resize(image, filter);
 
-	    if (!exists(destination->dir())) {
-	      fprintf(stderr, "Creating directory \"%s\".\n", destination->dir().string().c_str());
-	      create_directory(destination->dir());
+	    if (!exists(destination.dir())) {
+	      fprintf(stderr, "Creating directory \"%s\".\n", destination.dir().string().c_str());
+	      create_directory(destination.dir());
 	    }
-	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
-	    outfile.write(outimage, *destination);
+	    ImageFile outfile(destination.dir() / (*fi).stem(), destination.has_format() ? destination.format() : "jpeg");
+	    outfile.write(outimage, destination);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;
@@ -83,9 +65,6 @@ int main(int argc, char* argv[]) {
     }
 
   }
-
-  for (std::map<std::string, Destination*>::iterator di = destinations.begin(); di != destinations.end(); di++)
-    delete di->second;
 
   return 0;
 }
