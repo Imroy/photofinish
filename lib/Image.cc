@@ -6,6 +6,7 @@ namespace PhotoFinish {
   Image::Image(long int w, long int h) :
     _width(w),
     _height(h),
+    _greyscale(false),
     rowdata(NULL)
   {
     rowdata = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
@@ -16,6 +17,7 @@ namespace PhotoFinish {
   Image::Image(const Image& other) :
     _width(other._width),
     _height(other._height),
+    _greyscale(other._greyscale),
     rowdata(NULL)
   {
     rowdata = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));

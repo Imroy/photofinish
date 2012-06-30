@@ -47,6 +47,7 @@ namespace PhotoFinish {
       }
     }
 
+    ni->set_greyscale(img.is_greyscale());
     return *ni;
   }
 
@@ -81,6 +82,7 @@ namespace PhotoFinish {
       }
     }
 
+    ni->set_greyscale(img.is_greyscale());
     return *ni;
   }
 

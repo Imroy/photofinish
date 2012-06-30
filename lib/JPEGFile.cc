@@ -78,8 +78,25 @@ namespace PhotoFinish {
 
     cinfo.image_width = img.width();
     cinfo.image_height = img.height();
-    cinfo.input_components = 3;
-    cinfo.in_color_space = JCS_RGB;
+
+    cmsHPROFILE profile = NULL;
+    cmsUInt32Number cmsType;
+    if (img.is_greyscale()) {
+      fprintf(stderr, "Using default greyscale profile...\n");
+      cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+      cmsFreeToneCurve(gamma);
+      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(1);
+      cinfo.input_components = 1;
+      cinfo.in_color_space = JCS_GRAYSCALE;
+    } else {
+      fprintf(stderr, "Using default sRGB profile...\n");
+      profile = cmsCreate_sRGBProfile();
+      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(1);
+      cinfo.input_components = 3;
+      cinfo.in_color_space = JCS_RGB;
+    }
+
     jpeg_set_defaults(&cinfo);
     if (d.has_jpeg()) {
       D_JPEG jpeg = d.jpeg();
@@ -97,15 +114,14 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHPROFILE sRGB = cmsCreate_sRGBProfile();
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 sRGB, TYPE_RGB_8,
+						 profile, cmsType,
 						 INTENT_PERCEPTUAL, 0);
     cmsCloseProfile(lab);
-    cmsCloseProfile(sRGB);
+    cmsCloseProfile(profile);
 
     JSAMPROW row[1];
-    row[0] = (JSAMPROW)malloc(img.width() * 3 * sizeof(JSAMPLE));
+    row[0] = (JSAMPROW)malloc(img.width() * cinfo.input_components * sizeof(JSAMPLE));
 
     fprintf(stderr, "Writing JPEG file...\n");
     jpeg_start_compress(&cinfo, TRUE);
