@@ -76,6 +76,7 @@ namespace PhotoFinish {
     case PNG_COLOR_TYPE_GRAY:
       cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
       cs->rowlen = cs->width * (bit_depth >> 3);
+      cs->img->set_greyscale();
       break;
     case PNG_COLOR_TYPE_RGB:
       cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
@@ -101,8 +102,15 @@ namespace PhotoFinish {
       }
     }
     if (profile == NULL) {
-      fprintf(stderr, "Using default sRGB profile...\n");
-      profile = cmsCreate_sRGBProfile();
+      if (T_COLORSPACE(cmsType) == PT_RGB) {
+	fprintf(stderr, "Using default sRGB profile...\n");
+	profile = cmsCreate_sRGBProfile();
+      } else {
+	fprintf(stderr, "Using default greyscale profile...\n");
+	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+	cmsFreeToneCurve(gamma);
+      }
     }
 
     //  fprintf(stderr, "Creating colour transform...\n");
@@ -258,9 +266,21 @@ namespace PhotoFinish {
     //  fprintf(stderr, "Initialising PNG IO...\n");
     png_set_write_fn(png, &fb, write_png, flush_png);
 
-    fprintf(stderr, "writing header for %ldx%ld %d-bit RGB PNG image...\n", img.width(), img.height(), d.depth());
+    int png_colour_type, png_channels;
+    cmsUInt32Number cmsType;
+    if (img.is_colour()) {
+      png_colour_type = PNG_COLOR_TYPE_RGB;
+      png_channels = 3;
+      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(d.depth() >> 3);
+    } else {
+      png_colour_type = PNG_COLOR_TYPE_GRAY;
+      png_channels = 1;
+      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(d.depth() >> 3);
+    }
+
+    fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img.width(), img.height(), d.depth(), png_channels == 1 ? "greyscale" : "RGB");
     png_set_IHDR(png, info,
-		 img.width(), img.height(), d.depth(), PNG_COLOR_TYPE_RGB,
+		 img.width(), img.height(), d.depth(), png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
@@ -268,6 +288,14 @@ namespace PhotoFinish {
     cmsHPROFILE profile = NULL;
     if (d.has_profile() && d.profile().has_filepath())
       profile = cmsOpenProfileFromFile(d.profile().filepath().c_str(), "r");
+
+    if ((profile == NULL) && (img.is_greyscale())) {
+      fprintf(stderr, "Using default greyscale profile...\n");
+      cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+      cmsFreeToneCurve(gamma);
+    }
+
     if (profile != NULL) {
       cmsUInt32Number len;
       cmsSaveProfileToMem(profile, NULL, &len);
@@ -296,15 +324,14 @@ namespace PhotoFinish {
 
     png_bytepp png_rows = (png_bytepp)malloc(img.height() * sizeof(png_bytep));
     for (long int y = 0; y < img.height(); y++)
-      png_rows[y] = (png_bytep)malloc(img.width() * 3 * (d.depth() >> 3));
+      png_rows[y] = (png_bytep)malloc(img.width() * png_channels * (d.depth() >> 3));
 
     png_set_rows(png, info, png_rows);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     //  fprintf(stderr, "Creating colour transform...\n");
-    cmsUInt32Number format = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(d.depth() >> 3);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 profile, format,
+						 profile, cmsType,
 						 d.intent(), 0);
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
