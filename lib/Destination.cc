@@ -26,6 +26,18 @@
 
 namespace PhotoFinish {
 
+  void operator >> (const YAML::Node& node, bool& b) {
+    int temp;
+    node >> temp;
+    b = temp > 0 ? true : false;
+  }
+
+  void operator >> (const YAML::Node& node, fs::path& p) {
+    std::string temp;
+    node >> temp;
+    p = temp;
+  }
+
   D_sharpen::D_sharpen() :
     _has_radius(false),
     _has_sigma(false),
@@ -287,9 +299,7 @@ namespace PhotoFinish {
       d._has_name = true;
     } catch(YAML::RepresentationException& e) {}
     try {
-      std::string dir;
-      node["dir"] >> dir;
-      d._dir = dir;
+      node["dir"] >> d._dir;
       d._has_dir = true;
     } catch(YAML::RepresentationException& e) {}
     try {
@@ -305,9 +315,7 @@ namespace PhotoFinish {
       d._has_depth = true;
     } catch(YAML::RepresentationException& e) {}
     try {
-      int noresize;
-      node["noresize"] >> noresize;
-      d._noresize = noresize > 0 ? true : false;
+      node["noresize"] >> d._noresize;
       d._has_noresize = true;
     } catch(YAML::RepresentationException& e) {}
     try {

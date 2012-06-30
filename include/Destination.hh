@@ -31,6 +31,9 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  void operator >> (const YAML::Node& node, bool& b);
+  void operator >> (const YAML::Node& node, fs::path& p);
+
   class Destination {
   private:
     bool _has_name, _has_dir;
