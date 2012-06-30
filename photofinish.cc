@@ -62,6 +62,8 @@ int main(int argc, char* argv[]) {
 	  try {
 	    Filter filter(destination.resize());
 	    Image outimage = frame.crop_resize(image, filter);
+	    if ((destination.has_forcergb()) && (destination.forcergb()))
+	      outimage.set_colour();
 
 	    if (!exists(destination.dir())) {
 	      fprintf(stderr, "Creating directory \"%s\".\n", destination.dir().string().c_str());
