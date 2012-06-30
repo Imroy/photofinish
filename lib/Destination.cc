@@ -208,7 +208,8 @@ namespace PhotoFinish {
     _has_noresize(false), _noresize(false),
     _has_jpeg(false), _has_png(false),
     _has_intent(false), _intent(INTENT_PERCEPTUAL),
-    _has_profile(false)
+    _has_profile(false),
+    _has_forcergb(false), _forcergb(false)
   {}
 
   Destination::Destination(const Destination& other) :
@@ -223,7 +224,8 @@ namespace PhotoFinish {
     _has_jpeg(other._has_jpeg), _has_png(other._has_png),
     _jpeg(other._jpeg), _png(other._png),
     _has_intent(other._has_intent), _intent(other._intent),
-    _has_profile(other._has_profile), _profile(other._profile)
+    _has_profile(other._has_profile), _profile(other._profile),
+    _has_forcergb(other._has_forcergb), _forcergb(other._forcergb)
   {
     for (std::map<std::string, D_target*>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
       _targets.insert(std::pair<std::string, D_target*>(ti->first, new D_target(*(ti->second))));
@@ -299,6 +301,10 @@ namespace PhotoFinish {
     try {
       node["noresize"] >> d._noresize;
       d._has_noresize = true;
+    } catch(YAML::RepresentationException& e) {}
+    try {
+      node["forcergb"] >> d._forcergb;
+      d._has_forcergb = true;
     } catch(YAML::RepresentationException& e) {}
     try {
       std::string intent;

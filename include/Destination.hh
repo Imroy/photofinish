@@ -48,6 +48,8 @@ namespace PhotoFinish {
     bool _has_profile;
     D_profile _profile;
 
+    bool _has_forcergb, _forcergb;
+
   public:
     Destination();
     Destination(const Destination& other);
@@ -94,6 +96,9 @@ namespace PhotoFinish {
 
     inline bool has_profile(void) const { return _has_profile; }
     inline const D_profile& profile(void) const { return _profile; }
+
+    inline bool has_forcergb(void) const { return _has_forcergb; }
+    inline bool forcergb(void) const { return _forcergb; }
 
     friend void operator >> (const YAML::Node& node, Destination& d);
   };
