@@ -1,6 +1,7 @@
 #ifndef __FRAME_HH__
 #define __FRAME_HH__
 
+#include <memory>
 #include "Destination_items.hh"
 #include "Filter.hh"
 
@@ -17,13 +18,15 @@ namespace PhotoFinish {
     ~Frame();
 
     // Resize the image using a Lanczos filter
-    const Image& crop_resize(const Image& img, const Filter& filter);
+    Image::ptr crop_resize(Image::ptr img, const Filter& filter);
 
     inline double crop_x(void) const { return _crop_x; }
     inline double crop_y(void) const { return _crop_y; }
     inline double crop_w(void) const { return _crop_w; }
     inline double crop_h(void) const { return _crop_h; }
     inline double resolution(void) const { return _resolution; }
+
+    typedef std::shared_ptr<Frame> ptr;
   };
 
 }

@@ -3,6 +3,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include <string>
+#include <memory>
 #include <lcms2.h>
 #include "Image.hh"
 
@@ -63,6 +64,8 @@ namespace PhotoFinish {
     inline double height(void) const { return _height; }
 
     friend void operator >> (const YAML::Node& node, D_target& dt);
+
+    typedef std::shared_ptr<D_target> ptr;
   };
 
   class D_JPEG {

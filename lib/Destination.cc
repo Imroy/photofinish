@@ -227,54 +227,51 @@ namespace PhotoFinish {
     _has_profile(other._has_profile), _profile(other._profile),
     _has_forcergb(other._has_forcergb), _forcergb(other._forcergb)
   {
-    for (std::map<std::string, D_target*>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
-      _targets.insert(std::pair<std::string, D_target*>(ti->first, new D_target(*(ti->second))));
+    for (std::map<std::string, D_target::ptr>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
+      _targets.insert(std::pair<std::string, D_target::ptr>(ti->first, D_target::ptr(new D_target(*(ti->second)))));
   }
 
   Destination::~Destination() {
-    for (std::map<std::string, D_target*>::iterator ti = _targets.begin(); ti != _targets.end(); ti++)
-      delete ti->second;
   }
 
-  const Frame& Destination::best_frame(const Image& img) {
+  Frame::ptr Destination::best_frame(Image::ptr img) {
     if (_targets.size() == 0)
       throw NoTargets(_name);
 
-    Frame *best_frame = NULL;
+    Frame::ptr best_frame;
     double best_waste = 0;
-    for (std::map<std::string, D_target*>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
-      D_target *target = ti->second;
+    for (std::map<std::string, D_target::ptr>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
+      D_target::ptr target = ti->second;
       double waste;
       double x, y;
       double width, height;
 
-      if (target->width() * img.height() > target->height() * img.width()) {
-	width = img.width();
-	height = img.width() * target->height() / target->width();
+      if (target->width() * img->height() > target->height() * img->width()) {
+	width = img->width();
+	height = img->width() * target->height() / target->width();
 	x = 0;
-	double gap = waste = img.height() - height;
+	double gap = waste = img->height() - height;
 	y = gap * 0.5;
       } else {
-	height = img.height();
-	width = img.height() * target->width() / target->height();
+	height = img->height();
+	width = img->height() * target->width() / target->height();
 	y = 0;
-	double gap = waste = img.width() - width;
+	double gap = waste = img->width() - width;
 	x = gap * 0.5;
       }
       fprintf(stderr, "Waste from target \"%s\" (%0.1f,%0.1f)+(%0.1fx%0.1f) = %0.2f.\n", target->name().c_str(), x, y, width, height, waste);
-      if ((best_frame == NULL) || (waste < best_waste)) {
-	if (best_frame != NULL)	// delete previous best
-	  delete best_frame;
-	best_frame = new Frame(*target, x, y, width, height, 0);
+      if ((!best_frame) || (waste < best_waste)) {
+	Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
+	best_frame.swap(new_best_frame);
 	best_waste = waste;
       }
     }
 
-    if (best_frame == NULL)
+    if (!best_frame)
       throw NoResults("Destination", "best_frame");
 
     fprintf(stderr, "Best waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
-    return *best_frame;
+    return best_frame;
   }
 
   void operator >> (const YAML::Node& node, Destination& d) {
@@ -346,7 +343,7 @@ namespace PhotoFinish {
       for(YAML::Iterator ti = targets->begin(); ti != targets->end(); ti++) {
 	std::string name;
 	ti.first() >> name;
-	D_target *target = new D_target(name);
+	D_target::ptr target = D_target::ptr(new D_target(name));
 	ti.second() >> *target;
 	d._targets[name] = target;
       }
@@ -363,8 +360,7 @@ namespace PhotoFinish {
     for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
       std::string destname;
       it.first() >> destname;
-      fprintf(stderr, "Destination \"%s\".\n", destname.c_str());
-      Destination *destination = new Destination;
+      Destination::ptr destination = Destination::ptr(new Destination);
       it.second() >> *destination;
       _destinations[destname] = destination;
     }
@@ -373,12 +369,10 @@ namespace PhotoFinish {
 
   Destinations::Destinations(const Destinations& other) {
     for (const_iterator di = other._destinations.begin(); di != other._destinations.end(); di++)
-      _destinations.insert(std::pair<std::string, Destination*>(di->first, new Destination(*(di->second))));
+      _destinations.insert(std::pair<std::string, Destination::ptr>(di->first, Destination::ptr(new Destination(*(di->second)))));
   }
 
   Destinations::~Destinations() {
-    for (iterator di = _destinations.begin(); di != _destinations.end(); di++)
-      delete di->second;
   }
 
 }

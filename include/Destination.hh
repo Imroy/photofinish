@@ -28,7 +28,7 @@ namespace PhotoFinish {
     bool _has_sharpen, _has_resize;
     D_sharpen _sharpen;
     D_resize _resize;
-    std::map<std::string, D_target*> _targets;
+    std::map<std::string, D_target::ptr> _targets;
 
     bool _has_format;
     std::string _format;
@@ -55,7 +55,7 @@ namespace PhotoFinish {
     Destination(const Destination& other);
     ~Destination();
 
-    const Frame& best_frame(const Image& img);
+    Frame::ptr best_frame(Image::ptr img);
 
     inline bool has_name(void) const { return _has_name; }
     inline std::string name(void) const { return _name; }
@@ -74,7 +74,7 @@ namespace PhotoFinish {
 
     inline int num_targets(void) const { return _targets.size(); }
     inline bool has_targets(void) const { return !_targets.empty(); }
-    inline const std::map<std::string, D_target*>& targets(void) const { return _targets; }
+    inline const std::map<std::string, D_target::ptr>& targets(void) const { return _targets; }
 
     inline bool has_format(void) const { return _has_format; }
     inline std::string format(void) const { return _format; }
@@ -101,21 +101,23 @@ namespace PhotoFinish {
     inline bool forcergb(void) const { return _forcergb; }
 
     friend void operator >> (const YAML::Node& node, Destination& d);
+
+    typedef std::shared_ptr<Destination> ptr;
   };
 
   class Destinations {
   private:
-    std::map<std::string, Destination*> _destinations;
+    std::map<std::string, Destination::ptr> _destinations;
 
   public:
     Destinations(std::string filepath);
     Destinations(const Destinations& other);
     ~Destinations();
 
-    typedef std::map<std::string, Destination*>::iterator iterator;
-    typedef std::map<std::string, Destination*>::const_iterator const_iterator;
+    typedef std::map<std::string, Destination::ptr>::iterator iterator;
+    typedef std::map<std::string, Destination::ptr>::const_iterator const_iterator;
 
-    inline std::map<std::string, Destination*>::size_type count(const std::string& key) const { return _destinations.count(key); }
+    inline std::map<std::string, Destination::ptr>::size_type count(const std::string& key) const { return _destinations.count(key); }
 
     inline iterator begin(void) { return _destinations.begin(); }
     inline const_iterator begin(void) const { return _destinations.begin(); }
@@ -123,7 +125,7 @@ namespace PhotoFinish {
     inline iterator end(void) { return _destinations.end(); }
     inline const_iterator end(void) const { return _destinations.end(); }
 
-    inline const Destination& operator[] (const std::string& key) { return *(_destinations[key]); }
+    inline Destination::ptr operator[] (const std::string& key) { return _destinations[key]; }
   };
 
 }

@@ -17,7 +17,7 @@ namespace PhotoFinish {
     _ImageFile(filepath)
   {}
 
-  const Image& JPEGFile::read(void) {
+  Image::ptr JPEGFile::read(void) {
     throw Unimplemented("JPEGFile", "read()");
   }
 
@@ -56,7 +56,7 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = 0;
   }
 
-  void JPEGFile::write(const Image& img, const Destination &d) {
+  void JPEGFile::write(Image::ptr img, const Destination &d) {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
@@ -76,12 +76,12 @@ namespace PhotoFinish {
     dmgr.term_destination = ofstream_term_destination;
     cinfo.dest = &dmgr;
 
-    cinfo.image_width = img.width();
-    cinfo.image_height = img.height();
+    cinfo.image_width = img->width();
+    cinfo.image_height = img->height();
 
     cmsHPROFILE profile = NULL;
     cmsUInt32Number cmsType;
-    if (img.is_greyscale()) {
+    if (img->is_greyscale()) {
       fprintf(stderr, "Using default greyscale profile...\n");
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
@@ -121,12 +121,12 @@ namespace PhotoFinish {
     cmsCloseProfile(profile);
 
     JSAMPROW row[1];
-    row[0] = (JSAMPROW)malloc(img.width() * cinfo.input_components * sizeof(JSAMPLE));
+    row[0] = (JSAMPROW)malloc(img->width() * cinfo.input_components * sizeof(JSAMPLE));
 
-    fprintf(stderr, "Writing %ldx%ld JPEG file...\n", img.width(), img.height());
+    fprintf(stderr, "Writing %ldx%ld JPEG file...\n", img->width(), img->height());
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
-      cmsDoTransform(transform, img.row(cinfo.next_scanline), row[0], img.width());
+      cmsDoTransform(transform, img->row(cinfo.next_scanline), row[0], img->width());
       jpeg_write_scanlines(&cinfo, row, 1);
     }
 

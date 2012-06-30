@@ -34,25 +34,30 @@ int main(int argc, char* argv[]) {
       ImageFile infile(*fi);
 
       try {
-	Image image = infile.read();
+	Image::ptr image = infile.read();
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
 
-	  Destination destination = destinations[*di];
-	  Frame frame = destination.best_frame(image);
+	  Destination::ptr destination = destinations[*di];
+	  Frame::ptr frame = destination->best_frame(image);
 	  try {
-	    Filter filter(destination.resize());
-	    Image outimage = frame.crop_resize(image, filter);
-	    if ((destination.has_forcergb()) && (destination.forcergb()))
-	      outimage.set_colour();
-
-	    if (!exists(destination.dir())) {
-	      fprintf(stderr, "Creating directory \"%s\".\n", destination.dir().string().c_str());
-	      create_directory(destination.dir());
+	    Image::ptr outimage;
+	    if ((destination->has_noresize()) && (destination->noresize())) {
+	      outimage = image;
+	    } else {
+	      Filter filter(destination->resize());
+	      outimage = frame->crop_resize(image, filter);
+	      if ((destination->has_forcergb()) && (destination->forcergb()))
+		outimage->set_colour();
 	    }
-	    ImageFile outfile(destination.dir() / (*fi).stem(), destination.has_format() ? destination.format() : "jpeg");
-	    outfile.write(outimage, destination);
+
+	    if (!exists(destination->dir())) {
+	      fprintf(stderr, "Creating directory \"%s\".\n", destination->dir().string().c_str());
+	      create_directory(destination->dir());
+	    }
+	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
+	    outfile.write(outimage, *destination);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

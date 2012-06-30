@@ -67,7 +67,7 @@ namespace PhotoFinish {
   }
 
   void Image::copy_pixels(void) {
-    std::shared_ptr<Rows> new_rows(new Rows(_height, _width * 3));
+    Rows::ptr new_rows(new Rows(_height, _width * 3));
 
     for (long int y = 0; y < _height; y++)
       memcpy(new_rows->rowdata[y], _rows->rowdata[y], _width * 3 * sizeof(SAMPLE));

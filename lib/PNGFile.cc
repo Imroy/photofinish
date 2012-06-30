@@ -33,7 +33,7 @@ namespace PhotoFinish {
     size_t rowlen;
     omp_lock_t *queue_lock;
     png_uint_32 width, height;
-    Image *img;
+    Image::ptr img;
     cmsHTRANSFORM transform;
   };
 
@@ -51,7 +51,7 @@ namespace PhotoFinish {
     png_get_IHDR(png, info, &cs->width, &cs->height, &bit_depth, &colour_type, NULL, NULL, NULL);
     fprintf(stderr, "%dx%d, %d bpp, type %d.\n", cs->width, cs->height, bit_depth, colour_type);
 
-    cs->img = new Image(cs->width, cs->height);
+    cs->img = Image::ptr(new Image(cs->width, cs->height));
 
     cmsUInt32Number cmsType;
     switch (colour_type) {
@@ -139,7 +139,7 @@ namespace PhotoFinish {
     }
   }
 
-  const Image& PNGFile::read(void) {
+  Image::ptr PNGFile::read(void) {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     fs::ifstream fb(_filepath, std::ios_base::in);
 
@@ -207,7 +207,7 @@ namespace PhotoFinish {
     png_destroy_read_struct(&png, &info, NULL);
     fb.close();
 
-    return *cs.img;
+    return cs.img;
   }
 
   void write_png(png_structp png, png_bytep buffer, png_size_t length) {
@@ -220,7 +220,7 @@ namespace PhotoFinish {
     fb->flush();
   }
 
-  void PNGFile::write(const Image& img, const Destination &d) {
+  void PNGFile::write(Image::ptr img, const Destination &d) {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -250,7 +250,7 @@ namespace PhotoFinish {
 
     int png_colour_type, png_channels;
     cmsUInt32Number cmsType;
-    if (img.is_colour()) {
+    if (img->is_colour()) {
       png_colour_type = PNG_COLOR_TYPE_RGB;
       png_channels = 3;
       cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(d.depth() >> 3);
@@ -260,9 +260,9 @@ namespace PhotoFinish {
       cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(d.depth() >> 3);
     }
 
-    fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img.width(), img.height(), d.depth(), png_channels == 1 ? "greyscale" : "RGB");
+    fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), d.depth(), png_channels == 1 ? "greyscale" : "RGB");
     png_set_IHDR(png, info,
-		 img.width(), img.height(), d.depth(), png_colour_type,
+		 img->width(), img->height(), d.depth(), png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
@@ -271,7 +271,7 @@ namespace PhotoFinish {
     if (d.has_profile() && d.profile().has_filepath())
       profile = cmsOpenProfileFromFile(d.profile().filepath().c_str(), "r");
 
-    if ((profile == NULL) && (img.is_greyscale())) {
+    if ((profile == NULL) && (img->is_greyscale())) {
       fprintf(stderr, "Using default greyscale profile...\n");
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
@@ -304,9 +304,9 @@ namespace PhotoFinish {
       }
     }
 
-    png_bytepp png_rows = (png_bytepp)malloc(img.height() * sizeof(png_bytep));
-    for (long int y = 0; y < img.height(); y++)
-      png_rows[y] = (png_bytep)malloc(img.width() * png_channels * (d.depth() >> 3));
+    png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
+    for (long int y = 0; y < img->height(); y++)
+      png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (d.depth() >> 3));
 
     png_set_rows(png, info, png_rows);
 
@@ -326,15 +326,15 @@ namespace PhotoFinish {
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)
-    for (long int y = 0; y < img.height(); y++)
-      cmsDoTransform(transform, img.row(y), png_rows[y], img.width());
+    for (long int y = 0; y < img->height(); y++)
+      cmsDoTransform(transform, img->row(y), png_rows[y], img->width());
 
     cmsDeleteTransform(transform);
 
     fprintf(stderr, "Writing PNG image data...\n");
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
 
-    for (long int y = 0; y < img.height(); y++)
+    for (long int y = 0; y < img->height(); y++)
       free(png_rows[y]);
     free(png_rows);
 

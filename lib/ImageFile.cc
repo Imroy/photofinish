@@ -56,13 +56,13 @@ namespace PhotoFinish {
     }
   }
 
-  const Image& ImageFile::read(void) {
+  Image::ptr ImageFile::read(void) {
     if (_imagefile == NULL)
       throw Uninitialised("ImageFile");
     return _imagefile->read();
   }
 
-  void ImageFile::write(const Image& img, const Destination &d) {
+  void ImageFile::write(Image::ptr img, const Destination &d) {
     if (_imagefile == NULL)
       throw Uninitialised("ImageFile");
     _imagefile->write(img, d);
