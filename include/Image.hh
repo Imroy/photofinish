@@ -40,9 +40,11 @@ namespace PhotoFinish {
       Rows(long int rows, long int rowsize);
       Rows(const Rows& other);
       ~Rows();
+
+      typedef std::shared_ptr<Rows> ptr;
     };
 
-    std::shared_ptr<Rows> _rows;
+    Rows::ptr _rows;
 
   public:
     Image();
@@ -65,7 +67,7 @@ namespace PhotoFinish {
     inline SAMPLE* at(long int x, long int y) const { return &(_rows->rowdata[y][x * 3]); }
     inline SAMPLE& at(long int x, long int y, unsigned char c) const { return _rows->rowdata[y][c + (x * 3)]; }
 
-    typedef std::shared_ptr<Image> shared_ptr;
+    typedef std::shared_ptr<Image> ptr;
   };
 
 }

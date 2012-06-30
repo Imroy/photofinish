@@ -45,8 +45,8 @@ namespace PhotoFinish {
     {}
     virtual ~_ImageFile() {}
 
-    virtual const Image& read(void) = 0;
-    virtual void write(const Image& img, const Destination &d) = 0;
+    virtual Image::ptr read(void) = 0;
+    virtual void write(Image::ptr img, const Destination &d) = 0;
   };
 
   class PNGFile : public _ImageFile {
@@ -55,8 +55,8 @@ namespace PhotoFinish {
   public:
     PNGFile(const fs::path filepath);
 
-    const Image& read(void);
-    void write(const Image& img, const Destination &d);
+    Image::ptr read(void);
+    void write(Image::ptr img, const Destination &d);
   };
 
   class JPEGFile : public _ImageFile {
@@ -65,8 +65,8 @@ namespace PhotoFinish {
   public:
     JPEGFile(const fs::path filepath);
 
-    const Image& read(void);
-    void write(const Image& img, const Destination &d);
+    Image::ptr read(void);
+    void write(Image::ptr img, const Destination &d);
   };
 
   // Factory/wrapper class
@@ -81,8 +81,8 @@ namespace PhotoFinish {
     ImageFile(const ImageFile& other);
     ~ImageFile();
 
-    const Image& read(void);
-    void write(const Image& img, const Destination &d);
+    Image::ptr read(void);
+    void write(Image::ptr img, const Destination &d);
   };
 
 }
