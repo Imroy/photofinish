@@ -123,6 +123,7 @@ namespace PhotoFinish {
 
   void row_callback(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
     callback_state *cs = (callback_state*)png_get_progressive_ptr(png);
+    fprintf(stderr, "\rRead %d of %d rows (%ld in queue for colour transformation)   ", row_num + 1, cs->height, cs->rowqueue.size());
     png_bytep new_row = (png_bytep)malloc(cs->rowlen);
     memcpy(new_row, row_data, cs->rowlen);
     pngrow_t *row = new pngrow_t(row_num, new_row);
@@ -211,6 +212,7 @@ namespace PhotoFinish {
 	  while (cs.rowqueue.size() > 100)
 	    process_row(&cs);
 	} while (length > 0);
+	fprintf(stderr, "\n");
 	cs.finished = true;
 	process_workqueue(&cs);	// Help finish off the transforming of image data
       } else {
