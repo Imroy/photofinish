@@ -123,7 +123,7 @@ namespace PhotoFinish {
     JSAMPROW row[1];
     row[0] = (JSAMPROW)malloc(img.width() * cinfo.input_components * sizeof(JSAMPLE));
 
-    fprintf(stderr, "Writing JPEG file...\n");
+    fprintf(stderr, "Writing %ldx%ld JPEG file...\n", img.width(), img.height());
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
       cmsDoTransform(transform, img.row(cinfo.next_scanline), row[0], img.width());
