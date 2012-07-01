@@ -24,12 +24,12 @@ clean:
 $(PROGRAMS): %: %.o $(LIB_OBJS)
 	$(CXX) $(LDFLAGS) $^ $(LIBS) -o $@
 
-%.o: %.cc $(INCLUDES)
+%.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 depend:
 	touch .depend
-	makedepend -f .depend -I include $(INCLUDES) *.cc lib/*.cc 2> /dev/null
+	makedepend -f .depend -I include *.cc lib/*.cc 2> /dev/null
 
 ifneq ($(wildcard .depend),)
 include .depend
