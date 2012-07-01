@@ -17,7 +17,7 @@ namespace PhotoFinish {
     _ImageFile(filepath)
   {}
 
-  Image::ptr JPEGFile::read(void) {
+  Image::ptr JPEGFile::read(void) const {
     throw Unimplemented("JPEGFile", "read()");
   }
 
@@ -56,7 +56,7 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = 0;
   }
 
-  void JPEGFile::write(Image::ptr img, const Destination &d) {
+  void JPEGFile::write(Image::ptr img, const Destination &d) const {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);

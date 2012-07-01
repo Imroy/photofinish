@@ -20,27 +20,17 @@ namespace PhotoFinish {
 
   Filter::Filter(const D_resize& dr) throw(DestinationError) {
     if (!dr.has_filter()) {
-      _filter = new Lanczos(dr);
+      _filter = ptr(new Lanczos(dr));
       return;
     }
 
     std::string filter = dr.filter();
     if (boost::iequals(filter.substr(0, min(filter.length(), 7)), "lanczos")) {
-      _filter = new Lanczos(dr);
+      _filter = ptr(new Lanczos(dr));
       return;
     }
 
     throw DestinationError("resize.filter", filter);
   }
 
-  Filter::Filter(const Filter& other) :
-    _filter(other._filter)
-  {}
-
-  Filter::~Filter() {
-    if (_filter != NULL) {
-      delete _filter;
-      _filter = NULL;
-    }
-  }
 }
