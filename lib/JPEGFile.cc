@@ -26,6 +26,7 @@
 #include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
 
@@ -132,8 +133,9 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
+    cmsUInt32Number cmsTempType = COLORSPACE_SH(T_COLORSPACE(cmsType)) | CHANNELS_SH(cinfo.input_components) | BYTES_SH(2);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 profile, cmsType,
+						 profile, cmsTempType,
 						 INTENT_PERCEPTUAL, 0);
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
@@ -141,12 +143,17 @@ namespace PhotoFinish {
     JSAMPROW row[1];
     row[0] = (JSAMPROW)malloc(img->width() * cinfo.input_components * sizeof(JSAMPLE));
 
+    Ditherer ditherer(img->width(), cinfo.input_components);
+    short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * cinfo.input_components * sizeof(short unsigned int));
+
     fprintf(stderr, "Writing %ldx%ld JPEG file...\n", img->width(), img->height());
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
-      cmsDoTransform(transform, img->row(cinfo.next_scanline), row[0], img->width());
+      cmsDoTransform(transform, img->row(cinfo.next_scanline), temp_row, img->width());
+      ditherer.dither(temp_row, row[0]);
       jpeg_write_scanlines(&cinfo, row, 1);
     }
+    free(temp_row);
 
     jpeg_finish_compress(&cinfo);
     fb.close();
