@@ -45,16 +45,6 @@ namespace PhotoFinish {
     _sigma(-1)
   {}
 
-  D_sharpen::D_sharpen(const D_sharpen& other) :
-    _has_radius(other._has_radius),
-    _has_sigma(other._has_sigma),
-    _radius(other._radius),
-    _sigma(other._sigma)
-  {}
-
-  D_sharpen::~D_sharpen() {
-  }
-
   void operator >> (const YAML::Node& node, D_sharpen& ds) {
     try {
       node["radius"] >> ds._radius;
@@ -75,16 +65,6 @@ namespace PhotoFinish {
     _support(3)
   {}
 
-  D_resize::D_resize(const D_resize& other) :
-    _has_filter(other._has_filter),
-    _has_support(other._has_support),
-    _filter(other._filter),
-    _support(other._support)
-  {}
-
-  D_resize::~D_resize() {
-  }
-
   void operator >> (const YAML::Node& node, D_resize& dr) {
     try {
       node["filter"] >> dr._filter;
@@ -103,17 +83,6 @@ namespace PhotoFinish {
     _name(n),
     _width(-1), _height(1)
   {}
-
-  D_target::D_target(const D_target& other) :
-    _has_width(other._has_width),
-    _has_height(other._has_height),
-    _name(other._name),
-    _width(other._width),
-    _height(other._height)
-  {}
-
-  D_target::~D_target() {
-  }
 
   void operator >> (const YAML::Node& node, D_target& dt) {
     try {
@@ -136,19 +105,6 @@ namespace PhotoFinish {
     _sample_h(2), _sample_v(2),
     _progressive(true)
   {}
-
-  D_JPEG::D_JPEG(const D_JPEG& other) :
-    _has_quality(other._has_quality),
-    _has_sample(other._has_sample),
-    _has_progressive(other._has_progressive),
-    _quality(other._quality),
-    _sample_h(other._sample_h),
-    _sample_v(other._sample_v),
-    _progressive(other._progressive)
-  {}
-
-  D_JPEG::~D_JPEG() {
-  }
 
   void operator >> (const YAML::Node& node, D_JPEG& dj) {
     try {
@@ -177,12 +133,6 @@ namespace PhotoFinish {
   D_PNG::D_PNG() {
   }
 
-  D_PNG::D_PNG(const D_PNG& other)
-  {}
-
-  D_PNG::~D_PNG() {
-  }
-
   void operator >> (const YAML::Node& node, D_PNG& dp) {
   }
 
@@ -192,16 +142,6 @@ namespace PhotoFinish {
     _has_name(false),
     _has_filepath(false)
   {}
-
-  D_profile::D_profile(const D_profile& other) :
-    _has_name(other._has_name),
-    _has_filepath(other._has_filepath),
-    _name(other._name),
-    _filepath(other._filepath)
-  {}
-
-  D_profile::~D_profile() {
-  }
 
   void operator >> (const YAML::Node& node, D_profile& dp) {
     try {
@@ -250,6 +190,42 @@ namespace PhotoFinish {
   }
 
   Destination::~Destination() {
+  }
+
+  Destination& Destination::operator=(const Destination& b) {
+    if (this != &b) {
+      _has_name = b._has_name;
+      _has_dir = b._has_dir;
+      _name = b._name;
+      _dir = b._dir;
+      _has_size = b._has_size;
+      _size = b._size;
+      _has_sharpen = b._has_sharpen;
+      _has_resize = b._has_resize;
+      _sharpen = b._sharpen;
+      _resize = b._resize;
+      _has_format = b._has_format;
+      _format = b._format;
+      _has_depth = b._has_depth;
+      _depth = b._depth;
+      _has_noresize = b._has_noresize;
+      _noresize = b._noresize;
+      _has_jpeg = b._has_jpeg;
+      _has_png = b._has_png;
+      _jpeg = b._jpeg;
+      _png = b._png;
+      _has_intent = b._has_intent;
+      _intent = b._intent;
+      _has_profile = b._has_profile;
+      _profile = b._profile;
+      _has_forcergb = b._has_forcergb;
+      _forcergb = b._forcergb;
+
+      for (std::map<std::string, D_target::ptr>::const_iterator ti = b._targets.begin(); ti != b._targets.end(); ti++)
+	_targets.insert(std::pair<std::string, D_target::ptr>(ti->first, D_target::ptr(new D_target(*(ti->second)))));
+    }
+
+    return *this;
   }
 
   Frame::ptr Destination::best_frame(Image::ptr img) {
@@ -391,6 +367,15 @@ namespace PhotoFinish {
   }
 
   Destinations::~Destinations() {
+  }
+
+  Destinations& Destinations::operator=(const Destinations& b) {
+    if (this != &b) {
+      for (const_iterator di = b._destinations.begin(); di != b._destinations.end(); di++)
+	_destinations.insert(std::pair<std::string, Destination::ptr>(di->first, Destination::ptr(new Destination(*(di->second)))));
+    }
+
+    return *this;
   }
 
 }

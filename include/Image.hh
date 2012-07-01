@@ -49,10 +49,6 @@ namespace PhotoFinish {
   public:
     Image();
     Image(long int w, long int h);
-    Image(const Image& other);		// Note: links to other image's data
-    ~Image();
-
-    Image& operator=(const Image& b);
 
     void copy_pixels(void);		// Actually copy the image data
 

@@ -21,6 +21,7 @@
 
 #include <string>
 #include <lcms2.h>
+#include <memory>
 #include <boost/filesystem.hpp>
 #include "Image.hh"
 #include "Destination.hh"
@@ -43,10 +44,9 @@ namespace PhotoFinish {
     _ImageFile(const fs::path filepath) :
       _filepath(filepath)
     {}
-    virtual ~_ImageFile() {}
 
-    virtual Image::ptr read(void) = 0;
-    virtual void write(Image::ptr img, const Destination &d) = 0;
+    virtual Image::ptr read(void) const = 0;
+    virtual void write(Image::ptr img, const Destination &d) const = 0;
   };
 
   class PNGFile : public _ImageFile {
@@ -55,8 +55,8 @@ namespace PhotoFinish {
   public:
     PNGFile(const fs::path filepath);
 
-    Image::ptr read(void);
-    void write(Image::ptr img, const Destination &d);
+    Image::ptr read(void) const;
+    void write(Image::ptr img, const Destination &d) const;
   };
 
   class JPEGFile : public _ImageFile {
@@ -65,24 +65,24 @@ namespace PhotoFinish {
   public:
     JPEGFile(const fs::path filepath);
 
-    Image::ptr read(void);
-    void write(Image::ptr img, const Destination &d);
+    Image::ptr read(void) const;
+    void write(Image::ptr img, const Destination &d) const;
   };
 
   // Factory/wrapper class
   class ImageFile : public _ImageFile {
   private:
-    _ImageFile *_imagefile;
+    typedef std::shared_ptr<_ImageFile> ptr;
+
+    ptr _imagefile;
 
   public:
     ImageFile();
     ImageFile(const fs::path filepath) throw(UnknownFileType);
     ImageFile(fs::path filepath, const std::string format) throw(UnknownFileType);
-    ImageFile(const ImageFile& other);
-    ~ImageFile();
 
-    Image::ptr read(void);
-    void write(Image::ptr img, const Destination &d);
+    Image::ptr read(void) const;
+    void write(Image::ptr img, const Destination &d) const;
   };
 
 }

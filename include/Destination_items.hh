@@ -34,8 +34,6 @@ namespace PhotoFinish {
 
   public:
     D_sharpen();
-    D_sharpen(const D_sharpen& other);
-    ~D_sharpen();
 
     inline bool has_radius(void) const { return _has_radius; }
     inline double radius(void) const { return _radius; }
@@ -53,8 +51,6 @@ namespace PhotoFinish {
 
   public:
     D_resize();
-    D_resize(const D_resize& other);
-    ~D_resize();
 
     inline bool has_filter(void) const { return _has_filter; }
     inline std::string filter(void) const { return _filter; }
@@ -72,8 +68,6 @@ namespace PhotoFinish {
 
   public:
     D_target(std::string &n);
-    D_target(const D_target& other);
-    ~D_target();
 
     inline std::string name(void) const { return _name; }
     inline bool has_width(void) const { return _has_width; }
@@ -95,8 +89,6 @@ namespace PhotoFinish {
 
   public:
     D_JPEG();
-    D_JPEG(const D_JPEG& other);
-    ~D_JPEG();
 
     inline bool has_quality(void) const { return _has_quality; }
     inline int quality(void) const { return _quality; }
@@ -114,8 +106,6 @@ namespace PhotoFinish {
 
   public:
     D_PNG();
-    D_PNG(const D_PNG& other);
-    ~D_PNG();
 
     friend void operator >> (const YAML::Node& node, D_PNG& dp);
   };
@@ -127,8 +117,6 @@ namespace PhotoFinish {
 
   public:
     D_profile();
-    D_profile(const D_profile& other);
-    ~D_profile();
 
     inline bool has_name(void) const { return _has_name; }
     inline std::string name(void) const { return _name; }

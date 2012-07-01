@@ -158,7 +158,7 @@ namespace PhotoFinish {
     }
   }
 
-  Image::ptr PNGFile::read(void) {
+  Image::ptr PNGFile::read(void) const {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     fs::ifstream fb(_filepath, std::ios_base::in);
 
@@ -209,7 +209,7 @@ namespace PhotoFinish {
 	  fb.read((char*)buffer, 1048576);
 	  length = fb.gcount();
 	  png_process_data(png, info, buffer, length);
-	  while (cs.rowqueue.size() > 100)
+	  while (cs.rowqueue.size() > 10)
 	    process_row(&cs);
 	} while (length > 0);
 	fprintf(stderr, "\n");
@@ -240,7 +240,7 @@ namespace PhotoFinish {
     fb->flush();
   }
 
-  void PNGFile::write(Image::ptr img, const Destination &d) {
+  void PNGFile::write(Image::ptr img, const Destination &d) const {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);

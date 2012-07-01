@@ -19,6 +19,7 @@
 #ifndef __FILTER_HH__
 #define __FILTER_HH__
 
+#include <memory>
 #include "Destination_items.hh"
 #include "Exception.hh"
 
@@ -34,8 +35,6 @@ namespace PhotoFinish {
     {}
     _Filter(const D_resize& dr) :
       _radius(dr.has_support() ? dr.support() : 3)
-    {}
-    virtual ~_Filter()
     {}
 
     inline double radius(void) const { return _radius; }
@@ -53,22 +52,19 @@ namespace PhotoFinish {
       _r_radius(1.0 / _radius)
     {}
 
-    ~Lanczos()
-    {}
-
     SAMPLE eval(double x) const;
   };
 
   // Factory/wrapper class
   class Filter : public _Filter {
   private:
-    _Filter *_filter;
+    typedef std::shared_ptr<_Filter> ptr;
+
+    ptr _filter;
 
   public:
     Filter();
     Filter(const D_resize& resize) throw(DestinationError);
-    Filter(const Filter& other);
-    ~Filter();
 
     inline SAMPLE eval(double x) const {
       if (_filter == NULL)

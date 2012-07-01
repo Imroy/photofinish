@@ -73,6 +73,8 @@ namespace PhotoFinish {
     Destination(const Destination& other);
     ~Destination();
 
+    Destination& operator=(const Destination& b);
+
     Frame::ptr best_frame(Image::ptr img);
 
     inline bool has_name(void) const { return _has_name; }
@@ -131,6 +133,8 @@ namespace PhotoFinish {
     Destinations(std::string filepath);
     Destinations(const Destinations& other);
     ~Destinations();
+
+    Destinations& operator=(const Destinations& b);
 
     typedef std::map<std::string, Destination::ptr>::iterator iterator;
     typedef std::map<std::string, Destination::ptr>::const_iterator const_iterator;

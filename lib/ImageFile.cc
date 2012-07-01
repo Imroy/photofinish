@@ -34,13 +34,13 @@ namespace PhotoFinish {
     _imagefile(NULL)
   {
     if (boost::iequals(filepath.extension().generic_string(), ".png")) {
-      _imagefile = new PNGFile(filepath);
+      _imagefile = ptr(new PNGFile(filepath));
       return;
     }
 
     if (boost::iequals(filepath.extension().generic_string(), ".jpeg")
 	|| boost::iequals(filepath.extension().generic_string(), ".jpg")) {
-      _imagefile = new JPEGFile(filepath);
+      _imagefile = ptr(new JPEGFile(filepath));
       return;
     }
 
@@ -51,37 +51,26 @@ namespace PhotoFinish {
     _imagefile(NULL)
   {
     if (boost::iequals(format, "png")) {
-      _imagefile = new PNGFile(filepath.replace_extension(".png"));
+      _imagefile = ptr(new PNGFile(filepath.replace_extension(".png")));
       return;
     }
 
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg")) {
-      _imagefile = new JPEGFile(filepath.replace_extension(".jpeg"));
+      _imagefile = ptr(new JPEGFile(filepath.replace_extension(".jpeg")));
       return;
     }
 
     throw UnknownFileType(format);
   }
 
-  ImageFile::ImageFile(const ImageFile& other) :
-    _imagefile(other._imagefile)
-  {}
-
-  ImageFile::~ImageFile() {
-    if (_imagefile != NULL) {
-      delete _imagefile;
-      _imagefile = NULL;
-    }
-  }
-
-  Image::ptr ImageFile::read(void) {
+  Image::ptr ImageFile::read(void) const {
     if (_imagefile == NULL)
       throw Uninitialised("ImageFile");
     return _imagefile->read();
   }
 
-  void ImageFile::write(Image::ptr img, const Destination &d) {
+  void ImageFile::write(Image::ptr img, const Destination &d) const {
     if (_imagefile == NULL)
       throw Uninitialised("ImageFile");
     _imagefile->write(img, d);

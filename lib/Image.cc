@@ -70,27 +70,6 @@ namespace PhotoFinish {
     _rows(new Rows(h, w * 3))
   {}
 
-  Image::Image(const Image& other) :
-    _width(other._width),
-    _height(other._height),
-    _greyscale(other._greyscale),
-    _rows(other._rows)
-  {}
-
-  Image::~Image() {
-  }
-
-  Image& Image::operator=(const Image& b) {
-    if (this != &b) {
-      _width = b._width;
-      _height = b._height;
-      _greyscale = b._greyscale;
-      _rows = b._rows;
-    }
-
-    return *this;
-  }
-
   void Image::copy_pixels(void) {
     Rows::ptr new_rows(new Rows(_height, _width * 3));
 
