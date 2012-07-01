@@ -47,12 +47,14 @@ namespace PhotoFinish {
 
   void Ditherer::dither(short unsigned int *inrow, unsigned char *outrow) {
     memset(error_rows[next_row], 0, width * channels * sizeof(short int));
-    for (long int x = 0; x < width; x++) {
 #pragma omp parallel for schedule(dynamic, 1)
-      for (unsigned char c = 0; c < channels; c++) {
-	int target = inrow[pos] + error_rows[curr_row][pos];
-	outrow[pos] = round(target * (1.0 / 257));
-	int error = target - (int)(outrow[pos] * 257);
+    for (unsigned char c = 0; c < channels; c++) {
+      short unsigned int *in = &inrow[c];
+      unsigned char *out = &outrow[c];
+      for (long int x = 0; x < width; x++, in += channels, out += channels) {
+	int target = *in + error_rows[curr_row][pos];
+	*out = round(target * (1.0 / 257));
+	int error = target - (int)(*out * 257);
 
 	error_rows[next_row][pos] += (error * 5) >> 4;
 	if (x > 0)
