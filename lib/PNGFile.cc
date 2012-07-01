@@ -11,6 +11,7 @@
 #include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
 
@@ -314,8 +315,9 @@ namespace PhotoFinish {
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     //  fprintf(stderr, "Creating colour transform...\n");
+    cmsUInt32Number cmsTempType = COLORSPACE_SH(T_COLORSPACE(cmsType)) | CHANNELS_SH(png_channels) | BYTES_SH(2);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 profile, cmsType,
+						 profile, cmsTempType,
 						 d.intent(), 0);
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
@@ -327,10 +329,19 @@ namespace PhotoFinish {
 	fprintf(stderr, "Transforming image data from L*a*b* using %d threads...\n", omp_get_num_threads());
       }
     }
+    if (d.depth() == 8) {
+      Ditherer ditherer(img->width(), png_channels);
+      short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * png_channels * sizeof(short unsigned int));
+      for (long int y = 0; y < img->height(); y++) {
+	cmsDoTransform(transform, img->row(y), temp_row, img->width());
+	ditherer.dither(temp_row, png_rows[y]);
+      }
+      free(temp_row);
+    } else {
 #pragma omp parallel for schedule(dynamic, 1)
-    for (long int y = 0; y < img->height(); y++)
-      cmsDoTransform(transform, img->row(y), png_rows[y], img->width());
-
+      for (long int y = 0; y < img->height(); y++)
+	cmsDoTransform(transform, img->row(y), png_rows[y], img->width());
+    }
     cmsDeleteTransform(transform);
 
     fprintf(stderr, "Writing PNG image data...\n");
