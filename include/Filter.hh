@@ -7,15 +7,15 @@
 
 namespace PhotoFinish {
 
-  class _Filter {
+  class Base_Filter {
   protected:
     double _radius;
 
   public:
-    _Filter() :
+    Base_Filter() :
       _radius(3)
     {}
-    _Filter(const D_resize& dr) :
+    Base_Filter(const D_resize& dr) :
       _radius(dr.has_support() ? dr.support() : 3)
     {}
 
@@ -24,13 +24,13 @@ namespace PhotoFinish {
     virtual SAMPLE eval(double x) const = 0;
   };
 
-  class Lanczos : public _Filter {
+  class Lanczos : public Base_Filter {
   private:
     double _r_radius;	// Reciprocal of the radius
 
   public:
     Lanczos(const D_resize& dr) :
-      _Filter(dr),
+      Base_Filter(dr),
       _r_radius(1.0 / _radius)
     {}
 
@@ -38,9 +38,9 @@ namespace PhotoFinish {
   };
 
   // Factory/wrapper class
-  class Filter : public _Filter {
+  class Filter : public Base_Filter {
   private:
-    typedef std::shared_ptr<_Filter> ptr;
+    typedef std::shared_ptr<Base_Filter> ptr;
 
     ptr _filter;
 
