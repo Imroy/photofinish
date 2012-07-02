@@ -23,6 +23,7 @@
 #include <omp.h>
 #include <lcms2.h>
 #include <queue>
+#include <list>
 #include <unistd.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -36,7 +37,7 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   PNGFile::PNGFile(const fs::path filepath) :
-    _ImageFile(filepath)
+    Base_ImageFile(filepath)
   {}
 
   struct pngrow_t {
@@ -48,7 +49,7 @@ namespace PhotoFinish {
 
   struct callback_state {
     bool finished;
-    std::queue<pngrow_t*> rowqueue;
+    std::queue<pngrow_t*, std::list<pngrow_t*> > rowqueue;
     size_t rowlen;
     omp_lock_t *queue_lock;
     png_uint_32 width, height;
@@ -210,7 +211,7 @@ namespace PhotoFinish {
 	  fb.read((char*)buffer, 1048576);
 	  length = fb.gcount();
 	  png_process_data(png, info, buffer, length);
-	  while (cs.rowqueue.size() > 10)
+	  while (cs.rowqueue.size() > 100)
 	    process_row(&cs);
 	} while (length > 0);
 	fprintf(stderr, "\n");

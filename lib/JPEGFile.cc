@@ -33,7 +33,7 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   JPEGFile::JPEGFile(const fs::path filepath) :
-    _ImageFile(filepath)
+    Base_ImageFile(filepath)
   {}
 
   Image::ptr JPEGFile::read(void) const {

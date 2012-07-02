@@ -33,15 +33,15 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  class _ImageFile {
+  class Base_ImageFile {
   protected:
     const fs::path _filepath;
 
   public:
-    _ImageFile() :
+    Base_ImageFile() :
       _filepath()
     {}
-    _ImageFile(const fs::path filepath) :
+    Base_ImageFile(const fs::path filepath) :
       _filepath(filepath)
     {}
 
@@ -49,7 +49,7 @@ namespace PhotoFinish {
     virtual void write(Image::ptr img, const Destination &d) const = 0;
   };
 
-  class PNGFile : public _ImageFile {
+  class PNGFile : public Base_ImageFile {
   private:
 
   public:
@@ -59,7 +59,7 @@ namespace PhotoFinish {
     void write(Image::ptr img, const Destination &d) const;
   };
 
-  class JPEGFile : public _ImageFile {
+  class JPEGFile : public Base_ImageFile {
   private:
 
   public:
@@ -70,9 +70,9 @@ namespace PhotoFinish {
   };
 
   // Factory/wrapper class
-  class ImageFile : public _ImageFile {
+  class ImageFile : public Base_ImageFile {
   private:
-    typedef std::shared_ptr<_ImageFile> ptr;
+    typedef std::shared_ptr<Base_ImageFile> ptr;
 
     ptr _imagefile;
 
