@@ -31,7 +31,7 @@ namespace PhotoFinish {
     error_rows = (short int**)malloc(2 * sizeof(short int*));
     for (long int y = 0; y < 2; y++)
       error_rows[y] = (short int*)malloc(width * channels * sizeof(short int));
-    memset(error_rows[curr_row], 0, width * channels * sizeof(short int));
+    memset(error_rows[next_row], 0, width * channels * sizeof(short int));
   }
 
   Ditherer::~Ditherer() {
@@ -46,28 +46,27 @@ namespace PhotoFinish {
 #define pos ((x * channels) + c)
 
   void Ditherer::dither(short unsigned int *inrow, unsigned char *outrow) {
+    curr_row = next_row;
+    next_row = 1 - curr_row;
     memset(error_rows[next_row], 0, width * channels * sizeof(short int));
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned char c = 0; c < channels; c++) {
       short unsigned int *in = &inrow[c];
       unsigned char *out = &outrow[c];
       for (long int x = 0; x < width; x++, in += channels, out += channels) {
-	int target = *in + error_rows[curr_row][pos];
+	int target = *in + (error_rows[curr_row][pos] >> 4);
 	*out = round(target * (1.0 / 257));
-	int error = target - (int)(*out * 257);
+	int error = target - ((int)*out * 257);
 
-	error_rows[next_row][pos] += (error * 5) >> 4;
+	error_rows[next_row][pos] += error * 5;
 	if (x > 0)
-	  error_rows[next_row][pos - channels] += (error * 3) >> 4;
+	  error_rows[next_row][pos - channels] += error * 3;
 	if (x < width - 1) {
-	  error_rows[next_row][pos + channels] += error >> 4;
-	  error_rows[curr_row][pos + channels] += (error * 7) >> 4;
+	  error_rows[next_row][pos + channels] += error;
+	  error_rows[curr_row][pos + channels] += error * 7;
 	}
       }
     }
-
-    curr_row = next_row;
-    next_row = 1 - curr_row;
   }
 
 }
