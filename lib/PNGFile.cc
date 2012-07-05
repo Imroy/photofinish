@@ -353,7 +353,7 @@ namespace PhotoFinish {
       short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * png_channels * sizeof(short unsigned int));
       for (long int y = 0; y < img->height(); y++) {
 	cmsDoTransform(transform, img->row(y), temp_row, img->width());
-	ditherer.dither(temp_row, png_rows[y]);
+	ditherer.dither(temp_row, png_rows[y], y == img->height() - 1);
       }
       free(temp_row);
     } else {

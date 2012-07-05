@@ -150,7 +150,7 @@ namespace PhotoFinish {
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
       cmsDoTransform(transform, img->row(cinfo.next_scanline), temp_row, img->width());
-      ditherer.dither(temp_row, row[0]);
+      ditherer.dither(temp_row, row[0], cinfo.next_scanline == img->height() - 1);
       jpeg_write_scanlines(&cinfo, row, 1);
     }
     free(temp_row);

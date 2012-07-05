@@ -44,8 +44,10 @@ namespace PhotoFinish {
   }
 
 #define pos ((x * channels) + c)
+#define prevpos (((x - 1) * channels) + c)
+#define nextpos (((x + 1) * channels) + c)
 
-  void Ditherer::dither(short unsigned int *inrow, unsigned char *outrow) {
+  void Ditherer::dither(short unsigned int *inrow, unsigned char *outrow, bool lastrow) {
     curr_row = next_row;
     next_row = 1 - curr_row;
     memset(error_rows[next_row], 0, width * channels * sizeof(short int));
@@ -53,17 +55,49 @@ namespace PhotoFinish {
     for (unsigned char c = 0; c < channels; c++) {
       short unsigned int *in = &inrow[c];
       unsigned char *out = &outrow[c];
-      for (long int x = 0; x < width; x++, in += channels, out += channels) {
+
+      if (lastrow) {
+	for (long int x = 0; x < width - 1; x++, in += channels, out += channels) {
+	  int target = *in + (error_rows[curr_row][pos] >> 4);
+	  *out = round(target * (1.0 / 257));
+	  int error = target - ((int)*out * 257);
+
+	  error_rows[curr_row][nextpos] += error * 7;
+	}
+      } else {
+	// First pixel
+	long int x = 0;
 	int target = *in + (error_rows[curr_row][pos] >> 4);
 	*out = round(target * (1.0 / 257));
 	int error = target - ((int)*out * 257);
 
 	error_rows[next_row][pos] += error * 5;
-	if (x > 0)
-	  error_rows[next_row][pos - channels] += error * 3;
 	if (x < width - 1) {
-	  error_rows[next_row][pos + channels] += error;
-	  error_rows[curr_row][pos + channels] += error * 7;
+	  error_rows[next_row][nextpos] += error;
+	  error_rows[curr_row][nextpos] += error * 7;
+	}
+
+	x++;
+	in += channels;
+	out += channels;
+	// Most pixels
+	while (x < width - 1) {
+	  target = *in + (error_rows[curr_row][pos] >> 4);
+	  *out = round(target * (1.0 / 257));
+	  error = target - ((int)*out * 257);
+	  error_rows[next_row][prevpos] += error * 3;
+	  error_rows[next_row][nextpos] += error;
+	  error_rows[curr_row][nextpos] += error * 7;
+	  x++;
+	  in += channels;
+	  out += channels;
+	}
+	// Last pixel
+	if (x < width) {
+	  target = *in + (error_rows[curr_row][pos] >> 4);
+	  *out = round(target * (1.0 / 257));
+	  error = target - ((int)*out * 257);
+	  error_rows[next_row][prevpos] += error * 3;
 	}
       }
     }

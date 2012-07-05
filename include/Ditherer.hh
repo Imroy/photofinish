@@ -32,7 +32,7 @@ namespace PhotoFinish {
     Ditherer(long int w, unsigned char c);
     ~Ditherer();
 
-    void dither(short unsigned int *inrow, unsigned char *outrow);
+    void dither(short unsigned int *inrow, unsigned char *outrow, bool lastrow = false);
   };
 
 }
