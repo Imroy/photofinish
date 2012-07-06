@@ -1,0 +1,45 @@
+
+= Datasource =
+
+* Holds data (in derived classes)
+* Is produced by a processor (not tracked)
+* Has any number of processors waiting for its data
+* Starts as 'empty', becomes 'available' when its data is all filled in
+* When that happens, all of its dependent processors are notified
+
+
+== Sub-class examples ==
+
+* Image rows
+* Resampler coefficients
+* Image planes (for the ditherer)
+
+
+= Processor =
+
+* Processes data from any number of datasources (in derived classes)
+* Starts as 'waiting', become 'ready' when all of its datasources are 'available', and is then 'done'
+
+
+== Sub-class examples ==
+
+* Image format readers and writers
+* Colour space transformer
+* Rescalers
+* Ditherer
+
+
+= Action =
+
+* Is called by processors to queue up the next set of datasources and processors when they're done
+* Allows the datasource and processor classes to remain generic about how things are to procede
+* Would be set up by the program
+
+
+= Workqueue =
+
+* Is an object held by the program
+* Keeps lists of datasources and processors
+* Holds a lock so that it is thread-safe
+* Threads pull out ready processors for execution and call methods to maintain the lists
+* Actions add new datasources and processors to the queue
