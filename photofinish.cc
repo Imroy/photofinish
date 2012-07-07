@@ -27,6 +27,7 @@
 #include "ImageFile.hh"
 #include "Exception.hh"
 #include "Destination.hh"
+#include "Tags.hh"
 
 namespace fs = boost::filesystem;
 
@@ -50,6 +51,7 @@ int main(int argc, char* argv[]) {
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
       ImageFile infile(*fi);
+      Tags tags((*fi).parent_path() / ("." + (*fi).stem().native() + ".tags"));
 
       try {
 	Image::ptr image = infile.read();
