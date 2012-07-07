@@ -370,6 +370,8 @@ namespace PhotoFinish {
       free(png_rows[y]);
     free(png_rows);
 
+    png_destroy_write_struct(&png, &info);
+
     fprintf(stderr, "Done.\n");
     fb.close();
   }
