@@ -23,7 +23,10 @@
 #include <string>
 #include <memory>
 #include <lcms2.h>
+#include <boost/filesystem.hpp>
 #include "Image.hh"
+
+namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
@@ -113,7 +116,8 @@ namespace PhotoFinish {
   class D_profile {
   private:
     bool _has_name, _has_filepath;
-    std::string _name, _filepath;
+    std::string _name;
+    fs::path _filepath;
 
   public:
     D_profile();
@@ -121,7 +125,7 @@ namespace PhotoFinish {
     inline bool has_name(void) const { return _has_name; }
     inline std::string name(void) const { return _name; }
     inline bool has_filepath(void) const { return _has_filepath; }
-    inline std::string filepath(void) const { return _filepath; }
+    inline fs::path filepath(void) const { return _filepath; }
 
     friend void operator >> (const YAML::Node& node, D_profile& dp);
   };

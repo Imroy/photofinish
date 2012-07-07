@@ -345,8 +345,8 @@ namespace PhotoFinish {
   }
 
 
-  Destinations::Destinations(std::string filepath) {
-    std::ifstream fin(filepath);
+  Destinations::Destinations(fs::path filepath) {
+    std::ifstream fin(filepath.native());
     YAML::Parser parser(fin);
     YAML::Node doc;
 

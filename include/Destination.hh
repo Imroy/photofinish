@@ -130,7 +130,7 @@ namespace PhotoFinish {
     std::map<std::string, Destination::ptr> _destinations;
 
   public:
-    Destinations(std::string filepath);
+    Destinations(fs::path filepath);
     Destinations(const Destinations& other);
     ~Destinations();
 
