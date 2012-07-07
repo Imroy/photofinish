@@ -34,6 +34,7 @@ namespace PhotoFinish {
   void operator >> (const YAML::Node& node, bool& b);
   void operator >> (const YAML::Node& node, fs::path& p);
 
+  //! Represents a destination, read from destinations.yml
   class Destination {
   private:
     bool _has_name, _has_dir;
@@ -68,20 +69,28 @@ namespace PhotoFinish {
 
     bool _has_forcergb, _forcergb;
 
-    hash _variables;	///< Any variables left after values have been incorporated into the formal attributes
+    hash _variables;
 
   public:
+    //! Empty constructor
     Destination();
+
+    //! Copy constructor
     Destination(const Destination& other);
+
+    //! Destructor
     ~Destination();
 
+    //! Assignment operator
     Destination& operator=(const Destination& b);
 
     typedef std::shared_ptr<Destination> ptr;
 
-    ptr add_variables(hash& vars);		///< Duplicate the current object and incorporate variables
+    //! Duplicate the current object and incorporate variables
+    ptr add_variables(hash& vars);
 
-    Frame::ptr best_frame(Image::ptr img);	///< Find the best crop+rescaling frame for an image
+    //! Find the best crop+rescaling frame for an image
+    Frame::ptr best_frame(Image::ptr img);
 
     inline bool has_name(void) const { return _has_name; }
     inline std::string name(void) const { return _name; }
@@ -126,9 +135,11 @@ namespace PhotoFinish {
     inline bool has_forcergb(void) const { return _has_forcergb; }
     inline bool forcergb(void) const { return _forcergb; }
 
+    //! Read a destination from a YAML document
     friend void operator >> (const YAML::Node& node, Destination& d);
   };
 
+  //! A wrapper class for reading destinations from a YAML file and storing them in a map
   class Destinations {
   private:
     std::map<std::string, Destination::ptr> _destinations;
@@ -139,6 +150,8 @@ namespace PhotoFinish {
     ~Destinations();
 
     Destinations& operator=(const Destinations& b);
+
+    void Load(fs::path filepath);
 
     typedef std::map<std::string, Destination::ptr>::iterator iterator;
     typedef std::map<std::string, Destination::ptr>::const_iterator const_iterator;

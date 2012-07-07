@@ -390,20 +390,8 @@ namespace PhotoFinish {
 
 
   Destinations::Destinations(fs::path filepath) {
-    std::ifstream fin(filepath.native());
-    YAML::Parser parser(fin);
-    YAML::Node doc;
-
-    parser.GetNextDocument(doc);
-    for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
-      std::string destname;
-      it.first() >> destname;
-      Destination::ptr destination = Destination::ptr(new Destination);
-      it.second() >> *destination;
-      _destinations[destname] = destination;
-    }
+    Load(filepath);
   }
-
 
   Destinations::Destinations(const Destinations& other) {
     for (const_iterator di = other._destinations.begin(); di != other._destinations.end(); di++)
@@ -420,6 +408,21 @@ namespace PhotoFinish {
     }
 
     return *this;
+  }
+
+  void Destinations::Load(fs::path filepath) {
+    std::ifstream fin(filepath.native());
+    YAML::Parser parser(fin);
+    YAML::Node doc;
+
+    parser.GetNextDocument(doc);
+    for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
+      std::string destname;
+      it.first() >> destname;
+      Destination::ptr destination = Destination::ptr(new Destination);
+      it.second() >> *destination;
+      _destinations[destname] = destination;
+    }
   }
 
 }
