@@ -154,6 +154,7 @@ namespace PhotoFinish {
       jpeg_write_scanlines(&cinfo, row, 1);
     }
     free(temp_row);
+    cmsDeleteTransform(transform);
 
     jpeg_finish_compress(&cinfo);
     fb.close();
