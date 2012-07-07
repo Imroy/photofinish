@@ -57,12 +57,19 @@ namespace PhotoFinish {
       unsigned char *out = &outrow[c];
 
       if (lastrow) {
-	for (long int x = 0; x < width - 1; x++, in += channels, out += channels) {
+	// All but last pixel
+	long int x = 0;
+	for (; x < width - 1; x++, in += channels, out += channels) {
 	  int target = *in + (error_rows[curr_row][pos] >> 4);
 	  *out = round(target * (1.0 / 257));
 	  int error = target - ((int)*out * 257);
 
 	  error_rows[curr_row][nextpos] += error * 7;
+	}
+	// Last pixel
+	if (x < width) {
+	  int target = *in + (error_rows[curr_row][pos] >> 4);
+	  *out = round(target * (1.0 / 257));
 	}
       } else {
 	// First pixel
