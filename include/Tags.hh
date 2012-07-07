@@ -38,6 +38,10 @@ namespace PhotoFinish {
   public:
     Tags(fs::path filepath);
 
+    inline std::map<std::string, std::string>& variables(void) { return _variables; }
+    inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
+    inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
+
     void Load(fs::path filepath);
   };
 

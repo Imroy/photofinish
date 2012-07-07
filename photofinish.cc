@@ -51,7 +51,8 @@ int main(int argc, char* argv[]) {
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
       ImageFile infile(*fi);
-      Tags tags((*fi).parent_path() / ("." + (*fi).stem().native() + ".tags"));
+      Tags tags(".tags/default");
+      tags.Load((*fi).parent_path() / ("." + (*fi).stem().native() + ".tags"));
 
       try {
 	Image::ptr image = infile.read();
@@ -59,7 +60,7 @@ int main(int argc, char* argv[]) {
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
 
-	  Destination::ptr destination = destinations[*di];
+	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
 	  Frame::ptr frame = destination->best_frame(image);
 	  try {
 	    Image::ptr outimage;

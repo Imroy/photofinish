@@ -68,6 +68,8 @@ namespace PhotoFinish {
 
     bool _has_forcergb, _forcergb;
 
+    hash _variables;	///< Any variables left after values have been incorporated into the formal attributes
+
   public:
     Destination();
     Destination(const Destination& other);
@@ -75,7 +77,11 @@ namespace PhotoFinish {
 
     Destination& operator=(const Destination& b);
 
-    Frame::ptr best_frame(Image::ptr img);
+    typedef std::shared_ptr<Destination> ptr;
+
+    ptr add_variables(hash& vars);		///< Duplicate the current object and incorporate variables
+
+    Frame::ptr best_frame(Image::ptr img);	///< Find the best crop+rescaling frame for an image
 
     inline bool has_name(void) const { return _has_name; }
     inline std::string name(void) const { return _name; }
@@ -121,8 +127,6 @@ namespace PhotoFinish {
     inline bool forcergb(void) const { return _forcergb; }
 
     friend void operator >> (const YAML::Node& node, Destination& d);
-
-    typedef std::shared_ptr<Destination> ptr;
   };
 
   class Destinations {

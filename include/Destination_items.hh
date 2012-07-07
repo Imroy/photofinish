@@ -30,6 +30,8 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  typedef std::map<std::string, std::string> hash;
+
   class D_sharpen {
   private:
     bool _has_radius, _has_sigma;
@@ -92,6 +94,8 @@ namespace PhotoFinish {
 
   public:
     D_JPEG();
+
+    bool add_variables(hash& vars);
 
     inline bool has_quality(void) const { return _has_quality; }
     inline int quality(void) const { return _quality; }

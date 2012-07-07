@@ -106,6 +106,28 @@ namespace PhotoFinish {
     _progressive(true)
   {}
 
+  bool D_JPEG::add_variables(hash& vars) {
+    bool ret = false;
+    hash::iterator vi;
+    if ((vi = vars.find("qual")) != vars.end()) {
+      _quality = atoi(vi->second.c_str());
+      _has_quality = true;
+      vars.erase(vi);
+      ret = true;
+    }
+    if ((vi = vars.find("sample")) != vars.end()) {
+      int rc = sscanf(vi->second.c_str(), "%hhdx%hhd", &_sample_h, &_sample_v);
+      if (rc < 2)
+	fprintf(stderr, "D_JPEG: Failed to parse sample \"%s\".\n", vi->second.c_str());
+      else {
+	_has_sample = true;
+	vars.erase(vi);
+	ret = true;
+      }
+    }
+    return ret;
+  }
+
   void operator >> (const YAML::Node& node, D_JPEG& dj) {
     try {
       node["qual"] >> dj._quality;
@@ -183,7 +205,8 @@ namespace PhotoFinish {
     _jpeg(other._jpeg), _png(other._png),
     _has_intent(other._has_intent), _intent(other._intent),
     _has_profile(other._has_profile), _profile(other._profile),
-    _has_forcergb(other._has_forcergb), _forcergb(other._forcergb)
+    _has_forcergb(other._has_forcergb), _forcergb(other._forcergb),
+    _variables(other._variables)
   {
     for (std::map<std::string, D_target::ptr>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
       _targets.insert(std::pair<std::string, D_target::ptr>(ti->first, D_target::ptr(new D_target(*(ti->second)))));
@@ -220,12 +243,22 @@ namespace PhotoFinish {
       _profile = b._profile;
       _has_forcergb = b._has_forcergb;
       _forcergb = b._forcergb;
+      _variables = b._variables;
 
       for (std::map<std::string, D_target::ptr>::const_iterator ti = b._targets.begin(); ti != b._targets.end(); ti++)
 	_targets.insert(std::pair<std::string, D_target::ptr>(ti->first, D_target::ptr(new D_target(*(ti->second)))));
     }
 
     return *this;
+  }
+
+  Destination::ptr Destination::add_variables(hash& vars) {
+    Destination::ptr ret = Destination::ptr(new Destination(*this));
+    if (ret->_jpeg.add_variables(vars))
+      ret->_has_jpeg = true;
+    ret->_variables = vars;
+
+    return ret;
   }
 
   Frame::ptr Destination::best_frame(Image::ptr img) {
@@ -239,19 +272,30 @@ namespace PhotoFinish {
       double waste;
       double x, y;
       double width, height;
+      hash::iterator vi;
 
       if (target->width() * img->height() > target->height() * img->width()) {
 	width = img->width();
 	height = img->width() * target->height() / target->width();
 	x = 0;
+
+	double offy = 0.5;
+	if ((vi = _variables.find("offy")) != _variables.end())
+	  offy = atof(vi->second.c_str());
+
 	double gap = waste = img->height() - height;
-	y = gap * 0.5;
+	y = gap * offy / 100;
       } else {
 	height = img->height();
 	width = img->height() * target->width() / target->height();
 	y = 0;
+
+	double offx = 0.5;
+	if ((vi = _variables.find("offx")) != _variables.end())
+	  offx = atof(vi->second.c_str());
+
 	double gap = waste = img->width() - width;
-	x = gap * 0.5;
+	x = gap * offx / 100;
       }
       fprintf(stderr, "Waste from target \"%s\" (%0.1f,%0.1f)+(%0.1fx%0.1f) = %0.2f.\n", target->name().c_str(), x, y, width, height, waste);
       if ((!best_frame) || (waste < best_waste)) {
