@@ -1,0 +1,60 @@
+Photo Finish is a tool for processing digital images in the (presumably) last stage of publishing a photo. I run a "hybrid" workflow that starts with film scans, but this could also be of use to digital photographers.
+
+
+== Description ==
+
+So what does Photo Finish do?
+
+# It decides on the correct cropping window for a specified "destination"
+# Does the crop and rescaling
+# Saves the result with custom EXIF/IPTC/XMP metadata
+
+
+== Features ==
+
+My focus has been on image quality and correctness, so many computations are done in floating-point. The 1990's are long passed, so why limit ourselves to small integers? We have the computational power and memory storage to easily do this the right way.
+
+* The list of "destinations" is read from a YAML file
+** Destinations describe the size, format, and other specifics of the output
+* Each input file can have its own list of "tags" - EXIF/IPTC/XMP metadata, as well as "variables", some of which override destination parameters
+** This is an artefact of my original shell script (which used exiftool) and expanded in my Perl version (using Image::Exiftool); perhaps this should be replaced by YAML?
+* Image pixel data is stored internally in the [http://en.wikipedia.org/wiki/Lab_color_space CIE L*a*b* colour space] using floating-point components
+** This colour space is perceptually uniform, so it is ideal for rescaling of images
+** Even when the input and output(s) are greyscale, this colour space is used (partly for simplicity, but also because greyscale can have colour to it)
+** Configurable as either single or double precision at compile-time (DP adds almost nothing in my limited tests)
+* Rescaling is done using a Lanczos filter with a radius of 3 pixels
+* OpenMP is used in several places to take advantage of SMP systems
+* Dithers using Floyd-Steinberg error diffusion when producing 8-bit component output
+** Not sure if this improves the output or not, it just seemed like the right thing to do
+
+
+== Current limitations ==
+
+* Only reads PNG files
+* Only writes JPEG or PNG files
+* Probably only compiles on Linux for now
+
+
+== Todo ==
+
+* Add reading of JPEG files
+* Add other image formats e.g TIFF, JPEG 2000, RAW formats (reading only)
+* Thinking of a workqueue-based version to keep multiple processors/cores busy at all time
+
+
+== Libraries ==
+
+Photo Finish currently uses the following libraries:
+* [http://www.libpng.org/ LibPNG] for reading scans and optionally producing final output
+* [http://www.ijg.org/ IJG]'s LibJPEG for writing JPEG's
+* [http://www.littlecms.com/ Little CMS] (LCMS) for transforming between colour profiles
+* [http://code.google.com/p/yaml-cpp/ libyaml] for reading YAML data files
+* [http://www.exiv2.org/ EXIV] for EXIF/IPTC/XMP metadata
+* [http://www.boost.org/doc/libs/1_50_0/libs/filesystem/doc/ Boost.Filesystem] and a bit of [http://www.boost.org/doc/libs/1_50_0/libs/algorithm/doc/html/index.html Boost.Algorithm] (iequals)
+
+
+== License ==
+
+Copyright 2012 Ian Tester <imroykun@gmail.com>
+
+Photo Finish is licensed under the GNU GPL version 3 or later.
