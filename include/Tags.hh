@@ -29,10 +29,13 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  typedef std::map<std::string, std::string> hash;
+
   class Tags {
   private:
     std::map<std::string, std::string> _variables;
     Exiv2::ExifData _EXIFtags;
+    Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
 
   public:
@@ -40,6 +43,7 @@ namespace PhotoFinish {
 
     inline std::map<std::string, std::string>& variables(void) { return _variables; }
     inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
+    inline Exiv2::IptvData& IPTCtags(void) { return _IPTCtags; }
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
     void Load(fs::path filepath);

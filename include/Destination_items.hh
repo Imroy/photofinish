@@ -25,12 +25,11 @@
 #include <lcms2.h>
 #include <boost/filesystem.hpp>
 #include "Image.hh"
+#include "Tags.hh"
 
 namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
-
-  typedef std::map<std::string, std::string> hash;
 
   class D_sharpen {
   private:
