@@ -412,6 +412,9 @@ namespace PhotoFinish {
 
   void Destinations::Load(fs::path filepath) {
     std::ifstream fin(filepath.native());
+    if (fin.fail())
+      throw FileOpenError(filepath.native());
+
     YAML::Parser parser(fin);
     YAML::Node doc;
 

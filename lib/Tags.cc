@@ -17,6 +17,7 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Tags.hh"
+#include "Exception.hh"
 #include <exiv2/exiv2.hpp>
 #include <iostream>
 #include <fstream>
@@ -39,10 +40,8 @@ namespace PhotoFinish {
   void Tags::Load(fs::path filepath) {
     std::cerr << "Tags::Load(): Loading \"" << filepath.native() << "\"..." << std::endl;
     std::ifstream fin(filepath.native());
-    if (fin.fail()) {
-      std::cerr << "Tags::Load(): Could not open \"" << filepath.native() << "\"" << std::endl;
-      return;
-    }
+    if (fin.fail())
+      throw FileOpenError(filepath.native());
 
     hash EXIF_subst, IPTC_subst, XMP_subst;
     populate_EXIF_subst(EXIF_subst);

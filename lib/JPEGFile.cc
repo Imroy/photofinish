@@ -83,6 +83,8 @@ namespace PhotoFinish {
 
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.string().c_str());
     fs::ofstream fb(_filepath, std::ios_base::out);
+    if (fb.fail())
+      throw FileOpenError(_filepath.native());
 
     callback_state cs;
     cs.fb = &fb;

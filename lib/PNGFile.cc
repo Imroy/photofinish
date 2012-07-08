@@ -163,6 +163,8 @@ namespace PhotoFinish {
   Image::ptr PNGFile::read(void) const {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     fs::ifstream fb(_filepath, std::ios_base::in);
+    if (fb.fail())
+      throw FileOpenError(_filepath.native());
 
     {
       unsigned char header[8];
