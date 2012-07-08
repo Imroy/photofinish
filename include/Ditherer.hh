@@ -21,6 +21,7 @@
 
 namespace PhotoFinish {
 
+  //! Class for dithering images down to 8-bit components
   class Ditherer {
   private:
     long int width;
@@ -29,9 +30,24 @@ namespace PhotoFinish {
     int curr_row, next_row;
 
   public:
+    //! Constructor
+    /*!
+      \param w Width of the image
+      \param c Channels of the image
+    */
     Ditherer(long int w, unsigned char c);
+
+    //! Destructor
     ~Ditherer();
 
+    //! Dither a row of image data
+    /*!
+      Performs a Floyd-Steinberg error diffusion dither
+
+      \param inrow Pointer to a row of 16-bit image data
+      \param outrow Pointer to a row 8-bit image data that will be produced
+      \param lastrow Wether this is the last row of the image. Less has to be done.
+    */
     void dither(short unsigned int *inrow, unsigned char *outrow, bool lastrow = false);
   };
 
