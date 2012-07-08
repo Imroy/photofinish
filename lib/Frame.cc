@@ -53,8 +53,8 @@ namespace PhotoFinish {
 	long int max = s.N(nx);
 
 	out[0] = out[1] = out[2] = 0.0;
-	SAMPLE *weight = s.Weight(nx);
-	long int *x = s.Position(nx);
+	const SAMPLE *weight = s.Weight(nx);
+	const long int *x = s.Position(nx);
 	for (long int j = 0; j < max; j++, weight++, x++) {
 	  SAMPLE *in = img->at(*x, y);
 
@@ -88,8 +88,8 @@ namespace PhotoFinish {
       SAMPLE *out = ni->row(ny);
       for (long int x = 0; x < img->width(); x++, out += 3) {
 	out[0] = out[1] = out[2] = 0.0;
-	SAMPLE *weight = s.Weight(ny);
-	long int *y = s.Position(ny);
+	const SAMPLE *weight = s.Weight(ny);
+	const long int *y = s.Position(ny);
 	for (long int j = 0; j < max; j++, weight++, y++) {
 	  SAMPLE *in = img->at(x, *y);
 

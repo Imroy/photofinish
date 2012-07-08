@@ -25,7 +25,7 @@
 
 namespace PhotoFinish {
 
-  // Currently only using Lanczos sampling
+  //! Creates and stores coefficients for cropping and resampling an image
   class Resampler {
   private:
     long int *_N, **_Position;
@@ -33,15 +33,33 @@ namespace PhotoFinish {
     long int _to_size_i;
 
   public:
+    //! Constructor
+    /*!
+      \param filter Supplies the basis function for the resampling
+      \param from_start The starting point of the crop/resample
+      \param from_size The size of the crop/resample
+      \param from_max The size (maximum dimenstion) of the input
+      \param to_size The size of the output
+    */
     Resampler(const Filter& filter, double from_start, double from_size, long int from_max, double to_size);
+
+    //! Destructor
     ~Resampler();
 
-    // Methods for accessing the private data
-    inline long int& N(long int i) { return _N[i]; }
-    inline long int* Position(long int i) { return _Position[i]; }
-    inline long int& Position(long int f, long int i) { return _Position[i][f]; }
-    inline SAMPLE* Weight(long int i) { return _Weight[i]; }
-    inline SAMPLE& Weight(long int f, long int i) { return _Weight[i][f]; }
+    //! Accessor for the size of the other two arrays
+    inline const long int& N(long int i) const { return _N[i]; }
+
+    //! Accessor for the Position array
+    inline const long int* Position(long int i) const { return _Position[i]; }
+
+    //! Accessor for the Position array
+    inline const long int& Position(long int f, long int i) const { return _Position[i][f]; }
+
+    //! Accessor for the Weight array
+    inline const SAMPLE* Weight(long int i) const { return _Weight[i]; }
+
+    //! Accessor for the Weight array
+    inline const SAMPLE& Weight(long int f, long int i) const { return _Weight[i][f]; }
 
   };
 
