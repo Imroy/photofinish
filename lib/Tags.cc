@@ -25,6 +25,9 @@
 
 namespace PhotoFinish {
 
+  Tags::Tags() {
+  }
+
   Tags::Tags(fs::path filepath) {
     Load(filepath);
   }
@@ -52,10 +55,17 @@ namespace PhotoFinish {
       if (fin.eof())
 	break;
 
+      // Remove comment text
+      {
+	size_t x;
+	if ((x = line.find_first_of('#', 1)) != std::string::npos)
+	  line = line.substr(0, x - 1);
+      }
+
       if (line.substr(0, 2) == "#@") {
 	int start = line.find_first_not_of(" \t", 2);
 	int end = line.find_last_not_of(" \t");
-	std::cerr << "Tags::Load(): line=\"" << line << "\", start=" << start << ", end=" << end << std::endl;
+	//	std::cerr << "Tags::Load(): line=\"" << line << "\", start=" << start << ", end=" << end << std::endl;
 	Load(".tags" / fs::path(line.substr(start, end + 1 - start)));
 	continue;
       }
@@ -64,7 +74,7 @@ namespace PhotoFinish {
 	int start = line.find_first_not_of(" \t", 2);
 	int eq = line.find_first_of('=', start);
 	int end = line.find_last_not_of(" \t");
-	std::cerr << "Tags::Load(): line=\"" << line << "\", start=" << start << ", eq=" << eq << ", end=" << end << std::endl;
+	//	std::cerr << "Tags::Load(): line=\"" << line << "\", start=" << start << ", eq=" << eq << ", end=" << end << std::endl;
 	std::string key = line.substr(start, eq - start);
 	std::string v = line.substr(eq + 1, end - eq);
 	std::cerr << "Tags::Load(): Adding variable \"" << key << "\", value \"" << v << "\"" << std::endl;
@@ -72,11 +82,15 @@ namespace PhotoFinish {
 	continue;
       }
 
+      // Any other line beginning with '#' is a comment
+      if (line[0] == '#')
+	continue;
+
       if (line.substr(0, 1) == "-") {
 	int start = line.find_first_not_of(" \t", 1);
 	int eq = line.find_first_of('=', start);
 	int end = line.find_last_not_of(" \t");
-	std::cerr << "Tags::Load(): line=\"" << line << "\", start=" << start << ", eq=" << eq << ", end=" << end << std::endl;
+	//	std::cerr << "Tags::Load(): line=\"" << line << "\", start=" << start << ", eq=" << eq << ", end=" << end << std::endl;
 	if (line.substr(start, 3) == "XMP") {
 	  std::string key_string = line.substr(start, eq - start);
 	  hash::iterator si;
