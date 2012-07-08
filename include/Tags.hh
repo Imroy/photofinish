@@ -31,6 +31,7 @@ namespace PhotoFinish {
 
   typedef std::map<std::string, std::string> hash;
 
+  //! Reads and holds tag information
   class Tags {
   private:
     std::map<std::string, std::string> _variables;
@@ -45,9 +46,16 @@ namespace PhotoFinish {
     //! Constructor with a filepath from which to load tags (calls Load)
     Tags(fs::path filepath);
 
+    //! Accessor for the internal map of variables.
     inline hash& variables(void) { return _variables; }
+
+    //! Accessor for the internal Exiv2::ExifData object.
     inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
+
+    //! Accessor for the internal Exiv2::IptcData object.
     inline Exiv2::IptcData& IPTCtags(void) { return _IPTCtags; }
+
+    //! Accessor for the internal Exiv2::XmpData object.
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
     //! Load tags from supplied file path
