@@ -18,22 +18,25 @@
 */
 #include <string>
 #include <map>
+#include "Tags.hh"
 
 namespace PhotoFinish {
 
   //! Map from Image::Exiftool tag names to Exiv2's tag names
-  void populate_XMP_subst(std::map<std::string, std::string>& table) {
-    table["XMP:Copyright"] = "";
-    table["XMP:Creator"] = "";
-    table["XMP:CreatorContactInfoCiAdrCity"] = "";
-    table["XMP:CreatorContactInfoCiAdrCtry"] = "";
-    table["XMP:CreatorContactInfoCiAdrPcode"] = "";
+  void populate_XMP_subst(hash& table) {
 
-    table["XMP-cc:License"] = "";
+    table["XMP:Copyright"]			= "";
+    table["XMP:Creator"]			= "";
 
-    table["XMP-microsoft:CameraSerialNumber"] = "Xmp.MicrosoftPhoto.CameraSerialNumber";
-    table["XMP-microsoft:LensManufacturer"] = "Xmp.MicrosoftPhoto.LensManufacturer";
-    table["XMP-microsoft:LensModel"] = "Xmp.MicrosoftPhoto.LensModel";
+    table["XMP:CreatorContactInfoCiAdrCity"]	= "Xmp.iptc.CiAdrCity";
+    table["XMP:CreatorContactInfoCiAdrCtry"]	= "Xmp.iptc.CiAdrCtry";
+    table["XMP:CreatorContactInfoCiAdrPcode"]	= "Xmp.iptc.CiAdrPcode";
+
+    table["XMP-cc:License"]			= "Xmp.cc.License"; // Creative Commons not supported in Exiv2 yet?
+
+    table["XMP-microsoft:CameraSerialNumber"]	= "Xmp.MicrosoftPhoto.CameraSerialNumber";
+    table["XMP-microsoft:LensManufacturer"]	= "Xmp.MicrosoftPhoto.LensManufacturer";
+    table["XMP-microsoft:LensModel"]		= "Xmp.MicrosoftPhoto.LensModel";
   }
 
 }

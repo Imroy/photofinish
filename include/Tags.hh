@@ -39,14 +39,22 @@ namespace PhotoFinish {
     Exiv2::XmpData _XMPtags;
 
   public:
+    //! Empty Constructor
+    Tags();
+
+    //! Constructor with a filepath from which to load tags (calls Load)
     Tags(fs::path filepath);
 
-    inline std::map<std::string, std::string>& variables(void) { return _variables; }
+    inline hash& variables(void) { return _variables; }
     inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
-    inline Exiv2::IptvData& IPTCtags(void) { return _IPTCtags; }
+    inline Exiv2::IptcData& IPTCtags(void) { return _IPTCtags; }
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
+    //! Load tags from supplied file path
     void Load(fs::path filepath);
+
+    //! Embed EXIF/IPTC/XMP tags into an image file
+    void Embed(fs::path filepath) const;
   };
 
 }

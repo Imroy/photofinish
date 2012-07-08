@@ -25,6 +25,7 @@
 #include <boost/filesystem.hpp>
 #include "Image.hh"
 #include "Destination.hh"
+#include "Tags.hh"
 #include "Exception.hh"
 
 #define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
@@ -46,7 +47,7 @@ namespace PhotoFinish {
     {}
 
     virtual Image::ptr read(void) const = 0;
-    virtual void write(Image::ptr img, const Destination &d) const = 0;
+    virtual void write(Image::ptr img, const Destination &dest, const Tags &tags) const = 0;
   };
 
   class PNGFile : public Base_ImageFile {
@@ -56,7 +57,7 @@ namespace PhotoFinish {
     PNGFile(const fs::path filepath);
 
     Image::ptr read(void) const;
-    void write(Image::ptr img, const Destination &d) const;
+    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
   class JPEGFile : public Base_ImageFile {
@@ -66,7 +67,7 @@ namespace PhotoFinish {
     JPEGFile(const fs::path filepath);
 
     Image::ptr read(void) const;
-    void write(Image::ptr img, const Destination &d) const;
+    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
   // Factory/wrapper class
@@ -82,7 +83,7 @@ namespace PhotoFinish {
     ImageFile(fs::path filepath, const std::string format) throw(UnknownFileType);
 
     Image::ptr read(void) const;
-    void write(Image::ptr img, const Destination &d) const;
+    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
 }

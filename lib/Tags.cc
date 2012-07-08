@@ -138,5 +138,14 @@ namespace PhotoFinish {
     std::cerr << "Tags::Load(): Finished reading \"" << filepath.native() << "\"" << std::endl;
   }
 
+  void Tags::Embed(fs::path filepath) const {
+    Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
+    assert(image.get() != 0);
+
+    image->setExifData(_EXIFtags);
+    image->setIptcData(_IPTCtags);
+    image->setXmpData(_XMPtags);
+    image->writeMetadata();
+  }
 
 }

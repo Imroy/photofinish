@@ -18,12 +18,14 @@
 */
 #include <string>
 #include <map>
+#include "Tags.hh"
 
 namespace PhotoFinish {
 
   //! Map from Image::Exiftool tag names to Exiv2's tag names
-  void populate_IPTC_subst(std::map<std::string, std::string>& table) {
-    table["IPTC:CopyrightNotice"] = "Iptc.Application2.Copyright";
+  void populate_IPTC_subst(hash& table) {
+
+    table["IPTC:CopyrightNotice"]	= "Iptc.Application2.Copyright";
   }
 
 }

@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 	      create_directory(destination->dir());
 	    }
 	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
-	    outfile.write(outimage, *destination);
+	    outfile.write(outimage, *destination, tags);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

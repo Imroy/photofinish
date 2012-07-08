@@ -75,7 +75,7 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = 0;
   }
 
-  void JPEGFile::write(Image::ptr img, const Destination &d) const {
+  void JPEGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
@@ -117,8 +117,8 @@ namespace PhotoFinish {
     }
 
     jpeg_set_defaults(&cinfo);
-    if (d.has_jpeg()) {
-      D_JPEG jpeg = d.jpeg();
+    if (dest.has_jpeg()) {
+      D_JPEG jpeg = dest.jpeg();
       fprintf(stderr, "JPEGFile: Got quality of %d.\n", jpeg.quality());
       jpeg_set_quality(&cinfo, jpeg.quality(), TRUE);
       if (jpeg.progressive()) {
@@ -159,6 +159,8 @@ namespace PhotoFinish {
     jpeg_finish_compress(&cinfo);
     fb.close();
     jpeg_destroy_compress(&cinfo);
+
+    tags.Embed(_filepath);
   }
 
 }

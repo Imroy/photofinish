@@ -242,7 +242,7 @@ namespace PhotoFinish {
     fb->flush();
   }
 
-  void PNGFile::write(Image::ptr img, const Destination &d) const {
+  void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
     fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -275,23 +275,23 @@ namespace PhotoFinish {
     if (img->is_colour()) {
       png_colour_type = PNG_COLOR_TYPE_RGB;
       png_channels = 3;
-      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(d.depth() >> 3);
+      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(dest.depth() >> 3);
     } else {
       png_colour_type = PNG_COLOR_TYPE_GRAY;
       png_channels = 1;
-      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(d.depth() >> 3);
+      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(dest.depth() >> 3);
     }
 
-    fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), d.depth(), png_channels == 1 ? "greyscale" : "RGB");
+    fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), dest.depth(), png_channels == 1 ? "greyscale" : "RGB");
     png_set_IHDR(png, info,
-		 img->width(), img->height(), d.depth(), png_colour_type,
+		 img->width(), img->height(), dest.depth(), png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
 
     cmsHPROFILE profile = NULL;
-    if (d.has_profile() && d.profile().has_filepath())
-      profile = cmsOpenProfileFromFile(d.profile().filepath().c_str(), "r");
+    if (dest.has_profile() && dest.profile().has_filepath())
+      profile = cmsOpenProfileFromFile(dest.profile().filepath().c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
       fprintf(stderr, "Using default greyscale profile...\n");
@@ -306,14 +306,14 @@ namespace PhotoFinish {
       if (len > 0) {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  fprintf(stderr, "Embedding profile \"%s\" (%d bytes)...\n", d.profile().name().c_str(), len);
-	  png_set_iCCP(png, info, d.profile().name().c_str(), 0, profile_data, len);
+	  fprintf(stderr, "Embedding profile \"%s\" (%d bytes)...\n", dest.profile().name().c_str(), len);
+	  png_set_iCCP(png, info, dest.profile().name().c_str(), 0, profile_data, len);
 	}
       }
     } else {
       fprintf(stderr, "Using default sRGB profile...\n");
       profile = cmsCreate_sRGBProfile();
-      png_set_sRGB_gAMA_and_cHRM(png, info, d.intent());
+      png_set_sRGB_gAMA_and_cHRM(png, info, dest.intent());
     }
 
     {
@@ -328,7 +328,7 @@ namespace PhotoFinish {
 
     png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
     for (long int y = 0; y < img->height(); y++)
-      png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (d.depth() >> 3));
+      png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (dest.depth() >> 3));
 
     png_set_rows(png, info, png_rows);
 
@@ -337,7 +337,7 @@ namespace PhotoFinish {
     cmsUInt32Number cmsTempType = COLORSPACE_SH(T_COLORSPACE(cmsType)) | CHANNELS_SH(png_channels) | BYTES_SH(2);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
-						 d.intent(), 0);
+						 dest.intent(), 0);
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
@@ -348,7 +348,7 @@ namespace PhotoFinish {
 	fprintf(stderr, "Transforming image data from L*a*b* using %d threads...\n", omp_get_num_threads());
       }
     }
-    if (d.depth() == 8) {
+    if (dest.depth() == 8) {
       Ditherer ditherer(img->width(), png_channels);
       short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * png_channels * sizeof(short unsigned int));
       for (long int y = 0; y < img->height(); y++) {
@@ -374,6 +374,8 @@ namespace PhotoFinish {
 
     fprintf(stderr, "Done.\n");
     fb.close();
+
+    tags.Embed(_filepath);
   }
 
 }

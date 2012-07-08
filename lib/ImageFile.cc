@@ -70,10 +70,10 @@ namespace PhotoFinish {
     return _imagefile->read();
   }
 
-  void ImageFile::write(Image::ptr img, const Destination &d) const {
+  void ImageFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
     if (_imagefile == NULL)
       throw Uninitialised("ImageFile");
-    _imagefile->write(img, d);
+    _imagefile->write(img, dest, tags);
   }
 
 }
