@@ -34,6 +34,11 @@ namespace fs = boost::filesystem;
 using namespace PhotoFinish;
 
 int main(int argc, char* argv[]) {
+  if (argc == 1) {
+    fprintf(stderr, "%s <input file> [<input file>...] <destination> [<destination>...]\n", argv[0]);
+    exit(1);
+  }
+
   Destinations destinations("destinations.yml");
 
   std::deque<std::string> arg_destinations;
