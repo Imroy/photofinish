@@ -31,12 +31,14 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  //! Sharpen parameters for destination
   class D_sharpen {
   private:
     bool _has_radius, _has_sigma;
     double _radius, _sigma;
 
   public:
+    //! Empty constructor
     D_sharpen();
 
     inline bool has_radius(void) const { return _has_radius; }
@@ -47,6 +49,7 @@ namespace PhotoFinish {
     friend void operator >> (const YAML::Node& node, D_sharpen& ds);
   };
 
+  //! Resize parameters for destination
   class D_resize {
   private:
     bool _has_filter, _has_support;
@@ -54,6 +57,7 @@ namespace PhotoFinish {
     double _support;
 
   public:
+    //! Empty constructor
     D_resize();
 
     inline bool has_filter(void) const { return _has_filter; }
@@ -64,6 +68,7 @@ namespace PhotoFinish {
     friend void operator >> (const YAML::Node& node, D_resize& dr);
   };
 
+  //! Target parameters for destination
   class D_target {
   protected:
     bool _has_width, _has_height;
@@ -84,6 +89,7 @@ namespace PhotoFinish {
     typedef std::shared_ptr<D_target> ptr;
   };
 
+  //! JPEG parameters for destination
   class D_JPEG {
   private:
     bool _has_quality, _has_sample, _has_progressive;
@@ -94,6 +100,7 @@ namespace PhotoFinish {
   public:
     D_JPEG();
 
+    //! Set values from a map of "variables"
     bool add_variables(hash& vars);
 
     inline bool has_quality(void) const { return _has_quality; }
@@ -107,6 +114,7 @@ namespace PhotoFinish {
     friend void operator >> (const YAML::Node& node, D_JPEG& dj);
   };
 
+  //! PNG parameters for destination
   class D_PNG {
   private:
 
@@ -116,6 +124,7 @@ namespace PhotoFinish {
     friend void operator >> (const YAML::Node& node, D_PNG& dp);
   };
 
+  //! ICC profile parameters for destination
   class D_profile {
   private:
     bool _has_name, _has_filepath;

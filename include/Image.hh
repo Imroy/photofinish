@@ -26,7 +26,7 @@
 
 namespace PhotoFinish {
 
-  // A floating-point, L*a*b* image class
+  //! A floating-point, L*a*b* image class
   class Image {
   private:
     long int _width, _height;
@@ -47,20 +47,48 @@ namespace PhotoFinish {
     Rows::ptr _rows;
 
   public:
+    //! Empty constructor
     Image();
+
+    //! Constructor
+    /*!
+      \param w,h Width and height of the image
+    */
     Image(long int w, long int h);
 
-    void copy_pixels(void);		// Actually copy the image data
+    //! Copy the pixel data
+    /*!
+      The pixel data (stored in rows) is managed by the shared_ptr<> template.
+      This means that copying an Image object does not copy the pixel data, it
+      simply points to the old data. This method creates a new copy.
+     */
+    void copy_pixels(void);
 
-    // Methods for accessing the private data
-    inline long int width(void) const { return _width; }
-    inline long int height(void) const { return _height; }
-    inline bool is_greyscale(void) const { return _greyscale; }
-    inline bool is_colour(void) const { return !_greyscale; }
+    //! Accessor
+    inline const long int width(void) const { return _width; }
+
+    //! Accessor
+    inline const long int height(void) const { return _height; }
+
+    //! Accessor
+    inline const bool is_greyscale(void) const { return _greyscale; }
+
+    //! Accessor (negative of is_greyscale)
+    inline const bool is_colour(void) const { return !_greyscale; }
+
+    //! Setter
     inline void set_greyscale(bool g = true) { _greyscale = g; }
+
+    //! Setter (negative of set_greyscale)
     inline void set_colour(bool c = true) { _greyscale = !c; }
+
+    //! Pointer to pixel data at start of row
     inline SAMPLE* row(long int y) const { return _rows->rowdata[y]; }
+
+    //! Pointer to pixel data at coordinates
     inline SAMPLE* at(long int x, long int y) const { return &(_rows->rowdata[y][x * 3]); }
+
+    //! Reference to pixel data at coordinates and of a given channel
     inline SAMPLE& at(long int x, long int y, unsigned char c) const { return _rows->rowdata[y][c + (x * 3)]; }
 
     typedef std::shared_ptr<Image> ptr;

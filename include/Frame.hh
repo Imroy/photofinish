@@ -25,24 +25,43 @@
 
 namespace PhotoFinish {
 
+  //! Crop+rescaling parameters
   class Frame : public D_target {
   private:
-    // width and height attributes inherited from D_target are the final size of the image
     double _crop_x, _crop_y, _crop_w, _crop_h;	// coordinates for cropping from the original image
     double _resolution;				// PPI
 
   public:
+    //! Constructor
+    /*!
+      \param target D_target object providing the size (width, height) of the output
+      \param x,y Top-left corner of crop+rescale window
+      \param w,h Size of the crop+rescale window
+      \param r Resolution (PPI)
+    */
     Frame(const D_target& target, double x, double y, double w, double h, double r);
+
+    //! Destructor
     ~Frame();
 
-    // Resize the image using a Lanczos filter
+    //! Crop and resize an image
+    /*!
+      \param img The source image
+      \param filter The filter to use
+      \return A new cropped and resized image
+    */
     Image::ptr crop_resize(Image::ptr img, const Filter& filter);
 
-    inline double crop_x(void) const { return _crop_x; }
-    inline double crop_y(void) const { return _crop_y; }
-    inline double crop_w(void) const { return _crop_w; }
-    inline double crop_h(void) const { return _crop_h; }
-    inline double resolution(void) const { return _resolution; }
+    //! Accessor
+    inline const double crop_x(void) const { return _crop_x; }
+    //! Accessor
+    inline const double crop_y(void) const { return _crop_y; }
+    //! Accessor
+    inline const double crop_w(void) const { return _crop_w; }
+    //! Accessor
+    inline const double crop_h(void) const { return _crop_h; }
+    //! Accessor
+    inline const double resolution(void) const { return _resolution; }
 
     typedef std::shared_ptr<Frame> ptr;
   };

@@ -34,22 +34,41 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  //! Abstract base class for image files
   class Base_ImageFile {
   protected:
     const fs::path _filepath;
 
   public:
+    //! Empty constructor
     Base_ImageFile() :
       _filepath()
     {}
+
+    //! Constructor
+    /*!
+      \param filepath The path of the image file
+    */
     Base_ImageFile(const fs::path filepath) :
       _filepath(filepath)
     {}
 
+    //! Read the file into an image
+    /*!
+      \return A new Image object
+    */
     virtual Image::ptr read(void) const = 0;
+
+    //! Write an image to the file
+    /*!
+      \param img The Image object to write
+      \param dest A Destination object, used for the JPEG/PNG/etc parameters
+      \param tags A Tags object, used for writing EXIF/IPTC/XMP metadata to the new file
+    */
     virtual void write(Image::ptr img, const Destination &dest, const Tags &tags) const = 0;
   };
 
+  //! PNG file reader and writer
   class PNGFile : public Base_ImageFile {
   private:
 
@@ -60,6 +79,7 @@ namespace PhotoFinish {
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
+  //! JPEG file writer
   class JPEGFile : public Base_ImageFile {
   private:
 
@@ -70,7 +90,7 @@ namespace PhotoFinish {
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
-  // Factory/wrapper class
+  //! Factory/wrapper class for creating image file objects
   class ImageFile : public Base_ImageFile {
   private:
     typedef std::shared_ptr<Base_ImageFile> ptr;
@@ -78,8 +98,17 @@ namespace PhotoFinish {
     ptr _imagefile;
 
   public:
-    ImageFile();
+    //! Constructor
+    /*!
+      \param filepath File path, extension is used to decide what class to use
+    */
     ImageFile(const fs::path filepath) throw(UnknownFileType);
+
+    //! Constructor
+    /*!
+      \param filepath File path
+      \param format Is used to decide what class to use
+    */
     ImageFile(fs::path filepath, const std::string format) throw(UnknownFileType);
 
     Image::ptr read(void) const;

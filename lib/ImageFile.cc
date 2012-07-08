@@ -26,10 +26,6 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  ImageFile::ImageFile() :
-    _imagefile(NULL)
-  {}
-
   ImageFile::ImageFile(const fs::path filepath) throw(UnknownFileType) :
     _imagefile(NULL)
   {
