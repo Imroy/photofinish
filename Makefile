@@ -10,7 +10,7 @@ COMMON_FLAGS = -Wall -Iinclude `pkg-config --cflags $(PKGS)` -fopenmp -g -DSAMPL
 CFLAGS += $(COMMON_FLAGS)
 CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
 
-INCLUDES = $(wildcard include/*.hh)
+INCLUDES = $(wildcard include/*.hh) $(wildcard include/*.h)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 

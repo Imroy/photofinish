@@ -22,6 +22,7 @@
 #include <memory>
 #include "Destination_items.hh"
 #include "Exception.hh"
+#include "sample.h"
 
 namespace PhotoFinish {
 
