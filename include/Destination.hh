@@ -31,7 +31,10 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  //! Read a boolean value from a YAML file. Why doesn't yaml-cpp define this ?
   void operator >> (const YAML::Node& node, bool& b);
+
+  //! Read a boost.filesystem path from a YAML file
   void operator >> (const YAML::Node& node, fs::path& p);
 
   //! Represents a destination, read from destinations.yml
@@ -142,7 +145,7 @@ namespace PhotoFinish {
     inline bool has_thumbnail(void) const { return _has_thumbnail; }
     inline const D_thumbnail& thumbnail(void) const { return _thumbnail; }
 
-    //! Read a destination from a YAML document
+    //! Read a destination record from a YAML document
     friend void operator >> (const YAML::Node& node, Destination& d);
   };
 

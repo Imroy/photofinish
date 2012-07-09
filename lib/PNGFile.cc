@@ -39,16 +39,18 @@ namespace PhotoFinish {
     Base_ImageFile(filepath)
   {}
 
-  struct pngrow_t {
+  //! Structure holding a PNG row to be transformed
+  struct png_workqueue_row_t {
     png_uint_32 row_num;
     png_bytep row_data;
 
-    inline pngrow_t(png_uint_32 rn, png_bytep rd) : row_num(rn), row_data(rd) {}
+    inline png_workqueue_row_t(png_uint_32 rn, png_bytep rd) : row_num(rn), row_data(rd) {}
   };
 
-  struct callback_state {
+  //! Structure holding information for the PNG progressive reader
+  struct png_callback_state_t {
     bool finished;
-    std::queue<pngrow_t*, std::list<pngrow_t*> > rowqueue;
+    std::queue<png_workqueue_row_t*, std::list<png_workqueue_row_t*> > rowqueue;
     size_t rowlen;
     omp_lock_t *queue_lock;
     png_uint_32 width, height;
@@ -56,17 +58,18 @@ namespace PhotoFinish {
     cmsHTRANSFORM transform;
   };
 
-  void info_callback(png_structp png, png_infop info) {
+  //! Called by libPNG when the iHDR chunk has been read with the main "header" information
+  void png_info_callback(png_structp png, png_infop info) {
     png_set_gamma(png, 1.0, 1.0);
     png_set_alpha_mode(png, PNG_ALPHA_PNG, 1.0);
     png_set_packing(png);
     png_set_swap(png);
     png_read_update_info(png, info);
 
-    callback_state *cs = (callback_state*)png_get_progressive_ptr(png);
+    png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
 
     int bit_depth, colour_type;
-    //  fprintf(stderr, "info_callback: Getting header information...\n");
+    //  fprintf(stderr, "png_info_callback: Getting header information...\n");
     png_get_IHDR(png, info, &cs->width, &cs->height, &bit_depth, &colour_type, NULL, NULL, NULL);
     fprintf(stderr, "%dx%d, %d bpp, type %d.\n", cs->width, cs->height, bit_depth, colour_type);
 
@@ -122,26 +125,29 @@ namespace PhotoFinish {
     cmsCloseProfile(profile);
   }
 
-  void row_callback(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
-    callback_state *cs = (callback_state*)png_get_progressive_ptr(png);
+  //! Called by libPNG when a row of image data has been read
+  void png_row_callback(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
+    png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
     fprintf(stderr, "\rRead %d of %d rows (%ld in queue for colour transformation)   ", row_num + 1, cs->height, cs->rowqueue.size());
     png_bytep new_row = (png_bytep)malloc(cs->rowlen);
     memcpy(new_row, row_data, cs->rowlen);
-    pngrow_t *row = new pngrow_t(row_num, new_row);
+    png_workqueue_row_t *row = new png_workqueue_row_t(row_num, new_row);
 
     omp_set_lock(cs->queue_lock);
     cs->rowqueue.push(row);
     omp_unset_lock(cs->queue_lock);
   }
 
-  void end_callback(png_structp png, png_infop info) {
-    //  callback_state *cs = (callback_state*)png_get_progressive_ptr(png);
+  //! Called by libPNG when the image data has finished
+  void png_end_callback(png_structp png, png_infop info) {
+    //  png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
   }
 
-  void process_row(callback_state* cs) {
+  //! Pull a row off of the workqueue and transform it using LCMS
+  void png_process_row(png_callback_state_t* cs) {
     if (!cs->rowqueue.empty()) {
       omp_set_lock(cs->queue_lock);
-      pngrow_t *row = cs->rowqueue.front();
+      png_workqueue_row_t *row = cs->rowqueue.front();
       cs->rowqueue.pop();
       omp_unset_lock(cs->queue_lock);
 
@@ -151,11 +157,12 @@ namespace PhotoFinish {
     }
   }
 
-  void process_workqueue(callback_state* cs) {
+  //! Loop processing rows from the workqueue until it's empty and reading is finished
+  void png_run_workqueue(png_callback_state_t* cs) {
     while (!(cs->rowqueue.empty() && cs->finished)) {
       while (cs->rowqueue.empty() && !cs->finished)
 	usleep(100);
-      process_row(cs);
+      png_process_row(cs);
     }
   }
 
@@ -194,7 +201,7 @@ namespace PhotoFinish {
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
-    callback_state cs;
+    png_callback_state_t cs;
     cs.queue_lock = (omp_lock_t*)malloc(sizeof(omp_lock_t));
     omp_init_lock(cs.queue_lock);
     cs.width = cs.height = 0;
@@ -205,7 +212,7 @@ namespace PhotoFinish {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
 	fprintf(stderr, "Reading PNG image and transforming into L*a*b* using %d threads...\n", omp_get_num_threads());
-	png_set_progressive_read_fn(png, (void *)&cs, info_callback, row_callback, end_callback);
+	png_set_progressive_read_fn(png, (void *)&cs, png_info_callback, png_row_callback, png_end_callback);
 	png_byte buffer[1048576];
 	size_t length;
 	do {
@@ -213,13 +220,13 @@ namespace PhotoFinish {
 	  length = fb.gcount();
 	  png_process_data(png, info, buffer, length);
 	  while (cs.rowqueue.size() > 100)
-	    process_row(&cs);
+	    png_process_row(&cs);
 	} while (length > 0);
 	fprintf(stderr, "\n");
 	cs.finished = true;
-	process_workqueue(&cs);	// Help finish off the transforming of image data
+	png_run_workqueue(&cs);	// Help finish off the transforming of image data
       } else {
-	process_workqueue(&cs);	// Worker threads just process the workqueue
+	png_run_workqueue(&cs);	// Worker threads just run the workqueue
       }
     }
     omp_destroy_lock(cs.queue_lock);
@@ -233,14 +240,14 @@ namespace PhotoFinish {
     return cs.img;
   }
 
-  void write_png(png_structp png, png_bytep buffer, png_size_t length) {
-    fs::ofstream *fb = (fs::ofstream*)png_get_io_ptr(png);
-    fb->write((char*)buffer, length);
+  void png_write_ostream(png_structp png, png_bytep buffer, png_size_t length) {
+    std::ostream *os = (std::ostream*)png_get_io_ptr(png);
+    os->write((char*)buffer, length);
   }
 
-  void flush_png(png_structp png) {
-    fs::ofstream *fb = (fs::ofstream*)png_get_io_ptr(png);
-    fb->flush();
+  void png_flush_ostream(png_structp png) {
+    std::ostream *os = (std::ostream*)png_get_io_ptr(png);
+    os->flush();
   }
 
   void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
@@ -269,7 +276,7 @@ namespace PhotoFinish {
     }
 
     //  fprintf(stderr, "Initialising PNG IO...\n");
-    png_set_write_fn(png, &fb, write_png, flush_png);
+    png_set_write_fn(png, &fb, png_write_ostream, png_flush_ostream);
 
     int png_colour_type, png_channels;
     cmsUInt32Number cmsType;

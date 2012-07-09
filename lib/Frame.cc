@@ -37,7 +37,7 @@ namespace PhotoFinish {
     _resolution(r)
   {}
 
-  // Private functions for 1-dimensional scaling
+  //! Scale an image width-wise
   Image::ptr _crop_resize_w(Image::ptr img, const Filter& filter, double x, double cw, double nw) {
     long int nwi = ceil(nw);
     Image::ptr ni(new Image(nwi, img->height()));
@@ -47,7 +47,7 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	fprintf(stderr, "Resizing image horizontally using %d threads...\n", omp_get_num_threads());
+	fprintf(stderr, "Resizing image horizontally %ld => %0.2f using %d threads...\n", img->width(), nw, omp_get_num_threads());
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)
@@ -73,6 +73,7 @@ namespace PhotoFinish {
     return ni;
   }
 
+  //! Scale an image height-wise
   Image::ptr _crop_resize_h(Image::ptr img, const Filter& filter, double y, double ch, double nh) {
     long int nhi = ceil(nh);
     Image::ptr ni(new Image(img->width(), nhi));
@@ -82,7 +83,7 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	fprintf(stderr, "Resizing image vertically using %d threads...\n", omp_get_num_threads());
+	fprintf(stderr, "Resizing image vertically %ld => %0.2f using %d threads...\n", img->height(), nh, omp_get_num_threads());
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)

@@ -40,15 +40,17 @@ namespace PhotoFinish {
     throw Unimplemented("JPEGFile", "read()");
   }
 
-  struct callback_state {
+  //! Structure holding information for the JPEG reader
+  struct jpeg_callback_state_t {
     JOCTET *buffer;
     std::ostream *fb;
     size_t buffer_size;
   };
 
-  static void ostream_init_destination(j_compress_ptr cinfo) {
+  //! Called by libJPEG to initialise the "destination manager"
+  static void jpeg_ostream_init_destination(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
-    callback_state *cs = (callback_state*)(cinfo->client_data);
+    jpeg_callback_state_t *cs = (jpeg_callback_state_t*)(cinfo->client_data);
     cs->buffer = (JOCTET*)malloc(cs->buffer_size);
     if (cs->buffer == NULL)
       throw MemAllocError("Out of memory?");
@@ -57,18 +59,20 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = cs->buffer_size;
   }
 
-  static boolean ostream_empty_output_buffer(j_compress_ptr cinfo) {
+  //! Called by libJPEG to write the output buffer and prepare it for more data
+  static boolean jpeg_ostream_empty_output_buffer(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
-    callback_state *cs = (callback_state*)(cinfo->client_data);
+    jpeg_callback_state_t *cs = (jpeg_callback_state_t*)(cinfo->client_data);
     cs->fb->write((char*)cs->buffer, cs->buffer_size);
     dmgr->next_output_byte = cs->buffer;
     dmgr->free_in_buffer = cs->buffer_size;
     return 1;
   }
 
-  static void ostream_term_destination(j_compress_ptr cinfo) {
+  //! Called by libJPEG to write any remaining data in the output buffer and deallocate it
+  static void jpeg_ostream_term_destination(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
-    callback_state *cs = (callback_state*)(cinfo->client_data);
+    jpeg_callback_state_t *cs = (jpeg_callback_state_t*)(cinfo->client_data);
     cs->fb->write((char*)cs->buffer, cs->buffer_size - dmgr->free_in_buffer);
     free(cs->buffer);
     cs->buffer = NULL;
@@ -81,15 +85,15 @@ namespace PhotoFinish {
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
 
-    callback_state cs;
+    jpeg_callback_state_t cs;
     cs.fb = &os;
     cs.buffer_size = 1048576;
     cinfo.client_data = (void*)&cs;
 
     jpeg_destination_mgr dmgr;
-    dmgr.init_destination = ostream_init_destination;
-    dmgr.empty_output_buffer = ostream_empty_output_buffer;
-    dmgr.term_destination = ostream_term_destination;
+    dmgr.init_destination = jpeg_ostream_init_destination;
+    dmgr.empty_output_buffer = jpeg_ostream_empty_output_buffer;
+    dmgr.term_destination = jpeg_ostream_term_destination;
     cinfo.dest = &dmgr;
 
     cinfo.image_width = img->width();

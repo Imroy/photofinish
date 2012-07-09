@@ -47,6 +47,7 @@ namespace PhotoFinish {
     inline bool has_sigma(void) const { return _has_sigma; }
     inline double sigma(void) const { return _sigma; }
 
+    //! Read a D_sharpen record from a YAML file
     friend void operator >> (const YAML::Node& node, D_sharpen& ds);
   };
 
@@ -73,6 +74,7 @@ namespace PhotoFinish {
     inline bool has_support(void) const { return _has_support; }
     inline double support(void) const { return _support; }
 
+    //! Read a D_resize record from a YAML file
     friend void operator >> (const YAML::Node& node, D_resize& dr);
   };
 
@@ -93,6 +95,7 @@ namespace PhotoFinish {
     inline bool has_height(void) const { return _has_height; }
     inline double height(void) const { return _height; }
 
+    //! Read a D_target record from a YAML file
     friend void operator >> (const YAML::Node& node, D_target& dt);
 
     typedef std::shared_ptr<D_target> ptr;
@@ -129,6 +132,7 @@ namespace PhotoFinish {
     inline bool has_progressive(void) const { return _has_progressive; }
     inline bool progressive(void) const { return _progressive; }
 
+    //! Read a D_JPEG record from a YAML file
     friend void operator >> (const YAML::Node& node, D_JPEG& dj);
   };
 
@@ -139,6 +143,7 @@ namespace PhotoFinish {
   public:
     D_PNG();
 
+    //! Read a D_PNG record from a YAML file
     friend void operator >> (const YAML::Node& node, D_PNG& dp);
   };
 
@@ -157,6 +162,7 @@ namespace PhotoFinish {
     inline bool has_filepath(void) const { return _has_filepath; }
     inline fs::path filepath(void) const { return _filepath; }
 
+    //! Read a D_profile record from a YAML file
     friend void operator >> (const YAML::Node& node, D_profile& dp);
   };
 
@@ -176,6 +182,7 @@ namespace PhotoFinish {
     inline bool has_maxheight(void) const { return _has_maxheight; }
     inline double maxheight(void) const { return _maxheight; }
 
+    //! Read a D_thumbnail record from a YAML file
     friend void operator >> (const YAML::Node& node, D_thumbnail& dt);
   };
 
