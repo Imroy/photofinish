@@ -376,7 +376,7 @@ namespace PhotoFinish {
     fprintf(stderr, "Done.\n");
     fb.close();
 
-    tags.Embed(_filepath);
+    tags.embed(_filepath);
   }
 
 }

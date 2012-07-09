@@ -24,6 +24,8 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "Image.hh"
+#include "Destination_items.hh"
 
 namespace fs = boost::filesystem;
 
@@ -59,10 +61,13 @@ namespace PhotoFinish {
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
     //! Load tags from supplied file path
-    void Load(fs::path filepath);
+    void load(fs::path filepath);
+
+    //! Create a thumbnail from the supplied image
+    void make_thumbnail(Image::ptr img, const D_thumbnail& dt);
 
     //! Embed EXIF/IPTC/XMP tags into an image file
-    void Embed(fs::path filepath) const;
+    void embed(fs::path filepath) const;
   };
 
 }

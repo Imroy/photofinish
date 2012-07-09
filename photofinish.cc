@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     try {
       ImageFile infile(*fi);
       Tags tags(".tags/default");
-      tags.Load((*fi).parent_path() / ("." + (*fi).stem().native() + ".tags"));
+      tags.load((*fi).parent_path() / ("." + (*fi).stem().native() + ".tags"));
 
       try {
 	Image::ptr image = infile.read();
@@ -66,17 +66,20 @@ int main(int argc, char* argv[]) {
 	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
 
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
-	  Frame::ptr frame = destination->best_frame(image);
 	  try {
 	    Image::ptr outimage;
-	    if ((destination->has_noresize()) && (destination->noresize())) {
+	    if (destination->has_noresize() && destination->noresize()) {
 	      outimage = image;
 	    } else {
+	      Frame::ptr frame = destination->best_frame(image);
 	      Filter filter(destination->resize());
 	      outimage = frame->crop_resize(image, filter);
-	      if ((destination->has_forcergb()) && (destination->forcergb()))
+	      if (destination->has_forcergb() && destination->forcergb())
 		outimage->set_colour();
 	    }
+
+	    if (destination->has_thumbnail() && destination->thumbnail().has_generate() && destination->thumbnail().generate())
+	      tags.make_thumbnail(outimage, destination->thumbnail());
 
 	    if (!exists(destination->dir())) {
 	      fprintf(stderr, "Creating directory \"%s\".\n", destination->dir().string().c_str());
