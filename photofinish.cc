@@ -56,8 +56,14 @@ int main(int argc, char* argv[]) {
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
       ImageFile infile(*fi);
-      Tags tags(".tags/default");
-      tags.load((*fi).parent_path() / ("." + (*fi).stem().native() + ".tags"));
+      Tags tags;
+      if (fs::exists(".tags/default"))
+	tags.load(".tags/default");
+      {
+	fs::path tagpath = (*fi).parent_path() / ("." + (*fi).stem().native() + ".tags");
+	if (fs::exists(tagpath))
+	  tags.load(tagpath);
+      }
 
       try {
 	Image::ptr image = infile.read();
