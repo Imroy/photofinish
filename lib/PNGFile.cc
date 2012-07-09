@@ -24,7 +24,6 @@
 #include <lcms2.h>
 #include <queue>
 #include <list>
-#include <unistd.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
