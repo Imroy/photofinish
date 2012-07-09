@@ -41,7 +41,7 @@ namespace PhotoFinish {
   void populate_XMP_subst(hash& table);
 
   void Tags::load(fs::path filepath) {
-    std::cerr << "Tags::load(): Loading \"" << filepath.native() << "\"..." << std::endl;
+    std::cerr << "Loading \"" << filepath.native() << "\"..." << std::endl;
     std::ifstream fin(filepath.native());
     if (fin.fail())
       throw FileOpenError(filepath.native());
@@ -67,7 +67,6 @@ namespace PhotoFinish {
       if (line.substr(0, 2) == "#@") {
 	int start = line.find_first_not_of(" \t", 2);
 	int end = line.find_last_not_of(" \t");
-	//	std::cerr << "Tags::load(): line=\"" << line << "\", start=" << start << ", end=" << end << std::endl;
 	load(".tags" / fs::path(line.substr(start, end + 1 - start)));
 	continue;
       }
@@ -76,10 +75,9 @@ namespace PhotoFinish {
 	int start = line.find_first_not_of(" \t", 2);
 	int eq = line.find_first_of('=', start);
 	int end = line.find_last_not_of(" \t");
-	//	std::cerr << "Tags::load(): line=\"" << line << "\", start=" << start << ", eq=" << eq << ", end=" << end << std::endl;
 	std::string key = line.substr(start, eq - start);
 	std::string v = line.substr(eq + 1, end - eq);
-	std::cerr << "Tags::load(): Adding variable \"" << key << "\", value \"" << v << "\"" << std::endl;
+	std::cerr << "\tVariable \"" << key << "\" = \"" << v << "\"" << std::endl;
 	_variables.insert(std::pair<std::string, std::string>(key, v));
 	continue;
       }
@@ -88,70 +86,65 @@ namespace PhotoFinish {
       if (line[0] == '#')
 	continue;
 
+      // Lines starting with '-' are EXIF, IPTC, or XMP tags
       if (line.substr(0, 1) == "-") {
 	int start = line.find_first_not_of(" \t", 1);
 	int eq = line.find_first_of('=', start);
 	int end = line.find_last_not_of(" \t");
-	//	std::cerr << "Tags::load(): line=\"" << line << "\", start=" << start << ", eq=" << eq << ", end=" << end << std::endl;
+
 	if (line.substr(start, 3) == "XMP") {
 	  std::string key_string = line.substr(start, eq - start);
 	  hash::iterator si;
-	  if ((si = XMP_subst.find(key_string)) != XMP_subst.end()) {
-	    std::cerr << "Tags::load(): Substituting \"" << key_string << "\" => \"" << si->second << "\"" << std::endl;
+	  if (((si = XMP_subst.find(key_string)) != XMP_subst.end()) && (si->second.length() > 0))
 	    key_string = si->second;
-	  }
 
 	  try {
 	    Exiv2::XmpKey key(key_string);
 	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpText);
 	    v->read(line.substr(eq + 1, end - eq));
-	    std::cerr << "Tags::load(): Adding XMP \"" << key << "\", value \"" << *v << "\"" << std::endl;
+	    std::cerr << "\tXMP \"" << key << "\" = \"" << *v << "\"" << std::endl;
 	    _XMPtags.add(key, v.get());
 	  } catch (Exiv2::Error& e) {
-	    std::cerr << "Tags::load(): IPTC key \"" << key_string << "\" not accepted." << std::endl;
+	    std::cerr << "** XMP key \"" << key_string << "\" not accepted **" << std::endl;
 	  }
 	} else 	if (line.substr(start, 4) == "IPTC") {
 	  std::string key_string = line.substr(start, eq - start);
 	  hash::iterator si;
-	  if ((si = IPTC_subst.find(key_string)) != IPTC_subst.end()) {
-	    std::cerr << "Tags::load(): Substituting \"" << key_string << "\" => \"" << si->second << "\"" << std::endl;
+	  if (((si = IPTC_subst.find(key_string)) != IPTC_subst.end()) && (si->second.length() > 0))
 	    key_string = si->second;
-	  }
 
 	  try {
 	    Exiv2::IptcKey key(key_string);
 	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::asciiString);
 	    v->read(line.substr(eq + 1, end - eq));
-	    std::cerr << "Tags::load(): Adding IPTC \"" << key << "\", value \"" << *v << "\"" << std::endl;
+	    std::cerr << "\tIPTC \"" << key << "\" = \"" << *v << "\"" << std::endl;
 	    _IPTCtags.add(key, v.get());
 	  } catch (Exiv2::Error& e) {
-	    std::cerr << "Tags::load(): IPTC key \"" << key_string << "\" not accepted." << std::endl;
+	    std::cerr << "** IPTC key \"" << key_string << "\" not accepted **" << std::endl;
 	  }
 	} else {
 	  std::string key_string = line.substr(start, eq - start);
 	  hash::iterator si;
-	  if ((si = EXIF_subst.find(key_string)) != EXIF_subst.end()) {
-	    std::cerr << "Tags::load(): Substituting \"" << key_string << "\" => \"" << si->second << "\"" << std::endl;
+	  if (((si = EXIF_subst.find(key_string)) != EXIF_subst.end()) && (si->second.length() > 0))
 	    key_string = si->second;
-	  }
 
 	  try {
 	    Exiv2::ExifKey key(key_string);
 	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::asciiString);
 	    v->read(line.substr(eq + 1, end - eq));
-	    std::cerr << "Tags::load(): Adding EXIF \"" << key << "\", value \"" << *v << "\"" << std::endl;
+	    std::cerr << "\tEXIF \"" << key << "\" = \"" << *v << "\"" << std::endl;
 	    _EXIFtags.add(key, v.get());
 	  } catch (Exiv2::Error& e) {
-	    std::cerr << "Tags::load(): EXIF key \"" << key_string << "\" not accepted." << std::endl;
+	    std::cerr << "** EXIF key \"" << key_string << "\" not accepted **" << std::endl;
 	  }
 	}
 	continue;
       }
 
-      std::cerr << "Tags::load(): Unrecognised line \"" << line << "\" in file \"" << filepath.native() << "\"" << std::endl;
+      std::cerr << "** Unrecognised line \"" << line << "\" in file \"" << filepath.native() << "\" **" << std::endl;
     }
     fin.close();
-    std::cerr << "Tags::load(): Finished reading \"" << filepath.native() << "\"" << std::endl;
+    std::cerr << "Finished loading \"" << filepath.native() << "\"" << std::endl;
   }
 
   void Tags::make_thumbnail(Image::ptr img, const D_thumbnail& dt) {
