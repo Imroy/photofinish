@@ -65,6 +65,13 @@ namespace PhotoFinish {
     _support(3)
   {}
 
+  D_resize::D_resize(std::string f, double s) :
+    _has_filter(true),
+    _has_support(true),
+    _filter(f),
+    _support(s)
+  {}
+
   void operator >> (const YAML::Node& node, D_resize& dr) {
     try {
       node["filter"] >> dr._filter;
@@ -78,10 +85,16 @@ namespace PhotoFinish {
 
 
 
-  D_target::D_target(std::string &n) :
-    _has_width(false), _has_height(false),
+  D_target::D_target(std::string n, double w, double h) :
     _name(n),
-    _width(-1), _height(1)
+    _has_width(true), _has_height(true),
+    _width(w), _height(h)
+  {}
+
+  D_target::D_target(std::string &n) :
+    _name(n),
+    _has_width(false), _has_height(false),
+    _width(-1), _height(-1)
   {}
 
   void operator >> (const YAML::Node& node, D_target& dt) {
@@ -104,6 +117,15 @@ namespace PhotoFinish {
     _quality(90),
     _sample_h(2), _sample_v(2),
     _progressive(true)
+  {}
+
+  D_JPEG::D_JPEG(int q, char h, char v, bool p) :
+    _has_quality(true),
+    _has_sample(true),
+    _has_progressive(true),
+    _quality(q),
+    _sample_h(h), _sample_v(v),
+    _progressive(p)
   {}
 
   bool D_JPEG::add_variables(hash& vars) {
@@ -177,6 +199,28 @@ namespace PhotoFinish {
   }
 
 
+  D_thumbnail::D_thumbnail() :
+    _has_generate(false), _generate(true),
+    _has_maxwidth(false), _has_maxheight(false),
+    _maxwidth(-1), _maxheight(-1)
+  {}
+
+  void operator >> (const YAML::Node& node, D_thumbnail& dt) {
+    try {
+      node["generate"] >> dt._generate;
+      dt._has_generate = true;
+    } catch(YAML::RepresentationException& e) {}
+    try {
+      node["maxwidth"] >> dt._maxwidth;
+      dt._has_maxwidth = true;
+    } catch(YAML::RepresentationException& e) {}
+    try {
+      node["maxheight"] >> dt._maxheight;
+      dt._has_maxheight = true;
+    } catch(YAML::RepresentationException& e) {}
+  }
+
+
 
   Destination::Destination() :
     _has_name(false), _has_dir(false),
@@ -189,7 +233,8 @@ namespace PhotoFinish {
     _has_jpeg(false), _has_png(false),
     _has_intent(false), _intent(INTENT_PERCEPTUAL),
     _has_profile(false),
-    _has_forcergb(false), _forcergb(false)
+    _has_forcergb(false), _forcergb(false),
+    _has_thumbnail(false)
   {}
 
   Destination::Destination(const Destination& other) :
@@ -206,6 +251,7 @@ namespace PhotoFinish {
     _has_intent(other._has_intent), _intent(other._intent),
     _has_profile(other._has_profile), _profile(other._profile),
     _has_forcergb(other._has_forcergb), _forcergb(other._forcergb),
+    _has_thumbnail(other._has_thumbnail), _thumbnail(other._thumbnail),
     _variables(other._variables)
   {
     for (std::map<std::string, D_target::ptr>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
@@ -243,6 +289,8 @@ namespace PhotoFinish {
       _profile = b._profile;
       _has_forcergb = b._has_forcergb;
       _forcergb = b._forcergb;
+      _has_thumbnail = b._has_thumbnail;
+      _thumbnail = b._thumbnail;
       _variables = b._variables;
 
       for (std::map<std::string, D_target::ptr>::const_iterator ti = b._targets.begin(); ti != b._targets.end(); ti++)
@@ -375,6 +423,16 @@ namespace PhotoFinish {
     if (const YAML::Node *jpeg = node.FindValue("jpeg")) {
       *jpeg >> d._jpeg;
       d._has_jpeg = true;
+    }
+
+    if (const YAML::Node *profile = node.FindValue("profile")) {
+      *profile >> d._profile;
+      d._has_profile = true;
+    }
+
+    if (const YAML::Node *thumbnail = node.FindValue("thumbnail")) {
+      *thumbnail >> d._thumbnail;
+      d._has_thumbnail = true;
     }
 
     if (const YAML::Node *targets = node.FindValue("targets")) {

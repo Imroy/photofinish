@@ -25,11 +25,12 @@
 #include <lcms2.h>
 #include <boost/filesystem.hpp>
 #include "Image.hh"
-#include "Tags.hh"
 
 namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
+
+  typedef std::map<std::string, std::string> hash;
 
   //! Sharpen parameters for destination
   class D_sharpen {
@@ -60,6 +61,13 @@ namespace PhotoFinish {
     //! Empty constructor
     D_resize();
 
+    //! Constructor
+    /*!
+      \param f Name of filter
+      \param s Support i.e usually the radius of the filter
+    */
+    D_resize(std::string f, double s);
+
     inline bool has_filter(void) const { return _has_filter; }
     inline std::string filter(void) const { return _filter; }
     inline bool has_support(void) const { return _has_support; }
@@ -71,11 +79,12 @@ namespace PhotoFinish {
   //! Target parameters for destination
   class D_target {
   protected:
-    bool _has_width, _has_height;
     std::string _name;
+    bool _has_width, _has_height;
     double _width, _height;
 
   public:
+    D_target(std::string n, double w, double h);
     D_target(std::string &n);
 
     inline std::string name(void) const { return _name; }
@@ -98,7 +107,16 @@ namespace PhotoFinish {
     bool _progressive;
 
   public:
+    //! Empty constructor
     D_JPEG();
+
+    //! Constructor
+    /*!
+      \param q Quality
+      \param h,v Chroma sampling
+      \param p Progressive
+    */
+    D_JPEG(int q, char h, char v, bool p);
 
     //! Set values from a map of "variables"
     bool add_variables(hash& vars);
@@ -140,6 +158,25 @@ namespace PhotoFinish {
     inline fs::path filepath(void) const { return _filepath; }
 
     friend void operator >> (const YAML::Node& node, D_profile& dp);
+  };
+
+  class D_thumbnail {
+  private:
+    bool _has_generate, _generate;
+    bool _has_maxwidth, _has_maxheight;
+    double _maxwidth, _maxheight;
+
+  public:
+    D_thumbnail();
+
+    inline bool has_generate(void) const { return _has_generate; }
+    inline bool generate(void) const { return _generate; }
+    inline bool has_maxwidth(void) const { return _has_maxwidth; }
+    inline double maxwidth(void) const { return _maxwidth; }
+    inline bool has_maxheight(void) const { return _has_maxheight; }
+    inline double maxheight(void) const { return _maxheight; }
+
+    friend void operator >> (const YAML::Node& node, D_thumbnail& dt);
   };
 
 }

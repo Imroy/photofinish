@@ -34,15 +34,21 @@ namespace PhotoFinish {
   public:
     //! Constructor
     /*!
+      \param tw,th Size (width, height) of the output
+      \param x,y Top-left corner of crop+rescale window
+      \param w,h Size of the crop+rescale window
+      \param r Resolution (PPI)
+    */
+    Frame(double tw, double th, double x, double y, double w, double h, double r);
+
+    //! Constructor
+    /*!
       \param target D_target object providing the size (width, height) of the output
       \param x,y Top-left corner of crop+rescale window
       \param w,h Size of the crop+rescale window
       \param r Resolution (PPI)
     */
     Frame(const D_target& target, double x, double y, double w, double h, double r);
-
-    //! Destructor
-    ~Frame();
 
     //! Crop and resize an image
     /*!

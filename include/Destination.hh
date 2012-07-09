@@ -69,6 +69,9 @@ namespace PhotoFinish {
 
     bool _has_forcergb, _forcergb;
 
+    bool _has_thumbnail;
+    D_thumbnail _thumbnail;
+
     hash _variables;
 
   public:
@@ -124,6 +127,7 @@ namespace PhotoFinish {
     inline const D_PNG& png(void) const { return _png; }
 
     inline bool has_jpeg(void) const { return _has_jpeg; }
+    inline D_JPEG& jpeg(void) { return _jpeg; }
     inline const D_JPEG& jpeg(void) const { return _jpeg; }
 
     inline bool has_intent(void) const { return _has_intent; }
@@ -134,6 +138,9 @@ namespace PhotoFinish {
 
     inline bool has_forcergb(void) const { return _has_forcergb; }
     inline bool forcergb(void) const { return _forcergb; }
+
+    inline bool has_thumbnail(void) const { return _has_thumbnail; }
+    inline const D_thumbnail& thumbnail(void) const { return _thumbnail; }
 
     //! Read a destination from a YAML document
     friend void operator >> (const YAML::Node& node, Destination& d);

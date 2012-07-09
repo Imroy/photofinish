@@ -23,15 +23,19 @@
 
 namespace PhotoFinish {
 
+  Frame::Frame(double tw, double th, double x, double y, double w, double h, double r) :
+    D_target(std::string(""), tw, th),
+    _crop_x(x), _crop_y(y),
+    _crop_w(w), _crop_h(h),
+    _resolution(r)
+  {}
+
   Frame::Frame(const D_target& target, double x, double y, double w, double h, double r) :
     D_target(target),
     _crop_x(x), _crop_y(y),
     _crop_w(w), _crop_h(h),
     _resolution(r)
   {}
-
-  Frame::~Frame() {
-  }
 
   // Private functions for 1-dimensional scaling
   Image::ptr _crop_resize_w(Image::ptr img, const Filter& filter, double x, double cw, double nw) {
