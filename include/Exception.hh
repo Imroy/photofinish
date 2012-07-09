@@ -22,15 +22,25 @@
 #include <exception>
 
 namespace PhotoFinish {
+  //! Uninitialised attribute exception
   class Uninitialised : public std::exception {
   protected:
     const std::string _class, _attribute;
 
   public:
+    //! Constructor
+    /*!
+      \param c Class name
+      \param a Attribute name
+    */
     Uninitialised(const std::string& c, const std::string& a) :
       _class(c), _attribute(a)
     {}
 
+    //! Constructor
+    /*!
+      \param c Class name
+    */
     Uninitialised(const std::string& c) :
       _class(c)
     {}
@@ -43,11 +53,17 @@ namespace PhotoFinish {
     }
   };
 
+  //! Unimplemented method exception
   class Unimplemented : public std::exception {
   protected:
     const std::string _class, _method;
 
   public:
+    //! Constructor
+    /*!
+      \param c Class name
+      \param m Method name
+    */
     Unimplemented(const std::string& c, const std::string& m) :
       _class(c), _method(m)
     {}
@@ -57,11 +73,17 @@ namespace PhotoFinish {
     }
   };
 
+  //! No results exception
   class NoResults : public std::exception {
   protected:
     const std::string _class, _method;
 
   public:
+    //! Constructor
+    /*!
+      \param c Class name
+      \param m Method name
+    */
     NoResults(const std::string& c, const std::string& m) :
       _class(c), _method(m)
     {}
@@ -71,11 +93,16 @@ namespace PhotoFinish {
     }
   };
 
+  //! No targets exception
   class NoTargets : public std::exception {
   protected:
     const std::string _destination;
 
   public:
+    //! Constructor
+    /*!
+      \param d Name  of destination that has no targets
+    */
     NoTargets(const std::string& d) :
       _destination(d)
     {}
@@ -85,11 +112,16 @@ namespace PhotoFinish {
     }
   };
 
+  //! Generic error message exception
   class ErrorMsg : public std::exception {
   protected:
     const std::string _msg;
 
   public:
+    //! Constructor
+    /*!
+      \param m Error message
+    */
     ErrorMsg(const std::string& m) :
       _msg(m)
     {}
@@ -97,8 +129,13 @@ namespace PhotoFinish {
     virtual const char* what() const throw() = 0;
   };
 
+  //! Memory allocation exception
   class MemAllocError : public ErrorMsg {
   public:
+    //! Constructor
+    /*!
+      \param m Error message
+    */
     MemAllocError(const std::string& m) :
       ErrorMsg(m)
     {}
@@ -108,15 +145,25 @@ namespace PhotoFinish {
     }
   };
 
+  //! File error abstract base exception
   class FileError : public ErrorMsg {
   protected:
     const std::string _filepath;
 
   public:
+    //! Constructor
+    /*!
+      \param fp File path
+      \param m Error message
+    */
     FileError(const std::string& fp, const std::string& m) :
       ErrorMsg(m), _filepath(fp)
     {}
 
+    //! Constructor
+    /*!
+      \param fp File path
+    */
     FileError(const std::string& fp) :
       ErrorMsg(""), _filepath(fp)
     {}
@@ -124,12 +171,22 @@ namespace PhotoFinish {
     virtual const char* what() const throw() = 0;
   };
 
+  //! Unknown file type exception
   class UnknownFileType : public FileError {
   public:
+    //! Constructor
+    /*!
+      \param fp File path
+      \param m Error message
+    */
     UnknownFileType(const std::string& fp, const std::string& m) :
       FileError(fp, m)
     {}
 
+    //! Constructor
+    /*!
+      \param fp File path
+    */
     UnknownFileType(const std::string& fp) :
       FileError(fp)
     {}
@@ -143,12 +200,22 @@ namespace PhotoFinish {
     }
   };
 
+  //! File open exception
   class FileOpenError : public FileError {
   public:
+    //! Constructor
+    /*!
+      \param fp File path
+      \param m Error message
+    */
     FileOpenError(const std::string& fp, const std::string& m) :
       FileError(fp, m)
     {}
 
+    //! Constructor
+    /*!
+      \param fp File path
+    */
     FileOpenError(const std::string& fp) :
       FileError(fp)
     {}
@@ -162,12 +229,22 @@ namespace PhotoFinish {
     }
   };
 
+  //! File content exception
   class FileContentError : public FileError {
   public:
+    //! Constructor
+    /*!
+      \param fp File path
+      \param m Error message
+    */
     FileContentError(const std::string& fp, const std::string& m) :
       FileError(fp, m)
     {}
 
+    //! Constructor
+    /*!
+      \param fp File path
+    */
     FileContentError(const std::string& fp) :
       FileError(fp)
     {}
@@ -181,11 +258,17 @@ namespace PhotoFinish {
     }
   };
 
+  //! Destination exception
   class DestinationError : public ErrorMsg {
   private:
     const std::string _path, _value;
 
   public:
+    //! Constructor
+    /*!
+      \param p Destination field "path"
+      \param v Value that is wrong
+    */
     DestinationError(const std::string& p, const std::string& v) :
       ErrorMsg(""), _path(p), _value(v)
     {}
@@ -195,11 +278,17 @@ namespace PhotoFinish {
     }
   };
 
+  //! Library exception
   class LibraryError : public ErrorMsg {
   private:
     const std::string _lib;
 
   public:
+    //! Constructor
+    /*!
+      \param l Library name
+      \param m Error message
+    */
     LibraryError(const std::string& l, const std::string& m) :
       ErrorMsg(m), _lib(l)
     {}

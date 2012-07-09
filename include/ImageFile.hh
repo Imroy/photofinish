@@ -91,7 +91,7 @@ namespace PhotoFinish {
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
-  //! Factory/wrapper class for creating image file objects
+  //! Image file factory/wrapper class
   class ImageFile : public Base_ImageFile {
   private:
     typedef std::shared_ptr<Base_ImageFile> ptr;
