@@ -69,8 +69,6 @@ int main(int argc, char* argv[]) {
 	Image::ptr image = infile.read();
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
-	  fprintf(stderr, "Destination: \"%s\".\n", di->c_str());
-
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
 	  try {
 	    Image::ptr outimage;

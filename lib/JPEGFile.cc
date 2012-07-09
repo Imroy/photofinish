@@ -102,7 +102,7 @@ namespace PhotoFinish {
     cmsHPROFILE profile = NULL;
     cmsUInt32Number cmsTempType;
     if (img->is_greyscale()) {
-      fprintf(stderr, "Using default greyscale profile...\n");
+      fprintf(stderr, "\tUsing default greyscale profile...\n");
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
       cmsFreeToneCurve(gamma);
@@ -110,7 +110,7 @@ namespace PhotoFinish {
       cinfo.input_components = 1;
       cinfo.in_color_space = JCS_GRAYSCALE;
     } else {
-      fprintf(stderr, "Using default sRGB profile...\n");
+      fprintf(stderr, "\tUsing default sRGB profile...\n");
       profile = cmsCreate_sRGBProfile();
       cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
       cinfo.input_components = 3;
@@ -120,13 +120,13 @@ namespace PhotoFinish {
     jpeg_set_defaults(&cinfo);
     if (dest.has_jpeg()) {
       D_JPEG jpeg = dest.jpeg();
-      fprintf(stderr, "JPEGFile: Got quality of %d.\n", jpeg.quality());
+      fprintf(stderr, "\tJPEGFile: Got quality of %d.\n", jpeg.quality());
       jpeg_set_quality(&cinfo, jpeg.quality(), TRUE);
       if (jpeg.progressive()) {
-	fprintf(stderr, "JPEGFile: Progressive.\n");
+	fprintf(stderr, "\tJPEGFile: Progressive.\n");
 	jpeg_simple_progression(&cinfo);	// TODO: Custom scan sequence
       }
-      fprintf(stderr, "JPEGFile: %dx%d chroma sub-sampling.\n", jpeg.sample_h(), jpeg.sample_v());
+      fprintf(stderr, "\tJPEGFile: %dx%d chroma sub-sampling.\n", jpeg.sample_h(), jpeg.sample_v());
       cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
       cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
     } else {
@@ -146,7 +146,7 @@ namespace PhotoFinish {
     Ditherer ditherer(img->width(), cinfo.input_components);
     short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * cinfo.input_components * sizeof(short unsigned int));
 
-    fprintf(stderr, "Writing %ldx%ld JPEG file...\n", img->width(), img->height());
+    fprintf(stderr, "\tWriting %ldx%ld JPEG file...\n", img->width(), img->height());
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
       cmsDoTransform(transform, img->row(cinfo.next_scanline), temp_row, img->width());
@@ -169,7 +169,9 @@ namespace PhotoFinish {
     write(ofs, img, dest);
     ofs.close();
 
+    fprintf(stderr, "\tEmbedding metadata...\n");
     tags.embed(_filepath);
+    fprintf(stderr, "Done.\n");
   }
 
 }

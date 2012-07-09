@@ -313,6 +313,7 @@ namespace PhotoFinish {
     if (_targets.size() == 0)
       throw NoTargets(_name);
 
+    std::cerr << "Finding best target from \"" << _name << "\" to fit image " << img->width() << "x" << img->height() << "..." << std::endl;
     Frame::ptr best_frame;
     double best_waste = 0;
     for (std::map<std::string, D_target::ptr>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
@@ -345,7 +346,7 @@ namespace PhotoFinish {
 	double gap = waste = img->width() - width;
 	x = gap * offx / 100;
       }
-      fprintf(stderr, "Waste from target \"%s\" (%0.1f,%0.1f)+(%0.1fx%0.1f) = %0.2f.\n", target->name().c_str(), x, y, width, height, waste);
+      fprintf(stderr, "\tWaste from target \"%s\" (%0.1f,%0.1f)+(%0.1fx%0.1f) = %0.2f.\n", target->name().c_str(), x, y, width, height, waste);
       if ((!best_frame) || (waste < best_waste)) {
 	Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
 	best_frame.swap(new_best_frame);
@@ -356,7 +357,7 @@ namespace PhotoFinish {
     if (!best_frame)
       throw NoResults("Destination", "best_frame");
 
-    fprintf(stderr, "Best waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
+    fprintf(stderr, "Least waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
     return best_frame;
   }
 

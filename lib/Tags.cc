@@ -175,6 +175,8 @@ namespace PhotoFinish {
 
     Exiv2::ExifThumb EXIFthumb(_EXIFtags);
     EXIFthumb.setJpegThumbnail((unsigned char*)oss.str().data(), oss.str().length());
+
+    std::cerr << "Done." << std::endl;
   }
 
   void Tags::embed(fs::path filepath) const {

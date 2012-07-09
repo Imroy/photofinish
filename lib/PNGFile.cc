@@ -69,9 +69,8 @@ namespace PhotoFinish {
     png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
 
     int bit_depth, colour_type;
-    //  fprintf(stderr, "png_info_callback: Getting header information...\n");
     png_get_IHDR(png, info, &cs->width, &cs->height, &bit_depth, &colour_type, NULL, NULL, NULL);
-    fprintf(stderr, "%dx%d, %d bpp, type %d.\n", cs->width, cs->height, bit_depth, colour_type);
+    fprintf(stderr, "\t%dx%d, %d bpp, type %d.\n", cs->width, cs->height, bit_depth, colour_type);
 
     cs->img = Image::ptr(new Image(cs->width, cs->height));
 
@@ -87,7 +86,7 @@ namespace PhotoFinish {
       cs->rowlen = cs->width * 3 * (bit_depth >> 3);
       break;
     default:
-      fprintf(stderr, "unsupported PNG colour type %d\n", colour_type);
+      fprintf(stderr, "** unsupported PNG colour type %d **\n", colour_type);
       exit(1);
     }
 
@@ -95,29 +94,28 @@ namespace PhotoFinish {
     cmsHPROFILE profile = NULL;
 
     if (png_get_valid(png, info, PNG_INFO_iCCP)) {
-      fprintf(stderr, "Image has iCCP chunk.\n");
+      fprintf(stderr, "\tImage has iCCP chunk.\n");
       char *profile_name;
       int compression_type;
       png_bytep profile_data;
       unsigned int profile_len;
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
-	fprintf(stderr, "Loading ICC profile \"%s\" from file...\n", profile_name);
+	fprintf(stderr, "\tLoading ICC profile \"%s\" from file...\n", profile_name);
 	profile = cmsOpenProfileFromMem(profile_data, profile_len);
       }
     }
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
-	fprintf(stderr, "Using default sRGB profile...\n");
+	fprintf(stderr, "\tUsing default sRGB profile...\n");
 	profile = cmsCreate_sRGBProfile();
       } else {
-	fprintf(stderr, "Using default greyscale profile...\n");
+	fprintf(stderr, "\tUsing default greyscale profile...\n");
 	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
 	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
 	cmsFreeToneCurve(gamma);
       }
     }
 
-    //  fprintf(stderr, "Creating colour transform...\n");
     cs->transform = cmsCreateTransform(profile, cmsType,
 				       lab, IMAGE_TYPE,
 				       INTENT_PERCEPTUAL, 0);
@@ -174,27 +172,23 @@ namespace PhotoFinish {
 
     {
       unsigned char header[8];
-      //    fprintf(stderr, "Reading header...\n");
       fb.read((char*)header, 8);
       if (png_sig_cmp(header, 0, 8))
 	throw FileContentError(_filepath.string(), "is not a PNG file");
       fb.seekg(0, std::ios_base::beg);
     }
 
-    //  fprintf(stderr, "Creating read structure...\n");
     png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
 					     NULL, NULL, NULL);
     if (!png)
       throw LibraryError("libpng", "Could not create PNG read structure");
 
-    //  fprintf(stderr, "Creating info structure...\n");
     png_infop info = png_create_info_struct(png);
     if (!info) {
       png_destroy_read_struct(&png, (png_infopp)NULL, (png_infopp)NULL);
       throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
-    //  fprintf(stderr, "Setting jump point...\n");
     if (setjmp(png_jmpbuf(png))) {
       png_destroy_read_struct(&png, &info, NULL);
       fb.close();
@@ -211,7 +205,7 @@ namespace PhotoFinish {
     {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
-	fprintf(stderr, "Reading PNG image and transforming into L*a*b* using %d threads...\n", omp_get_num_threads());
+	fprintf(stderr, "\tReading PNG image and transforming into L*a*b* using %d threads...\n", omp_get_num_threads());
 	png_set_progressive_read_fn(png, (void *)&cs, png_info_callback, png_row_callback, png_end_callback);
 	png_byte buffer[1048576];
 	size_t length;
@@ -255,27 +249,23 @@ namespace PhotoFinish {
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
 
-    //  fprintf(stderr, "Creating write structure...\n");
     png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 					      NULL, NULL, NULL);
     if (!png)
       throw LibraryError("libpng", "Could not create PNG write structure");
 
-    //  fprintf(stderr, "Creating info structure...\n");
     png_infop info = png_create_info_struct(png);
     if (!info) {
       png_destroy_write_struct(&png, (png_infopp)NULL);
       throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
-    //  fprintf(stderr, "Setting jump point...\n");
     if (setjmp(png_jmpbuf(png))) {
       png_destroy_write_struct(&png, &info);
       fb.close();
       throw LibraryError("libpng", "Something went wrong writing the PNG");
     }
 
-    //  fprintf(stderr, "Initialising PNG IO...\n");
     png_set_write_fn(png, &fb, png_write_ostream, png_flush_ostream);
 
     int png_colour_type, png_channels;
@@ -290,7 +280,7 @@ namespace PhotoFinish {
       cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
 
-    fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), dest.depth(), png_channels == 1 ? "greyscale" : "RGB");
+    fprintf(stderr, "\tWriting header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), dest.depth(), png_channels == 1 ? "greyscale" : "RGB");
     png_set_IHDR(png, info,
 		 img->width(), img->height(), dest.depth(), png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
@@ -302,7 +292,7 @@ namespace PhotoFinish {
       profile = cmsOpenProfileFromFile(dest.profile().filepath().c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
-      fprintf(stderr, "Using default greyscale profile...\n");
+      fprintf(stderr, "\tUsing default greyscale profile...\n");
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
       cmsFreeToneCurve(gamma);
@@ -314,12 +304,12 @@ namespace PhotoFinish {
       if (len > 0) {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  fprintf(stderr, "Embedding profile \"%s\" (%d bytes)...\n", dest.profile().name().c_str(), len);
+	  fprintf(stderr, "\tEmbedding profile \"%s\" (%d bytes)...\n", dest.profile().name().c_str(), len);
 	  png_set_iCCP(png, info, dest.profile().name().c_str(), 0, profile_data, len);
 	}
       }
     } else {
-      fprintf(stderr, "Using default sRGB profile...\n");
+      fprintf(stderr, "\tUsing default sRGB profile...\n");
       profile = cmsCreate_sRGBProfile();
       png_set_sRGB_gAMA_and_cHRM(png, info, dest.intent());
     }
@@ -329,7 +319,7 @@ namespace PhotoFinish {
       if (t > 0) {
 	png_time ptime;
 	png_convert_from_time_t(&ptime, t);
-	fprintf(stderr, "Adding time chunk...\n");
+	fprintf(stderr, "\tAdding time chunk...\n");
 	png_set_tIME(png, info, &ptime);
       }
     }
@@ -341,7 +331,6 @@ namespace PhotoFinish {
     png_set_rows(png, info, png_rows);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    //  fprintf(stderr, "Creating colour transform...\n");
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
 						 dest.intent(), 0);
@@ -352,7 +341,7 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	fprintf(stderr, "Transforming image data from L*a*b* using %d threads...\n", omp_get_num_threads());
+	fprintf(stderr, "\tTransforming image data from L*a*b* using %d threads...\n", omp_get_num_threads());
       }
     }
     if (dest.depth() == 8) {
@@ -370,7 +359,7 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    fprintf(stderr, "Writing PNG image data...\n");
+    fprintf(stderr, "\tWriting PNG image data...\n");
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
 
     for (long int y = 0; y < img->height(); y++)
