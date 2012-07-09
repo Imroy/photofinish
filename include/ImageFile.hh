@@ -89,8 +89,8 @@ namespace PhotoFinish {
     JPEGFile(const fs::path filepath);
 
     Image::ptr read(void) const;
-    //! Special version of write() that takes an open ofstream object
-    void write(fs::ofstream& ofs, Image::ptr img, const Destination &dest, const Tags &tags) const;
+    //! Special version of write() that takes an open ostream object
+    void write(std::ostream& ofs, Image::ptr img, const Destination &dest) const;
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 

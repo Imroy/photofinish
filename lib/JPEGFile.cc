@@ -42,11 +42,11 @@ namespace PhotoFinish {
 
   struct callback_state {
     JOCTET *buffer;
-    std::ofstream *fb;
+    std::ostream *fb;
     size_t buffer_size;
   };
 
-  static void ofstream_init_destination(j_compress_ptr cinfo) {
+  static void ostream_init_destination(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     callback_state *cs = (callback_state*)(cinfo->client_data);
     cs->buffer = (JOCTET*)malloc(cs->buffer_size);
@@ -57,7 +57,7 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = cs->buffer_size;
   }
 
-  static boolean ofstream_empty_output_buffer(j_compress_ptr cinfo) {
+  static boolean ostream_empty_output_buffer(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     callback_state *cs = (callback_state*)(cinfo->client_data);
     cs->fb->write((char*)cs->buffer, cs->buffer_size);
@@ -66,7 +66,7 @@ namespace PhotoFinish {
     return 1;
   }
 
-  static void ofstream_term_destination(j_compress_ptr cinfo) {
+  static void ostream_term_destination(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     callback_state *cs = (callback_state*)(cinfo->client_data);
     cs->fb->write((char*)cs->buffer, cs->buffer_size - dmgr->free_in_buffer);
@@ -75,21 +75,21 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = 0;
   }
 
-  void JPEGFile::write(fs::ofstream& ofs, Image::ptr img, const Destination &dest, const Tags &tags) const {
+  void JPEGFile::write(std::ostream& os, Image::ptr img, const Destination &dest) const {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
 
     callback_state cs;
-    cs.fb = &ofs;
+    cs.fb = &os;
     cs.buffer_size = 1048576;
     cinfo.client_data = (void*)&cs;
 
     jpeg_destination_mgr dmgr;
-    dmgr.init_destination = ofstream_init_destination;
-    dmgr.empty_output_buffer = ofstream_empty_output_buffer;
-    dmgr.term_destination = ofstream_term_destination;
+    dmgr.init_destination = ostream_init_destination;
+    dmgr.empty_output_buffer = ostream_empty_output_buffer;
+    dmgr.term_destination = ostream_term_destination;
     cinfo.dest = &dmgr;
 
     cinfo.image_width = img->width();
@@ -163,10 +163,10 @@ namespace PhotoFinish {
     if (ofs.fail())
       throw FileOpenError(_filepath.native());
 
-    write(ofs, img, dest, tags);
+    write(ofs, img, dest);
     ofs.close();
 
-    tags.Embed(_filepath);
+    tags.embed(_filepath);
   }
 
 }
