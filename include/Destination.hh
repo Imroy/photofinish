@@ -130,7 +130,7 @@ namespace PhotoFinish {
     inline const D_PNG& png(void) const { return _png; }
 
     inline bool has_jpeg(void) const { return _has_jpeg; }
-    inline D_JPEG& jpeg(void) { return _jpeg; }
+    inline void set_jpeg(D_JPEG dj) { _jpeg = dj; _has_jpeg = true; }
     inline const D_JPEG& jpeg(void) const { return _jpeg; }
 
     inline bool has_intent(void) const { return _has_intent; }

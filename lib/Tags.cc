@@ -165,6 +165,8 @@ namespace PhotoFinish {
       height = dt.maxheight();
     }
 
+    std::cerr << "Making EXIF thumbnail..." << std::endl;
+
     Frame frame(width, height, 0, 0, img->width(), img->height(), 0);
 
     D_resize dr("Lanczos", 3.0);
@@ -172,7 +174,7 @@ namespace PhotoFinish {
     Image::ptr thumbimage = frame.crop_resize(img, lanczos);
 
     Destination dest;
-    dest.jpeg() = D_JPEG(50, 1, 1, false);
+    dest.set_jpeg(D_JPEG(50, 1, 1, false));
 
     JPEGFile thumbfile("");
     std::ostringstream oss;
