@@ -75,19 +75,14 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = 0;
   }
 
-  void JPEGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
+  void JPEGFile::write(fs::ofstream& ofs, Image::ptr img, const Destination &dest, const Tags &tags) const {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
     jpeg_create_compress(&cinfo);
 
-    fprintf(stderr, "Opening file \"%s\"...\n", _filepath.string().c_str());
-    fs::ofstream fb(_filepath, std::ios_base::out);
-    if (fb.fail())
-      throw FileOpenError(_filepath.native());
-
     callback_state cs;
-    cs.fb = &fb;
+    cs.fb = &ofs;
     cs.buffer_size = 1048576;
     cinfo.client_data = (void*)&cs;
 
@@ -159,8 +154,17 @@ namespace PhotoFinish {
     cmsDeleteTransform(transform);
 
     jpeg_finish_compress(&cinfo);
-    fb.close();
     jpeg_destroy_compress(&cinfo);
+  }
+
+  void JPEGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
+    fprintf(stderr, "Opening file \"%s\"...\n", _filepath.string().c_str());
+    fs::ofstream ofs(_filepath, std::ios_base::out);
+    if (ofs.fail())
+      throw FileOpenError(_filepath.native());
+
+    write(ofs, img, dest, tags);
+    ofs.close();
 
     tags.Embed(_filepath);
   }

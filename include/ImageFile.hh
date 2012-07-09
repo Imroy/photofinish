@@ -23,6 +23,7 @@
 #include <lcms2.h>
 #include <memory>
 #include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include "Image.hh"
 #include "Destination.hh"
 #include "Tags.hh"
@@ -88,6 +89,8 @@ namespace PhotoFinish {
     JPEGFile(const fs::path filepath);
 
     Image::ptr read(void) const;
+    //! Special version of write() that takes an open ofstream object
+    void write(fs::ofstream& ofs, Image::ptr img, const Destination &dest, const Tags &tags) const;
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
