@@ -279,15 +279,15 @@ namespace PhotoFinish {
     png_set_write_fn(png, &fb, png_write_ostream, png_flush_ostream);
 
     int png_colour_type, png_channels;
-    cmsUInt32Number cmsType;
+    cmsUInt32Number cmsTempType;
     if (img->is_colour()) {
       png_colour_type = PNG_COLOR_TYPE_RGB;
       png_channels = 3;
-      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(dest.depth() >> 3);
+      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
     } else {
       png_colour_type = PNG_COLOR_TYPE_GRAY;
       png_channels = 1;
-      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(dest.depth() >> 3);
+      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
 
     fprintf(stderr, "writing header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), dest.depth(), png_channels == 1 ? "greyscale" : "RGB");
@@ -342,7 +342,6 @@ namespace PhotoFinish {
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     //  fprintf(stderr, "Creating colour transform...\n");
-    cmsUInt32Number cmsTempType = COLORSPACE_SH(T_COLORSPACE(cmsType)) | CHANNELS_SH(png_channels) | BYTES_SH(2);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
 						 dest.intent(), 0);

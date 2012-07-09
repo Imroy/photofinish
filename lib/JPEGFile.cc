@@ -100,19 +100,19 @@ namespace PhotoFinish {
     cinfo.image_height = img->height();
 
     cmsHPROFILE profile = NULL;
-    cmsUInt32Number cmsType;
+    cmsUInt32Number cmsTempType;
     if (img->is_greyscale()) {
       fprintf(stderr, "Using default greyscale profile...\n");
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
       cmsFreeToneCurve(gamma);
-      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(1);
+      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
       cinfo.input_components = 1;
       cinfo.in_color_space = JCS_GRAYSCALE;
     } else {
       fprintf(stderr, "Using default sRGB profile...\n");
       profile = cmsCreate_sRGBProfile();
-      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(1);
+      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
       cinfo.input_components = 3;
       cinfo.in_color_space = JCS_RGB;
     }
@@ -134,7 +134,6 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsUInt32Number cmsTempType = COLORSPACE_SH(T_COLORSPACE(cmsType)) | CHANNELS_SH(cinfo.input_components) | BYTES_SH(2);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
 						 INTENT_PERCEPTUAL, 0);
