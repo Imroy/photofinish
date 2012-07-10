@@ -82,6 +82,9 @@ int main(int argc, char* argv[]) {
 		outimage->set_colour();
 	    }
 
+	    if (destination->has_size())
+	      tags.add_resolution(outimage, destination);
+
 	    if (destination->has_thumbnail() && destination->thumbnail().has_generate() && destination->thumbnail().generate())
 	      tags.make_thumbnail(outimage, destination->thumbnail());
 

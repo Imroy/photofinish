@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <math.h>
 #include <exiv2/exiv2.hpp>
 #include <iostream>
 #include <fstream>
@@ -177,6 +178,33 @@ namespace PhotoFinish {
     EXIFthumb.setJpegThumbnail((unsigned char*)oss.str().data(), oss.str().length());
 
     std::cerr << "Done." << std::endl;
+  }
+
+  void Tags::add_resolution(Image::ptr img, Destination::ptr dest) {
+    double res = (img->width() > img->height() ? img->width() : img->height()) / dest->size();
+    unsigned int num, den;
+    for (den = 1; den < 65535; den++) {
+      num = round(res * den);
+      double error = fabs(((double)num / den) - res);
+      if (error < res * 0.001) {
+	std::cerr << "\tSetting resolution to " << num << " / " << den << " (" << res << " +- " << error << ") ppi." << std::endl;
+	break;
+      }
+    }
+    Exiv2::URationalValue v(Exiv2::URational(num, den));
+    try {
+      Exiv2::ExifKey key("Exif.Image.XResolution");
+      _EXIFtags.add(key, &v);
+    } catch (Exiv2::Error& e) {
+      std::cerr << "** EXIF key \"Exif.Image.XResolution\" not accepted **" << std::endl;
+    }
+    try {
+      Exiv2::ExifKey key("Exif.Image.YResolution");
+      _EXIFtags.add(key, &v);
+    } catch (Exiv2::Error& e) {
+      std::cerr << "** EXIF key \"Exif.Image.YResolution\" not accepted **" << std::endl;
+    }
+    _EXIFtags["Exif.Image.ResolutionUnit"] = 2;	// Inches (yuck)
   }
 
   void Tags::embed(fs::path filepath) const {

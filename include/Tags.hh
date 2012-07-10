@@ -25,7 +25,7 @@
 #include <string>
 #include <map>
 #include "Image.hh"
-#include "Destination_items.hh"
+#include "Destination.hh"
 
 namespace fs = boost::filesystem;
 
@@ -65,6 +65,8 @@ namespace PhotoFinish {
 
     //! Create a thumbnail from the supplied image
     void make_thumbnail(Image::ptr img, const D_thumbnail& dt);
+
+    void add_resolution(Image::ptr img, Destination::ptr dest);
 
     //! Embed EXIF/IPTC/XMP tags into an image file
     void embed(fs::path filepath) const;
