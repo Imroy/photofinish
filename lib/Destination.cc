@@ -17,6 +17,7 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <strings.h>
 #include <string.h>
@@ -346,7 +347,10 @@ namespace PhotoFinish {
 	double gap = waste = img->width() - width;
 	x = gap * offx / 100;
       }
-      fprintf(stderr, "\tWaste from target \"%s\" (%0.1f,%0.1f)+(%0.1fx%0.1f) = %0.2f.\n", target->name().c_str(), x, y, width, height, waste);
+      std::cerr << "\tWaste from target \"" << target->name() << "\" ("
+		<< std::setprecision(1) << std::fixed << x << ", " << y << ") + ("
+		<< width << "×" << height << ") = "
+		<< std::setprecision(2) << std::fixed << waste << "." << std::endl;
       if ((!best_frame) || (waste < best_waste)) {
 	Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
 	best_frame.swap(new_best_frame);

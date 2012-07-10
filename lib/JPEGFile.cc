@@ -126,7 +126,7 @@ namespace PhotoFinish {
 	fprintf(stderr, "\tJPEGFile: Progressive.\n");
 	jpeg_simple_progression(&cinfo);	// TODO: Custom scan sequence
       }
-      fprintf(stderr, "\tJPEGFile: %dx%d chroma sub-sampling.\n", jpeg.sample_h(), jpeg.sample_v());
+      std::cerr << "\tJPEGFile: " << (int)jpeg.sample_h() << "×" << (int)jpeg.sample_v() << " chroma sub-sampling." << std::endl;
       cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
       cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
     } else {
@@ -146,7 +146,7 @@ namespace PhotoFinish {
     Ditherer ditherer(img->width(), cinfo.input_components);
     short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * cinfo.input_components * sizeof(short unsigned int));
 
-    fprintf(stderr, "\tWriting %ldx%ld JPEG file...\n", img->width(), img->height());
+    std::cerr << "\tWriting " << img->width() << "×" << img->height() << " JPEG image..." << std::endl;
     jpeg_start_compress(&cinfo, TRUE);
     while (cinfo.next_scanline < cinfo.image_height) {
       cmsDoTransform(transform, img->row(cinfo.next_scanline), temp_row, img->width());

@@ -70,7 +70,7 @@ namespace PhotoFinish {
 
     int bit_depth, colour_type;
     png_get_IHDR(png, info, &cs->width, &cs->height, &bit_depth, &colour_type, NULL, NULL, NULL);
-    fprintf(stderr, "\t%dx%d, %d bpp, type %d.\n", cs->width, cs->height, bit_depth, colour_type);
+    std::cerr << "\t" << cs->width << "×" << cs->height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
     cs->img = Image::ptr(new Image(cs->width, cs->height));
 
@@ -280,7 +280,9 @@ namespace PhotoFinish {
       cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
 
-    fprintf(stderr, "\tWriting header for %ldx%ld %d-bit %s PNG image...\n", img->width(), img->height(), dest.depth(), png_channels == 1 ? "greyscale" : "RGB");
+    std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
+	      << " " << dest.depth() << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
+	      << " PNG image..." << std::endl;
     png_set_IHDR(png, info,
 		 img->width(), img->height(), dest.depth(), png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);

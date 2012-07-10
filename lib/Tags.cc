@@ -187,7 +187,7 @@ namespace PhotoFinish {
       num = round(res * den);
       double error = fabs(((double)num / den) - res);
       if (error < res * 0.001) {
-	std::cerr << "\tSetting resolution to " << num << " / " << den << " (" << res << " +- " << error << ") ppi." << std::endl;
+	std::cerr << "\tSetting resolution to " << num << " ÷ " << den << " (" << res << " ± " << error << ") ppi." << std::endl;
 	break;
       }
     }
