@@ -3,6 +3,9 @@ PROGRAMS=photofinish
 #PRECISION=double
 PRECISION=float
 
+PREFIX=/usr/local
+BINDIR=$(PREFIX)/bin
+
 # Libraries with pkg-config data
 PKGS=libpng lcms2 exiv2 yaml-cpp
 
@@ -10,7 +13,6 @@ COMMON_FLAGS = -Wall -Iinclude `pkg-config --cflags $(PKGS)` -fopenmp -g -DSAMPL
 CFLAGS += $(COMMON_FLAGS)
 CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
 
-INCLUDES = $(wildcard include/*.hh) $(wildcard include/*.h)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
@@ -20,6 +22,9 @@ all: $(PROGRAMS)
 
 clean:
 	@rm -fv $(PROG_OBJS) $(LIB_OBJS) $(PROGRAMS)
+
+install: $(PROGRAMS)
+	install -t $(BINDIR) $(PROGRAMS)
 
 $(PROGRAMS): %: %.o $(LIB_OBJS)
 	$(CXX) $(LDFLAGS) $^ $(LIBS) -o $@
