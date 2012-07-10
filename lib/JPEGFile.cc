@@ -79,6 +79,9 @@ namespace PhotoFinish {
     dmgr->free_in_buffer = 0;
   }
 
+  void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
+  void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
+
   void JPEGFile::write(std::ostream& os, Image::ptr img, const Destination &dest) const {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
@@ -124,13 +127,25 @@ namespace PhotoFinish {
       jpeg_set_quality(&cinfo, jpeg.quality(), TRUE);
       if (jpeg.progressive()) {
 	std::cerr << "\tProgressive JPEG." << std::endl;
-	jpeg_simple_progression(&cinfo);	// TODO: Custom scan sequence
+	if (img->is_greyscale())
+	  jpegfile_scan_greyscale(&cinfo);
+	else
+	  jpegfile_scan_RGB(&cinfo);
       }
-      std::cerr << "\tJPEG chroma sub-sampling of " << (int)jpeg.sample_h() << "×" << (int)jpeg.sample_v() << "." << std::endl;
-      cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
-      cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
+      if (img->is_colour()) {
+	std::cerr << "\tJPEG chroma sub-sampling of " << (int)jpeg.sample_h() << "×" << (int)jpeg.sample_v() << "." << std::endl;
+	cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
+	cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
+      }
     } else {
       jpeg_set_quality(&cinfo, 95, TRUE);
+      if (img->is_greyscale())
+	jpegfile_scan_greyscale(&cinfo);
+      else {
+	cinfo.comp_info[0].h_samp_factor = 2;
+	cinfo.comp_info[0].v_samp_factor = 2;
+	jpegfile_scan_RGB(&cinfo);
+      }
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
@@ -161,7 +176,7 @@ namespace PhotoFinish {
   }
 
   void JPEGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
-    std::cerr << "Opening file \"" << _filepath << "\"..." << std::endl;
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
       throw FileOpenError(_filepath.native());

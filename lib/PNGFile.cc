@@ -166,7 +166,7 @@ namespace PhotoFinish {
   }
 
   Image::ptr PNGFile::read(void) const {
-    std::cerr << "Opening file \"" << _filepath << "\"..." << std::endl;
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
       throw FileOpenError(_filepath.native());
@@ -246,7 +246,7 @@ namespace PhotoFinish {
   }
 
   void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
-    std::cerr << "Opening file \"" << _filepath << "\"..." << std::endl;
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
 
