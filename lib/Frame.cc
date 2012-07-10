@@ -16,6 +16,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream>
+#include <iomanip>
 #include <omp.h>
 #include "Frame.hh"
 #include "Destination_items.hh"
@@ -47,7 +49,9 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	fprintf(stderr, "Resizing image horizontally %ld => %0.2f using %d threads...\n", img->width(), nw, omp_get_num_threads());
+	std::cerr << "Resizing image horizontally " << img->width() << " => "
+		  << std::setprecision(2) << std::fixed << nw
+		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)
@@ -83,7 +87,9 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	fprintf(stderr, "Resizing image vertically %ld => %0.2f using %d threads...\n", img->height(), nh, omp_get_num_threads());
+	std::cerr << "Resizing image vertically " << img->height() << " => "
+		  << std::setprecision(2) << std::fixed << nh
+		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)

@@ -16,7 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <stdio.h>
+#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -35,7 +35,7 @@ using namespace PhotoFinish;
 
 int main(int argc, char* argv[]) {
   if (argc == 1) {
-    fprintf(stderr, "%s <input file> [<input file>...] <destination> [<destination>...]\n", argv[0]);
+    std::cerr << argv[0] << "<input file> [<input file>...] <destination> [<destination>...]" << std::endl;
     exit(1);
   }
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
     else if (stat(argv[i], &s) == 0)
       arg_filenames.push_back(argv[i]);
     else
-      fprintf(stderr, "Argument \"%s\" is neither a destination name, nor a filename.\n", argv[i]);
+      std::cerr << "Argument \"" << argv[i] << " is neither a destination name, nor a filename." << std::endl;
   }
 
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 	      tags.make_thumbnail(outimage, destination->thumbnail());
 
 	    if (!exists(destination->dir())) {
-	      fprintf(stderr, "Creating directory \"%s\".\n", destination->dir().string().c_str());
+	      std::cerr << "Creating directory \"" << destination->dir() << "\"." << std::endl;
 	      create_directory(destination->dir());
 	    }
 	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");

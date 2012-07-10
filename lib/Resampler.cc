@@ -18,7 +18,6 @@
 */
 #include "Resampler.hh"
 #include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
 
 namespace PhotoFinish {

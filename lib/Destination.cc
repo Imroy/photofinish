@@ -141,7 +141,7 @@ namespace PhotoFinish {
     if ((vi = vars.find("sample")) != vars.end()) {
       int rc = sscanf(vi->second.c_str(), "%hhdx%hhd", &_sample_h, &_sample_v);
       if (rc < 2)
-	fprintf(stderr, "D_JPEG: Failed to parse sample \"%s\".\n", vi->second.c_str());
+	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second << "\"." << std::endl;
       else {
 	_has_sample = true;
 	vars.erase(vi);
@@ -161,7 +161,7 @@ namespace PhotoFinish {
       node["sample"] >> sample;
       int rc = sscanf(sample.c_str(), "%hhdx%hhd", &dj._sample_h, &dj._sample_v);
       if (rc < 2)
-	fprintf(stderr, "D_JPEG: Failed to parse sample \"%s\".\n", sample.c_str());
+	std::cerr << "D_JPEG: Failed to parse sample \"" << sample << "\"." << std::endl;
       else
 	dj._has_sample = true;
     } catch(YAML::RepresentationException& e) {}
@@ -361,7 +361,7 @@ namespace PhotoFinish {
     if (!best_frame)
       throw NoResults("Destination", "best_frame");
 
-    fprintf(stderr, "Least waste was from frame \"%s\" = %f.\n", best_frame->name().c_str(), best_waste);
+    std::cerr << "Least waste was from frame \"" << best_frame->name() << "\" = " << best_waste << "." << std::endl;
     return best_frame;
   }
 

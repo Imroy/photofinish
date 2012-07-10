@@ -86,7 +86,7 @@ namespace PhotoFinish {
       cs->rowlen = cs->width * 3 * (bit_depth >> 3);
       break;
     default:
-      fprintf(stderr, "** unsupported PNG colour type %d **\n", colour_type);
+      std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
 
@@ -94,22 +94,22 @@ namespace PhotoFinish {
     cmsHPROFILE profile = NULL;
 
     if (png_get_valid(png, info, PNG_INFO_iCCP)) {
-      fprintf(stderr, "\tImage has iCCP chunk.\n");
+      std::cerr << "\tImage has iCCP chunk." << std::endl;
       char *profile_name;
       int compression_type;
       png_bytep profile_data;
       unsigned int profile_len;
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
-	fprintf(stderr, "\tLoading ICC profile \"%s\" from file...\n", profile_name);
+	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	profile = cmsOpenProfileFromMem(profile_data, profile_len);
       }
     }
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
-	fprintf(stderr, "\tUsing default sRGB profile...\n");
+	std::cerr << "\tUsing default sRGB profile." << std::endl;
 	profile = cmsCreate_sRGBProfile();
       } else {
-	fprintf(stderr, "\tUsing default greyscale profile...\n");
+	std::cerr << "\tUsing default greyscale profile." << std::endl;
 	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
 	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
 	cmsFreeToneCurve(gamma);
@@ -126,7 +126,8 @@ namespace PhotoFinish {
   //! Called by libPNG when a row of image data has been read
   void png_row_callback(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
     png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
-    fprintf(stderr, "\rRead %d of %d rows (%ld in queue for colour transformation)   ", row_num + 1, cs->height, cs->rowqueue.size());
+    std::cerr << "\r\tRead " << (row_num + 1) << " of " << cs->height << " rows ("
+	      << cs->rowqueue.size() << " in queue for colour transformation)   ";
     png_bytep new_row = (png_bytep)malloc(cs->rowlen);
     memcpy(new_row, row_data, cs->rowlen);
     png_workqueue_row_t *row = new png_workqueue_row_t(row_num, new_row);
@@ -165,7 +166,7 @@ namespace PhotoFinish {
   }
 
   Image::ptr PNGFile::read(void) const {
-    fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
+    std::cerr << "Opening file \"" << _filepath << "\"..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
       throw FileOpenError(_filepath.native());
@@ -205,7 +206,7 @@ namespace PhotoFinish {
     {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
-	fprintf(stderr, "\tReading PNG image and transforming into L*a*b* using %d threads...\n", omp_get_num_threads());
+	std::cerr << "\tReading PNG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
 	png_set_progressive_read_fn(png, (void *)&cs, png_info_callback, png_row_callback, png_end_callback);
 	png_byte buffer[1048576];
 	size_t length;
@@ -216,7 +217,7 @@ namespace PhotoFinish {
 	  while (cs.rowqueue.size() > 100)
 	    png_process_row(&cs);
 	} while (length > 0);
-	fprintf(stderr, "\n");
+	std::cerr << std::endl;
 	cs.finished = true;
 	png_run_workqueue(&cs);	// Help finish off the transforming of image data
       } else {
@@ -227,7 +228,7 @@ namespace PhotoFinish {
     free(cs.queue_lock);
     cmsDeleteTransform(cs.transform);
 
-    fprintf(stderr, "Done.\n");
+    std::cerr << "Done." << std::endl;
     png_destroy_read_struct(&png, &info, NULL);
     fb.close();
 
@@ -245,7 +246,7 @@ namespace PhotoFinish {
   }
 
   void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
-    fprintf(stderr, "Opening file \"%s\"...\n", _filepath.c_str());
+    std::cerr << "Opening file \"" << _filepath << "\"..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
 
@@ -294,7 +295,7 @@ namespace PhotoFinish {
       profile = cmsOpenProfileFromFile(dest.profile().filepath().c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
-      fprintf(stderr, "\tUsing default greyscale profile...\n");
+      std::cerr << "\tUsing default greyscale profile." << std::endl;
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
       cmsFreeToneCurve(gamma);
@@ -306,12 +307,12 @@ namespace PhotoFinish {
       if (len > 0) {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  fprintf(stderr, "\tEmbedding profile \"%s\" (%d bytes)...\n", dest.profile().name().c_str(), len);
+	  std::cerr << "\tEmbedding profile \"" << dest.profile().name() << "\" (" << len << " bytes)." << std::endl;
 	  png_set_iCCP(png, info, dest.profile().name().c_str(), 0, profile_data, len);
 	}
       }
     } else {
-      fprintf(stderr, "\tUsing default sRGB profile...\n");
+      std::cerr << "\tUsing default sRGB profile." << std::endl;
       profile = cmsCreate_sRGBProfile();
       png_set_sRGB_gAMA_and_cHRM(png, info, dest.intent());
     }
@@ -321,7 +322,7 @@ namespace PhotoFinish {
       if (t > 0) {
 	png_time ptime;
 	png_convert_from_time_t(&ptime, t);
-	fprintf(stderr, "\tAdding time chunk...\n");
+	std::cerr << "\tAdding time chunk." << std::endl;
 	png_set_tIME(png, info, &ptime);
       }
     }
@@ -343,7 +344,7 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	fprintf(stderr, "\tTransforming image data from L*a*b* using %d threads...\n", omp_get_num_threads());
+	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
       }
     }
     if (dest.depth() == 8) {
@@ -361,7 +362,7 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    fprintf(stderr, "\tWriting PNG image data...\n");
+    std::cerr << "\tWriting PNG image data..." << std::endl;
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
 
     for (long int y = 0; y < img->height(); y++)
@@ -370,7 +371,7 @@ namespace PhotoFinish {
 
     png_destroy_write_struct(&png, &info);
 
-    fprintf(stderr, "Done.\n");
+    std::cerr << "Done." << std::endl;
     fb.close();
 
     tags.embed(_filepath);

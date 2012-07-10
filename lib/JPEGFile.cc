@@ -102,7 +102,7 @@ namespace PhotoFinish {
     cmsHPROFILE profile = NULL;
     cmsUInt32Number cmsTempType;
     if (img->is_greyscale()) {
-      fprintf(stderr, "\tUsing default greyscale profile...\n");
+      std::cerr << "\tUsing default greyscale profile." << std::endl;
       cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
       profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
       cmsFreeToneCurve(gamma);
@@ -110,7 +110,7 @@ namespace PhotoFinish {
       cinfo.input_components = 1;
       cinfo.in_color_space = JCS_GRAYSCALE;
     } else {
-      fprintf(stderr, "\tUsing default sRGB profile...\n");
+      std::cerr << "\tUsing default sRGB profile." << std::endl;
       profile = cmsCreate_sRGBProfile();
       cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
       cinfo.input_components = 3;
@@ -120,13 +120,13 @@ namespace PhotoFinish {
     jpeg_set_defaults(&cinfo);
     if (dest.has_jpeg()) {
       D_JPEG jpeg = dest.jpeg();
-      fprintf(stderr, "\tJPEGFile: Got quality of %d.\n", jpeg.quality());
+      std::cerr << "\tJPEG quality of " << jpeg.quality() << "." << std::endl;
       jpeg_set_quality(&cinfo, jpeg.quality(), TRUE);
       if (jpeg.progressive()) {
-	fprintf(stderr, "\tJPEGFile: Progressive.\n");
+	std::cerr << "\tProgressive JPEG." << std::endl;
 	jpeg_simple_progression(&cinfo);	// TODO: Custom scan sequence
       }
-      std::cerr << "\tJPEGFile: " << (int)jpeg.sample_h() << "×" << (int)jpeg.sample_v() << " chroma sub-sampling." << std::endl;
+      std::cerr << "\tJPEG chroma sub-sampling of " << (int)jpeg.sample_h() << "×" << (int)jpeg.sample_v() << "." << std::endl;
       cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
       cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
     } else {
@@ -161,7 +161,7 @@ namespace PhotoFinish {
   }
 
   void JPEGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
-    fprintf(stderr, "Opening file \"%s\"...\n", _filepath.string().c_str());
+    std::cerr << "Opening file \"" << _filepath << "\"..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
       throw FileOpenError(_filepath.native());
@@ -169,9 +169,9 @@ namespace PhotoFinish {
     write(ofs, img, dest);
     ofs.close();
 
-    fprintf(stderr, "\tEmbedding metadata...\n");
+    std::cerr << "\tEmbedding metadata..." << std::endl;
     tags.embed(_filepath);
-    fprintf(stderr, "Done.\n");
+    std::cerr << "Done." << std::endl;
   }
 
 }
