@@ -103,6 +103,8 @@ namespace PhotoFinish {
     table["FocalLength35efl"]		= "Exif.Photo.FocalLengthIn35mmFilm";
     table["FocalLengthIn35mmFormat"]	= "Exif.Photo.FocalLengthIn35mmFilm";
     table["ISO"]			= "Exif.Photo.ISOSpeedRatings";
+    table["LensMake"]			= "Exif.Photo.LensMake";
+    table["LensModel"]			= "Exif.Photo.LensModel";
     table["LensSerialNumber"]		= "Exif.Photo.LensSerialNumber";
     table["MeteringMode"]		= "Exif.Photo.MeteringMode";
     table["SceneType"]			= "Exif.Photo.SceneType";
