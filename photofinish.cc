@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
 	      tags.make_thumbnail(outimage, destination->thumbnail());
 
 	    if (!exists(destination->dir())) {
-	      std::cerr << "Creating directory \"" << destination->dir() << "\"." << std::endl;
+	      std::cerr << "Creating directory " << destination->dir() << "." << std::endl;
 	      create_directory(destination->dir());
 	    }
 	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
