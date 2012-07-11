@@ -40,7 +40,9 @@ namespace PhotoFinish {
 
   public:
     //! Empty constructor
-    D_sharpen();
+    D_sharpen()  :
+      _has_radius(false), _has_sigma(false)
+    {}
 
     inline bool has_radius(void) const { return _has_radius; }
     inline double radius(void) const { return _radius; }
@@ -53,20 +55,27 @@ namespace PhotoFinish {
   //! Resize parameters for destination
   class D_resize {
   private:
-    bool _has_filter, _has_support;
+    bool _has_filter;
     std::string _filter;
+    bool _has_support;
     double _support;
+
+    D_resize(std::string f, double s) :
+      _has_filter(true), _filter(f),
+      _has_support(true), _support(s)
+    {}
 
   public:
     //! Empty constructor
-    D_resize();
+    D_resize() :
+      _has_filter(false), _has_support(false)
+    {}
 
-    //! Constructor
-    /*!
-      \param f Name of filter
-      \param s Support i.e usually the radius of the filter
+    //! Named constructor
+    /*! Constructs a D_resize object with filter="lanczos" and the supplied radius
+      \param r Radius of Lanczos filter
     */
-    D_resize(std::string f, double s);
+    static inline D_resize lanczos(double r) { return D_resize("lanczos", r); }
 
     inline bool has_filter(void) const { return _has_filter; }
     inline std::string filter(void) const { return _filter; }

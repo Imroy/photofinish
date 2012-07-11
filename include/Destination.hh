@@ -50,6 +50,7 @@ namespace PhotoFinish {
     bool _has_sharpen, _has_resize;
     D_sharpen _sharpen;
     D_resize _resize;
+
     std::map<std::string, D_target::ptr> _targets;	//! List of targets
 
     bool _has_format;

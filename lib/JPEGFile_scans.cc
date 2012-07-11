@@ -25,7 +25,6 @@ namespace PhotoFinish {
 
   //! Create a scan script for encoding a colour progressive JPEG
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo) {
-    std::cerr << "Image has " << cinfo->num_components << " components." << std::endl;
     jpeg_scan_info *my_scan_info = (jpeg_scan_info*)malloc(11 * sizeof(jpeg_scan_info));
 
     // Luma DC

@@ -112,7 +112,7 @@ namespace PhotoFinish {
     /*!
       \param resize A D_resize object which will supply our parameters.
     */
-    Filter(const D_resize& resize) throw(DestinationError);
+    Filter(const D_resize& dr) throw(DestinationError);
 
     inline double radius(void) const {
       if (_filter == NULL)
