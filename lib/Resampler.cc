@@ -30,9 +30,11 @@ namespace PhotoFinish {
     _Position = (long int**)malloc(_to_size_i * sizeof(long int*));
     _Weight = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
 
-    double range = filter.radius();
-    double norm_fact = 1.0;
-    if (scale >= 1.0) {
+    double range, norm_fact;
+    if (scale < 1.0) {
+      range = filter.radius();
+      norm_fact = 1.0;
+    } else {
       range = filter.radius() * scale;
       norm_fact = filter.radius() / ceil(range);
     }

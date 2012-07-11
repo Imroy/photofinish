@@ -29,13 +29,13 @@ namespace PhotoFinish {
   //! Abstract base class for filters
   class Base_Filter {
   protected:
+    bool _has_radius;
     double _radius;
 
   public:
-    //! Constructor
-    /*! Radius defaults to '3'. */
+    //! Empty constructor
     Base_Filter() :
-      _radius(3)
+      _has_radius(false)
     {}
 
     //! Constructor
@@ -43,14 +43,26 @@ namespace PhotoFinish {
       \param dr A D_resize object which will supply our parameters.
     */
     Base_Filter(const D_resize& dr) :
+      _has_radius(dr.has_support()),
       _radius(dr.has_support() ? dr.support() : 3)
     {}
 
+    //! Fallback constructor
+    /*!
+      \param r Radius of the filter
+    */
+    Base_Filter(double r) :
+      _has_radius(true),
+      _radius(r)
+    {}
+
     //! Accessor
+    inline bool has_radius(void) const { return _has_radius; }
+    //! The size of this filter
     inline double radius(void) const { return _radius; }
 
     //! Evaluate the filter at a given point
-    virtual SAMPLE eval(double x) const = 0;
+    virtual SAMPLE eval(double x) const throw(Uninitialised) = 0;
   };
 
   //! Lanczos filter
@@ -59,6 +71,9 @@ namespace PhotoFinish {
     double _r_radius;	// Reciprocal of the radius
 
   public:
+    //! Empty constructor
+    Lanczos() {}
+
     //! Constructor
     /*!
       \param dr A D_resize object which will supply our parameters.
@@ -68,7 +83,16 @@ namespace PhotoFinish {
       _r_radius(1.0 / _radius)
     {}
 
-    SAMPLE eval(double x) const;
+    //! Fallback constructor
+    /*!
+      \param r Radius of the Lanczos filter
+    */
+    Lanczos(double r) :
+      Base_Filter(r),
+      _r_radius(1.0 / _radius)
+    {}
+
+    SAMPLE eval(double x) const throw(Uninitialised);
   };
 
   //! Filter factory/wrapper class
@@ -80,7 +104,9 @@ namespace PhotoFinish {
 
   public:
     //! Empty constructor
-    Filter();
+    Filter() :
+      _filter(NULL)
+    {}
 
     //! Constructor
     /*!
@@ -88,7 +114,13 @@ namespace PhotoFinish {
     */
     Filter(const D_resize& resize) throw(DestinationError);
 
-    inline SAMPLE eval(double x) const {
+    inline double radius(void) const {
+      if (_filter == NULL)
+	throw Uninitialised("Filter");
+      return _filter->radius();
+    }
+
+    inline SAMPLE eval(double x) const throw(Uninitialised) {
       if (_filter == NULL)
 	throw Uninitialised("Filter");
       return _filter->eval(x);

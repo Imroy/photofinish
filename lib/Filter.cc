@@ -25,20 +25,19 @@
 
 namespace PhotoFinish {
 
-  SAMPLE Lanczos::eval(double x) const {
+  SAMPLE Lanczos::eval(double x) const throw(Uninitialised) {
+    if (!_has_radius)
+      throw Uninitialised("Lanczos", "resize.radius");
+
     if (fabs(x) < 1e-6)
       return 1.0;
     double pix = M_PI * x;
     return (_radius * sin(pix) * sin(pix * _r_radius)) / (sqr(M_PI) * sqr(x));
   }
 
-  Filter::Filter() :
-    _filter(NULL)
-  {}
-
   Filter::Filter(const D_resize& dr) throw(DestinationError) {
     if (!dr.has_filter()) {
-      _filter = ptr(new Lanczos(dr));
+      _filter = ptr(new Lanczos(3.0));
       return;
     }
 
