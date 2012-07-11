@@ -43,7 +43,7 @@ namespace PhotoFinish {
   //! Structure holding information for the JPEG reader
   struct jpeg_callback_state_t {
     JOCTET *buffer;
-    std::ostream *fb;
+    std::ostream *os;
     size_t buffer_size;
   };
 
@@ -63,7 +63,7 @@ namespace PhotoFinish {
   static boolean jpeg_ostream_empty_output_buffer(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     jpeg_callback_state_t *cs = (jpeg_callback_state_t*)(cinfo->client_data);
-    cs->fb->write((char*)cs->buffer, cs->buffer_size);
+    cs->os->write((char*)cs->buffer, cs->buffer_size);
     dmgr->next_output_byte = cs->buffer;
     dmgr->free_in_buffer = cs->buffer_size;
     return 1;
@@ -73,7 +73,7 @@ namespace PhotoFinish {
   static void jpeg_ostream_term_destination(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     jpeg_callback_state_t *cs = (jpeg_callback_state_t*)(cinfo->client_data);
-    cs->fb->write((char*)cs->buffer, cs->buffer_size - dmgr->free_in_buffer);
+    cs->os->write((char*)cs->buffer, cs->buffer_size - dmgr->free_in_buffer);
     free(cs->buffer);
     cs->buffer = NULL;
     dmgr->free_in_buffer = 0;
@@ -89,7 +89,7 @@ namespace PhotoFinish {
     jpeg_create_compress(&cinfo);
 
     jpeg_callback_state_t cs;
-    cs.fb = &os;
+    cs.os = &os;
     cs.buffer_size = 1048576;
     cinfo.client_data = (void*)&cs;
 

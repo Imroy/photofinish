@@ -41,22 +41,22 @@ namespace PhotoFinish {
   class Destination {
   private:
     bool _has_name, _has_dir;
-    std::string _name;		// Name of this destination
-    fs::path _dir;		// Destination directory
+    std::string _name;		//! Name of this destination
+    fs::path _dir;		//! Destination directory
 
     bool _has_size;
-    double _size;			// Size in inches (yuck)
+    double _size;			//! Size of long edge in inches (yuck)
 
     bool _has_sharpen, _has_resize;
     D_sharpen _sharpen;
     D_resize _resize;
-    std::map<std::string, D_target::ptr> _targets;
+    std::map<std::string, D_target::ptr> _targets;	//! List of targets
 
     bool _has_format;
-    std::string _format;
+    std::string _format;	//! Output format
 
     bool _has_depth;
-    int _depth;
+    int _depth;			//! Output bit depth
 
     bool _has_noresize, _noresize;
 
@@ -65,12 +65,12 @@ namespace PhotoFinish {
     D_PNG _png;
 
     bool _has_intent;
-    cmsUInt32Number _intent;
+    cmsUInt32Number _intent;	//! CMS rendering intent
 
     bool _has_profile;
     D_profile _profile;
 
-    bool _has_forcergb, _forcergb;
+    bool _has_forcergb, _forcergb;	//! Force the output to be RGB
 
     bool _has_thumbnail;
     D_thumbnail _thumbnail;

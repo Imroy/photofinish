@@ -46,6 +46,7 @@ namespace PhotoFinish {
     _sigma(-1)
   {}
 
+  //! Read a D_sharpen record from a YAML file
   void operator >> (const YAML::Node& node, D_sharpen& ds) {
     try {
       node["radius"] >> ds._radius;
@@ -73,6 +74,7 @@ namespace PhotoFinish {
     _support(s)
   {}
 
+  //! Read a D_resize record from a YAML file
   void operator >> (const YAML::Node& node, D_resize& dr) {
     try {
       node["filter"] >> dr._filter;
@@ -98,6 +100,7 @@ namespace PhotoFinish {
     _width(-1), _height(-1)
   {}
 
+  //! Read a D_target record from a YAML file
   void operator >> (const YAML::Node& node, D_target& dt) {
     try {
       node["width"] >> dt._width;
@@ -151,6 +154,7 @@ namespace PhotoFinish {
     return ret;
   }
 
+  //! Read a D_JPEG record from a YAML file
   void operator >> (const YAML::Node& node, D_JPEG& dj) {
     try {
       node["qual"] >> dj._quality;
@@ -178,6 +182,7 @@ namespace PhotoFinish {
   D_PNG::D_PNG() {
   }
 
+  //! Read a D_PNG record from a YAML file
   void operator >> (const YAML::Node& node, D_PNG& dp) {
   }
 
@@ -188,6 +193,7 @@ namespace PhotoFinish {
     _has_filepath(false)
   {}
 
+  //! Read a D_profile record from a YAML file
   void operator >> (const YAML::Node& node, D_profile& dp) {
     try {
       node["name"] >> dp._name;
@@ -206,6 +212,7 @@ namespace PhotoFinish {
     _maxwidth(-1), _maxheight(-1)
   {}
 
+  //! Read a D_thumbnail record from a YAML file
   void operator >> (const YAML::Node& node, D_thumbnail& dt) {
     try {
       node["generate"] >> dt._generate;
