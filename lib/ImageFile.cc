@@ -26,6 +26,10 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  ImageFile::ImageFile(const fs::path filepath) :
+    _filepath(filepath)
+  {}
+
   ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
     if (boost::iequals(filepath.extension().generic_string(), ".png"))
       return ImageFile::ptr(new PNGFile(filepath));

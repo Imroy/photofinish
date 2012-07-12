@@ -33,9 +33,6 @@ namespace PhotoFinish {
   public:
     typedef std::shared_ptr<Filter> ptr;
 
-    //! Empty constructor
-    Filter() {}
-
     //! Named constructor
     /*! Create a Filter object using the filter name in the D_resize object.
       \param dr A D_resize object which will supply our parameters.
@@ -57,18 +54,15 @@ namespace PhotoFinish {
 
   public:
     //! Empty constructor
-    Lanczos() {}
+    Lanczos();
 
     //! Constructor
     /*!
       \param dr A D_resize object which will supply our parameters.
     */
-    Lanczos(const D_resize& dr) :
-      _has_radius(dr.has_support()),
-      _radius(dr.support()),
-      _r_radius(1.0 / _radius)
-    {}
+    Lanczos(const D_resize& dr);
 
+    //! Accessor
     inline double range(void) const { return _radius; }
 
     SAMPLE eval(double x) const throw(Uninitialised);

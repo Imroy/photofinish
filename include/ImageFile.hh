@@ -44,18 +44,11 @@ namespace PhotoFinish {
   public:
     typedef std::shared_ptr<ImageFile> ptr;
 
-    //! Empty constructor
-    ImageFile() :
-      _filepath()
-    {}
-
     //! Constructor
     /*!
       \param filepath The path of the image file
     */
-    ImageFile(const fs::path filepath) :
-      _filepath(filepath)
-    {}
+    ImageFile(const fs::path filepath);
 
     //! Named constructor
     /*! Use the extension of the file path to decide what class to use

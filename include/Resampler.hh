@@ -26,7 +26,7 @@
 
 namespace PhotoFinish {
 
-  //! Creates and stores coefficients for cropping and resampling an image
+  //! Creates and stores coefficients for cropping and resizing an image
   class Resampler {
   private:
     long int *_N, **_Position;

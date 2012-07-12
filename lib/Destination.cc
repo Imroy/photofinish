@@ -41,6 +41,10 @@ namespace PhotoFinish {
 
 
 
+  D_sharpen::D_sharpen() :
+    _has_radius(false), _has_sigma(false)
+  {}
+
   //! Read a D_sharpen record from a YAML file
   void operator >> (const YAML::Node& node, D_sharpen& ds) {
     try {
@@ -54,6 +58,16 @@ namespace PhotoFinish {
   }
 
 
+
+  D_resize::D_resize() :
+    _has_filter(false), _has_support(false),
+    _support(-1)
+  {}
+
+  D_resize::D_resize(std::string f, double s) :
+    _has_filter(true), _filter(f),
+    _has_support(true), _support(s)
+  {}
 
   //! Read a D_resize record from a YAML file
   void operator >> (const YAML::Node& node, D_resize& dr) {

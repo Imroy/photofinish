@@ -25,16 +25,6 @@
 
 namespace PhotoFinish {
 
-  SAMPLE Lanczos::eval(double x) const throw(Uninitialised) {
-    if (!_has_radius)
-      throw Uninitialised("Lanczos", "resize.radius");
-
-    if (fabs(x) < 1e-6)
-      return 1.0;
-    double pix = M_PI * x;
-    return (_radius * sin(pix) * sin(pix * _r_radius)) / (sqr(M_PI) * sqr(x));
-  }
-
   Filter::ptr Filter::create(const D_resize& dr) throw(DestinationError) {
     if (!dr.has_filter())
       return Filter::ptr(new Lanczos(D_resize::lanczos(3.0)));
@@ -44,6 +34,26 @@ namespace PhotoFinish {
       return Filter::ptr(new Lanczos(dr));
 
     throw DestinationError("resize.filter", filter);
+  }
+
+  Lanczos::Lanczos() :
+    _has_radius(false)
+  {}
+
+  Lanczos::Lanczos(const D_resize& dr) :
+    _has_radius(dr.has_support()),
+    _radius(dr.support()),
+    _r_radius(1.0 / _radius)
+  {}
+
+  SAMPLE Lanczos::eval(double x) const throw(Uninitialised) {
+    if (!_has_radius)
+      throw Uninitialised("Lanczos", "resize.radius");
+
+    if (fabs(x) < 1e-6)
+      return 1.0;
+    double pix = M_PI * x;
+    return (_radius * sin(pix) * sin(pix * _r_radius)) / (sqr(M_PI) * sqr(x));
   }
 
 }
