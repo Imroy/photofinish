@@ -42,7 +42,7 @@ namespace PhotoFinish {
       \param from_max The size (maximum dimenstion) of the input
       \param to_size The size of the output
     */
-    Resampler(const Filter& filter, double from_start, double from_size, long int from_max, double to_size);
+    Resampler(Filter::ptr filter, double from_start, double from_size, long int from_max, double to_size);
 
     //! Destructor
     ~Resampler();

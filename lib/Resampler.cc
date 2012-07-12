@@ -22,7 +22,7 @@
 
 namespace PhotoFinish {
 
-  Resampler::Resampler(const Filter& filter, double from_start, double from_size, long int from_max, double to_size)
+  Resampler::Resampler(Filter::ptr filter, double from_start, double from_size, long int from_max, double to_size)
     : _to_size_i(ceil(to_size))
   {
     double scale = from_size / to_size;
@@ -32,11 +32,11 @@ namespace PhotoFinish {
 
     double range, norm_fact;
     if (scale < 1.0) {
-      range = filter.radius();
+      range = filter->range();
       norm_fact = 1.0;
     } else {
-      range = filter.radius() * scale;
-      norm_fact = filter.radius() / ceil(range);
+      range = filter->range() * scale;
+      norm_fact = filter->range() / ceil(range);
     }
 
 #pragma omp parallel for schedule(dynamic, 1)
@@ -54,7 +54,7 @@ namespace PhotoFinish {
       long int k = 0;
       for (long int j = left; j <= right; j++, k++) {
 	_Position[i][k] = j;
-	_Weight[i][k] = filter.eval((centre - j) * norm_fact);
+	_Weight[i][k] = filter->eval((centre - j) * norm_fact);
       }
       // normalize the filter's weight's so the sum equals to 1.0, very important for avoiding box type of artifacts
       long int max = _N[i];

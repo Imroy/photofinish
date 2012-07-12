@@ -27,48 +27,33 @@
 namespace PhotoFinish {
 
   //! Abstract base class for filters
-  class Base_Filter {
+  class Filter {
   protected:
-    bool _has_radius;
-    double _radius;
 
   public:
-    //! Empty constructor
-    Base_Filter() :
-      _has_radius(false)
-    {}
+    typedef std::shared_ptr<Filter> ptr;
 
-    //! Constructor
-    /*!
+    //! Empty constructor
+    Filter() {}
+
+    //! Named constructor
+    /*! Create a Filter object using the filter name in the D_resize object.
       \param dr A D_resize object which will supply our parameters.
     */
-    Base_Filter(const D_resize& dr) :
-      _has_radius(dr.has_support()),
-      _radius(dr.has_support() ? dr.support() : 3)
-    {}
+    static ptr create(const D_resize& dr) throw(DestinationError);
 
-    //! Fallback constructor
-    /*!
-      \param r Radius of the filter
-    */
-    Base_Filter(double r) :
-      _has_radius(true),
-      _radius(r)
-    {}
-
-    //! Accessor
-    inline bool has_radius(void) const { return _has_radius; }
     //! The size of this filter
-    inline double radius(void) const { return _radius; }
+    virtual double range(void) const = 0;
 
     //! Evaluate the filter at a given point
     virtual SAMPLE eval(double x) const throw(Uninitialised) = 0;
   };
 
   //! Lanczos filter
-  class Lanczos : public Base_Filter {
+  class Lanczos : public Filter {
   private:
-    double _r_radius;	// Reciprocal of the radius
+    bool _has_radius;
+    double _radius, _r_radius;	// Radius and its reciprocal
 
   public:
     //! Empty constructor
@@ -79,52 +64,14 @@ namespace PhotoFinish {
       \param dr A D_resize object which will supply our parameters.
     */
     Lanczos(const D_resize& dr) :
-      Base_Filter(dr),
+      _has_radius(dr.has_support()),
+      _radius(dr.support()),
       _r_radius(1.0 / _radius)
     {}
 
-    //! Fallback constructor
-    /*!
-      \param r Radius of the Lanczos filter
-    */
-    Lanczos(double r) :
-      Base_Filter(r),
-      _r_radius(1.0 / _radius)
-    {}
+    inline double range(void) const { return _radius; }
 
     SAMPLE eval(double x) const throw(Uninitialised);
-  };
-
-  //! Filter factory/wrapper class
-  class Filter : public Base_Filter {
-  private:
-    typedef std::shared_ptr<Base_Filter> ptr;
-
-    ptr _filter;
-
-  public:
-    //! Empty constructor
-    Filter() :
-      _filter(NULL)
-    {}
-
-    //! Constructor
-    /*!
-      \param resize A D_resize object which will supply our parameters.
-    */
-    Filter(const D_resize& dr) throw(DestinationError);
-
-    inline double radius(void) const {
-      if (_filter == NULL)
-	throw Uninitialised("Filter");
-      return _filter->radius();
-    }
-
-    inline SAMPLE eval(double x) const throw(Uninitialised) {
-      if (_filter == NULL)
-	throw Uninitialised("Filter");
-      return _filter->eval(x);
-    }
   };
 
 }

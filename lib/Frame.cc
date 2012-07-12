@@ -40,7 +40,7 @@ namespace PhotoFinish {
   {}
 
   //! Scale an image width-wise
-  Image::ptr _crop_resize_w(Image::ptr img, const Filter& filter, double x, double cw, double nw) {
+  Image::ptr _crop_resize_w(Image::ptr img, Filter::ptr filter, double x, double cw, double nw) {
     long int nwi = ceil(nw);
     Image::ptr ni(new Image(nwi, img->height()));
     Resampler s(filter, x, cw, img->width(), nw);
@@ -78,7 +78,7 @@ namespace PhotoFinish {
   }
 
   //! Scale an image height-wise
-  Image::ptr _crop_resize_h(Image::ptr img, const Filter& filter, double y, double ch, double nh) {
+  Image::ptr _crop_resize_h(Image::ptr img, Filter::ptr filter, double y, double ch, double nh) {
     long int nhi = ceil(nh);
     Image::ptr ni(new Image(img->width(), nhi));
     Resampler s(filter, y, ch, img->height(), nh);
@@ -115,7 +115,7 @@ namespace PhotoFinish {
     return ni;
   }
 
-  Image::ptr Frame::crop_resize(Image::ptr img, const Filter& filter) {
+  Image::ptr Frame::crop_resize(Image::ptr img, Filter::ptr filter) {
     if (_width * img->height() < img->width() * _height) {
       Image::ptr temp = _crop_resize_w(img, filter, _crop_x, _crop_w, _width);
       return _crop_resize_h(temp, filter, _crop_y, _crop_h, _height);

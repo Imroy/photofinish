@@ -68,7 +68,8 @@ namespace PhotoFinish {
   public:
     //! Empty constructor
     D_resize() :
-      _has_filter(false), _has_support(false)
+      _has_filter(false), _has_support(false),
+      _support(-1)
     {}
 
     //! Named constructor

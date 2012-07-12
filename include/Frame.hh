@@ -56,7 +56,7 @@ namespace PhotoFinish {
       \param filter The filter to use
       \return A new cropped and resized image
     */
-    Image::ptr crop_resize(Image::ptr img, const Filter& filter);
+    Image::ptr crop_resize(Image::ptr img, Filter::ptr filter);
 
     //! Accessor
     inline const double crop_x(void) const { return _crop_x; }

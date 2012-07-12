@@ -163,7 +163,7 @@ namespace PhotoFinish {
 
     Frame frame(width, height, 0, 0, img->width(), img->height(), 0);
 
-    Filter lanczos(D_resize::lanczos(3.0));
+    Filter::ptr lanczos = Filter::create(D_resize::lanczos(3.0));
     Image::ptr thumbimage = frame.crop_resize(img, lanczos);
 
     Destination dest;

@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 	      outimage = image;
 	    } else {
 	      Frame::ptr frame = destination->best_frame(image);
-	      Filter filter(destination->resize());
+	      Filter::ptr filter = Filter::create(destination->resize());
 	      outimage = frame->crop_resize(image, filter);
 	      if (destination->has_forcergb() && destination->forcergb())
 		outimage->set_colour();

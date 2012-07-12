@@ -35,17 +35,13 @@ namespace PhotoFinish {
     return (_radius * sin(pix) * sin(pix * _r_radius)) / (sqr(M_PI) * sqr(x));
   }
 
-  Filter::Filter(const D_resize& dr) throw(DestinationError) {
-    if (!dr.has_filter()) {
-      _filter = ptr(new Lanczos(3.0));
-      return;
-    }
+  Filter::ptr Filter::create(const D_resize& dr) throw(DestinationError) {
+    if (!dr.has_filter())
+      return Filter::ptr(new Lanczos(D_resize::lanczos(3.0)));
 
     std::string filter = dr.filter();
-    if (boost::iequals(filter.substr(0, min(filter.length(), 7)), "lanczos")) {
-      _filter = ptr(new Lanczos(dr));
-      return;
-    }
+    if (boost::iequals(filter.substr(0, min(filter.length(), 7)), "lanczos"))
+      return Filter::ptr(new Lanczos(dr));
 
     throw DestinationError("resize.filter", filter);
   }
