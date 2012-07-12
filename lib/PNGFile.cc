@@ -36,7 +36,7 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   PNGFile::PNGFile(const fs::path filepath) :
-    Base_ImageFile(filepath)
+    ImageFile(filepath)
   {}
 
   //! Structure holding a PNG row to be transformed

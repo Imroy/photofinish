@@ -37,13 +37,15 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   //! Abstract base class for image files
-  class Base_ImageFile {
+  class ImageFile {
   protected:
     const fs::path _filepath;
 
   public:
+    typedef std::shared_ptr<ImageFile> ptr;
+
     //! Empty constructor
-    Base_ImageFile() :
+    ImageFile() :
       _filepath()
     {}
 
@@ -51,9 +53,25 @@ namespace PhotoFinish {
     /*!
       \param filepath The path of the image file
     */
-    Base_ImageFile(const fs::path filepath) :
+    ImageFile(const fs::path filepath) :
       _filepath(filepath)
     {}
+
+    //! Named constructor
+    /*! Use the extension of the file path to decide what class to use
+      \param filepath File path
+    */
+    static ImageFile::ptr create(const fs::path filepath) throw(UnknownFileType);
+
+    //! Named constructor
+    /*! Use the format to decide what class to use
+      \param filepath File path
+      \param format File format
+    */
+    static ImageFile::ptr create(fs::path filepath, const std::string format) throw(UnknownFileType);
+
+    //! Accessor
+    inline virtual const fs::path filepath(void) const { return _filepath; }
 
     //! Read the file into an image
     /*!
@@ -71,7 +89,7 @@ namespace PhotoFinish {
   };
 
   //! PNG file reader and writer
-  class PNGFile : public Base_ImageFile {
+  class PNGFile : public ImageFile {
   private:
 
   public:
@@ -82,7 +100,7 @@ namespace PhotoFinish {
   };
 
   //! JPEG file writer
-  class JPEGFile : public Base_ImageFile {
+  class JPEGFile : public ImageFile {
   private:
 
   public:
@@ -91,31 +109,6 @@ namespace PhotoFinish {
     Image::ptr read(void) const;
     //! Special version of write() that takes an open ostream object
     void write(std::ostream& ofs, Image::ptr img, const Destination &dest) const;
-    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
-  };
-
-  //! Image file factory/wrapper class
-  class ImageFile : public Base_ImageFile {
-  private:
-    typedef std::shared_ptr<Base_ImageFile> ptr;
-
-    ptr _imagefile;
-
-  public:
-    //! Constructor
-    /*!
-      \param filepath File path, extension is used to decide what class to use
-    */
-    ImageFile(const fs::path filepath) throw(UnknownFileType);
-
-    //! Constructor
-    /*!
-      \param filepath File path
-      \param format Is used to decide what class to use
-    */
-    ImageFile(fs::path filepath, const std::string format) throw(UnknownFileType);
-
-    Image::ptr read(void) const;
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 

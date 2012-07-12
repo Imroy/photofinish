@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
-      ImageFile infile(*fi);
+      ImageFile::ptr infile = ImageFile::create(*fi);
       Tags tags;
       if (fs::exists(".tags/default"))
 	tags.load(".tags/default");
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
       }
 
       try {
-	Image::ptr image = infile.read();
+	Image::ptr image = infile->read();
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
@@ -92,8 +92,8 @@ int main(int argc, char* argv[]) {
 	      std::cerr << "Creating directory " << destination->dir() << "." << std::endl;
 	      create_directory(destination->dir());
 	    }
-	    ImageFile outfile(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
-	    outfile.write(outimage, *destination, tags);
+	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
+	    outfile->write(outimage, *destination, tags);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;
