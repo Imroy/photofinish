@@ -71,15 +71,23 @@ int main(int argc, char* argv[]) {
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
 	  try {
-	    Image::ptr outimage;
+	    Image::ptr intimage;
 	    if (destination->has_noresize() && destination->noresize()) {
-	      outimage = image;
+	      intimage = image;
 	    } else {
 	      Frame::ptr frame = destination->best_frame(image);
 	      Filter::ptr filter = Filter::create(destination->resize());
-	      outimage = frame->crop_resize(image, filter);
+	      intimage = frame->crop_resize(image, filter);
 	      if (destination->has_forcergb() && destination->forcergb())
-		outimage->set_colour();
+		intimage->set_colour();
+	    }
+
+	    Image::ptr outimage;
+	    if (destination->has_sharpen()) {
+	      Kernel2D::ptr sharpen = Kernel2D::create(destination->sharpen());
+	      outimage = intimage->convolve(sharpen);
+	    } else {
+	      outimage = intimage;
 	    }
 
 	    if (destination->has_size())

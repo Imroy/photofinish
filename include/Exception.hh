@@ -19,6 +19,7 @@
 #ifndef __EXCEPTION_HH__
 #define __EXCEPTION_HH__
 
+#include <string>
 #include <exception>
 
 namespace PhotoFinish {

@@ -23,6 +23,7 @@
 #include <math.h>
 #include <string.h>
 #include <memory>
+#include "Kernel2D.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
@@ -32,22 +33,11 @@ namespace PhotoFinish {
   private:
     long int _width, _height;
     bool _greyscale;		// Used by readers and writers when converting colour spaces
-
-    struct Rows {
-      long int rows;
-      SAMPLE ** rowdata;
-
-      Rows();
-      Rows(long int rows, long int rowsize);
-      Rows(const Rows& other);
-      ~Rows();
-
-      typedef std::shared_ptr<Rows> ptr;
-    };
-
-    Rows::ptr _rows;
+    SAMPLE **_rowdata;
 
   public:
+    typedef std::shared_ptr<Image> ptr;
+
     //! Empty constructor
     Image();
 
@@ -57,13 +47,11 @@ namespace PhotoFinish {
     */
     Image(long int w, long int h);
 
-    //! Copy the pixel data
-    /*!
-      The pixel data (stored in rows) is managed by the shared_ptr<> template.
-      This means that copying an Image object does not copy the pixel data, it
-      simply points to the old data. This method creates a new copy.
-     */
-    void copy_pixels(void);
+    //! Destructor
+    ~Image();
+
+    //! Convolve this image with the kernel and produce a new image
+    ptr convolve(Kernel2D::ptr kern);
 
     //! Accessor
     inline const long int width(void) const { return _width; }
@@ -84,15 +72,13 @@ namespace PhotoFinish {
     inline void set_colour(bool c = true) { _greyscale = !c; }
 
     //! Pointer to pixel data at start of row
-    inline SAMPLE* row(long int y) const { return _rows->rowdata[y]; }
+    inline SAMPLE* row(long int y) const { return _rowdata[y]; }
 
     //! Pointer to pixel data at coordinates
-    inline SAMPLE* at(long int x, long int y) const { return &(_rows->rowdata[y][x * 3]); }
+    inline SAMPLE* at(long int x, long int y) const { return &(_rowdata[y][x * 3]); }
 
     //! Reference to pixel data at coordinates and of a given channel
-    inline SAMPLE& at(long int x, long int y, unsigned char c) const { return _rows->rowdata[y][c + (x * 3)]; }
-
-    typedef std::shared_ptr<Image> ptr;
+    inline SAMPLE& at(long int x, long int y, unsigned char c) const { return _rowdata[y][c + (x * 3)]; }
   };
 
 }
