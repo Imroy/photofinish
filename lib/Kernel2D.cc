@@ -53,6 +53,43 @@ namespace PhotoFinish {
     }
   }
 
+  Image::ptr Kernel2D::convolve(Image::ptr img) {
+    std::cerr << "Convolving " << img->width() << "×" << img->height() << " image with " << _width << "×" << _height << " kernel..." << std::endl;
+    Image::ptr out = Image::ptr(new Image(img->width(), img->height()));
+
+    for (long int y = 0; y < img->height(); y++) {
+      SAMPLE *outp = out->row(y);
+      unsigned short int ky_start = y < _centrey ? _centrey - y : 0;
+      unsigned short int ky_end = y > img->height() - _height + _centrey ? img->height() + _centrey - y : _height;
+
+      for (long int x = 0; x < img->width(); x++, outp += 3) {
+	unsigned short int kx_start = x < _centrex ? _centrex - x : 0;
+	unsigned short int kx_end = x > img->width() - _width + _centrex ? img->width() + _centrex - x : _width;
+
+	double weight = 0;
+	outp[0] = outp[1] = outp[2] = 0;
+	for (unsigned short int ky = ky_start; ky < ky_end; ky++) {
+	  const SAMPLE *kp = row(ky);
+	  SAMPLE *inp = img->at(x + kx_start - _centrex, y + ky - _centrey);
+	  for (unsigned short int kx = kx_start; kx < kx_end; kx++, kp++, inp += 3) {
+	    weight += *kp;
+	    outp[0] += inp[0] * *kp;
+	    outp[1] += inp[1] * *kp;
+	    outp[2] += inp[2] * *kp;
+	  }
+	}
+	if (fabs(weight) > 1e-5) {
+	  weight = 1.0 / weight;
+	  outp[0] *= weight;
+	  outp[1] *= weight;
+	  outp[2] *= weight;
+	}
+      }
+    }
+
+    return out;
+  }
+
 
 
   GaussianSharpen::GaussianSharpen() :

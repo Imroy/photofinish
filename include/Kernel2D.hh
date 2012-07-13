@@ -22,6 +22,7 @@
 #include <memory>
 #include <stdlib.h>
 #include <math.h>
+#include "Image.hh"
 #include "Exception.hh"
 #include "sample.h"
 
@@ -63,6 +64,9 @@ namespace PhotoFinish {
 
     //! Accessor for the values array
     inline SAMPLE& at(short unsigned int x, short unsigned int y) const { return _values[y][x]; }
+
+    //! Convolve and image with this kernel and produce a new image
+    Image::ptr convolve(Image::ptr img);
   };
 
   //! GaussianSharpen kernel

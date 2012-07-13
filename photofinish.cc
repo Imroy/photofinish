@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
 	    Image::ptr outimage;
 	    if (destination->has_sharpen()) {
 	      Kernel2D::ptr sharpen = Kernel2D::create(destination->sharpen());
-	      outimage = intimage->convolve(sharpen);
+	      outimage = sharpen->convolve(intimage);
 	    } else {
 	      outimage = intimage;
 	    }

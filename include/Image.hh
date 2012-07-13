@@ -23,7 +23,6 @@
 #include <math.h>
 #include <string.h>
 #include <memory>
-#include "Kernel2D.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
@@ -49,9 +48,6 @@ namespace PhotoFinish {
 
     //! Destructor
     ~Image();
-
-    //! Convolve this image with the kernel and produce a new image
-    ptr convolve(Kernel2D::ptr kern);
 
     //! Accessor
     inline const long int width(void) const { return _width; }
