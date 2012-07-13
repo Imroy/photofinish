@@ -134,6 +134,7 @@ namespace PhotoFinish {
 #pragma omp parallel for schedule(dynamic, 1)
     for (long int y = 0; y < img->height(); y++) {
       SAMPLE *out = ni->row(y);
+
       for (long int nx = 0; nx < _to_size_i; nx++, out += 3) {
 	long int max = size(nx);
 
@@ -168,15 +169,23 @@ namespace PhotoFinish {
 #pragma omp parallel for schedule(dynamic, 1)
     for (long int ny = 0; ny < _to_size_i; ny++) {
       long int max = size(ny);
+      long int ystart = this->start(ny);
+      long int j = 0;
+      const SAMPLE *weight = &this->at(j, ny);
 
+      SAMPLE *in = img->row(ystart);
       SAMPLE *out = ni->row(ny);
-      for (long int x = 0; x < img->width(); x++, out += 3) {
-	out[0] = out[1] = out[2] = 0.0;
-	const SAMPLE *weight = this->row(ny);
-	long int y = this->start(ny);
-	for (long int j = 0; j < max; j++, weight++, y++) {
-	  SAMPLE *in = img->at(x, y);
+      for (long int x = 0; x < img->width(); x++, in += 3, out += 3) {
+	out[0] = in[0] * *weight;
+	out[1] = in[1] * *weight;
+	out[2] = in[2] * *weight;
+      }
 
+      weight++;
+      for (j = 1; j < max; j++, weight++) {
+	in = img->row(ystart + j);
+	out = ni->row(ny);
+	for (long int x = 0; x < img->width(); x++, in += 3, out += 3) {
 	  out[0] += in[0] * *weight;
 	  out[1] += in[1] * *weight;
 	  out[2] += in[2] * *weight;
