@@ -139,10 +139,8 @@ namespace PhotoFinish {
 
 	out[0] = out[1] = out[2] = 0.0;
 	const SAMPLE *weight = this->row(nx);
-	long int x = this->start(nx);
-	for (long int j = 0; j < max; j++, weight++, x++) {
-	  SAMPLE *in = img->at(x, y);
-
+	const SAMPLE *in = img->at(this->start(nx), y);
+	for (long int j = 0; j < max; j++, weight++, in += 3) {
 	  out[0] += in[0] * *weight;
 	  out[1] += in[1] * *weight;
 	  out[2] += in[2] * *weight;
