@@ -30,6 +30,7 @@ namespace PhotoFinish {
 
     table["XMP:CreatorContactInfoCiAdrCity"]	= "Xmp.iptc.CiAdrCity";
     table["XMP:CreatorContactInfoCiAdrCtry"]	= "Xmp.iptc.CiAdrCtry";
+    table["XMP:CreatorContactInfoCiAdrExtadr"]	= "Xmp.iptc.CiAdrExtadr";
     table["XMP:CreatorContactInfoCiAdrPcode"]	= "Xmp.iptc.CiAdrPcode";
 
     table["XMP-cc:License"]			= "Xmp.cc.License"; // Creative Commons not supported in Exiv2 yet?
