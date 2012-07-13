@@ -24,6 +24,7 @@
 #include <math.h>
 #include "Destination_items.hh"
 #include "Destination.hh"
+#include "Exception.hh"
 
 namespace PhotoFinish {
 

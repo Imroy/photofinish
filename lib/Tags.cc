@@ -162,9 +162,7 @@ namespace PhotoFinish {
     std::cerr << "Making EXIF thumbnail..." << std::endl;
 
     Frame frame(width, height, 0, 0, img->width(), img->height(), 0);
-
-    Filter::ptr lanczos = Filter::create(D_resize::lanczos(3.0));
-    Image::ptr thumbimage = frame.crop_resize(img, lanczos);
+    Image::ptr thumbimage = frame.crop_resize(img, D_resize::lanczos(3.0));
 
     Destination dest;
     dest.set_jpeg(D_JPEG(50, 1, 1, false));

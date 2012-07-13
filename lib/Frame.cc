@@ -21,7 +21,7 @@
 #include <omp.h>
 #include "Frame.hh"
 #include "Destination_items.hh"
-#include "Resampler.hh"
+#include "Kernel1Dvar.hh"
 
 namespace PhotoFinish {
 
@@ -39,90 +39,18 @@ namespace PhotoFinish {
     _resolution(r)
   {}
 
-  //! Scale an image width-wise
-  Image::ptr _crop_resize_w(Image::ptr img, Filter::ptr filter, double x, double cw, double nw) {
-    long int nwi = ceil(nw);
-    Image::ptr ni(new Image(nwi, img->height()));
-    Resampler s(filter, x, cw, img->width(), nw);
-
-#pragma omp parallel
-    {
-#pragma omp master
-      {
-	std::cerr << "Resizing image horizontally " << img->width() << " => "
-		  << std::setprecision(2) << std::fixed << nw
-		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
-      }
-    }
-#pragma omp parallel for schedule(dynamic, 1)
-    for (long int y = 0; y < img->height(); y++) {
-      SAMPLE *out = ni->row(y);
-      for (long int nx = 0; nx < nwi; nx++, out += 3) {
-	long int max = s.N(nx);
-
-	out[0] = out[1] = out[2] = 0.0;
-	const SAMPLE *weight = s.Weight(nx);
-	const long int *x = s.Position(nx);
-	for (long int j = 0; j < max; j++, weight++, x++) {
-	  SAMPLE *in = img->at(*x, y);
-
-	  out[0] += in[0] * *weight;
-	  out[1] += in[1] * *weight;
-	  out[2] += in[2] * *weight;
-	}
-      }
-    }
-
-    ni->set_greyscale(img->is_greyscale());
-    return ni;
-  }
-
-  //! Scale an image height-wise
-  Image::ptr _crop_resize_h(Image::ptr img, Filter::ptr filter, double y, double ch, double nh) {
-    long int nhi = ceil(nh);
-    Image::ptr ni(new Image(img->width(), nhi));
-    Resampler s(filter, y, ch, img->height(), nh);
-
-#pragma omp parallel
-    {
-#pragma omp master
-      {
-	std::cerr << "Resizing image vertically " << img->height() << " => "
-		  << std::setprecision(2) << std::fixed << nh
-		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
-      }
-    }
-#pragma omp parallel for schedule(dynamic, 1)
-    for (long int ny = 0; ny < nhi; ny++) {
-      long int max = s.N(ny);
-
-      SAMPLE *out = ni->row(ny);
-      for (long int x = 0; x < img->width(); x++, out += 3) {
-	out[0] = out[1] = out[2] = 0.0;
-	const SAMPLE *weight = s.Weight(ny);
-	const long int *y = s.Position(ny);
-	for (long int j = 0; j < max; j++, weight++, y++) {
-	  SAMPLE *in = img->at(x, *y);
-
-	  out[0] += in[0] * *weight;
-	  out[1] += in[1] * *weight;
-	  out[2] += in[2] * *weight;
-	}
-      }
-    }
-
-    ni->set_greyscale(img->is_greyscale());
-    return ni;
-  }
-
-  Image::ptr Frame::crop_resize(Image::ptr img, Filter::ptr filter) {
+  Image::ptr Frame::crop_resize(Image::ptr img, const D_resize& dr) {
     if (_width * img->height() < img->width() * _height) {
-      Image::ptr temp = _crop_resize_w(img, filter, _crop_x, _crop_w, _width);
-      return _crop_resize_h(temp, filter, _crop_y, _crop_h, _height);
+      Kernel1Dvar::ptr scale_width = Kernel1Dvar::create(dr, _crop_x, _crop_w, img->width(), _width);
+      Image::ptr temp = scale_width->convolve_h(img);
+      Kernel1Dvar::ptr scale_height = Kernel1Dvar::create(dr, _crop_y, _crop_h, img->height(), _height);
+      return scale_height->convolve_v(temp);
     }
 
-    Image::ptr temp = _crop_resize_h(img, filter, _crop_y, _crop_h, _height);
-    return _crop_resize_w(temp, filter, _crop_x, _crop_w, _width);
+    Kernel1Dvar::ptr scale_height = Kernel1Dvar::create(dr, _crop_y, _crop_h, img->height(), _height);
+    Image::ptr temp = scale_height->convolve_v(img);
+    Kernel1Dvar::ptr scale_width = Kernel1Dvar::create(dr, _crop_x, _crop_w, img->width(), _width);
+    return scale_width->convolve_h(temp);
   }
 
 }

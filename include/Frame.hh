@@ -21,7 +21,6 @@
 
 #include <memory>
 #include "Destination_items.hh"
-#include "Filter.hh"
 
 namespace PhotoFinish {
 
@@ -53,10 +52,10 @@ namespace PhotoFinish {
     //! Crop and resize an image
     /*!
       \param img The source image
-      \param filter The filter to use
+      \param dr A D_resize object which will supply our parameters.
       \return A new cropped and resized image
     */
-    Image::ptr crop_resize(Image::ptr img, Filter::ptr filter);
+    Image::ptr crop_resize(Image::ptr img, const D_resize &dr);
 
     //! Accessor
     inline const double crop_x(void) const { return _crop_x; }

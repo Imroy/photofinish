@@ -25,9 +25,10 @@
 #include <boost/filesystem.hpp>
 #include "Image.hh"
 #include "ImageFile.hh"
-#include "Exception.hh"
 #include "Destination.hh"
 #include "Tags.hh"
+#include "Kernel2D.hh"
+#include "Exception.hh"
 
 namespace fs = boost::filesystem;
 
@@ -71,23 +72,22 @@ int main(int argc, char* argv[]) {
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
 	  try {
-	    Image::ptr intimage;
+	    Image::ptr sized_image;
 	    if (destination->has_noresize() && destination->noresize()) {
-	      intimage = image;
+	      sized_image = image;
 	    } else {
 	      Frame::ptr frame = destination->best_frame(image);
-	      Filter::ptr filter = Filter::create(destination->resize());
-	      intimage = frame->crop_resize(image, filter);
+	      sized_image = frame->crop_resize(image, destination->resize());
 	      if (destination->has_forcergb() && destination->forcergb())
-		intimage->set_colour();
+		sized_image->set_colour();
 	    }
 
 	    Image::ptr outimage;
 	    if (destination->has_sharpen()) {
 	      Kernel2D::ptr sharpen = Kernel2D::create(destination->sharpen());
-	      outimage = sharpen->convolve(intimage);
+	      outimage = sharpen->convolve(sized_image);
 	    } else {
-	      outimage = intimage;
+	      outimage = sized_image;
 	    }
 
 	    if (destination->has_size())
