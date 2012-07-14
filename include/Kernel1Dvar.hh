@@ -24,6 +24,7 @@
 #include <math.h>
 #include "Destination_items.hh"
 #include "Exception.hh"
+#include "Definable.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
@@ -90,8 +91,8 @@ namespace PhotoFinish {
   //! Lanczos filter
   class Lanczos : public Kernel1Dvar {
   private:
-    bool _has_radius;
-    double _radius, _r_radius;	//! Radius and its reciprocal
+    definable<double> _radius;	//! Radius
+    double _r_radius;		//! Reciprocal of the radius
 
     double range(void) const;
     SAMPLE eval(double x) const throw(Uninitialised);

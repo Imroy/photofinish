@@ -26,6 +26,7 @@
 #include "Destination_items.hh"
 #include "Image.hh"
 #include "Frame.hh"
+#include "Definable.hh"
 
 namespace fs = boost::filesystem;
 
@@ -40,41 +41,32 @@ namespace PhotoFinish {
   //! Represents a destination, read from destinations.yml
   class Destination {
   private:
-    bool _has_name, _has_dir;
-    std::string _name;		//! Name of this destination
-    fs::path _dir;		//! Destination directory
+    definable<std::string> _name;	//! Name of this destination
+    definable<fs::path> _dir;		//! Destination directory
 
-    bool _has_size;
-    double _size;			//! Size of long edge in inches (yuck)
+    definable<double> _size;			//! Size of long edge in inches (yuck)
 
-    bool _has_sharpen, _has_resize;
-    D_sharpen _sharpen;
-    D_resize _resize;
+    definable<D_sharpen> _sharpen;
+    definable<D_resize> _resize;
 
     std::map<std::string, D_target::ptr> _targets;	//! List of targets
 
-    bool _has_format;
-    std::string _format;	//! Output format
+    definable<std::string> _format;	//! Output format
 
-    bool _has_depth;
-    int _depth;			//! Output bit depth
+    definable<int> _depth;			//! Output bit depth
 
-    bool _has_noresize, _noresize;
+    definable<bool> _noresize;
 
-    bool _has_jpeg, _has_png;
-    D_JPEG _jpeg;
-    D_PNG _png;
+    definable<D_JPEG> _jpeg;
+    definable<D_PNG> _png;
 
-    bool _has_intent;
-    cmsUInt32Number _intent;	//! CMS rendering intent
+    definable<cmsUInt32Number> _intent;	//! CMS rendering intent
 
-    bool _has_profile;
-    D_profile _profile;
+    definable<D_profile> _profile;
 
-    bool _has_forcergb, _forcergb;	//! Force the output to be RGB
+    definable<bool> _forcergb;	//! Force the output to be RGB
 
-    bool _has_thumbnail;
-    D_thumbnail _thumbnail;
+    definable<D_thumbnail> _thumbnail;
 
     hash _variables;
 
@@ -99,52 +91,38 @@ namespace PhotoFinish {
     //! Find the best crop+rescaling frame for an image
     Frame::ptr best_frame(Image::ptr img);
 
-    inline bool has_name(void) const { return _has_name; }
-    inline std::string name(void) const { return _name; }
+    inline definable<std::string> name(void) const { return _name; }
 
-    inline bool has_dir(void) const { return _has_dir; }
-    inline const fs::path& dir(void) const { return _dir; }
+    inline const definable<fs::path>& dir(void) const { return _dir; }
 
-    inline bool has_size(void) const { return _has_size; }
-    inline double size(void) const { return _size; }
+    inline definable<double> size(void) const { return _size; }
 
-    inline bool has_sharpen(void) const { return _has_sharpen; }
-    inline const D_sharpen& sharpen(void) const { return _sharpen; }
+    inline definable<D_sharpen> sharpen(void) const { return _sharpen; }
 
-    inline bool has_resize(void) const { return _has_resize; }
-    inline const D_resize& resize(void) const { return _resize; }
+    inline definable<D_resize> resize(void) const { return _resize; }
 
     inline int num_targets(void) const { return _targets.size(); }
     inline bool has_targets(void) const { return !_targets.empty(); }
     inline const std::map<std::string, D_target::ptr>& targets(void) const { return _targets; }
 
-    inline bool has_format(void) const { return _has_format; }
-    inline std::string format(void) const { return _format; }
+    inline definable<std::string> format(void) const { return _format; }
 
-    inline bool has_depth(void) const { return _has_depth; }
-    inline int depth(void) const { return _depth; }
+    inline definable<int> depth(void) const { return _depth; }
 
-    inline bool has_noresize(void) const { return _has_noresize; }
-    inline bool noresize(void) const { return _noresize; }
+    inline definable<bool> noresize(void) const { return _noresize; }
 
-    inline bool has_png(void) const { return _has_png; }
-    inline const D_PNG& png(void) const { return _png; }
+    inline definable<D_PNG> png(void) const { return _png; }
 
-    inline bool has_jpeg(void) const { return _has_jpeg; }
-    inline void set_jpeg(D_JPEG dj) { _jpeg = dj; _has_jpeg = true; }
-    inline const D_JPEG& jpeg(void) const { return _jpeg; }
+    inline definable<D_JPEG> jpeg(void) const { return _jpeg; }
+    inline void set_jpeg(const D_JPEG& j) { _jpeg = j; }
 
-    inline bool has_intent(void) const { return _has_intent; }
-    inline cmsUInt32Number intent(void) const { return _intent; }
+    inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 
-    inline bool has_profile(void) const { return _has_profile; }
-    inline const D_profile& profile(void) const { return _profile; }
+    inline definable<D_profile> profile(void) const { return _profile; }
 
-    inline bool has_forcergb(void) const { return _has_forcergb; }
-    inline bool forcergb(void) const { return _forcergb; }
+    inline definable<bool> forcergb(void) const { return _forcergb; }
 
-    inline bool has_thumbnail(void) const { return _has_thumbnail; }
-    inline const D_thumbnail& thumbnail(void) const { return _thumbnail; }
+    inline definable<D_thumbnail> thumbnail(void) const { return _thumbnail; }
 
     //! Read a destination record from a YAML document
     friend void operator >> (const YAML::Node& node, Destination& d);

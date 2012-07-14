@@ -293,8 +293,8 @@ namespace PhotoFinish {
     png_set_compression_level(png, Z_BEST_COMPRESSION);
 
     cmsHPROFILE profile = NULL;
-    if (dest.has_profile() && dest.profile().has_filepath())
-      profile = cmsOpenProfileFromFile(dest.profile().filepath().c_str(), "r");
+    if (dest.profile().defined() && dest.profile()->filepath().defined())
+      profile = cmsOpenProfileFromFile(dest.profile()->filepath()->c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
       std::cerr << "\tUsing default greyscale profile." << std::endl;
@@ -309,8 +309,9 @@ namespace PhotoFinish {
       if (len > 0) {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  std::cerr << "\tEmbedding profile \"" << dest.profile().name() << "\" (" << len << " bytes)." << std::endl;
-	  png_set_iCCP(png, info, dest.profile().name().c_str(), 0, profile_data, len);
+	  std::string profile_name = dest.profile()->name().get();
+	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
+	  png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);
 	}
       }
     } else {

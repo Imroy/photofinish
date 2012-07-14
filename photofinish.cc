@@ -73,35 +73,39 @@ int main(int argc, char* argv[]) {
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
 	  try {
 	    Image::ptr sized_image;
-	    if (destination->has_noresize() && destination->noresize()) {
+	    if (destination->noresize().defined() && destination->noresize()) {
 	      sized_image = image;
 	    } else {
 	      Frame::ptr frame = destination->best_frame(image);
 	      sized_image = frame->crop_resize(image, destination->resize());
-	      if (destination->has_forcergb() && destination->forcergb())
+	      if (destination->forcergb().defined() && destination->forcergb())
 		sized_image->set_colour();
 	    }
 
-	    Image::ptr outimage;
-	    if (destination->has_sharpen()) {
+	    Image::ptr sharp_image;
+	    if (destination->sharpen().defined()) {
 	      Kernel2D::ptr sharpen = Kernel2D::create(destination->sharpen());
-	      outimage = sharpen->convolve(sized_image);
+	      sharp_image = sharpen->convolve(sized_image);
 	    } else {
-	      outimage = sized_image;
+	      sharp_image = sized_image;
 	    }
+	    sized_image.reset();	// Unallocate resized image
 
-	    if (destination->has_size())
-	      tags.add_resolution(outimage, destination);
+	    if (destination->size().defined())
+	      tags.add_resolution(sharp_image, destination);
 
-	    if (destination->has_thumbnail() && destination->thumbnail().has_generate() && destination->thumbnail().generate())
-	      tags.make_thumbnail(outimage, destination->thumbnail());
+	    if (destination->thumbnail().defined() && destination->thumbnail()->generate().defined() && destination->thumbnail()->generate())
+	      tags.make_thumbnail(sharp_image, destination->thumbnail());
 
 	    if (!exists(destination->dir())) {
 	      std::cerr << "Creating directory " << destination->dir() << "." << std::endl;
 	      create_directory(destination->dir());
 	    }
-	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / (*fi).stem(), destination->has_format() ? destination->format() : "jpeg");
-	    outfile->write(outimage, *destination, tags);
+	    std::string format = "jpeg";
+	    if (destination->format().defined())
+	      format = destination->format();
+	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / (*fi).stem(), format);
+	    outfile->write(sharp_image, *destination, tags);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

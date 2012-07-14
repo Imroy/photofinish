@@ -24,6 +24,7 @@
 #include <math.h>
 #include "Image.hh"
 #include "Exception.hh"
+#include "Definable.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
@@ -72,10 +73,8 @@ namespace PhotoFinish {
   //! GaussianSharpen kernel
   class GaussianSharpen : public Kernel2D {
   private:
-    bool _has_radius;
-    double _radius;	// Radius
-    bool _has_sigma;
-    double _sigma, _safe_sigma_sqr;
+    definable<double> _radius, _sigma;	// Radius
+    double _safe_sigma_sqr;
 
   public:
     //! Empty constructor

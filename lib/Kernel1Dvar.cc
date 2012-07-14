@@ -85,7 +85,7 @@ namespace PhotoFinish {
 
   Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, long int from_max, double to_size) throw(DestinationError) {
     Kernel1Dvar::ptr ret;
-    if (!dr.has_filter()) {
+    if (!dr.filter().defined()) {
       ret = Kernel1Dvar::ptr(new Lanczos(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size));
       return ret;
     }
@@ -200,15 +200,13 @@ namespace PhotoFinish {
 
 
   Lanczos::Lanczos() :
-    Kernel1Dvar(),
-    _has_radius(false)
+    Kernel1Dvar()
   {}
 
     Lanczos::Lanczos(const D_resize& dr, double from_start, double from_size, long int from_max, double to_size) :
       Kernel1Dvar(to_size),
-      _has_radius(dr.has_support()),
       _radius(dr.support()),
-      _r_radius(1.0 / _radius)
+      _r_radius(_radius.defined() ? 1.0 / _radius : 0.0)
   {
     build(dr, from_start, from_size, from_max);
   }
@@ -218,7 +216,7 @@ namespace PhotoFinish {
   }
 
   SAMPLE Lanczos::eval(double x) const throw(Uninitialised) {
-    if (!_has_radius)
+    if (!_radius.defined())
       throw Uninitialised("Lanczos", "resize.radius");
 
     if (fabs(x) < 1e-6)

@@ -25,6 +25,7 @@
 #include <lcms2.h>
 #include <boost/filesystem.hpp>
 #include "Image.hh"
+#include "Definable.hh"
 
 namespace fs = boost::filesystem;
 
@@ -35,17 +36,14 @@ namespace PhotoFinish {
   //! Sharpen parameters for destination
   class D_sharpen {
   private:
-    bool _has_radius, _has_sigma;
-    double _radius, _sigma;
+    definable<double> _radius, _sigma;
 
   public:
     //! Empty constructor
     D_sharpen();
 
-    inline bool has_radius(void) const { return _has_radius; }
-    inline double radius(void) const { return _radius; }
-    inline bool has_sigma(void) const { return _has_sigma; }
-    inline double sigma(void) const { return _sigma; }
+    inline definable<double> radius(void) const { return _radius; }
+    inline definable<double> sigma(void) const { return _sigma; }
 
     friend void operator >> (const YAML::Node& node, D_sharpen& ds);
   };
@@ -53,10 +51,8 @@ namespace PhotoFinish {
   //! Resize parameters for destination
   class D_resize {
   private:
-    bool _has_filter;
-    std::string _filter;
-    bool _has_support;
-    double _support;
+    definable<std::string> _filter;
+    definable<double> _support;
 
     D_resize(std::string f, double s);
 
@@ -70,10 +66,8 @@ namespace PhotoFinish {
     */
     static inline D_resize lanczos(double r) { return D_resize("lanczos", r); }
 
-    inline bool has_filter(void) const { return _has_filter; }
-    inline std::string filter(void) const { return _filter; }
-    inline bool has_support(void) const { return _has_support; }
-    inline double support(void) const { return _support; }
+    inline definable<std::string> filter(void) const { return _filter; }
+    inline definable<double> support(void) const { return _support; }
 
     friend void operator >> (const YAML::Node& node, D_resize& dr);
   };
@@ -82,18 +76,15 @@ namespace PhotoFinish {
   class D_target {
   protected:
     std::string _name;
-    bool _has_width, _has_height;
-    double _width, _height;
+    definable<double> _width, _height;
 
   public:
     D_target(std::string n, double w, double h);
     D_target(std::string &n);
 
     inline std::string name(void) const { return _name; }
-    inline bool has_width(void) const { return _has_width; }
-    inline double width(void) const { return _width; }
-    inline bool has_height(void) const { return _has_height; }
-    inline double height(void) const { return _height; }
+    inline definable<double> width(void) const { return _width; }
+    inline definable<double> height(void) const { return _height; }
 
     friend void operator >> (const YAML::Node& node, D_target& dt);
 
@@ -103,10 +94,9 @@ namespace PhotoFinish {
   //! JPEG parameters for destination
   class D_JPEG {
   private:
-    bool _has_quality, _has_sample, _has_progressive;
-    int _quality;
-    char _sample_h, _sample_v;
-    bool _progressive;
+    definable<int> _quality;
+    definable< std::pair<char, char> > _sample;
+    definable<bool> _progressive;
 
   public:
     //! Empty constructor
@@ -123,13 +113,9 @@ namespace PhotoFinish {
     //! Set values from a map of "variables"
     bool add_variables(hash& vars);
 
-    inline bool has_quality(void) const { return _has_quality; }
-    inline int quality(void) const { return _quality; }
-    inline bool has_sample(void) const { return _has_sample; }
-    inline char sample_h(void) const { return _sample_h; }
-    inline char sample_v(void) const { return _sample_v; }
-    inline bool has_progressive(void) const { return _has_progressive; }
-    inline bool progressive(void) const { return _progressive; }
+    inline definable<int> quality(void) const { return _quality; }
+    inline definable< std::pair<char, char> > sample(void) const { return _sample; }
+    inline definable<bool> progressive(void) const { return _progressive; }
 
     friend void operator >> (const YAML::Node& node, D_JPEG& dj);
   };
@@ -147,17 +133,14 @@ namespace PhotoFinish {
   //! ICC profile parameters for destination
   class D_profile {
   private:
-    bool _has_name, _has_filepath;
-    std::string _name;
-    fs::path _filepath;
+    definable<std::string> _name;
+    definable<fs::path> _filepath;
 
   public:
     D_profile();
 
-    inline bool has_name(void) const { return _has_name; }
-    inline std::string name(void) const { return _name; }
-    inline bool has_filepath(void) const { return _has_filepath; }
-    inline fs::path filepath(void) const { return _filepath; }
+    inline definable<std::string> name(void) const { return _name; }
+    inline definable<fs::path> filepath(void) const { return _filepath; }
 
     friend void operator >> (const YAML::Node& node, D_profile& dp);
   };
@@ -165,19 +148,15 @@ namespace PhotoFinish {
   //! Thumbnail parameters for destination
   class D_thumbnail {
   private:
-    bool _has_generate, _generate;
-    bool _has_maxwidth, _has_maxheight;
-    double _maxwidth, _maxheight;
+    definable<bool> _generate;
+    definable<double> _maxwidth, _maxheight;
 
   public:
     D_thumbnail();
 
-    inline bool has_generate(void) const { return _has_generate; }
-    inline bool generate(void) const { return _generate; }
-    inline bool has_maxwidth(void) const { return _has_maxwidth; }
-    inline double maxwidth(void) const { return _maxwidth; }
-    inline bool has_maxheight(void) const { return _has_maxheight; }
-    inline double maxheight(void) const { return _maxheight; }
+    inline definable<bool> generate(void) const { return _generate; }
+    inline definable<double> maxwidth(void) const { return _maxwidth; }
+    inline definable<double> maxheight(void) const { return _maxheight; }
 
     friend void operator >> (const YAML::Node& node, D_thumbnail& dt);
   };

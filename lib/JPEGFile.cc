@@ -121,8 +121,8 @@ namespace PhotoFinish {
     }
 
     jpeg_set_defaults(&cinfo);
-    if (dest.has_jpeg()) {
-      D_JPEG jpeg = dest.jpeg();
+    if (dest.jpeg().defined()) {
+      const D_JPEG jpeg = dest.jpeg().get();
       std::cerr << "\tJPEG quality of " << jpeg.quality() << "." << std::endl;
       jpeg_set_quality(&cinfo, jpeg.quality(), TRUE);
       if (jpeg.progressive()) {
@@ -133,9 +133,9 @@ namespace PhotoFinish {
 	  jpegfile_scan_RGB(&cinfo);
       }
       if (img->is_colour()) {
-	std::cerr << "\tJPEG chroma sub-sampling of " << (int)jpeg.sample_h() << "×" << (int)jpeg.sample_v() << "." << std::endl;
-	cinfo.comp_info[0].h_samp_factor = jpeg.sample_h();
-	cinfo.comp_info[0].v_samp_factor = jpeg.sample_v();
+	std::cerr << "\tJPEG chroma sub-sampling of " << (int)jpeg.sample()->first << "×" << (int)jpeg.sample()->second << "." << std::endl;
+	cinfo.comp_info[0].h_samp_factor = jpeg.sample()->first;
+	cinfo.comp_info[0].v_samp_factor = jpeg.sample()->second;
       }
     } else {
       jpeg_set_quality(&cinfo, 95, TRUE);
