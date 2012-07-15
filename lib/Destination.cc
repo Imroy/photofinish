@@ -281,7 +281,8 @@ namespace PhotoFinish {
 	if ((vi = _variables.find("offy")) != _variables.end())
 	  offy = atof(vi->second.c_str());
 
-	double gap = waste = img->height() - height;
+	double gap = img->height() - height;
+	waste = gap * width;
 	y = gap * offy / 100;
       } else {
 	height = img->height();
@@ -292,7 +293,8 @@ namespace PhotoFinish {
 	if ((vi = _variables.find("offx")) != _variables.end())
 	  offx = atof(vi->second.c_str());
 
-	double gap = waste = img->width() - width;
+	double gap = img->width() - width;
+	waste = gap * height;
 	x = gap * offx / 100;
       }
 
