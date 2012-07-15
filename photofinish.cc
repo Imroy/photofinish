@@ -80,6 +80,8 @@ int main(int argc, char* argv[]) {
 	      sized_image = frame->crop_resize(image, destination->resize());
 	      if (destination->forcergb().defined() && destination->forcergb())
 		sized_image->set_colour();
+	      if (destination->forcegrey().defined() && destination->forcegrey())
+		sized_image->set_greyscale();
 	    }
 
 	    Image::ptr sharp_image;

@@ -65,6 +65,7 @@ namespace PhotoFinish {
     D_profile _profile;
 
     definable<bool> _forcergb;	//! Force the output to be RGB
+    definable<bool> _forcegrey;	//! Force the output to be greyscale
 
     D_thumbnail _thumbnail;
 
@@ -121,6 +122,7 @@ namespace PhotoFinish {
     inline const D_profile& profile(void) const { return _profile; }
 
     inline definable<bool> forcergb(void) const { return _forcergb; }
+    inline definable<bool> forcegrey(void) const { return _forcegrey; }
 
     inline const D_thumbnail& thumbnail(void) const { return _thumbnail; }
 

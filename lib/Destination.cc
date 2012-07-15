@@ -200,6 +200,7 @@ namespace PhotoFinish {
     _intent(other._intent),
     _profile(other._profile),
     _forcergb(other._forcergb),
+    _forcegrey(other._forcegrey),
     _thumbnail(other._thumbnail),
     _variables(other._variables)
   {
@@ -225,6 +226,7 @@ namespace PhotoFinish {
       _intent = b._intent;
       _profile = b._profile;
       _forcergb = b._forcergb;
+      _forcegrey = b._forcegrey;
       _thumbnail = b._thumbnail;
       _variables = b._variables;
 
@@ -340,6 +342,9 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("forcergb"))
       *n >> d._forcergb;
+
+    if (const YAML::Node *n = node.FindValue("forcegrey"))
+      *n >> d._forcegrey;
 
     if (const YAML::Node *n = node.FindValue("intent")) {
       std::string intent;
