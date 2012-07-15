@@ -257,6 +257,16 @@ namespace PhotoFinish {
       double width, height;
       hash::iterator vi;
 
+      if ((target->width() > img->width()) && (target->height() > img->height())) {
+	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target is larger than the original image in both dimensions." << std::endl;
+	continue;
+      }
+
+      if (target->width() * target->height() > img->width() * img->height()) {
+	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target has more pixels than the original image." << std::endl;
+	continue;
+      }
+
       if (target->width() * img->height() > target->height() * img->width()) {
 	width = img->width();
 	height = img->width() * target->height() / target->width();
@@ -280,6 +290,17 @@ namespace PhotoFinish {
 	double gap = waste = img->width() - width;
 	x = gap * offx / 100;
       }
+
+      if ((target->width() > width) && (target->height() > height)) {
+	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target is larger than the cropped image in both dimensions." << std::endl;
+	continue;
+      }
+
+      if (target->width() * target->height() > width * height) {
+	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target has more pixels than the cropped image." << std::endl;
+	continue;
+      }
+
       std::cerr << "\tWaste from target \"" << target->name() << "\" ("
 		<< std::setprecision(1) << std::fixed << x << ", " << y << ") + ("
 		<< width << "×" << height << ") = "
