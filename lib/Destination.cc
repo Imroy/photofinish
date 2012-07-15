@@ -47,12 +47,11 @@ namespace PhotoFinish {
 
   //! Read a D_sharpen record from a YAML file
   void operator >> (const YAML::Node& node, D_sharpen& ds) {
-    try {
-      node["radius"] >> ds._radius;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["sigma"] >> ds._sigma;
-    } catch(YAML::RepresentationException& e) {}
+    if (const YAML::Node *n = node.FindValue("radius"))
+      *n >> ds._radius;
+
+    if (const YAML::Node *n = node.FindValue("sigma"))
+      *n >> ds._sigma;
   }
 
 
@@ -66,12 +65,11 @@ namespace PhotoFinish {
 
   //! Read a D_resize record from a YAML file
   void operator >> (const YAML::Node& node, D_resize& dr) {
-    try {
-      node["filter"] >> dr._filter;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["support"] >> dr._support;
-    } catch(YAML::RepresentationException& e) {}
+    if (const YAML::Node *n = node.FindValue("filter"))
+      *n >> dr._filter;
+
+    if (const YAML::Node *n = node.FindValue("support"))
+      *n >> dr._support;
   }
 
 
@@ -87,12 +85,11 @@ namespace PhotoFinish {
 
   //! Read a D_target record from a YAML file
   void operator >> (const YAML::Node& node, D_target& dt) {
-    try {
-      node["width"] >> dt._width;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["height"] >> dt._height;
-    } catch(YAML::RepresentationException& e) {}
+    if (const YAML::Node *n = node.FindValue("width"))
+      *n >> dt._width;
+
+    if (const YAML::Node *n = node.FindValue("height"))
+      *n >> dt._height;
   }
 
 
@@ -131,24 +128,21 @@ namespace PhotoFinish {
 
   //! Read a D_JPEG record from a YAML file
   void operator >> (const YAML::Node& node, D_JPEG& dj) {
-    try {
-      node["qual"] >> dj._quality;
-    } catch(YAML::RepresentationException& e) {}
-    try {
+    if (const YAML::Node *n = node.FindValue("qual"))
+      *n >> dj._quality;
+
+    if (const YAML::Node *n = node.FindValue("sample")) {
       std::string sample;
-      node["sample"] >> sample;
+      *n >> sample;
       char h, v;
       int rc = sscanf(sample.c_str(), "%hhdx%hhd", &h, &v);
       if (rc == 2)
 	dj._sample = std::pair<char, char>(h, v);
       else
 	std::cerr << "D_JPEG: Failed to parse sample \"" << sample << "\"." << std::endl;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      int pro;
-      node["pro"] >> pro;
-      dj._progressive = pro > 0 ? true : false;
-    } catch(YAML::RepresentationException& e) {}
+    }
+    if (const YAML::Node *n = node.FindValue("pro"))
+      *n >> dj._progressive;
   }
 
 
@@ -167,12 +161,11 @@ namespace PhotoFinish {
 
   //! Read a D_profile record from a YAML file
   void operator >> (const YAML::Node& node, D_profile& dp) {
-    try {
-      node["name"] >> dp._name;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["filename"] >> dp._filepath;
-    } catch(YAML::RepresentationException& e) {}
+    if (const YAML::Node *n = node.FindValue("name"))
+      *n >> dp._name;
+
+    if (const YAML::Node *n = node.FindValue("filename"))
+      *n >> dp._filepath;
   }
 
 
@@ -181,15 +174,14 @@ namespace PhotoFinish {
 
   //! Read a D_thumbnail record from a YAML file
   void operator >> (const YAML::Node& node, D_thumbnail& dt) {
-    try {
-      node["generate"] >> dt._generate;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["maxwidth"] >> dt._maxwidth;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["maxheight"] >> dt._maxheight;
-    } catch(YAML::RepresentationException& e) {}
+    if (const YAML::Node *n = node.FindValue("generate"))
+      *n >> dt._generate;
+
+    if (const YAML::Node *n = node.FindValue("maxwidth"))
+      *n >> dt._maxwidth;
+
+    if (const YAML::Node *n = node.FindValue("maxheight"))
+      *n >> dt._maxheight;
   }
 
 
@@ -307,30 +299,30 @@ namespace PhotoFinish {
   }
 
   void operator >> (const YAML::Node& node, Destination& d) {
-    try {
-      node["name"] >> d._name;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["dir"] >> d._dir;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["size"] >> d._size;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["format"] >> d._format;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["depth"] >> d._depth;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["noresize"] >> d._noresize;
-    } catch(YAML::RepresentationException& e) {}
-    try {
-      node["forcergb"] >> d._forcergb;
-    } catch(YAML::RepresentationException& e) {}
-    try {
+    if (const YAML::Node *n = node.FindValue("name"))
+      *n >> d._name;
+
+    if (const YAML::Node *n = node.FindValue("dir"))
+      *n >> d._dir;
+
+    if (const YAML::Node *n = node.FindValue("size"))
+      *n >> d._size;
+
+    if (const YAML::Node *n = node.FindValue("format"))
+      *n >> d._format;
+
+    if (const YAML::Node *n = node.FindValue("depth"))
+      *n >> d._depth;
+
+    if (const YAML::Node *n = node.FindValue("noresize"))
+      *n >> d._noresize;
+
+    if (const YAML::Node *n = node.FindValue("forcergb"))
+      *n >> d._forcergb;
+
+    if (const YAML::Node *n = node.FindValue("intent")) {
       std::string intent;
-      node["intent"] >> intent;
+      *n >> intent;
       if (strncasecmp(intent.c_str(), "perceptual", 10) == 0)
 	d._intent = INTENT_PERCEPTUAL;
       else if (strncasecmp(intent.c_str(), "relative", 8) == 0)
@@ -341,31 +333,25 @@ namespace PhotoFinish {
 	d._intent = INTENT_ABSOLUTE_COLORIMETRIC;
       else
 	d._intent = INTENT_PERCEPTUAL;
-    } catch(YAML::RepresentationException& e) {}
-
-    if (const YAML::Node *sharpen = node.FindValue("sharpen")) {
-      *sharpen >> d._sharpen;
     }
 
-    if (const YAML::Node *resize = node.FindValue("resize")) {
-      *resize >> d._resize;
-    }
+    if (const YAML::Node *n = node.FindValue("sharpen"))
+      *n >> d._sharpen;
 
-    if (const YAML::Node *png = node.FindValue("png")) {
-      *png >> d._png;
-    }
+    if (const YAML::Node *n = node.FindValue("resize"))
+      *n >> d._resize;
 
-    if (const YAML::Node *jpeg = node.FindValue("jpeg")) {
-      *jpeg >> d._jpeg;
-    }
+    if (const YAML::Node *n = node.FindValue("png"))
+      *n >> d._png;
 
-    if (const YAML::Node *profile = node.FindValue("profile")) {
-      *profile >> d._profile;
-    }
+    if (const YAML::Node *n = node.FindValue("jpeg"))
+      *n >> d._jpeg;
 
-    if (const YAML::Node *thumbnail = node.FindValue("thumbnail")) {
-      *thumbnail >> d._thumbnail;
-    }
+    if (const YAML::Node *n = node.FindValue("profile"))
+      *n >> d._profile;
+
+    if (const YAML::Node *n = node.FindValue("thumbnail"))
+      *n >> d._thumbnail;
 
     if (const YAML::Node *targets = node.FindValue("targets")) {
       for(YAML::Iterator ti = targets->begin(); ti != targets->end(); ti++) {
