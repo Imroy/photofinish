@@ -46,8 +46,8 @@ namespace PhotoFinish {
 
     definable<double> _size;			//! Size of long edge in inches (yuck)
 
-    definable<D_sharpen> _sharpen;
-    definable<D_resize> _resize;
+    D_sharpen _sharpen;
+    D_resize _resize;
 
     std::map<std::string, D_target::ptr> _targets;	//! List of targets
 
@@ -57,16 +57,16 @@ namespace PhotoFinish {
 
     definable<bool> _noresize;
 
-    definable<D_JPEG> _jpeg;
-    definable<D_PNG> _png;
+    D_JPEG _jpeg;
+    D_PNG _png;
 
     definable<cmsUInt32Number> _intent;	//! CMS rendering intent
 
-    definable<D_profile> _profile;
+    D_profile _profile;
 
     definable<bool> _forcergb;	//! Force the output to be RGB
 
-    definable<D_thumbnail> _thumbnail;
+    D_thumbnail _thumbnail;
 
     hash _variables;
 
@@ -97,9 +97,9 @@ namespace PhotoFinish {
 
     inline definable<double> size(void) const { return _size; }
 
-    inline definable<D_sharpen> sharpen(void) const { return _sharpen; }
+    inline const D_sharpen& sharpen(void) const { return _sharpen; }
 
-    inline definable<D_resize> resize(void) const { return _resize; }
+    inline const D_resize& resize(void) const { return _resize; }
 
     inline int num_targets(void) const { return _targets.size(); }
     inline bool has_targets(void) const { return !_targets.empty(); }
@@ -111,18 +111,18 @@ namespace PhotoFinish {
 
     inline definable<bool> noresize(void) const { return _noresize; }
 
-    inline definable<D_PNG> png(void) const { return _png; }
+    inline const D_PNG& png(void) const { return _png; }
 
-    inline definable<D_JPEG> jpeg(void) const { return _jpeg; }
+    inline const D_JPEG& jpeg(void) const { return _jpeg; }
     inline void set_jpeg(const D_JPEG& j) { _jpeg = j; }
 
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 
-    inline definable<D_profile> profile(void) const { return _profile; }
+    inline const D_profile& profile(void) const { return _profile; }
 
     inline definable<bool> forcergb(void) const { return _forcergb; }
 
-    inline definable<D_thumbnail> thumbnail(void) const { return _thumbnail; }
+    inline const D_thumbnail& thumbnail(void) const { return _thumbnail; }
 
     //! Read a destination record from a YAML document
     friend void operator >> (const YAML::Node& node, Destination& d);

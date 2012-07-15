@@ -96,6 +96,29 @@ namespace PhotoFinish {
 
   };
 
+  class Role_Definable {
+  protected:
+    bool _defined;
+
+    //! Set this object as 'defined' (or not)
+    inline void set_defined(bool v = true) { _defined = v; }
+
+    //! Undefine the object
+    inline void undefine(void) { _defined = false; }
+
+  public:
+    //! Empty constructor
+    //! Sets defined to false
+    Role_Definable() :
+      _defined(false)
+    {}
+
+    //! Is this object defined?
+    inline const bool defined(void) const { return _defined; }
+
+    inline friend bool defined(const Role_Definable& obj) { return obj._defined; }
+  };
+
 }
 
 #endif /* __DEFINABLE_HH__ */

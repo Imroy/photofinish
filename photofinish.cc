@@ -94,7 +94,7 @@ int main(int argc, char* argv[]) {
 	    if (destination->size().defined())
 	      tags.add_resolution(sharp_image, destination);
 
-	    if (destination->thumbnail().defined() && destination->thumbnail()->generate().defined() && destination->thumbnail()->generate())
+	    if (destination->thumbnail().defined() && destination->thumbnail().generate().defined() && destination->thumbnail().generate())
 	      tags.make_thumbnail(sharp_image, destination->thumbnail());
 
 	    if (!exists(destination->dir())) {

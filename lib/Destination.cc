@@ -106,13 +106,11 @@ namespace PhotoFinish {
     _progressive(p)
   {}
 
-  bool D_JPEG::add_variables(hash& vars) {
-    bool ret = false;
+  void D_JPEG::add_variables(hash& vars) {
     hash::iterator vi;
     if ((vi = vars.find("qual")) != vars.end()) {
       _quality = atoi(vi->second.c_str());
       vars.erase(vi);
-      ret = true;
     }
     if ((vi = vars.find("sample")) != vars.end()) {
       char h, v;
@@ -120,11 +118,15 @@ namespace PhotoFinish {
       if (rc == 2) {
 	_sample = std::pair<char, char>(h, v);
 	vars.erase(vi);
-	ret = true;
       } else
 	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second << "\"." << std::endl;
     }
-    return ret;
+
+    // If any one of the parameters are defined, then the whole object is 'defined'
+    if (_quality.defined()
+	|| _sample.defined()
+	|| _progressive.defined())
+      set_defined();
   }
 
   //! Read a D_JPEG record from a YAML file
@@ -243,8 +245,7 @@ namespace PhotoFinish {
 
   Destination::ptr Destination::add_variables(hash& vars) {
     Destination::ptr ret = Destination::ptr(new Destination(*this));
-    if (ret->jpeg()->add_variables(vars))
-      ret->jpeg().set_defined();
+    ret->_jpeg.add_variables(vars);
     ret->_variables = vars;
 
     return ret;

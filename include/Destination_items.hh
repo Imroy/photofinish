@@ -34,7 +34,7 @@ namespace PhotoFinish {
   typedef std::map<std::string, std::string> hash;
 
   //! Sharpen parameters for destination
-  class D_sharpen {
+  class D_sharpen : public Role_Definable {
   private:
     definable<double> _radius, _sigma;
 
@@ -49,7 +49,7 @@ namespace PhotoFinish {
   };
 
   //! Resize parameters for destination
-  class D_resize {
+  class D_resize : public Role_Definable {
   private:
     definable<std::string> _filter;
     definable<double> _support;
@@ -92,7 +92,7 @@ namespace PhotoFinish {
   };
 
   //! JPEG parameters for destination
-  class D_JPEG {
+  class D_JPEG : public Role_Definable {
   private:
     definable<int> _quality;
     definable< std::pair<char, char> > _sample;
@@ -111,7 +111,7 @@ namespace PhotoFinish {
     D_JPEG(int q, char h, char v, bool p);
 
     //! Set values from a map of "variables"
-    bool add_variables(hash& vars);
+    void add_variables(hash& vars);
 
     inline definable<int> quality(void) const { return _quality; }
     inline definable< std::pair<char, char> > sample(void) const { return _sample; }
@@ -121,7 +121,7 @@ namespace PhotoFinish {
   };
 
   //! PNG parameters for destination
-  class D_PNG {
+  class D_PNG : public Role_Definable {
   private:
 
   public:
@@ -131,7 +131,7 @@ namespace PhotoFinish {
   };
 
   //! ICC profile parameters for destination
-  class D_profile {
+  class D_profile : public Role_Definable {
   private:
     definable<std::string> _name;
     definable<fs::path> _filepath;
@@ -146,7 +146,7 @@ namespace PhotoFinish {
   };
 
   //! Thumbnail parameters for destination
-  class D_thumbnail {
+  class D_thumbnail : public Role_Definable {
   private:
     definable<bool> _generate;
     definable<double> _maxwidth, _maxheight;

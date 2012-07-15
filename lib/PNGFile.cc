@@ -283,18 +283,26 @@ namespace PhotoFinish {
       cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
 
+    int depth = 8;	// Default value
+    if (dest.depth().defined())
+      depth = dest.depth();
+
     std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
-	      << " " << dest.depth() << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
+	      << " " << depth << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
 	      << " PNG image..." << std::endl;
     png_set_IHDR(png, info,
-		 img->width(), img->height(), dest.depth(), png_colour_type,
+		 img->width(), img->height(), depth, png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
 
+    cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
+    if (dest.intent().defined())
+      intent = dest.intent();
+
     cmsHPROFILE profile = NULL;
-    if (dest.profile().defined() && dest.profile()->filepath().defined())
-      profile = cmsOpenProfileFromFile(dest.profile()->filepath()->c_str(), "r");
+    if (dest.profile().defined() && dest.profile().filepath().defined())
+      profile = cmsOpenProfileFromFile(dest.profile().filepath()->c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
       std::cerr << "\tUsing default greyscale profile." << std::endl;
@@ -309,7 +317,9 @@ namespace PhotoFinish {
       if (len > 0) {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  std::string profile_name = dest.profile()->name().get();
+	  std::string profile_name = "icc";	// Default value
+	  if (dest.profile().defined() && dest.profile().name().defined())
+	    profile_name = dest.profile().name();
 	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
 	  png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);
 	}
@@ -317,7 +327,7 @@ namespace PhotoFinish {
     } else {
       std::cerr << "\tUsing default sRGB profile." << std::endl;
       profile = cmsCreate_sRGBProfile();
-      png_set_sRGB_gAMA_and_cHRM(png, info, dest.intent());
+      png_set_sRGB_gAMA_and_cHRM(png, info, intent);
     }
 
     {
@@ -332,14 +342,14 @@ namespace PhotoFinish {
 
     png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
     for (long int y = 0; y < img->height(); y++)
-      png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (dest.depth() >> 3));
+      png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (depth >> 3));
 
     png_set_rows(png, info, png_rows);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
-						 dest.intent(), 0);
+						 intent, 0);
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
@@ -350,7 +360,7 @@ namespace PhotoFinish {
 	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
       }
     }
-    if (dest.depth() == 8) {
+    if (depth == 8) {
       Ditherer ditherer(img->width(), png_channels);
       short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * png_channels * sizeof(short unsigned int));
       for (long int y = 0; y < img->height(); y++) {
