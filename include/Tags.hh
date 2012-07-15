@@ -66,7 +66,7 @@ namespace PhotoFinish {
     //! Create a thumbnail from the supplied image
     void make_thumbnail(Image::ptr img, const D_thumbnail& dt);
 
-    void add_resolution(Image::ptr img, Destination::ptr dest);
+    void add_resolution(Image::ptr img, double size);
 
     //! Embed EXIF/IPTC/XMP tags into an image file
     void embed(fs::path filepath) const;

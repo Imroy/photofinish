@@ -90,6 +90,9 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("height"))
       *n >> dt._height;
+
+    if (const YAML::Node *n = node.FindValue("size"))
+      *n >> dt._size;
   }
 
 

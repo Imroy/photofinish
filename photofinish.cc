@@ -72,6 +72,8 @@ int main(int argc, char* argv[]) {
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
 	  try {
+	    definable<double> size = destination->size();
+
 	    Image::ptr sized_image;
 	    if (destination->noresize().defined() && destination->noresize()) {
 	      sized_image = image;
@@ -82,6 +84,8 @@ int main(int argc, char* argv[]) {
 		sized_image->set_colour();
 	      if (destination->forcegrey().defined() && destination->forcegrey())
 		sized_image->set_greyscale();
+	      if (frame->size().defined())
+		size = frame->size();
 	    }
 
 	    Image::ptr sharp_image;
@@ -93,8 +97,8 @@ int main(int argc, char* argv[]) {
 	    }
 	    sized_image.reset();	// Unallocate resized image
 
-	    if (destination->size().defined())
-	      tags.add_resolution(sharp_image, destination);
+	    if (size.defined())
+	      tags.add_resolution(sharp_image, size);
 
 	    if (destination->thumbnail().defined() && destination->thumbnail().generate().defined() && destination->thumbnail().generate())
 	      tags.make_thumbnail(sharp_image, destination->thumbnail());

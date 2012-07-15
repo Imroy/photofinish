@@ -177,8 +177,8 @@ namespace PhotoFinish {
     std::cerr << "Done." << std::endl;
   }
 
-  void Tags::add_resolution(Image::ptr img, Destination::ptr dest) {
-    double res = (img->width() > img->height() ? img->width() : img->height()) / dest->size();
+  void Tags::add_resolution(Image::ptr img, double size) {
+    double res = (img->width() > img->height() ? img->width() : img->height()) / size;
     unsigned int num, den;
     for (den = 1; den < 65535; den++) {
       num = round(res * den);
@@ -190,14 +190,12 @@ namespace PhotoFinish {
     }
     Exiv2::URationalValue v(Exiv2::URational(num, den));
     try {
-      Exiv2::ExifKey key("Exif.Image.XResolution");
-      _EXIFtags.add(key, &v);
+      _EXIFtags["Exif.Image.XResolution"] = v;
     } catch (Exiv2::Error& e) {
       std::cerr << "** EXIF key \"Exif.Image.XResolution\" not accepted **" << std::endl;
     }
     try {
-      Exiv2::ExifKey key("Exif.Image.YResolution");
-      _EXIFtags.add(key, &v);
+      _EXIFtags["Exif.Image.YResolution"] = v;
     } catch (Exiv2::Error& e) {
       std::cerr << "** EXIF key \"Exif.Image.YResolution\" not accepted **" << std::endl;
     }

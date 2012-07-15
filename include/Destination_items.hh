@@ -77,6 +77,7 @@ namespace PhotoFinish {
   protected:
     std::string _name;
     definable<double> _width, _height;
+    definable<double> _size;		//! A target-specific size (in inches) to override the one in the destination
 
   public:
     D_target(std::string n, double w, double h);
@@ -85,6 +86,7 @@ namespace PhotoFinish {
     inline std::string name(void) const { return _name; }
     inline definable<double> width(void) const { return _width; }
     inline definable<double> height(void) const { return _height; }
+    inline definable<double> size(void) const { return _size; }
 
     friend void operator >> (const YAML::Node& node, D_target& dt);
 
