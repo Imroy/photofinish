@@ -41,7 +41,7 @@ namespace PhotoFinish {
     Kernel1Dvar(double to_size);
 
     //! Build the kernel; used by derived classes
-    void build(const D_resize& dr, double from_start, double from_size, long int from_max) throw(DestinationError);
+    void build(double from_start, double from_size, long int from_max) throw(DestinationError);
 
     //! The size of this filter
     virtual double range(void) const = 0;

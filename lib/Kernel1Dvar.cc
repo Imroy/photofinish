@@ -45,7 +45,7 @@ namespace PhotoFinish {
     _weights = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
   }
 
-  void Kernel1Dvar::build(const D_resize& dr, double from_start, double from_size, long int from_max) throw(DestinationError) {
+  void Kernel1Dvar::build(double from_start, double from_size, long int from_max) throw(DestinationError) {
     double scale = from_size / _to_size;
     double range, norm_fact;
     if (scale < 1.0) {
@@ -208,7 +208,7 @@ namespace PhotoFinish {
       _radius(dr.support()),
       _r_radius(_radius.defined() ? 1.0 / _radius : 0.0)
   {
-    build(dr, from_start, from_size, from_max);
+    build(from_start, from_size, from_max);
   }
 
   double Lanczos::range(void) const {
