@@ -41,6 +41,54 @@ namespace PhotoFinish {
   void populate_IPTC_subst(hash& table);
   void populate_XMP_subst(hash& table);
 
+  Exiv2::URational parse_URational(double value) {
+    unsigned int num, den;
+    for (den = 1; den < 65535; den++) {
+      num = round(value * den);
+      double error = fabs(((double)num / den) - value);
+      if (error < value * 0.001)
+	break;
+    }
+    return Exiv2::URational(num, den);
+  }
+
+  Exiv2::URational parse_URational(std::string s) {
+    size_t slash = s.find_first_of('/');
+    if (slash == std::string::npos)
+      return parse_URational(atof(s.c_str()));
+
+    unsigned int num, den;
+    num = atoi(s.substr(0, slash).c_str());
+    den = atoi(s.substr(slash + 1, s.length() - slash - 1).c_str());
+
+    return Exiv2::URational(num, den);
+  }
+
+  Exiv2::Rational parse_Rational(double value) {
+    signed int num;
+    unsigned int den;
+    for (den = 1; den < 65535; den++) {
+      num = round(value * den);
+      double error = fabs(((double)num / den) - value);
+      if (error < value * 0.001)
+	break;
+    }
+    return Exiv2::Rational(num, den);
+  }
+
+  Exiv2::Rational parse_Rational(std::string s) {
+    size_t slash = s.find_first_of('/');
+    if (slash == std::string::npos)
+      return parse_Rational(atof(s.c_str()));
+
+    signed int num;
+    unsigned int den;
+    num = atoi(s.substr(0, slash).c_str());
+    den = atoi(s.substr(slash + 1, s.length() - slash - 1).c_str());
+
+    return Exiv2::Rational(num, den);
+  }
+
   void Tags::load(fs::path filepath) {
     std::cerr << "Loading \"" << filepath.native() << "\"..." << std::endl;
     std::ifstream fin(filepath.native());
@@ -92,6 +140,7 @@ namespace PhotoFinish {
 	int start = line.find_first_not_of(" \t", 1);
 	int eq = line.find_first_of('=', start);
 	int end = line.find_last_not_of(" \t");
+	std::string value_string = line.substr(eq + 1, end - eq);
 
 	if (line.substr(start, 3) == "XMP") {
 	  std::string key_string = line.substr(start, eq - start);
@@ -102,7 +151,7 @@ namespace PhotoFinish {
 	  try {
 	    Exiv2::XmpKey key(key_string);
 	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpText);
-	    v->read(line.substr(eq + 1, end - eq));
+	    v->read(value_string);
 	    std::cerr << "\tXMP \"" << key << "\" = \"" << *v << "\"" << std::endl;
 	    _XMPtags.add(key, v.get());
 	  } catch (Exiv2::Error& e) {
@@ -117,7 +166,7 @@ namespace PhotoFinish {
 	  try {
 	    Exiv2::IptcKey key(key_string);
 	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::asciiString);
-	    v->read(line.substr(eq + 1, end - eq));
+	    v->read(value_string);
 	    std::cerr << "\tIPTC \"" << key << "\" = \"" << *v << "\"" << std::endl;
 	    _IPTCtags.add(key, v.get());
 	  } catch (Exiv2::Error& e) {
@@ -131,9 +180,17 @@ namespace PhotoFinish {
 
 	  try {
 	    Exiv2::ExifKey key(key_string);
-	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::asciiString);
-	    v->read(line.substr(eq + 1, end - eq));
-	    std::cerr << "\tEXIF \"" << key << "\" = \"" << *v << "\"" << std::endl;
+
+	    Exiv2::TypeId type = key.defaultTypeId();
+	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(type);
+	    if (type == Exiv2::unsignedRational)
+	      v = Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
+	    else if (type == Exiv2::signedRational)
+	      v = Exiv2::Value::AutoPtr(new Exiv2::RationalValue(parse_Rational(value_string)));
+	    else
+	      v->read(value_string);
+
+	    std::cerr << "\tEXIF \"" << key << "\" (" << type << ") = \"" << *v << "\"" << std::endl;
 	    _EXIFtags.add(key, v.get());
 	  } catch (Exiv2::Error& e) {
 	    std::cerr << "** EXIF key \"" << key_string << "\" not accepted **" << std::endl;
@@ -179,16 +236,8 @@ namespace PhotoFinish {
 
   void Tags::add_resolution(Image::ptr img, double size) {
     double res = (img->width() > img->height() ? img->width() : img->height()) / size;
-    unsigned int num, den;
-    for (den = 1; den < 65535; den++) {
-      num = round(res * den);
-      double error = fabs(((double)num / den) - res);
-      if (error < res * 0.001) {
-	std::cerr << "\tSetting resolution to " << num << " ÷ " << den << " (" << res << " ± " << error << ") ppi." << std::endl;
-	break;
-      }
-    }
-    Exiv2::URationalValue v(Exiv2::URational(num, den));
+    Exiv2::URationalValue v = Exiv2::URationalValue(parse_URational(res));
+    std::cerr << "\tSetting resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << res << ") ppi." << std::endl;
     try {
       _EXIFtags["Exif.Image.XResolution"] = v;
     } catch (Exiv2::Error& e) {
