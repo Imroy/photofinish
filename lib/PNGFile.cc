@@ -247,6 +247,89 @@ namespace PhotoFinish {
     os->flush();
   }
 
+  //! Class holding information for the PNG writer
+  class png_write_queue {
+  private:
+    std::queue<long int, std::list<long int> > rownumbers;
+    short unsigned int **rows;
+    std::vector<omp_lock_t*> rowlocks;
+    png_bytepp png_rows;
+    size_t rowlen;
+    omp_lock_t *queue_lock;
+    Image::ptr img;
+    cmsHTRANSFORM transform;
+
+  public:
+    png_write_queue(Image::ptr _img, int channels, cmsHTRANSFORM t, png_bytepp pr) :
+      rows((short unsigned int**)malloc(_img->height() * sizeof(short unsigned int*))),
+      rowlocks(_img->height()),
+      png_rows(pr),
+      rowlen(_img->width() * channels * sizeof(short unsigned int)),
+      queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
+      img(_img),
+      transform(t)
+    {
+      omp_init_lock(queue_lock);
+
+      for (long int y = 0; y < img->height(); y++) {
+	rownumbers.push(y);
+	rows[y] = NULL;
+	rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
+	omp_init_lock(rowlocks[y]);
+      }
+    }
+
+    ~png_write_queue() {
+      for (long int y = 0; y < img->height(); y++) {
+	omp_destroy_lock(rowlocks[y]);
+	free(rowlocks[y]);
+      }
+      free(rows);
+      omp_destroy_lock(queue_lock);
+      free(queue_lock);
+    }
+
+    inline size_t num_rows(void) const { return rownumbers.size(); }
+
+    inline bool empty(void) const {
+      omp_set_lock(queue_lock);
+      bool ret = rownumbers.empty();
+      omp_unset_lock(queue_lock);
+      return ret;
+    }
+
+    inline short unsigned int* row(long int y) const {
+      omp_set_lock(rowlocks[y]);
+      short unsigned int *ret = rows[y];
+      omp_unset_lock(rowlocks[y]);
+      return ret;
+    }
+
+    //! Pull a row off of the workqueue and transform it using LCMS
+    inline void process_row(void) {
+      omp_set_lock(queue_lock);
+      if (!rownumbers.empty()) {
+	long int y = rownumbers.front();
+	rownumbers.pop();
+
+	omp_set_lock(rowlocks[y]);	// Take out row lock before relinquishing the queue lock
+	omp_unset_lock(queue_lock);
+
+	short unsigned int *destrow;
+	if (png_rows == NULL)
+	  destrow = (short unsigned int*)malloc(rowlen);
+	else
+	  destrow = (short unsigned int*)png_rows[y];
+
+	cmsDoTransform(transform, img->row(y), destrow, img->width());
+
+	rows[y] = destrow;
+	omp_unset_lock(rowlocks[y]);
+      } else
+	omp_unset_lock(queue_lock);
+    }
+  };
+
   void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
@@ -353,27 +436,44 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-#pragma omp parallel
+    png_write_queue queue(img, png_channels, transform, depth == 8 ? NULL : png_rows);
+
+#pragma omp parallel shared(queue)
     {
-#pragma omp master
-      {
+      int th_id = omp_get_thread_num();
+      if (th_id == 0) {		// Master thread
 	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
+
+	Ditherer ditherer(img->width(), png_channels);
+
+	for (long int y = 0; y < img->height(); y++) {
+	  // Process rows until the one we need becomes available, or the queue is empty
+	  short unsigned int *row = queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.process_row();
+	    row = queue.row(y);
+	  }
+
+	  // If it's still not available, something has gone wrong
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	    exit(2);
+	  }
+
+	  if (depth == 8) {
+	    ditherer.dither(row, png_rows[y], y == img->height() - 1);
+	    free(row);
+	  }
+	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " left)  ";
+	}
+      } else {	// Other thread(s) transform the image data
+	while (!queue.empty())
+	  queue.process_row();
       }
-    }
-    if (depth == 8) {
-      Ditherer ditherer(img->width(), png_channels);
-      short unsigned int *temp_row = (short unsigned int*)malloc(img->width() * png_channels * sizeof(short unsigned int));
-      for (long int y = 0; y < img->height(); y++) {
-	cmsDoTransform(transform, img->row(y), temp_row, img->width());
-	ditherer.dither(temp_row, png_rows[y], y == img->height() - 1);
-      }
-      free(temp_row);
-    } else {
-#pragma omp parallel for schedule(dynamic, 1)
-      for (long int y = 0; y < img->height(); y++)
-	cmsDoTransform(transform, img->row(y), png_rows[y], img->width());
     }
     cmsDeleteTransform(transform);
+    std::cerr << std::endl;
 
     std::cerr << "\tWriting PNG image data..." << std::endl;
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);

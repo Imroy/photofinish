@@ -84,29 +84,80 @@ namespace PhotoFinish {
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
-  //! Structure holding information for the JPEG writer
-  struct jpeg_write_queue_state_t {
+  //! Class holding information for the JPEG writer
+  class jpeg_write_queue {
+  private:
     std::queue<long int, std::list<long int> > rownumbers;
     short unsigned int **rows;
+    std::vector<omp_lock_t*> rowlocks;
     size_t rowlen;
     omp_lock_t *queue_lock;
     Image::ptr img;
     cmsHTRANSFORM transform;
-  };
 
-  //! Pull a row off of the workqueue and transform it using LCMS
-  void jpeg_write_process_row(jpeg_write_queue_state_t *qs) {
-    if (!qs->rownumbers.empty()) {
-      omp_set_lock(qs->queue_lock);
-      long int y = qs->rownumbers.front();
-      qs->rownumbers.pop();
-      omp_unset_lock(qs->queue_lock);
+  public:
+    jpeg_write_queue(Image::ptr _img, int channels, cmsHTRANSFORM t) :
+      rows((short unsigned int**)malloc(_img->height() * sizeof(short unsigned int*))),
+      rowlocks(_img->height()),
+      rowlen(_img->width() * channels * sizeof(short unsigned int)),
+      queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
+      img(_img),
+      transform(t)
+    {
+      omp_init_lock(queue_lock);
 
-      short unsigned int *row = (short unsigned int*)malloc(qs->rowlen);
-      cmsDoTransform(qs->transform, qs->img->row(y), row, qs->img->width());
-      qs->rows[y] = row;
+      for (long int y = 0; y < img->height(); y++) {
+	rownumbers.push(y);
+	rows[y] = NULL;
+	rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
+	omp_init_lock(rowlocks[y]);
+      }
     }
-  }
+
+    ~jpeg_write_queue() {
+      for (long int y = 0; y < img->height(); y++) {
+	omp_destroy_lock(rowlocks[y]);
+	free(rowlocks[y]);
+      }
+      free(rows);
+      omp_destroy_lock(queue_lock);
+      free(queue_lock);
+    }
+
+    inline size_t num_rows(void) const { return rownumbers.size(); }
+
+    inline bool empty(void) const {
+      omp_set_lock(queue_lock);
+      bool ret = rownumbers.empty();
+      omp_unset_lock(queue_lock);
+      return ret;
+    }
+
+    inline short unsigned int* row(long int y) const {
+      omp_set_lock(rowlocks[y]);
+      short unsigned int *ret = rows[y];
+      omp_unset_lock(rowlocks[y]);
+      return ret;
+    }
+
+    //! Pull a row off of the workqueue and transform it using LCMS
+    inline void process_row(void) {
+      omp_set_lock(queue_lock);
+      if (!rownumbers.empty()) {
+	long int y = rownumbers.front();
+	rownumbers.pop();
+
+	omp_set_lock(rowlocks[y]);	// Take out rowlock before relinquishing the queue lock
+	omp_unset_lock(queue_lock);
+
+	short unsigned int *row = (short unsigned int*)malloc(rowlen);
+	cmsDoTransform(transform, img->row(y), row, img->width());
+	rows[y] = row;
+	omp_unset_lock(rowlocks[y]);
+      } else
+	omp_unset_lock(queue_lock);
+    }
+  };
 
   void JPEGFile::write(std::ostream& os, Image::ptr img, const Destination &dest) const {
     jpeg_compress_struct cinfo;
@@ -192,20 +243,9 @@ namespace PhotoFinish {
 
     Ditherer ditherer(img->width(), cinfo.input_components);
 
-    jpeg_write_queue_state_t qs;
-    qs.queue_lock = (omp_lock_t*)malloc(sizeof(omp_lock_t));
-    omp_init_lock(qs.queue_lock);
-    qs.rowlen = img->width() * cinfo.input_components * sizeof(short unsigned int);
-    qs.img = img;
-    qs.transform = transform;
+    jpeg_write_queue queue(img, cinfo.input_components, transform);
 
-    qs.rows = (short unsigned int**)malloc(img->height() * sizeof(short unsigned int*));
-    for (long int y = 0; y < img->height(); y++) {
-      qs.rownumbers.push(y);
-      qs.rows[y] = NULL;
-    }
-
-#pragma omp parallel shared(qs)
+#pragma omp parallel shared(queue)
     {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
@@ -217,30 +257,30 @@ namespace PhotoFinish {
 	while (cinfo.next_scanline < cinfo.image_height) {
 	  int y = cinfo.next_scanline;
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  while ((qs.rows[y] == NULL) && !qs.rownumbers.empty())
-	    jpeg_write_process_row(&qs);
+	  short unsigned int *row = queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.process_row();
+	    row = queue.row(y);
+	  }
+
 	  // If it's still not available, something has gone wrong
-	  if (qs.rows[y] == NULL) {
-	    std::cerr << "** Oh crap **" << std::endl;
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
 	    exit(2);
 	  }
 
-	  ditherer.dither(qs.rows[y], jpeg_row[0], y == img->height() - 1);
-	  free(qs.rows[y]);
+	  ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
 	  jpeg_write_scanlines(&cinfo, jpeg_row, 1);
 	  std::cerr << "\r\tWritten " << y + 1 << " of " << img->height() << " rows ("
-		    << qs.rownumbers.size() << " left for colour transformation)   ";
+		    << queue.num_rows() << " left for colour transformation)   ";
 	}
 	free(jpeg_row[0]);
       } else {	// Other thread(s) transform the image data
-	while (!qs.rownumbers.empty())
-	  jpeg_write_process_row(&qs);
+	while (!queue.empty())
+	  queue.process_row();
       }
     }
-    free(qs.rows);
-    omp_destroy_lock(qs.queue_lock);
-    free(qs.queue_lock);
-    cmsDeleteTransform(qs.transform);
+    cmsDeleteTransform(transform);
     std::cerr << std::endl;
 
     jpeg_finish_compress(&cinfo);
