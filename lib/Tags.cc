@@ -60,7 +60,7 @@ namespace PhotoFinish {
 
     unsigned int num, den;
     num = boost::lexical_cast<unsigned int>(s.substr(0, slash));
-    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1).c_str());
+    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1));
 
     return Exiv2::URational(num, den);
   }
@@ -84,8 +84,8 @@ namespace PhotoFinish {
 
     signed int num;
     unsigned int den;
-    num = boost::lexical_cast<signed int>(s.substr(0, slash).c_str());
-    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1).c_str());
+    num = boost::lexical_cast<signed int>(s.substr(0, slash));
+    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1));
 
     return Exiv2::Rational(num, den);
   }
