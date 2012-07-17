@@ -1,4 +1,4 @@
-Photo Finish is a tool for processing digital images in the (presumably) last stage of publishing a photo. I run a "hybrid" workflow that starts with film scans, but this could also be of use to digital photographers.
+Photo Finish is a command-line tool for automatically processing digital images in the (presumably) last stage of publishing a photo. I run a "hybrid" workflow that starts with film scans, but this could also be of use to digital photographers.
 
 
 == Description ==
@@ -17,12 +17,12 @@ My focus has been on image quality and correctness, so many computations are don
 * The list of "destinations" is read from a YAML file
 ** Destinations describe the size, format, and other specifics of the output
 * Each input file can have its own list of "tags" - EXIF/IPTC/XMP metadata, as well as "variables", some of which override destination parameters
-** This is an artefact of my original shell script (which used exiftool) and expanded in my Perl version (using Image::Exiftool); perhaps this should be replaced by YAML?
+** This is an artefact of my original shell script (which used exiftool) and expanded in my Perl version (using [http://www.sno.phy.queensu.ca/~phil/exiftool/ Image::Exiftool]); perhaps this should be replaced by YAML?
 * Image pixel data is stored internally in the [http://en.wikipedia.org/wiki/Lab_color_space CIE L*a*b* colour space] using floating-point components
 ** This colour space is perceptually uniform, so it is ideal for rescaling of images
 ** Even when the input and output(s) are greyscale, this colour space is used (partly for simplicity, but also because greyscale can have colour to it)
 ** Configurable as either single or double precision at compile-time (DP adds almost nothing in my limited tests)
-* Rescaling is done using a Lanczos filter with a radius of 3 pixels
+* Rescaling is done using a Lanczos filter
 * OpenMP is used in several places to take advantage of SMP systems
 * Dithers using Floyd-Steinberg error diffusion when producing 8-bit component output
 ** Not sure if this improves the output or not, it just seemed like the right thing to do
@@ -33,13 +33,18 @@ My focus has been on image quality and correctness, so many computations are don
 * Only reads PNG files
 * Only writes JPEG or PNG files
 * Probably only compiles on Linux for now
+* Cropping is defined in a very simple way that doesn't work well with different aspect ratios
 
 
 == Todo ==
 
 * Add reading of JPEG files
 * Add other image formats e.g TIFF, JPEG 2000, RAW formats (reading only)
-* Thinking of a workqueue-based version to keep multiple processors/cores busy at all time
+* Use YAML (or something else?) for the "tags" format
+* A more flexible way of defining cropping (and sizing?) parameters e.g feature placement, rule of thirds, diagonal method, etc
+
+Crazy idea:
+* An entirely workqueue-based version to keep multiple processors/cores busy at all time
 
 
 == Libraries ==
