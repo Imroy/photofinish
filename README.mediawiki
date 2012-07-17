@@ -60,6 +60,6 @@ Photo Finish currently uses the following libraries:
 
 == License ==
 
-Copyright 2012 Ian Tester <imroykun@gmail.com>
+Copyright 2012 Ian Tester &lt;imroykun&#x40;gmail.com&gt;
 
 Photo Finish is licensed under the GNU GPL version 3 or later.
