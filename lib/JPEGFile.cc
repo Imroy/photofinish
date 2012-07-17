@@ -28,6 +28,7 @@
 #include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "TransformQueue.hh"
 #include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
@@ -83,81 +84,6 @@ namespace PhotoFinish {
 
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
-
-  //! Class holding information for the JPEG writer
-  class jpeg_write_queue {
-  private:
-    std::queue<long int, std::list<long int> > rownumbers;
-    short unsigned int **rows;
-    std::vector<omp_lock_t*> rowlocks;
-    size_t rowlen;
-    omp_lock_t *queue_lock;
-    Image::ptr img;
-    cmsHTRANSFORM transform;
-
-  public:
-    jpeg_write_queue(Image::ptr _img, int channels, cmsHTRANSFORM t) :
-      rows((short unsigned int**)malloc(_img->height() * sizeof(short unsigned int*))),
-      rowlocks(_img->height()),
-      rowlen(_img->width() * channels * sizeof(short unsigned int)),
-      queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
-      img(_img),
-      transform(t)
-    {
-      omp_init_lock(queue_lock);
-
-      for (long int y = 0; y < img->height(); y++) {
-	rownumbers.push(y);
-	rows[y] = NULL;
-	rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
-	omp_init_lock(rowlocks[y]);
-      }
-    }
-
-    ~jpeg_write_queue() {
-      for (long int y = 0; y < img->height(); y++) {
-	omp_destroy_lock(rowlocks[y]);
-	free(rowlocks[y]);
-      }
-      free(rows);
-      omp_destroy_lock(queue_lock);
-      free(queue_lock);
-    }
-
-    inline size_t num_rows(void) const { return rownumbers.size(); }
-
-    inline bool empty(void) const {
-      omp_set_lock(queue_lock);
-      bool ret = rownumbers.empty();
-      omp_unset_lock(queue_lock);
-      return ret;
-    }
-
-    inline short unsigned int* row(long int y) const {
-      omp_set_lock(rowlocks[y]);
-      short unsigned int *ret = rows[y];
-      omp_unset_lock(rowlocks[y]);
-      return ret;
-    }
-
-    //! Pull a row off of the workqueue and transform it using LCMS
-    inline void process_row(void) {
-      omp_set_lock(queue_lock);
-      if (!rownumbers.empty()) {
-	long int y = rownumbers.front();
-	rownumbers.pop();
-
-	omp_set_lock(rowlocks[y]);	// Take out rowlock before relinquishing the queue lock
-	omp_unset_lock(queue_lock);
-
-	short unsigned int *row = (short unsigned int*)malloc(rowlen);
-	cmsDoTransform(transform, img->row(y), row, img->width());
-	rows[y] = row;
-	omp_unset_lock(rowlocks[y]);
-      } else
-	omp_unset_lock(queue_lock);
-    }
-  };
 
   void JPEGFile::write(std::ostream& os, Image::ptr img, const Destination &dest) const {
     jpeg_compress_struct cinfo;
@@ -243,7 +169,7 @@ namespace PhotoFinish {
 
     Ditherer ditherer(img->width(), cinfo.input_components);
 
-    jpeg_write_queue queue(img, cinfo.input_components, transform);
+    transform_queue queue(img, cinfo.input_components, transform);
 
 #pragma omp parallel shared(queue)
     {

@@ -29,6 +29,7 @@
 #include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "TransformQueue.hh"
 #include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
@@ -247,89 +248,6 @@ namespace PhotoFinish {
     os->flush();
   }
 
-  //! Class holding information for the PNG writer
-  class png_write_queue {
-  private:
-    std::queue<long int, std::list<long int> > rownumbers;
-    short unsigned int **rows;
-    std::vector<omp_lock_t*> rowlocks;
-    png_bytepp png_rows;
-    size_t rowlen;
-    omp_lock_t *queue_lock;
-    Image::ptr img;
-    cmsHTRANSFORM transform;
-
-  public:
-    png_write_queue(Image::ptr _img, int channels, cmsHTRANSFORM t, png_bytepp pr) :
-      rows((short unsigned int**)malloc(_img->height() * sizeof(short unsigned int*))),
-      rowlocks(_img->height()),
-      png_rows(pr),
-      rowlen(_img->width() * channels * sizeof(short unsigned int)),
-      queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
-      img(_img),
-      transform(t)
-    {
-      omp_init_lock(queue_lock);
-
-      for (long int y = 0; y < img->height(); y++) {
-	rownumbers.push(y);
-	rows[y] = NULL;
-	rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
-	omp_init_lock(rowlocks[y]);
-      }
-    }
-
-    ~png_write_queue() {
-      for (long int y = 0; y < img->height(); y++) {
-	omp_destroy_lock(rowlocks[y]);
-	free(rowlocks[y]);
-      }
-      free(rows);
-      omp_destroy_lock(queue_lock);
-      free(queue_lock);
-    }
-
-    inline size_t num_rows(void) const { return rownumbers.size(); }
-
-    inline bool empty(void) const {
-      omp_set_lock(queue_lock);
-      bool ret = rownumbers.empty();
-      omp_unset_lock(queue_lock);
-      return ret;
-    }
-
-    inline short unsigned int* row(long int y) const {
-      omp_set_lock(rowlocks[y]);
-      short unsigned int *ret = rows[y];
-      omp_unset_lock(rowlocks[y]);
-      return ret;
-    }
-
-    //! Pull a row off of the workqueue and transform it using LCMS
-    inline void process_row(void) {
-      omp_set_lock(queue_lock);
-      if (!rownumbers.empty()) {
-	long int y = rownumbers.front();
-	rownumbers.pop();
-
-	omp_set_lock(rowlocks[y]);	// Take out row lock before relinquishing the queue lock
-	omp_unset_lock(queue_lock);
-
-	short unsigned int *destrow;
-	if (png_rows == NULL)
-	  destrow = (short unsigned int*)malloc(rowlen);
-	else
-	  destrow = (short unsigned int*)png_rows[y];
-
-	cmsDoTransform(transform, img->row(y), destrow, img->width());
-
-	rows[y] = destrow;
-	omp_unset_lock(rowlocks[y]);
-      } else
-	omp_unset_lock(queue_lock);
-    }
-  };
-
   void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
@@ -436,7 +354,7 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    png_write_queue queue(img, png_channels, transform, depth == 8 ? NULL : png_rows);
+    transform_queue queue(img, png_channels, transform, depth == 8 ? NULL : png_rows);
 
 #pragma omp parallel shared(queue)
     {
