@@ -110,7 +110,7 @@ namespace PhotoFinish {
   void D_JPEG::add_variables(hash& vars) {
     hash::iterator vi;
     if ((vi = vars.find("qual")) != vars.end()) {
-      _quality = atoi(vi->second.c_str());
+      _quality = boost::lexical_cast<int>(vi->second);
       vars.erase(vi);
     }
     if ((vi = vars.find("sample")) != vars.end()) {
@@ -291,7 +291,7 @@ namespace PhotoFinish {
 
 	double offy = 0.5;
 	if ((vi = _variables.find("offy")) != _variables.end())
-	  offy = atof(vi->second.c_str());
+	  offy = boost::lexical_cast<double>(vi->second);
 
 	double gap = img->height() - height;
 	waste = gap * width;
@@ -303,7 +303,7 @@ namespace PhotoFinish {
 
 	double offx = 0.5;
 	if ((vi = _variables.find("offx")) != _variables.end())
-	  offx = atof(vi->second.c_str());
+	  offx = boost::lexical_cast<double>(vi->second);
 
 	double gap = img->width() - width;
 	waste = gap * height;

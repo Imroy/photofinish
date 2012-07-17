@@ -16,13 +16,14 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <math.h>
-#include <exiv2/exiv2.hpp>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <map>
+#include <exiv2/exiv2.hpp>
+#include <boost/lexical_cast.hpp>
+#include <math.h>
 #include "Image.hh"
 #include "ImageFile.hh"
 #include "Tags.hh"
@@ -55,11 +56,11 @@ namespace PhotoFinish {
   Exiv2::URational parse_URational(std::string s) {
     size_t slash = s.find_first_of('/');
     if (slash == std::string::npos)
-      return parse_URational(atof(s.c_str()));
+      return parse_URational(boost::lexical_cast<double>(s));
 
     unsigned int num, den;
-    num = atoi(s.substr(0, slash).c_str());
-    den = atoi(s.substr(slash + 1, s.length() - slash - 1).c_str());
+    num = boost::lexical_cast<unsigned int>(s.substr(0, slash));
+    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1).c_str());
 
     return Exiv2::URational(num, den);
   }
@@ -79,12 +80,12 @@ namespace PhotoFinish {
   Exiv2::Rational parse_Rational(std::string s) {
     size_t slash = s.find_first_of('/');
     if (slash == std::string::npos)
-      return parse_Rational(atof(s.c_str()));
+      return parse_Rational(boost::lexical_cast<double>(s));
 
     signed int num;
     unsigned int den;
-    num = atoi(s.substr(0, slash).c_str());
-    den = atoi(s.substr(slash + 1, s.length() - slash - 1).c_str());
+    num = boost::lexical_cast<signed int>(s.substr(0, slash).c_str());
+    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1).c_str());
 
     return Exiv2::Rational(num, den);
   }

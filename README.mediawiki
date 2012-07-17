@@ -55,7 +55,7 @@ Photo Finish currently uses the following libraries:
 * [http://www.littlecms.com/ Little CMS] (LCMS) for transforming between colour profiles
 * [http://code.google.com/p/yaml-cpp/ libyaml] for reading YAML data files
 * [http://www.exiv2.org/ EXIV] for EXIF/IPTC/XMP metadata
-* [http://www.boost.org/doc/libs/1_50_0/libs/filesystem/doc/ Boost.Filesystem] and a bit of [http://www.boost.org/doc/libs/1_50_0/libs/algorithm/doc/html/index.html Boost.Algorithm] (iequals)
+* [http://www.boost.org/doc/libs/1_50_0/libs/filesystem/doc/ Boost.Filesystem], [http://www.boost.org/doc/libs/1_50_0/doc/html/boost_lexical_cast.html Boost.Lexical_Cast], and a bit of [http://www.boost.org/doc/libs/1_50_0/libs/algorithm/doc/html/index.html Boost.Algorithm] (iequals)
 
 
 == License ==
