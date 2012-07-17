@@ -19,6 +19,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <boost/lexical_cast.hpp>
 #include <strings.h>
 #include <string.h>
 #include <math.h>
@@ -102,7 +103,7 @@ namespace PhotoFinish {
 
   D_JPEG::D_JPEG(int q, char h, char v, bool p) :
     _quality(q),
-    _sample(std::pair<char, char>(h, v)),
+    _sample(std::pair<int, int>(h, v)),
     _progressive(p)
   {}
 
@@ -113,11 +114,17 @@ namespace PhotoFinish {
       vars.erase(vi);
     }
     if ((vi = vars.find("sample")) != vars.end()) {
-      char h, v;
-      int rc = sscanf(vi->second.c_str(), "%hhdx%hhd", &h, &v);
-      if (rc == 2) {
-	_sample = std::pair<char, char>(h, v);
-	vars.erase(vi);
+      std::string sample = vi->second;
+      size_t x = sample.find_first_of("x×");
+      if (x != std::string::npos) {
+	try {
+	  int h = boost::lexical_cast<int>(sample.substr(0, x));
+	  int v = boost::lexical_cast<int>(sample.substr(x + 1, sample.length() - x - 1));
+	  _sample = std::pair<int, int>(h, v);
+	  vars.erase(vi);
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	}
       } else
 	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second << "\"." << std::endl;
     }
@@ -137,11 +144,16 @@ namespace PhotoFinish {
     if (const YAML::Node *n = node.FindValue("sample")) {
       std::string sample;
       *n >> sample;
-      char h, v;
-      int rc = sscanf(sample.c_str(), "%hhdx%hhd", &h, &v);
-      if (rc == 2)
-	dj._sample = std::pair<char, char>(h, v);
-      else
+      size_t x = sample.find_first_of("x×");
+      if (x != std::string::npos) {
+	try {
+	  int h = boost::lexical_cast<int>(sample.substr(0, x));
+	  int v = boost::lexical_cast<int>(sample.substr(x + 1, sample.length() - x - 1));
+	  dj._sample = std::pair<int, int>(h, v);
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	}
+      } else
 	std::cerr << "D_JPEG: Failed to parse sample \"" << sample << "\"." << std::endl;
     }
     if (const YAML::Node *n = node.FindValue("pro"))

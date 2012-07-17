@@ -97,7 +97,7 @@ namespace PhotoFinish {
   class D_JPEG : public Role_Definable {
   private:
     definable<int> _quality;
-    definable< std::pair<char, char> > _sample;
+    definable< std::pair<int, int> > _sample;
     definable<bool> _progressive;
 
   public:
@@ -116,7 +116,7 @@ namespace PhotoFinish {
     void add_variables(hash& vars);
 
     inline definable<int> quality(void) const { return _quality; }
-    inline definable< std::pair<char, char> > sample(void) const { return _sample; }
+    inline definable< std::pair<int, int> > sample(void) const { return _sample; }
     inline definable<bool> progressive(void) const { return _progressive; }
 
     friend void operator >> (const YAML::Node& node, D_JPEG& dj);
