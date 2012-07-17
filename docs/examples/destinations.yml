@@ -1,0 +1,420 @@
+##
+## My settings for photos to upload to devianArt
+##
+da:
+  name: deviantART
+  dir: DeviantArt
+  size: 8
+  sharpen:
+    radius: 1
+    sigma: 10
+  resize:
+    filter: Lanczos
+    support: 3.0
+  thumbnail:
+    generate: 1
+    maxwidth: 64
+    maxheight: 64
+  targets:
+    landscape:
+      width: 1200
+      height: 800
+    portrait:
+      width: 600
+      height: 900
+    square:
+      width: 900
+      height: 900
+
+##
+## My special settings for family photos to go on devianArt
+## (they're smaller)
+##
+da-fam:
+  name: deviantART
+  dir: DeviantArt
+  size: 6
+  sharpen:
+    radius: 1
+    sigma: 20
+  targets:
+    landscape:
+      width: 900
+      height: 600
+    portrait:
+      width: 512
+      height: 768
+    square:
+      width: 640
+      height: 640
+
+##
+## For photos to be submitted to Ilford Photo's community gallery
+## http://ilfordphoto.com/photocommunity/gallery/
+## Limited to only 640×480 :(
+##
+ilford:
+  name: Ilford Photo
+  dir: Ilford
+  size: 4
+  support: 1.2
+  sharpen:
+    radius: 1
+    sigma: 30
+  targets:
+    landscape:
+      width: 640
+      height: 480
+## Remove the line above and uncomment the following to "force" certain aspect ratios
+#      height: 427
+#    portrait:
+#      width: 320
+#      height: 480
+#    square:
+#      width: 480
+#      height: 480
+
+##
+## For photos to be printed by Ilford Lab Direct - http://www.ilfordlab.com/
+## Targets sourced from http://www.ilfordlab.com/page/61/Black-and-White-Prints-From-Digital.htm
+##  - click the "view pricing" button
+## All rectangular sizes are listed in both portrait and landscape orientations
+##
+ilfordlab:
+  name: Ilford Lab
+  dir: IlfordLab
+  format: jpeg
+  forcegrey: 1
+  jpeg:
+    qual: 90
+    pro: 1
+  resize:
+    filter: Lanczos
+    support: 3.0
+  thumbnail:
+    generate: 1
+    maxwidth: 64
+    maxheight: 64
+  targets:
+    4×6:
+      width: 1200
+      height: 1800
+      size: 6
+    6×4:
+      width: 1800
+      height: 1200
+      size: 6
+    5×7:
+      width: 1500
+      height: 2100
+      size: 7
+    7×5:
+      width: 2100
+      height: 1500
+      size: 7
+    5×15:
+      width: 1500
+      height: 4500
+      size: 15
+    15×5:
+      width: 4500
+      height: 1500
+      size: 15
+    6×6:
+      width: 1800
+      height: 1800
+      size: 6
+    6×8:
+      width: 1800
+      height: 2400
+      size: 8
+    8×6:
+      width: 2400
+      height: 1800
+      size: 8
+    6×9:
+      width: 1800
+      height: 2700
+      size: 9
+    9×6:
+      width: 2700
+      height: 1800
+      size: 9
+    8×8:
+      width: 2400
+      height: 2400
+      size: 8
+    8×10:
+      width: 2400
+      height: 3000
+      size: 10
+    10×8:
+      width: 3000
+      height: 2400
+      size: 10
+    8×12:
+      width: 2400
+      height: 3600
+      size: 12
+    12×8:
+      width: 3600
+      height: 2400
+      size: 12
+    10×10:
+      width: 3000
+      height: 3000
+      size: 10
+    10×12:
+      width: 3000
+      height: 3600
+      size: 12
+    12×10:
+      width: 3600
+      height: 3000
+      size: 12
+    10×15:
+      width: 3000
+      height: 4500
+      size: 15
+    15×10:
+      width: 4500
+      height: 3000
+      size: 15
+    10×30:
+      width: 3000
+      height: 9000
+      size: 30
+    30×10:
+      width: 9000
+      height: 3000
+      size: 30
+    12×12:
+      width: 3600
+      height: 3600
+      size: 12
+    12×16:
+      width: 3600
+      height: 4800
+      size: 16
+    16×12:
+      width: 4800
+      height: 3600
+      size: 16
+    12×18:
+      width: 3600
+      height: 5400
+      size: 18
+    18×12:
+      width: 5400
+      height: 3600
+      size: 18
+    16×16:
+      width: 4800
+      height: 4800
+      size: 16
+    16×20:
+      width: 4800
+      height: 6000
+      size: 20
+    20×16:
+      width: 6000
+      height: 4800
+      size: 20
+    16×24:
+      width: 4800
+      height: 7200
+      size: 24
+    24×16:
+      width: 7200
+      height: 4800
+      size: 24
+    20×20:
+      width: 6000
+      height: 6000
+      size: 20
+    20×24:
+      width: 6000
+      height: 7200
+      size: 24
+    24×20:
+      width: 7200
+      height: 6000
+      size: 24
+    20×30:
+      width: 6000
+      height: 9000
+      size: 30
+    30×20:
+      width: 9000
+      height: 6000
+      size: 30
+    24×24:
+      width: 7200
+      height: 7200
+      size: 24
+    24×36:
+      width: 7200
+      height: 10800
+      size: 36
+    36×24:
+      width: 10800
+      height: 7200
+      size: 36
+    30×30:
+      width: 9000
+      height: 9000
+      size: 30
+    30×40:
+      width: 9000
+      height: 12000
+      size: 40
+    40×30:
+      width: 12000
+      height: 9000
+      size: 40
+    40×40:
+      width: 12000
+      height: 12000
+      size: 40
+
+##
+## My settings for photos submitted to my Picasa Web Album
+##
+picasa:
+  name: Google Picasa Web Album
+  dir: Picasa
+  size: 6
+  sharpen:
+    radius: 1
+    sigma: 20
+  targets:
+    landscape:
+      width: 1024
+      height: 768
+    portrait:
+      width: 768
+      height: 1024
+    square:
+      width: 1024
+      height: 1024
+
+##
+## For printing at many photo kiosks
+## Really just a conversion to sRGB JPEG
+##
+print:
+  name: Generic print
+  dir: Prints
+  noresize: 1
+  format: jpeg
+  forcergb: 1
+  jpeg:
+    pro: 0
+    qual: 96
+    sample: 1x1
+  profile:
+    name: sRGB
+    filename: /usr/share/colour/icc/sRGB.icm
+
+##
+## For a simple photo frame
+##
+frame:
+  name: frame
+  dir: Frame
+  jpeg:
+    pro: 0
+    qual: 96
+    sample: 1x1
+  size: 8
+  sharpen:
+    radius: 1
+    sigma: 30
+  targets:
+    landscape:
+      width: 800
+      height: 600
+
+##
+## For a HDTV
+##
+hdtv:
+  name: HDTV
+  dir: HDTV
+  jpeg:
+    pro: 0
+    qual: 96
+    sample: 1x1
+  forcergb: 1
+  size: 40
+  sharpen:
+    radius: 1
+    sigma: 10
+  targets:
+    landscape:
+      width: 1920
+      height: 1080
+
+##
+## Wallpaper for my Motorola Milestone - 480×854 (FWVGA) screen
+##
+milestone:
+  name: "Motorola Milestone"
+  dir: Wallpaper-Milestone
+  format: png
+  resize:
+    filter: Lanczos
+    support: 3.0
+  size: 3.5433
+  sharpen:
+    radius: 1
+    sigma: 10
+  targets:
+    portrait:
+      width: 960
+      height: 854
+
+##
+## Wallpaper for my Motorola Atrix - 540×960 (qHD) screen
+##
+atrix:
+  name: "Motorola Atrix"
+  dir: Wallpaper-Atrix
+  format: png
+  resize:
+    filter: Lanczos
+    support: 3.0
+  size: 3.5433
+  sharpen:
+    radius: 1
+    sigma: 30
+  targets:
+    portrait:
+      width: 1080
+      height: 960
+
+##
+## Wallpaper for a 3rd generation iPad
+##
+ipad3:
+  name: "Apple iPad 3"
+  dir: Wallpaper-iPad3
+  format: jpeg
+  jpeg:
+    qual: 96
+    sample: 2x2
+  resize:
+    filter: Lanczos
+    support: 3.0
+  size: 9.7
+  sharpen:
+    radius: 1
+    sigma: 10
+  targets:
+    portrait:
+      width: 1536
+      height: 2048
+    landscape:
+      width: 2048
+      height: 1536
+
