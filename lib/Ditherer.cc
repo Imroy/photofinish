@@ -23,13 +23,13 @@
 
 namespace PhotoFinish {
 
-  Ditherer::Ditherer(long int w, unsigned char c) :
+  Ditherer::Ditherer(unsigned int w, unsigned char c) :
     width(w), channels(c),
     error_rows(NULL),
     curr_row(0), next_row(1)
   {
     error_rows = (short int**)malloc(2 * sizeof(short int*));
-    for (long int y = 0; y < 2; y++)
+    for (unsigned int y = 0; y < 2; y++)
       error_rows[y] = (short int*)malloc(width * channels * sizeof(short int));
     memset(error_rows[next_row], 0, width * channels * sizeof(short int));
   }
@@ -58,7 +58,7 @@ namespace PhotoFinish {
 
       if (lastrow) {
 	// All but last pixel
-	long int x = 0;
+	unsigned int x = 0;
 	for (; x < width - 1; x++, in += channels, out += channels) {
 	  int target = *in + (error_rows[curr_row][pos] >> 4);
 	  *out = round(target * (1.0 / 257));
@@ -73,7 +73,7 @@ namespace PhotoFinish {
 	}
       } else {
 	// First pixel
-	long int x = 0;
+	unsigned int x = 0;
 	int target = *in + (error_rows[curr_row][pos] >> 4);
 	*out = round(target * (1.0 / 257));
 	int error = target - ((int)*out * 257);

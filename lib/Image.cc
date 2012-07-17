@@ -30,20 +30,20 @@ namespace PhotoFinish {
     _rowdata(NULL)
   {}
 
-  Image::Image(long int w, long int h) :
+  Image::Image(unsigned int w, unsigned int h) :
     _width(w),
     _height(h),
     _greyscale(false),
     _rowdata(NULL)
   {
     _rowdata = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
-    for (long int y = 0; y < _height; y++)
+    for (unsigned int y = 0; y < _height; y++)
       _rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
   }
 
   Image::~Image() {
     if (_rowdata != NULL) {
-      for (long int y = 0; y < _height; y++)
+      for (unsigned int y = 0; y < _height; y++)
 	free(_rowdata[y]);
       free(_rowdata);
       _rowdata = NULL;

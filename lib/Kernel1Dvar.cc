@@ -40,12 +40,12 @@ namespace PhotoFinish {
     _to_size(to_size),
     _to_size_i(ceil(to_size))
   {
-    _size = (long int*)malloc(_to_size_i * sizeof(long int));
-    _start = (long int*)malloc(_to_size_i * sizeof(long int));
+    _size = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
+    _start = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
     _weights = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
   }
 
-  void Kernel1Dvar::build(double from_start, double from_size, long int from_max) throw(DestinationError) {
+  void Kernel1Dvar::build(double from_start, double from_size, unsigned int from_max) throw(DestinationError) {
     double scale = from_size / _to_size;
     double range, norm_fact;
     if (scale < 1.0) {
@@ -57,33 +57,36 @@ namespace PhotoFinish {
     }
 
 #pragma omp parallel for schedule(dynamic, 1)
-    for (long int i = 0; i < _to_size_i; i++) {
+    for (unsigned int i = 0; i < _to_size_i; i++) {
       double centre = from_start + (i * scale);
-      int left = floor(centre - range);
-      if (left < 0)
+      unsigned int left = floor(centre - range);
+      if (range > centre)
 	left = 0;
-      long int right = ceil(centre + range);
+      unsigned int right = ceil(centre + range);
       if (right >= from_max)
 	right = from_max - 1;
-      _size[i] = right - left + 1;
+      _size[i] = right + 1 - left;
       _start[i] = left;
       _weights[i] = (SAMPLE*)malloc(_size[i] * sizeof(SAMPLE));
-      long int k = 0;
-      for (long int j = left; j <= right; j++, k++)
+      unsigned int k = 0;
+      for (unsigned int j = left; j <= right; j++, k++)
 	_weights[i][k] = this->eval((centre - j) * norm_fact);
+
       // normalize the filter's weight's so the sum equals to 1.0, very important for avoiding box type of artifacts
-      long int max = _size[i];
+      unsigned int max = _size[i];
       SAMPLE tot = 0.0;
-      for (long int k = 0; k < max; k++)
+      for (unsigned int k = 0; k < max; k++)
 	tot += _weights[i][k];
-      if (tot != 0) // 0 should never happen except bug in filter
-	for (long int k = 0; k < max; k++)
-	  _weights[i][k] /= tot;
+      if (fabs(tot) > 1e-5) {
+	tot = 1.0 / tot;
+	for (unsigned int k = 0; k < max; k++)
+	  _weights[i][k] *= tot;
+      }
     }
 
   }
 
-  Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, long int from_max, double to_size) throw(DestinationError) {
+  Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) throw(DestinationError) {
     Kernel1Dvar::ptr ret;
     if (!dr.filter().defined()) {
       ret = Kernel1Dvar::ptr(new Lanczos(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size));
@@ -111,7 +114,7 @@ namespace PhotoFinish {
     }
 
     if (_weights != NULL) {
-      for (long int i = 0; i < _to_size_i; i++)
+      for (unsigned int i = 0; i < _to_size_i; i++)
 	free(_weights[i]);
       free(_weights);
       _weights = NULL;
@@ -132,16 +135,16 @@ namespace PhotoFinish {
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)
-    for (long int y = 0; y < img->height(); y++) {
+    for (unsigned int y = 0; y < img->height(); y++) {
       SAMPLE *out = ni->row(y);
 
-      for (long int nx = 0; nx < _to_size_i; nx++, out += 3) {
-	long int max = size(nx);
+      for (unsigned int nx = 0; nx < _to_size_i; nx++, out += 3) {
+	unsigned int max = size(nx);
 
 	out[0] = out[1] = out[2] = 0.0;
 	const SAMPLE *weight = this->row(nx);
 	const SAMPLE *in = img->at(this->start(nx), y);
-	for (long int j = 0; j < max; j++, weight++, in += 3) {
+	for (unsigned int j = 0; j < max; j++, weight++, in += 3) {
 	  out[0] += in[0] * *weight;
 	  out[1] += in[1] * *weight;
 	  out[2] += in[2] * *weight;
@@ -167,15 +170,15 @@ namespace PhotoFinish {
       }
     }
 #pragma omp parallel for schedule(dynamic, 1)
-    for (long int ny = 0; ny < _to_size_i; ny++) {
-      long int max = size(ny);
-      long int ystart = this->start(ny);
-      long int j = 0;
+    for (unsigned int ny = 0; ny < _to_size_i; ny++) {
+      unsigned int max = size(ny);
+      unsigned int ystart = this->start(ny);
+      unsigned int j = 0;
       const SAMPLE *weight = &this->at(j, ny);
 
       SAMPLE *in = img->row(ystart);
       SAMPLE *out = ni->row(ny);
-      for (long int x = 0; x < img->width(); x++, in += 3, out += 3) {
+      for (unsigned int x = 0; x < img->width(); x++, in += 3, out += 3) {
 	out[0] = in[0] * *weight;
 	out[1] = in[1] * *weight;
 	out[2] = in[2] * *weight;
@@ -185,7 +188,7 @@ namespace PhotoFinish {
       for (j = 1; j < max; j++, weight++) {
 	in = img->row(ystart + j);
 	out = ni->row(ny);
-	for (long int x = 0; x < img->width(); x++, in += 3, out += 3) {
+	for (unsigned int x = 0; x < img->width(); x++, in += 3, out += 3) {
 	  out[0] += in[0] * *weight;
 	  out[1] += in[1] * *weight;
 	  out[2] += in[2] * *weight;
@@ -203,7 +206,7 @@ namespace PhotoFinish {
     Kernel1Dvar()
   {}
 
-    Lanczos::Lanczos(const D_resize& dr, double from_start, double from_size, long int from_max, double to_size) :
+    Lanczos::Lanczos(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) :
       Kernel1Dvar(to_size),
       _radius(dr.support()),
       _r_radius(_radius.defined() ? 1.0 / _radius : 0.0)

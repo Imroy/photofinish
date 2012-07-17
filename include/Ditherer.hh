@@ -24,7 +24,7 @@ namespace PhotoFinish {
   //! Class for dithering images down to 8-bit components
   class Ditherer {
   private:
-    long int width;
+    unsigned int width;
     unsigned char channels;
     short int **error_rows;
     int curr_row, next_row;
@@ -35,7 +35,7 @@ namespace PhotoFinish {
       \param w Width of the image
       \param c Channels of the image
     */
-    Ditherer(long int w, unsigned char c);
+    Ditherer(unsigned int w, unsigned char c);
 
     //! Destructor
     ~Ditherer();

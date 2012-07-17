@@ -181,7 +181,7 @@ namespace PhotoFinish {
 	std::cerr << "\tTransforming from L*a*b* and writing " << img->width() << "×" << img->height() << " JPEG image using " << omp_get_num_threads() << " threads..." << std::endl;
 	jpeg_start_compress(&cinfo, TRUE);
 	while (cinfo.next_scanline < cinfo.image_height) {
-	  int y = cinfo.next_scanline;
+	  unsigned int y = cinfo.next_scanline;
 	  // Process rows until the one we need becomes available, or the queue is empty
 	  short unsigned int *row = queue.row(y);
 	  while (!queue.empty() && (row == NULL)) {
@@ -197,8 +197,8 @@ namespace PhotoFinish {
 
 	  ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
 	  jpeg_write_scanlines(&cinfo, jpeg_row, 1);
-	  std::cerr << "\r\tWritten " << y + 1 << " of " << img->height() << " rows ("
-		    << queue.num_rows() << " left for colour transformation)   ";
+	  std::cerr << "\r\tTransformed and written " << y + 1 << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " left)   ";
 	}
 	free(jpeg_row[0]);
       } else {	// Other thread(s) transform the image data

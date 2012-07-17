@@ -57,12 +57,12 @@ namespace PhotoFinish {
     std::cerr << "Convolving " << img->width() << "×" << img->height() << " image with " << _width << "×" << _height << " kernel..." << std::endl;
     Image::ptr out = Image::ptr(new Image(img->width(), img->height()));
 
-    for (long int y = 0; y < img->height(); y++) {
+    for (unsigned int y = 0; y < img->height(); y++) {
       SAMPLE *outp = out->row(y);
       unsigned short int ky_start = y < _centrey ? _centrey - y : 0;
       unsigned short int ky_end = y > img->height() - _height + _centrey ? img->height() + _centrey - y : _height;
 
-      for (long int x = 0; x < img->width(); x++, outp += 3) {
+      for (unsigned int x = 0; x < img->width(); x++, outp += 3) {
 	unsigned short int kx_start = x < _centrex ? _centrex - x : 0;
 	unsigned short int kx_end = x > img->width() - _width + _centrex ? img->width() + _centrex - x : _width;
 

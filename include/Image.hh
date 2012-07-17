@@ -27,7 +27,7 @@ namespace PhotoFinish {
   //! A floating-point, L*a*b* image class
   class Image {
   private:
-    long int _width, _height;
+    unsigned int _width, _height;
     bool _greyscale;		// Used by readers and writers when converting colour spaces
     SAMPLE **_rowdata;
 
@@ -41,16 +41,16 @@ namespace PhotoFinish {
     /*!
       \param w,h Width and height of the image
     */
-    Image(long int w, long int h);
+    Image(unsigned int w, unsigned int h);
 
     //! Destructor
     ~Image();
 
     //! Accessor
-    inline const long int width(void) const { return _width; }
+    inline const unsigned int width(void) const { return _width; }
 
     //! Accessor
-    inline const long int height(void) const { return _height; }
+    inline const unsigned int height(void) const { return _height; }
 
     //! Accessor
     inline const bool is_greyscale(void) const { return _greyscale; }
@@ -65,13 +65,13 @@ namespace PhotoFinish {
     inline void set_colour(bool c = true) { _greyscale = !c; }
 
     //! Pointer to pixel data at start of row
-    inline SAMPLE* row(long int y) const { return _rowdata[y]; }
+    inline SAMPLE* row(unsigned int y) const { return _rowdata[y]; }
 
     //! Pointer to pixel data at coordinates
-    inline SAMPLE* at(long int x, long int y) const { return &(_rowdata[y][x * 3]); }
+    inline SAMPLE* at(unsigned int x, unsigned int y) const { return &(_rowdata[y][x * 3]); }
 
     //! Reference to pixel data at coordinates and of a given channel
-    inline SAMPLE& at(long int x, long int y, unsigned char c) const { return _rowdata[y][c + (x * 3)]; }
+    inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) const { return _rowdata[y][c + (x * 3)]; }
   };
 
 }

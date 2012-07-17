@@ -30,16 +30,16 @@ namespace PhotoFinish {
   //! Creates and stores coefficients for cropping and resizing an image
   class Kernel1Dvar {
   protected:
-    long int *_size, *_start;
+    unsigned int *_size, *_start;
     SAMPLE **_weights;
     double _to_size;
-    long int _to_size_i;
+    unsigned int _to_size_i;
 
     //! Private constructor
     Kernel1Dvar(double to_size);
 
     //! Build the kernel; used by derived classes
-    void build(double from_start, double from_size, long int from_max) throw(DestinationError);
+    void build(double from_start, double from_size, unsigned int from_max) throw(DestinationError);
 
     //! The size of this filter
     virtual double range(void) const = 0;
@@ -61,7 +61,7 @@ namespace PhotoFinish {
       \param from_max The size (maximum dimenstion) of the input
       \param to_size The size of the output
     */
-    static ptr create(const D_resize& dr, double from_start, double from_size, long int from_max, double to_size) throw(DestinationError);
+    static ptr create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) throw(DestinationError);
 
     //! Destructor
     ~Kernel1Dvar();
@@ -73,16 +73,16 @@ namespace PhotoFinish {
     Image::ptr convolve_v(Image::ptr img);
 
     //! Accessor for the size of the weights
-    inline const long int& size(long int i) const { return _size[i]; }
+    inline const unsigned int& size(unsigned int i) const { return _size[i]; }
 
     //! Accessor for the starting point of the weights
-    inline long int& start(long int i) const { return _start[i]; }
+    inline unsigned int& start(unsigned int i) const { return _start[i]; }
 
     //! Accessor for the weights array
-    inline const SAMPLE* row(long int i) const { return _weights[i]; }
+    inline const SAMPLE* row(unsigned int i) const { return _weights[i]; }
 
     //! Accessor for the weights array
-    inline const SAMPLE& at(long int f, long int i) const { return _weights[i][f]; }
+    inline const SAMPLE& at(unsigned int f, unsigned int i) const { return _weights[i][f]; }
 
   };
 
@@ -108,7 +108,7 @@ namespace PhotoFinish {
       \param from_max The size (maximum dimenstion) of the input
       \param to_size The size of the output
     */
-    Lanczos(const D_resize& dr, double from_start, double from_size, long int from_max, double to_size);
+    Lanczos(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size);
   };
 
 

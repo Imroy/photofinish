@@ -32,7 +32,7 @@ namespace PhotoFinish {
   {
     omp_init_lock(_queue_lock);
 
-    for (long int y = 0; y < _img->height(); y++) {
+    for (unsigned int y = 0; y < _img->height(); y++) {
       _rownumbers.push(y);
       _rows[y] = NULL;
       _rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
@@ -41,7 +41,7 @@ namespace PhotoFinish {
   }
 
   transform_queue::~transform_queue() {
-    for (long int y = 0; y < _img->height(); y++) {
+    for (unsigned int y = 0; y < _img->height(); y++) {
       omp_destroy_lock(_rowlocks[y]);
       free(_rowlocks[y]);
     }
@@ -57,7 +57,7 @@ namespace PhotoFinish {
     return ret;
   }
 
-  short unsigned int* transform_queue::row(long int y) const {
+  short unsigned int* transform_queue::row(unsigned int y) const {
     omp_set_lock(_rowlocks[y]);
     short unsigned int *ret = _rows[y];
     omp_unset_lock(_rowlocks[y]);
@@ -68,7 +68,7 @@ namespace PhotoFinish {
   void transform_queue::process_row(void) {
     omp_set_lock(_queue_lock);
     if (!_rownumbers.empty()) {
-      long int y = _rownumbers.front();
+      unsigned int y = _rownumbers.front();
       _rownumbers.pop();
 
       omp_set_lock(_rowlocks[y]);	// Take out row lock before relinquishing the queue lock

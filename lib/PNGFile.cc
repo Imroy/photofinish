@@ -342,7 +342,7 @@ namespace PhotoFinish {
     }
 
     png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
-    for (long int y = 0; y < img->height(); y++)
+    for (unsigned int y = 0; y < img->height(); y++)
       png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (depth >> 3));
 
     png_set_rows(png, info, png_rows);
@@ -364,7 +364,7 @@ namespace PhotoFinish {
 
 	Ditherer ditherer(img->width(), png_channels);
 
-	for (long int y = 0; y < img->height(); y++) {
+	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
 	  short unsigned int *row = queue.row(y);
 	  while (!queue.empty() && (row == NULL)) {
@@ -396,7 +396,7 @@ namespace PhotoFinish {
     std::cerr << "\tWriting PNG image data..." << std::endl;
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
 
-    for (long int y = 0; y < img->height(); y++)
+    for (unsigned int y = 0; y < img->height(); y++)
       free(png_rows[y]);
     free(png_rows);
 

@@ -31,7 +31,7 @@ namespace PhotoFinish {
   //! Class holding information for the image writers
   class transform_queue {
   private:
-    std::queue<long int, std::list<long int> > _rownumbers;
+    std::queue<unsigned int, std::list<unsigned int> > _rownumbers;
     short unsigned int **_rows;
     std::vector<omp_lock_t*> _rowlocks;
     unsigned char **_destrows;
@@ -60,7 +60,7 @@ namespace PhotoFinish {
     bool empty(void) const;
 
     //! Return a row pointer
-    short unsigned int* row(long int y) const;
+    short unsigned int* row(unsigned int y) const;
 
     //! Pull a row off of the workqueue and transform it using LCMS
     void process_row(void);
