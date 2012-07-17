@@ -20,6 +20,7 @@
 #include <iomanip>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 #include "Destination_items.hh"
 #include "Destination.hh"
 #include "Exception.hh"
@@ -363,13 +364,13 @@ namespace PhotoFinish {
     if (const YAML::Node *n = node.FindValue("intent")) {
       std::string intent;
       *n >> intent;
-      if (strncasecmp(intent.c_str(), "perceptual", 10) == 0)
+      if (boost::iequals(intent.substr(0, 10), "perceptual"))
 	d._intent = INTENT_PERCEPTUAL;
-      else if (strncasecmp(intent.c_str(), "relative", 8) == 0)
+      else if (boost::iequals(intent.substr(0, 8), "relative"))
 	d._intent = INTENT_RELATIVE_COLORIMETRIC;
-      else if (strncasecmp(intent.c_str(), "saturation", 10) == 0)
+      else if (boost::iequals(intent.substr(0, 10), "saturation"))
 	d._intent = INTENT_SATURATION;
-      else if (strncasecmp(intent.c_str(), "absolute", 8) == 0)
+      else if (boost::iequals(intent.substr(0, 8), "absolute"))
 	d._intent = INTENT_ABSOLUTE_COLORIMETRIC;
       else
 	d._intent = INTENT_PERCEPTUAL;
