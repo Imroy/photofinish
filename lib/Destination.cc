@@ -20,9 +20,6 @@
 #include <iomanip>
 #include <fstream>
 #include <boost/lexical_cast.hpp>
-#include <strings.h>
-#include <string.h>
-#include <math.h>
 #include "Destination_items.hh"
 #include "Destination.hh"
 #include "Exception.hh"

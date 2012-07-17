@@ -20,8 +20,6 @@
 #define __KERNEL1DVAR_HH__
 
 #include <memory>
-#include <stdlib.h>
-#include <math.h>
 #include "Destination_items.hh"
 #include "Exception.hh"
 #include "Definable.hh"

@@ -20,8 +20,6 @@
 #define __KERNEL_HH__
 
 #include <memory>
-#include <stdlib.h>
-#include <math.h>
 #include "Image.hh"
 #include "Exception.hh"
 #include "Definable.hh"

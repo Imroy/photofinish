@@ -19,9 +19,6 @@
 #ifndef __IMAGE_HH__
 #define __IMAGE_HH__
 
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
 #include <memory>
 #include "sample.h"
 

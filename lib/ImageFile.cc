@@ -16,7 +16,6 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <string.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include "ImageFile.hh"
