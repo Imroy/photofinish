@@ -98,7 +98,7 @@ namespace PhotoFinish {
   GaussianSharpen::GaussianSharpen(const D_sharpen& ds) :
     Kernel2D(1 + (2 * ds.radius()), 1 + (2 * ds.radius()), ds.radius(), ds.radius()),	// Is there no better way to do this?
     _radius(ds.radius()),
-    _sigma(ds.sigma())
+    _sigma(ds.sigma()), _safe_sigma_sqr(fabs(_sigma) < 1e-5 ? 1e-5 : sqr(_sigma))
   {
     if (!_radius.defined())
       throw Uninitialised("GaussianSharpen", "sharpen.radius");
