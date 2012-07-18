@@ -69,7 +69,7 @@ namespace PhotoFinish {
 	double weight = 0;
 	outp[0] = outp[1] = outp[2] = 0;
 	for (unsigned short int ky = ky_start; ky < ky_end; ky++) {
-	  const SAMPLE *kp = row(ky);
+	  const SAMPLE *kp = &at(kx_start, ky);
 	  SAMPLE *inp = img->at(x + kx_start - _centrex, y + ky - _centrey);
 	  for (unsigned short int kx = kx_start; kx < kx_end; kx++, kp++, inp += 3) {
 	    weight += *kp;
@@ -109,7 +109,7 @@ namespace PhotoFinish {
     SAMPLE total = 0;
     for (unsigned short int y = 0; y < _height; y++)
       for (unsigned short int x = 0; x < _width; x++)
-	total += at(x, y) = -exp((sqr(x) + sqr(y)) / (-2.0 * _safe_sigma_sqr));
+	total += at(x, y) = -exp((sqr((int)x - _centrex) + sqr((int)y - _centrey)) / (-2.0 * _safe_sigma_sqr));
 
     at(_centrex, _centrey) = -2.0 * total;
   }
