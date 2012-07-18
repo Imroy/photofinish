@@ -51,6 +51,8 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("sigma"))
       *n >> ds._sigma;
+
+    ds.set_defined();
   }
 
 
@@ -69,6 +71,8 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("support"))
       *n >> dr._support;
+
+    dr.set_defined();
   }
 
 
@@ -107,11 +111,12 @@ namespace PhotoFinish {
 
   void D_JPEG::add_variables(hash& vars) {
     hash::iterator vi;
-    if ((vi = vars.find("qual")) != vars.end()) {
+    if (!_quality.defined() && ((vi = vars.find("qual")) != vars.end())) {
       _quality = boost::lexical_cast<int>(vi->second);
       vars.erase(vi);
+      set_defined();
     }
-    if ((vi = vars.find("sample")) != vars.end()) {
+    if (!_sample.defined() && ((vi = vars.find("sample")) != vars.end())) {
       std::string sample = vi->second;
       size_t x = sample.find_first_of("x×");
       if (x != std::string::npos) {
@@ -120,18 +125,13 @@ namespace PhotoFinish {
 	  int v = boost::lexical_cast<int>(sample.substr(x + 1, sample.length() - x - 1));
 	  _sample = std::pair<int, int>(h, v);
 	  vars.erase(vi);
+	  set_defined();
 	} catch (boost::bad_lexical_cast &ex) {
 	  std::cerr << ex.what();
 	}
       } else
 	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second << "\"." << std::endl;
     }
-
-    // If any one of the parameters are defined, then the whole object is 'defined'
-    if (_quality.defined()
-	|| _sample.defined()
-	|| _progressive.defined())
-      set_defined();
   }
 
   //! Read a D_JPEG record from a YAML file
@@ -156,6 +156,8 @@ namespace PhotoFinish {
     }
     if (const YAML::Node *n = node.FindValue("pro"))
       *n >> dj._progressive;
+
+    dj.set_defined();
   }
 
 
@@ -179,6 +181,8 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("filename"))
       *n >> dp._filepath;
+
+    dp.set_defined();
   }
 
 
@@ -195,6 +199,8 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("maxheight"))
       *n >> dt._maxheight;
+
+    dt.set_defined();
   }
 
 
