@@ -38,6 +38,9 @@ namespace PhotoFinish {
     //! Private constructor for derived classes
     Kernel2D(short unsigned int w, short unsigned int h, short unsigned int cx, short unsigned int cy);
 
+    //! Private constructor for square filters
+    Kernel2D(short unsigned int size, short unsigned int centre);
+
   public:
     typedef std::shared_ptr<Kernel2D> ptr;
 
