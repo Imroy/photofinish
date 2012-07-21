@@ -153,7 +153,7 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << y + 1 << " of " << img->height() << " rows.";
     }
-    std::cerr << std::endl;
+    std::cerr << "\r\tConvolved " << img->height() << " of " << img->height() << " rows." << std::endl;
 
     ni->set_greyscale(img->is_greyscale());
     return ni;
@@ -200,7 +200,7 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << ny + 1 << " of " << _to_size_i << " rows.";
     }
-    std::cerr << std::endl;
+    std::cerr << "\r\tConvolved " << _to_size_i << " of " << _to_size_i << " rows." << std::endl;
 
     ni->set_greyscale(img->is_greyscale());
     return ni;
