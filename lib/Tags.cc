@@ -43,11 +43,16 @@ namespace PhotoFinish {
   void populate_XMP_subst(hash& table);
 
   Exiv2::URational parse_URational(double value) {
-    unsigned int num, den;
-    for (den = 1; den < 65535; den++) {
-      num = round(value * den);
-      double error = fabs(((double)num / den) - value);
-      if (error < value * 0.001)
+    double margin = fabs(value) * 1e-6;
+    unsigned int num = 0, den;
+    for (den = 1; den < INT_MAX; den++) {
+      double numf = value * den;
+      if ((numf < 0) || (numf > UINT_MAX))
+	break;
+
+      num = round(numf);
+      double error = fabs(num - numf);
+      if (error < margin * den)
 	break;
     }
     return Exiv2::URational(num, den);
@@ -66,12 +71,17 @@ namespace PhotoFinish {
   }
 
   Exiv2::Rational parse_Rational(double value) {
-    signed int num;
+    double margin = fabs(value) * 1e-6;
+    signed int num = 0;
     unsigned int den;
-    for (den = 1; den < 65535; den++) {
-      num = round(value * den);
-      double error = fabs(((double)num / den) - value);
-      if (error < value * 0.001)
+    for (den = 1; den < INT_MAX; den++) {
+      double numf = value * den;
+      if ((numf < INT_MIN) || (numf > INT_MAX))
+	break;
+
+      num = round(numf);
+      double error = fabs(num - numf);
+      if (error < margin * den)
 	break;
     }
     return Exiv2::Rational(num, den);
