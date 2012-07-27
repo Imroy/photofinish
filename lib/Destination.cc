@@ -23,6 +23,7 @@
 #include <boost/algorithm/string.hpp>
 #include "Destination_items.hh"
 #include "Destination.hh"
+#include "CropSolution.hh"
 #include "Exception.hh"
 
 namespace PhotoFinish {
@@ -273,10 +274,6 @@ namespace PhotoFinish {
     double best_waste = 0;
     for (std::map<std::string, D_target::ptr>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
       D_target::ptr target = ti->second;
-      double waste;
-      double x, y;
-      double width, height;
-      hash::iterator vi;
 
       if ((target->width() > img->width()) && (target->height() > img->height())) {
 	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target is larger than the original image in both dimensions." << std::endl;
@@ -288,51 +285,27 @@ namespace PhotoFinish {
 	continue;
       }
 
-      if (target->width() * img->height() > target->height() * img->width()) {
-	width = img->width();
-	height = img->width() * target->height() / target->width();
-	x = 0;
+      CropSolver cs(img, _variables);
+      Frame::ptr frame = cs.solve(img, target);
 
-	double offy = 0.5;
-	if ((vi = _variables.find("offy")) != _variables.end())
-	  offy = boost::lexical_cast<double>(vi->second);
-
-	double gap = img->height() - height;
-	waste = gap * width;
-	y = gap * offy / 100;
-      } else {
-	height = img->height();
-	width = img->height() * target->width() / target->height();
-	y = 0;
-
-	double offx = 0.5;
-	if ((vi = _variables.find("offx")) != _variables.end())
-	  offx = boost::lexical_cast<double>(vi->second);
-
-	double gap = img->width() - width;
-	waste = gap * height;
-	x = gap * offx / 100;
-      }
-
-      if ((target->width() > width) && (target->height() > height)) {
+      if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
 	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target is larger than the cropped image in both dimensions." << std::endl;
 	continue;
       }
 
-      if (target->width() * target->height() > width * height) {
+      if (target->width() * target->height() > frame->crop_w() * frame->crop_h()) {
 	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target has more pixels than the cropped image." << std::endl;
 	continue;
       }
 
-      double waste = fr->waste(img);
+      double waste = frame->waste(img);
 
       std::cerr << "\tWaste from target \"" << target->name() << "\" ("
-		<< std::setprecision(1) << std::fixed << x << ", " << y << ") + ("
-		<< width << "×" << height << ") = "
-		<< std::setprecision(2) << std::fixed << waste << "." << std::endl;
+		<< std::setprecision(2) << std::fixed << frame->crop_x() << ", " << frame->crop_y() << ") + ("
+		<< frame->crop_w() << "×" << frame->crop_h() << ") = "
+		<< waste << "." << std::endl;
       if ((!best_frame) || (waste < best_waste)) {
-	Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
-	best_frame.swap(new_best_frame);
+	best_frame.swap(frame);
 	best_waste = waste;
       }
     }
