@@ -96,6 +96,7 @@ namespace PhotoFinish {
 
   };
 
+  //! Base class for adding "definable" attribute
   class Role_Definable {
   protected:
     bool _defined;
