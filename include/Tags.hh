@@ -32,11 +32,13 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   typedef std::map<std::string, std::string> hash;
+  typedef std::vector<std::string> stringlist;
+  typedef std::map<std::string, stringlist > multihash;
 
   //! Reads and holds tag information
   class Tags {
   private:
-    std::map<std::string, std::string> _variables;
+    multihash _variables;
     Exiv2::ExifData _EXIFtags;
     Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
@@ -49,7 +51,7 @@ namespace PhotoFinish {
     Tags(fs::path filepath);
 
     //! Accessor for the internal map of variables.
-    inline hash& variables(void) { return _variables; }
+    inline multihash& variables(void) { return _variables; }
 
     //! Accessor for the internal Exiv2::ExifData object.
     inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }

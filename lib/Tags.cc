@@ -136,9 +136,16 @@ namespace PhotoFinish {
 	int eq = line.find_first_of('=', start);
 	int end = line.find_last_not_of(" \t");
 	std::string key = line.substr(start, eq - start);
-	std::string v = line.substr(eq + 1, end - eq);
-	std::cerr << "\tVariable \"" << key << "\" = \"" << v << "\"" << std::endl;
-	_variables.insert(std::pair<std::string, std::string>(key, v));
+	std::string value = line.substr(eq + 1, end - eq);
+	std::cerr << "\tVariable \"" << key << "\" = \"" << value << "\"" << std::endl;
+	multihash::iterator vi;
+	if ((vi = _variables.find(key)) != _variables.end())
+	  vi->second.push_back(value);
+	else {
+	  std::vector<std::string> list;
+	  list.push_back(value);
+	  _variables[key] = list;
+	}
 	continue;
       }
 
@@ -161,10 +168,10 @@ namespace PhotoFinish {
 
 	  try {
 	    Exiv2::XmpKey key(key_string);
-	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::xmpText);
-	    v->read(value_string);
-	    std::cerr << "\tXMP \"" << key << "\" = \"" << *v << "\"" << std::endl;
-	    _XMPtags.add(key, v.get());
+	    Exiv2::Value::AutoPtr value = Exiv2::Value::create(Exiv2::xmpText);
+	    value->read(value_string);
+	    std::cerr << "\tXMP \"" << key << "\" = \"" << *value << "\"" << std::endl;
+	    _XMPtags.add(key, value.get());
 	  } catch (Exiv2::Error& e) {
 	    std::cerr << "** XMP key \"" << key_string << "\" not accepted **" << std::endl;
 	  }
@@ -176,10 +183,10 @@ namespace PhotoFinish {
 
 	  try {
 	    Exiv2::IptcKey key(key_string);
-	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(Exiv2::asciiString);
-	    v->read(value_string);
-	    std::cerr << "\tIPTC \"" << key << "\" = \"" << *v << "\"" << std::endl;
-	    _IPTCtags.add(key, v.get());
+	    Exiv2::Value::AutoPtr value = Exiv2::Value::create(Exiv2::asciiString);
+	    value->read(value_string);
+	    std::cerr << "\tIPTC \"" << key << "\" = \"" << *value << "\"" << std::endl;
+	    _IPTCtags.add(key, value.get());
 	  } catch (Exiv2::Error& e) {
 	    std::cerr << "** IPTC key \"" << key_string << "\" not accepted **" << std::endl;
 	  }
@@ -193,16 +200,16 @@ namespace PhotoFinish {
 	    Exiv2::ExifKey key(key_string);
 
 	    Exiv2::TypeId type = key.defaultTypeId();
-	    Exiv2::Value::AutoPtr v = Exiv2::Value::create(type);
+	    Exiv2::Value::AutoPtr value = Exiv2::Value::create(type);
 	    if (type == Exiv2::unsignedRational)
-	      v = Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
+	      value = Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
 	    else if (type == Exiv2::signedRational)
-	      v = Exiv2::Value::AutoPtr(new Exiv2::RationalValue(parse_Rational(value_string)));
+	      value = Exiv2::Value::AutoPtr(new Exiv2::RationalValue(parse_Rational(value_string)));
 	    else
-	      v->read(value_string);
+	      value->read(value_string);
 
-	    std::cerr << "\tEXIF \"" << key << "\" (" << type << ") = \"" << *v << "\"" << std::endl;
-	    _EXIFtags.add(key, v.get());
+	    std::cerr << "\tEXIF \"" << key << "\" (" << type << ") = \"" << *value << "\"" << std::endl;
+	    _EXIFtags.add(key, value.get());
 	  } catch (Exiv2::Error& e) {
 	    std::cerr << "** EXIF key \"" << key_string << "\" not accepted **" << std::endl;
 	  }

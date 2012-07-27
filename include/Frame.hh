@@ -68,6 +68,8 @@ namespace PhotoFinish {
     //! Accessor
     inline const double resolution(void) const { return _resolution; }
 
+    const double waste(Image::ptr img) const;
+
     typedef std::shared_ptr<Frame> ptr;
   };
 

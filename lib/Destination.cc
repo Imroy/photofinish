@@ -109,15 +109,15 @@ namespace PhotoFinish {
     _progressive(p)
   {}
 
-  void D_JPEG::add_variables(hash& vars) {
-    hash::iterator vi;
+  void D_JPEG::add_variables(multihash& vars) {
+    multihash::iterator vi;
     if (!_quality.defined() && ((vi = vars.find("qual")) != vars.end())) {
-      _quality = boost::lexical_cast<int>(vi->second);
+      _quality = boost::lexical_cast<int>(vi->second[0]);
       vars.erase(vi);
       set_defined();
     }
     if (!_sample.defined() && ((vi = vars.find("sample")) != vars.end())) {
-      std::string sample = vi->second;
+      std::string sample = vi->second[0];
       size_t x = sample.find_first_of("x×");
       if (x != std::string::npos) {
 	try {
@@ -130,7 +130,7 @@ namespace PhotoFinish {
 	  std::cerr << ex.what();
 	}
       } else
-	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second << "\"." << std::endl;
+	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second[0] << "\"." << std::endl;
     }
   }
 
@@ -256,7 +256,7 @@ namespace PhotoFinish {
     return *this;
   }
 
-  Destination::ptr Destination::add_variables(hash& vars) {
+  Destination::ptr Destination::add_variables(multihash& vars) {
     Destination::ptr ret = Destination::ptr(new Destination(*this));
     ret->_jpeg.add_variables(vars);
     ret->_variables = vars;
@@ -323,6 +323,8 @@ namespace PhotoFinish {
 	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target has more pixels than the cropped image." << std::endl;
 	continue;
       }
+
+      double waste = fr->waste(img);
 
       std::cerr << "\tWaste from target \"" << target->name() << "\" ("
 		<< std::setprecision(1) << std::fixed << x << ", " << y << ") + ("

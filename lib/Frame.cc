@@ -53,4 +53,9 @@ namespace PhotoFinish {
     return scale_width->convolve_h(temp);
   }
 
+  const double Frame::waste(Image::ptr img) const {
+    return ((img->width() - _crop_w) * _crop_h)
+      + (img->width() * (img->height() - _crop_h));
+  }
+
 }

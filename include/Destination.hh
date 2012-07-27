@@ -69,7 +69,7 @@ namespace PhotoFinish {
 
     D_thumbnail _thumbnail;
 
-    hash _variables;
+    multihash _variables;
 
   public:
     //! Empty constructor
@@ -87,7 +87,7 @@ namespace PhotoFinish {
     typedef std::shared_ptr<Destination> ptr;
 
     //! Duplicate the current object and incorporate variables
-    ptr add_variables(hash& vars);
+    ptr add_variables(multihash& vars);
 
     //! Find the best crop+rescaling frame for an image
     Frame::ptr best_frame(Image::ptr img);

@@ -19,9 +19,9 @@
 #ifndef __DESTINATION_ITEMS_HH__
 #define __DESTINATION_ITEMS_HH__
 
-#include "yaml-cpp/yaml.h"
 #include <string>
 #include <memory>
+#include "yaml-cpp/yaml.h"
 #include <lcms2.h>
 #include <boost/filesystem.hpp>
 #include "Image.hh"
@@ -32,6 +32,8 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   typedef std::map<std::string, std::string> hash;
+  typedef std::vector<std::string> stringlist;
+  typedef std::map<std::string, stringlist > multihash;
 
   //! Sharpen parameters for destination
   class D_sharpen : public Role_Definable {
@@ -113,7 +115,7 @@ namespace PhotoFinish {
     D_JPEG(int q, char h, char v, bool p);
 
     //! Set values from a map of "variables"
-    void add_variables(hash& vars);
+    void add_variables(multihash& vars);
 
     inline definable<int> quality(void) const { return _quality; }
     inline definable< std::pair<int, int> > sample(void) const { return _sample; }
