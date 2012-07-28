@@ -27,25 +27,25 @@
 
 namespace PhotoFinish {
 
-  void add_targets(multihash& vars, std::string key, targetlist& targets) {
+  void add_rulers(multihash& vars, std::string key, rulerlist& rulers) {
     multihash::iterator vi;
     if ((vi = vars.find(key)) != vars.end())
       for (stringlist::iterator si = vi->second.begin(); si != vi->second.end(); si++) {
 	int at = si->find_first_of('@', 0);
 	double fx = boost::lexical_cast<double>(si->substr(0, at));
 	double tx = boost::lexical_cast<double>(si->substr(at + 1, si->length() - at - 1));
-	targets.push_back(std::make_pair(fx, tx));
+	rulers.push_back(std::make_pair(fx, tx));
       }
   }
 
   CropSolver::CropSolver(multihash& vars) {
-    add_targets(vars, "targetx", _h_targets);
-    add_targets(vars, "targety", _v_targets);
+    add_rulers(vars, "hruler", _h_rulers);
+    add_rulers(vars, "vruler", _v_rulers);
   }
 
-  void add_target_pins(targetlist& targets, unsigned int max) {
+  void add_ruler_pins(rulerlist& rulers, unsigned int max) {
     bool has_first = false, has_last = false;
-    for (targetlist::iterator ti = targets.begin(); ti != targets.end(); ti++) {
+    for (rulerlist::iterator ti = rulers.begin(); ti != rulers.end(); ti++) {
       if (ti->first < 0.5)
 	has_first = true;
       else if (ti->first > 0.5)
@@ -53,23 +53,23 @@ namespace PhotoFinish {
     }
 
     if (!has_first)
-      targets.push_back(targetpair(0, 0));
+      rulers.push_back(rulerpair(0, 0));
     if (!has_last)
-      targets.push_back(targetpair(1, max - 1));
+      rulers.push_back(rulerpair(1, max - 1));
   }
 
   Frame::ptr CropSolver::solve(Image::ptr img, D_target::ptr target) {
-    targetlist h_targets(_h_targets), v_targets(_v_targets);
+    rulerlist h_rulers(_h_rulers), v_rulers(_v_rulers);
     if ((target->width() * img->height() > target->height() * img->width())
-	&& (h_targets.size() < 2))
-      add_target_pins(h_targets, img->width());
+	&& (h_rulers.size() < 2))
+      add_ruler_pins(h_rulers, img->width());
 
     if ((target->width() * img->height() < target->height() * img->width())
-	&& (v_targets.size() < 2))
-      add_target_pins(v_targets, img->height());
+	&& (v_rulers.size() < 2))
+      add_ruler_pins(v_rulers, img->height());
 
     Frame::ptr best_frame;
-    double best_weight = 0;
+    double best_distance = 0;
     omp_lock_t best_lock;
     omp_init_lock(&best_lock);
 
@@ -108,27 +108,27 @@ namespace PhotoFinish {
 	    if (y + height > img->height())
 	      continue;
 
-	    double weight = 0;
+	    double distance = 0;
 
-	    targetlist::iterator ti;
+	    rulerlist::iterator ti;
 
-	    for (ti = h_targets.begin(); (ti != h_targets.end()) && ((!best_frame) || (weight < best_weight)); ti++)
-	      weight += sqr(ti->second - (x + (ti->first * width)));
+	    for (ti = h_rulers.begin(); (ti != h_rulers.end()) && ((!best_frame) || (distance < best_distance)); ti++)
+	      distance += sqr(ti->second - (x + (ti->first * width)));
 
-	    if ((best_frame) && (weight > best_weight))
+	    if ((best_frame) && (distance > best_distance))
 	      continue;
 
-	    for (ti = v_targets.begin(); (ti != v_targets.end()) && ((!best_frame) || (weight < best_weight)); ti++)
-	      weight += sqr(ti->second - (y + (ti->first * height)));
+	    for (ti = v_rulers.begin(); (ti != v_rulers.end()) && ((!best_frame) || (distance < best_distance)); ti++)
+	      distance += sqr(ti->second - (y + (ti->first * height)));
 
-	    if (best_frame && (weight > best_weight))
+	    if (best_frame && (distance > best_distance))
 	      continue;
 
 	    omp_set_lock(&best_lock);
-	    if ((!best_frame) || (weight < best_weight)) {
+	    if ((!best_frame) || (distance < best_distance)) {
 	      Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
 	      best_frame.swap(new_best_frame);
-	      best_weight = weight;
+	      best_distance = distance;
 	      new_best = true;
 	    }
 	    omp_unset_lock(&best_lock);
@@ -167,7 +167,7 @@ namespace PhotoFinish {
 
     if (best_frame)
       std::cerr << "\t\tBest frame (" << best_frame->crop_x() << ", " << best_frame->crop_y() << ") + ("
-		<< best_frame->crop_w() << "×" << best_frame->crop_h() << ") (weight = " << sqrt(best_weight) << ")" << std::endl;
+		<< best_frame->crop_w() << "×" << best_frame->crop_h() << ") (distance = " << sqrt(best_distance) << ")" << std::endl;
 
     return best_frame;
   }
