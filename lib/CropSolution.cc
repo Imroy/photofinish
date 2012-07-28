@@ -18,6 +18,7 @@
 */
 #include <boost/lexical_cast.hpp>
 #include <math.h>
+#include <omp.h>
 #include "CropSolution.hh"
 
 #define sqr(x) ((x) * (x))
@@ -26,79 +27,79 @@
 
 namespace PhotoFinish {
 
-  CropSolver::CropSolver(Image::ptr img, multihash& vars) {
+  void add_targets(multihash& vars, std::string key, targetlist& targets) {
     multihash::iterator vi;
-    stringlist::iterator si;
-    bool has_left = false, has_right = false;
-    if ((vi = vars.find("targetx")) != vars.end()) {
-      for (si = vi->second.begin(); si != vi->second.end(); si++) {
+    if ((vi = vars.find(key)) != vars.end())
+      for (stringlist::iterator si = vi->second.begin(); si != vi->second.end(); si++) {
 	int at = si->find_first_of('@', 0);
 	double fx = boost::lexical_cast<double>(si->substr(0, at));
-	if (fx < 0.5)
-	  has_left = true;
-	else if (fx > 0.5)
-	  has_right = true;
 	double tx = boost::lexical_cast<double>(si->substr(at + 1, si->length() - at - 1));
-	_h_targets.push_back(std::make_pair(fx, tx));
+	targets.push_back(std::make_pair(fx, tx));
       }
-    }
-    if (_h_targets.size() < 2) {
-      if (!has_left)
-	_h_targets.push_back(std::pair<double, double>(0, 0));
-      if (!has_right)
-	_h_targets.push_back(std::pair<double, double>(1, img->width() - 1));
+  }
+
+  CropSolver::CropSolver(multihash& vars) {
+    add_targets(vars, "targetx", _h_targets);
+    add_targets(vars, "targety", _v_targets);
+  }
+
+  void add_target_pins(targetlist& targets, unsigned int max) {
+    bool has_first = false, has_last = false;
+    for (targetlist::iterator ti = targets.begin(); ti != targets.end(); ti++) {
+      if (ti->first < 0.5)
+	has_first = true;
+      else if (ti->first > 0.5)
+	has_last = true;
     }
 
-    bool has_top = false, has_bottom = false;
-    if ((vi = vars.find("targety")) != vars.end()) {
-      for (si = vi->second.begin(); si != vi->second.end(); si++) {
-	int at = si->find_first_of('@', 0);
-	double fy = boost::lexical_cast<double>(si->substr(0, at));
-	if (fy < 0.5)
-	  has_top = true;
-	else if (fy > 0.5)
-	  has_bottom = true;
-	double ty = boost::lexical_cast<double>(si->substr(at + 1, si->length() - at - 1));
-	_v_targets.push_back(std::make_pair(fy, ty));
-      }
-    }
-    if (_v_targets.size() < 2) {
-      if (!has_top)
-	_v_targets.push_back(std::pair<double, double>(0, 0));
-      if (!has_bottom)
-	_v_targets.push_back(std::pair<double, double>(1, img->height() - 1));
-    }
-
+    if (!has_first)
+      targets.push_back(targetpair(0, 0));
+    if (!has_last)
+      targets.push_back(targetpair(1, max - 1));
   }
 
   Frame::ptr CropSolver::solve(Image::ptr img, D_target::ptr target) {
+    targetlist h_targets(_h_targets), v_targets(_v_targets);
+    if ((target->width() * img->height() > target->height() * img->width())
+	&& (h_targets.size() < 2))
+      add_target_pins(h_targets, img->width());
+
+    if ((target->width() * img->height() < target->height() * img->width())
+	&& (v_targets.size() < 2))
+      add_target_pins(v_targets, img->height());
+
     Frame::ptr best_frame;
     double best_weight = 0;
+    omp_lock_t best_lock;
+    omp_init_lock(&best_lock);
 
     double imgsize = max(img->width(), img->height());
     double tsize = max(target->width(), target->height());
     double width_factor = target->width() / tsize;
     double height_factor = target->height() / tsize;
 
-    double step = 16;
+    double step = 8;
     double minx = 0, maxx = img->width();
     double miny = 0, maxy = img->height();
     double minsize = step, maxsize = step;
-    bool first = true;
+    bool first = true, new_best = false;
 
-    while (step > 1e-6) {
-      // OpenMP (or at least GOMP) can't parallelise a for loop using floating point values
+    while (step > 1e-7) {
+      // OpenMP can't parallelise a for loop using floating point values
       // So put them into a list and loop over that
       std::vector<double> xvalues;
       for (double x = minx; x < maxx; x += step)
 	xvalues.push_back(x);
 
-#pragma omp parallel for schedule(dynamic, 1) shared(xvalues, best_frame, best_weight)
+#pragma omp parallel for schedule(dynamic, 1)
       for (size_t xi = 0; xi < xvalues.size(); xi++) {
 	double x = xvalues[xi];
+	double xsize = (img->width() - x) / width_factor;
+
 	for (double y = miny; y < maxy; y += step) {
 	  if (first)
-	    maxsize = min((img->width() - x) / width_factor, (img->height() - y) / height_factor);
+	    maxsize = min(xsize, (img->height() - y) / height_factor);
+
 	  for (double size = minsize; size < maxsize; size += step) {
 	    double width = size * width_factor;
 	    if (x + width > img->width())
@@ -109,45 +110,52 @@ namespace PhotoFinish {
 
 	    double weight = 0;
 
-	    std::vector< std::pair<double, double> >::iterator ti;
+	    targetlist::iterator ti;
 
-	    for (ti = _h_targets.begin(); ti != _h_targets.end(); ti++) {
-	      double fx = x + (ti->first * width);
-	      weight += sqr(ti->second - fx);
-	    }
+	    for (ti = h_targets.begin(); (ti != h_targets.end()) && ((!best_frame) || (weight < best_weight)); ti++)
+	      weight += sqr(ti->second - (x + (ti->first * width)));
 
-	    for (ti = _v_targets.begin(); ti != _v_targets.end(); ti++) {
-	      double fy = y + (ti->first * height);
-	      weight += sqr(ti->second - fy);
-	    }
+	    if ((best_frame) && (weight > best_weight))
+	      continue;
 
-#pragma omp critical
+	    for (ti = v_targets.begin(); (ti != v_targets.end()) && ((!best_frame) || (weight < best_weight)); ti++)
+	      weight += sqr(ti->second - (y + (ti->first * height)));
+
+	    if (best_frame && (weight > best_weight))
+	      continue;
+
+	    omp_set_lock(&best_lock);
 	    if ((!best_frame) || (weight < best_weight)) {
 	      Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
 	      best_frame.swap(new_best_frame);
 	      best_weight = weight;
+	      new_best = true;
 	    }
+	    omp_unset_lock(&best_lock);
 	  }
 	}
       }
 
-      minx = best_frame->crop_x() - step;
-      maxx = best_frame->crop_x() + step;
+      if (!new_best)
+	break;
+
+      minx = best_frame->crop_x() - step * 2;
+      maxx = best_frame->crop_x() + step * 2;
       if (minx < 0)
 	minx = 0;
       else if (maxx > img->width())
 	maxx = img->width();
 
-      miny = best_frame->crop_y() - step;
-      maxy = best_frame->crop_y() + step;
+      miny = best_frame->crop_y() - step * 2;
+      maxy = best_frame->crop_y() + step * 2;
       if (miny < 0)
 	miny = 0;
       else if (maxy > img->height())
 	maxy = img->height();
 
       double best_size = max(best_frame->crop_w(), best_frame->crop_h());
-      minsize = best_size - step;
-      maxsize = best_size + step;
+      minsize = best_size - step * 2;
+      maxsize = best_size + step * 2;
       if (minsize < 0)
 	minsize = 0;
       else if (maxsize > imgsize)
@@ -156,6 +164,10 @@ namespace PhotoFinish {
       step /= 16;
       first = false;
     }
+
+    if (best_frame)
+      std::cerr << "\t\tBest frame (" << best_frame->crop_x() << ", " << best_frame->crop_y() << ") + ("
+		<< best_frame->crop_w() << "×" << best_frame->crop_h() << ") (weight = " << sqrt(best_weight) << ")" << std::endl;
 
     return best_frame;
   }

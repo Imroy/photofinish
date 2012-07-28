@@ -29,12 +29,15 @@
 
 namespace PhotoFinish {
 
+  typedef std::pair<double, double> targetpair;
+  typedef std::vector< targetpair > targetlist;
+
   class CropSolver {
   private:
-    std::vector< std::pair<double, double> > _h_targets, _v_targets;
+    targetlist _h_targets, _v_targets;
 
   public:
-    CropSolver(Image::ptr img, multihash& vars);
+    CropSolver(multihash& vars);
 
     Frame::ptr solve(Image::ptr img, D_target::ptr target);
   };

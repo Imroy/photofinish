@@ -270,37 +270,38 @@ namespace PhotoFinish {
       throw NoTargets(_name);
 
     std::cerr << "Finding best target from \"" << _name << "\" to fit image " << img->width() << "x" << img->height() << "..." << std::endl;
+    CropSolver solver(_variables);
     Frame::ptr best_frame;
     double best_waste = 0;
     for (std::map<std::string, D_target::ptr>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
       D_target::ptr target = ti->second;
+      std::cerr << "\tTarget \"" << target->name() << "\" (" << target->width() << "×" << target->height() << "):" << std::endl;
 
       if ((target->width() > img->width()) && (target->height() > img->height())) {
-	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target is larger than the original image in both dimensions." << std::endl;
+	std::cerr << "\tSkipping because the target is larger than the original image in both dimensions." << std::endl;
 	continue;
       }
 
       if (target->width() * target->height() > img->width() * img->height()) {
-	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target has more pixels than the original image." << std::endl;
+	std::cerr << "\tSkipping because the target has more pixels than the original image." << std::endl;
 	continue;
       }
 
-      CropSolver cs(img, _variables);
-      Frame::ptr frame = cs.solve(img, target);
+      Frame::ptr frame = solver.solve(img, target);
 
       if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
-	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target is larger than the cropped image in both dimensions." << std::endl;
+	std::cerr << "\tSkipping because the target is larger than the cropped image in both dimensions." << std::endl;
 	continue;
       }
 
       if (target->width() * target->height() > frame->crop_w() * frame->crop_h()) {
-	std::cerr << "\tSkipping target \"" << target->name() << "\" because the target has more pixels than the cropped image." << std::endl;
+	std::cerr << "\tSkipping because the target has more pixels than the cropped image." << std::endl;
 	continue;
       }
 
       double waste = frame->waste(img);
 
-      std::cerr << "\tWaste from target \"" << target->name() << "\" ("
+      std::cerr << "\tWaste from ("
 		<< std::setprecision(2) << std::fixed << frame->crop_x() << ", " << frame->crop_y() << ") + ("
 		<< frame->crop_w() << "×" << frame->crop_h() << ") = "
 		<< waste << "." << std::endl;
