@@ -22,6 +22,7 @@
 #include <tiffio.hxx>
 #include "ImageFile.hh"
 #include "TransformQueue.hh"
+#include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
 
@@ -140,6 +141,132 @@ namespace PhotoFinish {
   }
 
   void TIFFfile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
+    fs::ofstream fb;
+    fb.open(_filepath, std::ios_base::out);
+
+    TIFF *tiff = TIFFStreamOpen("", &fb);
+    if (tiff == NULL)
+      throw FileOpenError(_filepath.native());
+
+    int rc;
+
+    TIFFcheck(SetField(tiff, TIFFTAG_SUBFILETYPE, 0));
+    TIFFcheck(SetField(tiff, TIFFTAG_IMAGEWIDTH, img->width()));
+    TIFFcheck(SetField(tiff, TIFFTAG_IMAGELENGTH, img->height()));
+    TIFFcheck(SetField(tiff, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT));
+    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_DEFLATE));
+    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
+    TIFFcheck(SetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
+
+    cmsUInt32Number cmsTempType;
+    if (img->is_colour()) {
+      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB));
+      TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 3));
+      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
+    } else {
+      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK));
+      TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 1));
+      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
+    }
+
+    int depth = 8;	// Default value
+    if (dest.depth().defined())
+      depth = dest.depth();
+    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, depth));
+
+    cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
+    if (dest.intent().defined())
+      intent = dest.intent();
+
+    cmsHPROFILE profile = NULL;
+    if (dest.profile().defined() && dest.profile().filepath().defined())
+      profile = cmsOpenProfileFromFile(dest.profile().filepath()->c_str(), "r");
+
+    if (profile == NULL) {
+      if (img->is_colour()) {
+	std::cerr << "\tUsing default sRGB profile." << std::endl;
+	profile = cmsCreate_sRGBProfile();
+      } else {
+	std::cerr << "\tUsing default greyscale profile." << std::endl;
+	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+	cmsFreeToneCurve(gamma);
+      }
+    }
+
+    if (profile != NULL) {
+      cmsUInt32Number len;
+      cmsSaveProfileToMem(profile, NULL, &len);
+      if (len > 0) {
+	void *profile_data = malloc(len);
+	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
+	  std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
+	  TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, len, profile_data));
+	}
+      }
+    }
+
+    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
+    cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
+						 profile, cmsTempType,
+						 intent, 0);
+    cmsCloseProfile(lab);
+    cmsCloseProfile(profile);
+
+    transform_queue queue(img, T_CHANNELS(cmsTempType), transform);
+    for (unsigned int y = 0; y < img->height(); y++)
+      queue.add(y);
+
+#pragma omp parallel shared(queue)
+    {
+      int th_id = omp_get_thread_num();
+      if (th_id == 0) {		// Master thread
+	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
+
+	unsigned char *tiff_row = (unsigned char*)malloc(img->width() * T_CHANNELS(cmsTempType) * (depth >> 3));
+	Ditherer ditherer(img->width(), T_CHANNELS(cmsTempType));
+
+	for (unsigned int y = 0; y < img->height(); y++) {
+	  // Process rows until the one we need becomes available, or the queue is empty
+	  short unsigned int *row = queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.writer_process_row();
+	    row = queue.row(y);
+	  }
+
+	  // If it's still not available, something has gone wrong
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	    exit(2);
+	  }
+
+	  if (depth == 8) {
+	    ditherer.dither(row, tiff_row, y == img->height() - 1);
+	    TIFFWriteScanline(tiff, tiff_row, y, 0);
+	  } else
+	    TIFFWriteScanline(tiff, row, y, 0);
+	  free(row);
+
+	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " left)  ";
+	}
+	free(tiff_row);
+      } else {	// Other thread(s) transform the image data
+	while (!queue.empty())
+	  queue.writer_process_row();
+      }
+    }
+    cmsDeleteTransform(transform);
+    std::cerr << std::endl;
+
+    TIFFFlush(tiff);
+    fb.close();
+
+    std::cerr << "Done." << std::endl;
+
+    tags.embed(_filepath);
+
   }
 
 }
