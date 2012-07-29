@@ -170,6 +170,8 @@ namespace PhotoFinish {
     Ditherer ditherer(img->width(), cinfo.input_components);
 
     transform_queue queue(img, cinfo.input_components, transform);
+    for (unsigned int y = 0; y < cinfo.image_height; y++)
+      queue.add(y);
 
 #pragma omp parallel shared(queue)
     {
@@ -185,13 +187,13 @@ namespace PhotoFinish {
 	  // Process rows until the one we need becomes available, or the queue is empty
 	  short unsigned int *row = queue.row(y);
 	  while (!queue.empty() && (row == NULL)) {
-	    queue.process_row();
+	    queue.writer_process_row();
 	    row = queue.row(y);
 	  }
 
 	  // If it's still not available, something has gone wrong
 	  if (row == NULL) {
-	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << ") **" << std::endl;
 	    exit(2);
 	  }
 
@@ -203,7 +205,7 @@ namespace PhotoFinish {
 	free(jpeg_row[0]);
       } else {	// Other thread(s) transform the image data
 	while (!queue.empty())
-	  queue.process_row();
+	  queue.writer_process_row();
       }
     }
     cmsDeleteTransform(transform);

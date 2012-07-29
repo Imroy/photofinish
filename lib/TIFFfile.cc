@@ -21,6 +21,7 @@
 #include <tiffio.h>
 #include <tiffio.hxx>
 #include "ImageFile.hh"
+#include "TransformQueue.hh"
 
 namespace fs = boost::filesystem;
 
@@ -95,13 +96,42 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    tdata_t buf = _TIFFmalloc(TIFFScanlineSize(tiff));
-    for (unsigned int y = 0; y < height; y++) {
-      TIFFcheck(ReadScanline(tiff, buf, y));
+    transform_queue queue(img, T_CHANNELS(cmsType), transform);
 
-      cmsDoTransform(transform, buf, img->row(y), width);
+#pragma omp parallel shared(queue)
+    {
+      int th_id = omp_get_thread_num();
+      if (th_id == 0) {		// Master thread
+	std::cerr << "\tReading TIFF image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
+	for (unsigned int y = 0; y < height; y++) {
+	  tdata_t buffer = _TIFFmalloc(TIFFScanlineSize(tiff));
+	  TIFFcheck(ReadScanline(tiff, buffer, y));
+	  std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows ("
+		    << queue.num_rows() << " in queue for colour transformation)   ";
+
+	  queue.add(y, buffer);
+
+	  while (queue.num_rows() > 100) {
+	    queue.reader_process_row();
+	    std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows ("
+		      << queue.num_rows() << " in queue for colour transformation)   ";
+	  }
+	}
+	queue.set_finished();
+	while (!queue.empty()) {
+	  queue.reader_process_row();
+	  std::cerr << "\r\tRead " << height << " of " << height << " rows ("
+		    << queue.num_rows() << " in queue for colour transformation)   ";
+	}
+	std::cerr << std::endl;
+      } else {
+	while (!(queue.empty() && queue.finished())) {
+	  while (queue.empty() && !queue.finished())
+	    usleep(100);
+	  queue.reader_process_row();
+	}
+      }
     }
-    _TIFFfree(buf);
 
     TIFFFlush(tiff);
     fb.close();

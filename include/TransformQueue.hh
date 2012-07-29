@@ -31,14 +31,16 @@ namespace PhotoFinish {
   //! Class holding information for the image writers
   class transform_queue {
   private:
-    std::queue<unsigned int, std::list<unsigned int> > _rownumbers;
-    short unsigned int **_rows;
+    typedef std::pair<unsigned int, void*> row_t;
+
+    std::queue<row_t*, std::list<row_t*> > _rowqueue;
+    short unsigned int **_rowpointers;
     std::vector<omp_lock_t*> _rowlocks;
-    unsigned char **_destrows;
     size_t _rowlen;
     omp_lock_t *_queue_lock;
     Image::ptr _img;
     cmsHTRANSFORM _transform;
+    bool _finished;
 
   public:
     //! Constructor
@@ -46,24 +48,36 @@ namespace PhotoFinish {
       \param img The Image object from which the pixel data comes
       \param channels The number of channels in the output
       \param transform The LCMS2 transform for transforming the image data
-      \param destrows For 16-bit output, the row pointers into which to place the transformed pixels; if NULL we allocate our own rows
     */
-    transform_queue(Image::ptr img, int channels, cmsHTRANSFORM transform, unsigned char **destrows = NULL);
+    transform_queue(Image::ptr img, int channels, cmsHTRANSFORM transform);
 
     //! Deconstructor
     ~transform_queue();
 
     //! The number of rows in the queue
-    inline size_t num_rows(void) const { return _rownumbers.size(); }
+    inline size_t num_rows(void) const { return _rowqueue.size(); }
 
     //! Is the queue empty?
     bool empty(void) const;
 
+    //! Is the reading process finished?
+    inline bool finished(void) const { return _finished; }
+
+    //! Signal the reading process has finished
+    inline void set_finished(void) { _finished = true; }
+
     //! Return a row pointer
     short unsigned int* row(unsigned int y) const;
 
-    //! Pull a row off of the workqueue and transform it using LCMS
-    void process_row(void);
+    //! Add a new row to the queue
+    void add(unsigned int num, void* data = NULL);
+
+    //! Pull a row off of the workqueue and transform it using LCMS for a reader
+    void reader_process_row(void);
+
+    //! Pull a row off of the workqueue and transform it using LCMS for a writer
+    //! If the row's data pointer is NULL, a new row is allocated for it
+    void writer_process_row(void);
   };
 
 }
