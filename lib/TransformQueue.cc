@@ -18,9 +18,21 @@
 */
 #include <iostream>
 #include <stdlib.h>
+#include <string.h>
 #include "TransformQueue.hh"
 
 namespace PhotoFinish {
+
+  transform_queue::transform_queue() :
+    _rowpointers(NULL),
+    _rowlocks(),
+    _rowlen(0),
+    _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
+    _transform(NULL),
+    _finished(false)
+  {
+    omp_init_lock(_queue_lock);
+  }
 
   transform_queue::transform_queue(Image::ptr img, int channels, cmsHTRANSFORM transform) :
     _rowpointers((short unsigned int**)malloc(img->height() * sizeof(short unsigned int*))),
@@ -50,6 +62,19 @@ namespace PhotoFinish {
     free(_queue_lock);
   }
 
+  void transform_queue::set_image(Image::ptr img, int channels) {
+    _rowpointers = (short unsigned int**)malloc(img->height() * sizeof(short unsigned int*));
+    _rowlocks.reserve(img->height());
+    _rowlen = img->width() * channels * sizeof(short unsigned int);
+    _img = img;
+
+    for (unsigned int y = 0; y < _img->height(); y++) {
+      _rowpointers[y] = NULL;
+      _rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
+      omp_init_lock(_rowlocks[y]);
+    }
+  }
+
   bool transform_queue::empty(void) const {
     omp_set_lock(_queue_lock);
     bool ret = _rowqueue.empty();
@@ -70,7 +95,19 @@ namespace PhotoFinish {
     omp_unset_lock(_queue_lock);
   }
 
+  void transform_queue::add_copy(unsigned int num, void* data) {
+    omp_set_lock(_queue_lock);
+    void *new_row = malloc(_rowlen);
+    memcpy(new_row, data, _rowlen);
+
+    _rowqueue.push(new row_t(num, new_row));
+    omp_unset_lock(_queue_lock);
+  }
+
   void transform_queue::reader_process_row(void) {
+    if (!_img || (_transform == NULL))
+      return;
+
     omp_set_lock(_queue_lock);
     if (!_rowqueue.empty()) {
       row_t *row = _rowqueue.front();
@@ -89,6 +126,9 @@ namespace PhotoFinish {
   }
 
   void transform_queue::writer_process_row(void) {
+    if (!_img || (_transform == NULL))
+      return;
+
     omp_set_lock(_queue_lock);
     if (!_rowqueue.empty()) {
       row_t *row = _rowqueue.front();

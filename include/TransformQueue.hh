@@ -43,6 +43,9 @@ namespace PhotoFinish {
     bool _finished;
 
   public:
+    //! Empty constructor
+    transform_queue();
+
     //! Constructor
     /*!
       \param img The Image object from which the pixel data comes
@@ -53,6 +56,15 @@ namespace PhotoFinish {
 
     //! Deconstructor
     ~transform_queue();
+
+    //! Set the image
+    void set_image(Image::ptr img, int channels);
+
+    //! Get the image
+    inline Image::ptr image(void) const { return _img; }
+
+    //! Set the CMS transform
+    inline void set_transform(cmsHTRANSFORM transform) { _transform = transform; }
 
     //! The number of rows in the queue
     inline size_t num_rows(void) const { return _rowqueue.size(); }
@@ -71,6 +83,9 @@ namespace PhotoFinish {
 
     //! Add a new row to the queue
     void add(unsigned int num, void* data = NULL);
+
+    //! Add a new row to the queue, copying the data
+    void add_copy(unsigned int num, void* data);
 
     //! Pull a row off of the workqueue and transform it using LCMS for a reader
     void reader_process_row(void);

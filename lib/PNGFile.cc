@@ -22,8 +22,6 @@
 #include <time.h>
 #include <omp.h>
 #include <lcms2.h>
-#include <queue>
-#include <list>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
@@ -40,25 +38,6 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
-  //! Structure holding a PNG row to be transformed
-  struct png_workqueue_row_t {
-    png_uint_32 row_num;
-    png_bytep row_data;
-
-    inline png_workqueue_row_t(png_uint_32 rn, png_bytep rd) : row_num(rn), row_data(rd) {}
-  };
-
-  //! Structure holding information for the PNG progressive reader
-  struct png_callback_state_t {
-    bool finished;
-    std::queue<png_workqueue_row_t*, std::list<png_workqueue_row_t*> > rowqueue;
-    size_t rowlen;
-    omp_lock_t *queue_lock;
-    png_uint_32 width, height;
-    Image::ptr img;
-    cmsHTRANSFORM transform;
-  };
-
   //! Called by libPNG when the iHDR chunk has been read with the main "header" information
   void png_info_cb(png_structp png, png_infop info) {
     png_set_gamma(png, 1.0, 1.0);
@@ -67,29 +46,29 @@ namespace PhotoFinish {
     png_set_swap(png);
     png_read_update_info(png, info);
 
-    png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
+    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
 
+    unsigned int width, height;
     int bit_depth, colour_type;
-    png_get_IHDR(png, info, &cs->width, &cs->height, &bit_depth, &colour_type, NULL, NULL, NULL);
-    std::cerr << "\t" << cs->width << "×" << cs->height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
+    png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
+    std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
-    cs->img = Image::ptr(new Image(cs->width, cs->height));
+    Image::ptr img(new Image(width, height));
 
     cmsUInt32Number cmsType;
     switch (colour_type) {
     case PNG_COLOR_TYPE_GRAY:
       cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
-      cs->rowlen = cs->width * (bit_depth >> 3);
-      cs->img->set_greyscale();
+      img->set_greyscale();
       break;
     case PNG_COLOR_TYPE_RGB:
       cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
-      cs->rowlen = cs->width * 3 * (bit_depth >> 3);
       break;
     default:
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
+    queue->set_image(img, T_CHANNELS(cmsType));
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHPROFILE profile = NULL;
@@ -117,52 +96,34 @@ namespace PhotoFinish {
       }
     }
 
-    cs->transform = cmsCreateTransform(profile, cmsType,
-				       lab, IMAGE_TYPE,
-				       INTENT_PERCEPTUAL, 0);
+    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
+						 lab, IMAGE_TYPE,
+						 INTENT_PERCEPTUAL, 0);
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
+
+    queue->set_transform(transform);
   }
 
   //! Called by libPNG when a row of image data has been read
   void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
-    png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
-    std::cerr << "\r\tRead " << (row_num + 1) << " of " << cs->height << " rows ("
-	      << cs->rowqueue.size() << " in queue for colour transformation)   ";
-    png_bytep new_row = (png_bytep)malloc(cs->rowlen);
-    memcpy(new_row, row_data, cs->rowlen);
-    png_workqueue_row_t *row = new png_workqueue_row_t(row_num, new_row);
-
-    omp_set_lock(cs->queue_lock);
-    cs->rowqueue.push(row);
-    omp_unset_lock(cs->queue_lock);
+    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
+    std::cerr << "\r\tRead " << (row_num + 1) << " of " << queue->image()->height() << " rows ("
+	      << queue->num_rows() << " in queue for colour transformation)   ";
+    queue->add_copy(row_num, row_data);
   }
 
   //! Called by libPNG when the image data has finished
   void png_end_cb(png_structp png, png_infop info) {
-    //  png_callback_state_t *cs = (png_callback_state_t*)png_get_progressive_ptr(png);
-  }
-
-  //! Pull a row off of the workqueue and transform it using LCMS
-  void png_process_row(png_callback_state_t* cs) {
-    if (!cs->rowqueue.empty()) {
-      omp_set_lock(cs->queue_lock);
-      png_workqueue_row_t *row = cs->rowqueue.front();
-      cs->rowqueue.pop();
-      omp_unset_lock(cs->queue_lock);
-
-      cmsDoTransform(cs->transform, row->row_data, cs->img->row(row->row_num), cs->width);
-      free(row->row_data);
-      delete row;
-    }
+    //    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
   }
 
   //! Loop, processing rows from the workqueue until it's empty and reading is finished
-  void png_run_workqueue(png_callback_state_t* cs) {
-    while (!(cs->rowqueue.empty() && cs->finished)) {
-      while (cs->rowqueue.empty() && !cs->finished)
+  void png_run_workqueue(transform_queue *queue) {
+    while (!(queue->empty() && queue->finished())) {
+      while (queue->empty() && !queue->finished())
 	usleep(100);
-      png_process_row(cs);
+      queue->reader_process_row();
     }
   }
 
@@ -197,43 +158,36 @@ namespace PhotoFinish {
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
-    png_callback_state_t cs;
-    cs.queue_lock = (omp_lock_t*)malloc(sizeof(omp_lock_t));
-    omp_init_lock(cs.queue_lock);
-    cs.width = cs.height = 0;
-    cs.transform = NULL;
-    cs.finished = false;
-#pragma omp parallel shared(cs)
+    transform_queue queue;
+
+#pragma omp parallel shared(queue)
     {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
 	std::cerr << "\tReading PNG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
-	png_set_progressive_read_fn(png, (void *)&cs, png_info_cb, png_row_cb, png_end_cb);
+	png_set_progressive_read_fn(png, (void *)&queue, png_info_cb, png_row_cb, png_end_cb);
 	png_byte buffer[1048576];
 	size_t length;
 	do {
 	  fb.read((char*)buffer, 1048576);
 	  length = fb.gcount();
 	  png_process_data(png, info, buffer, length);
-	  while (cs.rowqueue.size() > 100)
-	    png_process_row(&cs);
+	  while (queue.num_rows() > 100)
+	    queue.reader_process_row();
 	} while (length > 0);
 	std::cerr << std::endl;
-	cs.finished = true;
-	png_run_workqueue(&cs);	// Help finish off the transforming of image data
+	queue.set_finished();
+	png_run_workqueue(&queue);	// Help finish off the transforming of image data
       } else {
-	png_run_workqueue(&cs);	// Worker threads just run the workqueue
+	png_run_workqueue(&queue);	// Worker threads just run the workqueue
       }
     }
-    omp_destroy_lock(cs.queue_lock);
-    free(cs.queue_lock);
-    cmsDeleteTransform(cs.transform);
 
     std::cerr << "Done." << std::endl;
     png_destroy_read_struct(&png, &info, NULL);
     fb.close();
 
-    return cs.img;
+    return queue.image();
   }
 
   //! libPNG callback for writing to an ostream
