@@ -30,6 +30,8 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
+#define TIFFcheck(x) if ((rc = TIFF##x) != 1) throw LibraryError("libtiff", "TIFF" #x " returned " + rc)
+
   Image::ptr TIFFfile::read(void) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
@@ -40,31 +42,31 @@ namespace PhotoFinish {
     if (tiff == NULL)
       throw FileOpenError(_filepath.native());
 
+    int rc;
     uint32 width, height;
-    TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &width);
-    TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &height);
+    TIFFcheck(GetField(tiff, TIFFTAG_IMAGEWIDTH, &width));
+    TIFFcheck(GetField(tiff, TIFFTAG_IMAGELENGTH, &height));
     std::cerr << "\tImage is " << width << "x" << height << std::endl;
     Image::ptr img(new Image(width, height));
 
     uint16 bit_depth, photometric;
-    TIFFGetField(tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth);
+    TIFFcheck(GetField(tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));
     std::cerr << "\tImage has a depth of " << bit_depth << std::endl;
+    TIFFcheck(GetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric));
+
     cmsUInt32Number cmsType;
-    if (TIFFGetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric) == 1) {
-      switch (photometric) {
-      case PHOTOMETRIC_MINISBLACK:
-	cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
-	img->set_greyscale();
-	break;
-      case PHOTOMETRIC_RGB:
-	cmsType = COLORSPACE_SH(PT_RGB) | DOSWAP_SH(1) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
-	break;
-      default:
-	std::cerr << "** unsupported TIF photometric interpretation " << photometric << " **" << std::endl;
-	exit(1);
-      }
-    } else
-      std::cerr << "** Could not get photometric interpretation **" << std::endl;
+    switch (photometric) {
+    case PHOTOMETRIC_MINISBLACK:
+      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
+      img->set_greyscale();
+      break;
+    case PHOTOMETRIC_RGB:
+      cmsType = COLORSPACE_SH(PT_RGB) | DOSWAP_SH(1) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
+      break;
+    default:
+      std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
+      exit(1);
+    }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHPROFILE profile = NULL;
@@ -95,7 +97,7 @@ namespace PhotoFinish {
 
     tdata_t buf = _TIFFmalloc(TIFFScanlineSize(tiff));
     for (unsigned int y = 0; y < height; y++) {
-      TIFFReadScanline(tiff, buf, y);
+      TIFFcheck(ReadScanline(tiff, buf, y));
 
       cmsDoTransform(transform, buf, img->row(y), width);
     }
