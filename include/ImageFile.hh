@@ -105,6 +105,17 @@ namespace PhotoFinish {
     void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
   };
 
+  //! TIFF file reader and writer
+  class TIFFfile : public ImageFile {
+  private:
+
+  public:
+    TIFFfile(const fs::path filepath);
+
+    Image::ptr read(void) const;
+    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
+  };
+
 }
 
 #endif // __IMAGEFILE_HH__

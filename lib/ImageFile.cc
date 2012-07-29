@@ -37,6 +37,10 @@ namespace PhotoFinish {
 	|| boost::iequals(filepath.extension().generic_string(), ".jpg"))
       return ImageFile::ptr(new JPEGFile(filepath));
 
+    if (boost::iequals(filepath.extension().generic_string(), ".tiff")
+	|| boost::iequals(filepath.extension().generic_string(), ".tif"))
+      return ImageFile::ptr(new TIFFfile(filepath));
+
     throw UnknownFileType(filepath.generic_string());
   }
 
@@ -47,6 +51,10 @@ namespace PhotoFinish {
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
       return ImageFile::ptr(new JPEGFile(filepath.replace_extension(".jpeg")));
+
+    if (boost::iequals(format, "tiff")
+	|| boost::iequals(format, "tif"))
+      return ImageFile::ptr(new TIFFfile(filepath.replace_extension(".tiff")));
 
     throw UnknownFileType(format);
   }
