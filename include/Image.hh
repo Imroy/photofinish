@@ -20,6 +20,7 @@
 #define __IMAGE_HH__
 
 #include <memory>
+#include "Definable.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
@@ -30,6 +31,7 @@ namespace PhotoFinish {
     unsigned int _width, _height;
     bool _greyscale;		// Used by readers and writers when converting colour spaces
     SAMPLE **_rowdata;
+    definable<double> _resolution;		// PPI
 
   public:
     typedef std::shared_ptr<Image> ptr;
@@ -63,6 +65,15 @@ namespace PhotoFinish {
 
     //! Setter (negative of set_greyscale)
     inline void set_colour(bool c = true) { _greyscale = !c; }
+
+    //! Accessor
+    inline const definable<double> resolution(void) const { return _resolution; }
+
+    //! Setter
+    inline void set_resolution(double r) { _resolution = r; }
+
+    //! Set the resolution given the length of the longest side (in inches)
+    inline void set_resolution_from_size(double size) { _resolution = (_width > _height ? _width : _height) / size; }
 
     //! Pointer to pixel data at start of row
     inline SAMPLE* row(unsigned int y) const { return _rowdata[y]; }

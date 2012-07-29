@@ -28,7 +28,6 @@ namespace PhotoFinish {
   class Frame : public D_target {
   private:
     double _crop_x, _crop_y, _crop_w, _crop_h;	// coordinates for cropping from the original image
-    double _resolution;				// PPI
 
   public:
     //! Constructor
@@ -36,18 +35,16 @@ namespace PhotoFinish {
       \param tw,th Size (width, height) of the output
       \param x,y Top-left corner of crop+rescale window
       \param w,h Size of the crop+rescale window
-      \param r Resolution (PPI)
     */
-    Frame(double tw, double th, double x, double y, double w, double h, double r);
+    Frame(double tw, double th, double x, double y, double w, double h);
 
     //! Constructor
     /*!
       \param target D_target object providing the size (width, height) of the output
       \param x,y Top-left corner of crop+rescale window
       \param w,h Size of the crop+rescale window
-      \param r Resolution (PPI)
     */
-    Frame(const D_target& target, double x, double y, double w, double h, double r);
+    Frame(const D_target& target, double x, double y, double w, double h);
 
     //! Crop and resize an image
     /*!
@@ -65,8 +62,6 @@ namespace PhotoFinish {
     inline const double crop_w(void) const { return _crop_w; }
     //! Accessor
     inline const double crop_h(void) const { return _crop_h; }
-    //! Accessor
-    inline const double resolution(void) const { return _resolution; }
 
     const double waste(Image::ptr img) const;
 

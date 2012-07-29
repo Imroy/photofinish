@@ -236,7 +236,7 @@ namespace PhotoFinish {
 
     std::cerr << "Making EXIF thumbnail..." << std::endl;
 
-    Frame frame(width, height, 0, 0, img->width(), img->height(), 0);
+    Frame frame(width, height, 0, 0, img->width(), img->height());
     Image::ptr thumbimage = frame.crop_resize(img, D_resize::lanczos(3.0));
 
     Destination dest;
@@ -252,10 +252,9 @@ namespace PhotoFinish {
     std::cerr << "Done." << std::endl;
   }
 
-  void Tags::add_resolution(Image::ptr img, double size) {
-    double res = (img->width() > img->height() ? img->width() : img->height()) / size;
-    Exiv2::URationalValue v = Exiv2::URationalValue(parse_URational(res));
-    std::cerr << "\tSetting resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << res << ") ppi." << std::endl;
+  void Tags::add_resolution(Image::ptr img) {
+    Exiv2::URationalValue v = Exiv2::URationalValue(parse_URational(img->resolution()));
+    std::cerr << "\tSetting resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->resolution() << ") ppi." << std::endl;
     try {
       _EXIFtags["Exif.Image.XResolution"] = v;
     } catch (Exiv2::Error& e) {

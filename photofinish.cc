@@ -97,8 +97,10 @@ int main(int argc, char* argv[]) {
 	    }
 	    sized_image.reset();	// Unallocate resized image
 
-	    if (size.defined())
-	      tags.add_resolution(sharp_image, size);
+	    if (size.defined()) {
+	      sharp_image->set_resolution_from_size(size);
+	      tags.add_resolution(sharp_image);
+	    }
 
 	    if (destination->thumbnail().defined() && destination->thumbnail().generate().defined() && destination->thumbnail().generate())
 	      tags.make_thumbnail(sharp_image, destination->thumbnail());

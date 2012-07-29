@@ -126,7 +126,7 @@ namespace PhotoFinish {
 
 	    omp_set_lock(&best_lock);
 	    if ((!best_frame) || (distance < best_distance)) {
-	      Frame::ptr new_best_frame(new Frame(*target, x, y, width, height, 0));
+	      Frame::ptr new_best_frame(new Frame(*target, x, y, width, height));
 	      best_frame.swap(new_best_frame);
 	      best_distance = distance;
 	      new_best = true;

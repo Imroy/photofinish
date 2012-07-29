@@ -25,18 +25,16 @@
 
 namespace PhotoFinish {
 
-  Frame::Frame(double tw, double th, double x, double y, double w, double h, double r) :
+  Frame::Frame(double tw, double th, double x, double y, double w, double h) :
     D_target(std::string(""), tw, th),
     _crop_x(x), _crop_y(y),
-    _crop_w(w), _crop_h(h),
-    _resolution(r)
+    _crop_w(w), _crop_h(h)
   {}
 
-  Frame::Frame(const D_target& target, double x, double y, double w, double h, double r) :
+  Frame::Frame(const D_target& target, double x, double y, double w, double h) :
     D_target(target),
     _crop_x(x), _crop_y(y),
-    _crop_w(w), _crop_h(h),
-    _resolution(r)
+    _crop_w(w), _crop_h(h)
   {}
 
   Image::ptr Frame::crop_resize(Image::ptr img, const D_resize& dr) {

@@ -159,6 +159,12 @@ namespace PhotoFinish {
     TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
     TIFFcheck(SetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
 
+    if (img->resolution().defined()) {
+      TIFFcheck(SetField (tiff, TIFFTAG_XRESOLUTION, img->resolution()));
+      TIFFcheck(SetField (tiff, TIFFTAG_YRESOLUTION, img->resolution()));
+      TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
+    }
+
     cmsUInt32Number cmsTempType;
     if (img->is_colour()) {
       TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB));
