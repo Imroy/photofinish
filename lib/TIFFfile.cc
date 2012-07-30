@@ -212,29 +212,34 @@ namespace PhotoFinish {
       intent = dest->intent();
 
     cmsHPROFILE profile = NULL;
-    if (dest->profile() && dest->profile()->filepath().defined())
-      profile = cmsOpenProfileFromFile(dest->profile()->filepath()->c_str(), "r");
-
-    if (profile == NULL) {
-      if (img->is_colour()) {
-	std::cerr << "\tUsing default sRGB profile." << std::endl;
-	profile = cmsCreate_sRGBProfile();
-      } else {
-	std::cerr << "\tUsing default greyscale profile." << std::endl;
-	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	cmsFreeToneCurve(gamma);
+    if (dest->profile()) {
+      profile = dest->profile()->profile();
+      if (dest->profile()->has_data()) {
+	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << " from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
+	TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, dest->profile()->data_size(), dest->profile()->data()));
       }
-    }
+    } else {
+      if (profile == NULL) {
+	if (img->is_colour()) {
+	  std::cerr << "\tUsing default sRGB profile." << std::endl;
+	  profile = cmsCreate_sRGBProfile();
+	} else {
+	  std::cerr << "\tUsing default greyscale profile." << std::endl;
+	  cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+	  profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+	  cmsFreeToneCurve(gamma);
+	}
+      }
 
-    if (profile != NULL) {
-      cmsUInt32Number len;
-      cmsSaveProfileToMem(profile, NULL, &len);
-      if (len > 0) {
-	void *profile_data = malloc(len);
-	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
-	  TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, len, profile_data));
+      if (profile != NULL) {
+	cmsUInt32Number len;
+	cmsSaveProfileToMem(profile, NULL, &len);
+	if (len > 0) {
+	  void *profile_data = malloc(len);
+	  if (cmsSaveProfileToMem(profile, profile_data, &len)) {
+	    std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
+	    TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, len, profile_data));
+	  }
 	}
       }
     }

@@ -284,33 +284,38 @@ namespace PhotoFinish {
       intent = dest->intent();
 
     cmsHPROFILE profile = NULL;
-    if (dest->profile() && dest->profile()->filepath().defined())
-      profile = cmsOpenProfileFromFile(dest->profile()->filepath()->c_str(), "r");
-
-    if ((profile == NULL) && (img->is_greyscale())) {
-      std::cerr << "\tUsing default greyscale profile." << std::endl;
-      cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-      cmsFreeToneCurve(gamma);
-    }
-
-    if (profile != NULL) {
-      cmsUInt32Number len;
-      cmsSaveProfileToMem(profile, NULL, &len);
-      if (len > 0) {
-	png_bytep profile_data = (png_bytep)malloc(len);
-	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	  std::string profile_name = "icc";	// Default value
-	  if (dest->profile() && dest->profile()->name().defined())
-	    profile_name = dest->profile()->name();
-	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
-	  png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);
-	}
+    if (dest->profile()) {
+      profile = dest->profile()->profile();
+      if (dest->profile()->has_data()) {
+	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << " from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
+	png_set_iCCP(png, info, dest->profile()->name()->c_str(), 0, (unsigned char*)dest->profile()->data(), dest->profile()->data_size());
       }
     } else {
-      std::cerr << "\tUsing default sRGB profile." << std::endl;
-      profile = cmsCreate_sRGBProfile();
-      png_set_sRGB_gAMA_and_cHRM(png, info, intent);
+      if ((profile == NULL) && (img->is_greyscale())) {
+	std::cerr << "\tUsing default greyscale profile." << std::endl;
+	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+	cmsFreeToneCurve(gamma);
+      }
+
+      if (profile != NULL) {
+	cmsUInt32Number len;
+	cmsSaveProfileToMem(profile, NULL, &len);
+	if (len > 0) {
+	  png_bytep profile_data = (png_bytep)malloc(len);
+	  if (cmsSaveProfileToMem(profile, profile_data, &len)) {
+	    std::string profile_name = "icc";	// Default value
+	    if (dest->profile() && dest->profile()->name().defined())
+	      profile_name = dest->profile()->name();
+	    std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
+	    png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);
+	  }
+	}
+      } else {
+	std::cerr << "\tUsing default sRGB profile." << std::endl;
+	profile = cmsCreate_sRGBProfile();
+	png_set_sRGB_gAMA_and_cHRM(png, info, intent);
+      }
     }
 
     {

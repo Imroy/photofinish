@@ -215,6 +215,14 @@ namespace PhotoFinish {
     return *this;
   }
 
+  cmsHPROFILE D_profile::profile(void) const {
+    if (_filepath.defined())
+      return cmsOpenProfileFromFile(_filepath->c_str(), "r");
+    if (_data != NULL)
+      return cmsOpenProfileFromMem(_data, _data_size);
+
+    throw Uninitialised("D_profile", "filepath and data");
+  }
 
   //! Read a D_profile record from a YAML file
   void operator >> (const YAML::Node& node, D_profile& dp) {

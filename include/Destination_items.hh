@@ -161,8 +161,20 @@ namespace PhotoFinish {
     //! Assignment operator
     D_profile& operator=(const D_profile& b);
 
+    //! Accessor
     inline definable<std::string> name(void) const { return _name; }
+
+    //! Accessor
     inline definable<fs::path> filepath(void) const { return _filepath; }
+
+    //! Accessor
+    inline bool has_data(void) const { return _data != NULL; }
+
+    cmsHPROFILE profile(void) const;
+
+    inline void* data(void) const { return _data; }
+
+    inline unsigned int data_size(void) const { return _data_size; }
 
     friend void operator >> (const YAML::Node& node, D_profile& dp);
 
