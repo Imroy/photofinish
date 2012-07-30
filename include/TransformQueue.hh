@@ -72,6 +72,8 @@ namespace PhotoFinish {
     //! Set the CMS transform
     inline void set_transform(cmsHTRANSFORM transform) { _transform = transform; }
 
+    inline void free_transform(void) { cmsDeleteTransform(_transform); }
+
     //! The number of rows in the queue
     inline size_t num_rows(void) const { return _rowqueue.size(); }
 

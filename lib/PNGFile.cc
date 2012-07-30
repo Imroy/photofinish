@@ -204,6 +204,7 @@ namespace PhotoFinish {
 	png_run_workqueue(&queue);	// Worker threads just run the workqueue
       }
     }
+    queue.free_transform();
 
     std::cerr << "Done." << std::endl;
     png_destroy_read_struct(&png, &info, NULL);
