@@ -143,11 +143,23 @@ namespace PhotoFinish {
     unsigned int _data_size;
 
   public:
+    //! Empty constructor
     D_profile();
+
+    //! Constructor
     D_profile(std::string name, fs::path filepath);
+
+    //! Constructor
     D_profile(std::string name, void *data, unsigned int data_size);
 
+    //! Copy constructor
+    D_profile(const D_profile& other);
+
+    //! Destructor
     ~D_profile();
+
+    //! Assignment operator
+    D_profile& operator=(const D_profile& b);
 
     inline definable<std::string> name(void) const { return _name; }
     inline definable<fs::path> filepath(void) const { return _filepath; }

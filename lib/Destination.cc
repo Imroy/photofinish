@@ -21,6 +21,7 @@
 #include <fstream>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
+#include <string.h>
 #include "Destination_items.hh"
 #include "Destination.hh"
 #include "CropSolution.hh"
@@ -187,12 +188,31 @@ namespace PhotoFinish {
     _data(data), _data_size(data_size)
   {}
 
+  D_profile::D_profile(const D_profile& other) :
+    _name(other._name),
+    _filepath(other._filepath),
+    _data(memcpy(malloc(other._data_size), other._data, other._data_size)),
+    _data_size(other._data_size)
+  {}
+
   D_profile::~D_profile() {
     if (_data != NULL) {
       free(_data);
       _data = NULL;
       _data_size = 0;
     }
+  }
+
+  D_profile& D_profile::operator=(const D_profile& b) {
+    if (this != &b) {
+      _name = b._name;
+      _filepath = b._filepath;
+      _data = malloc(b._data_size);
+      memcpy(_data, b._data, b._data_size);
+      _data_size = b._data_size;
+    }
+
+    return *this;
   }
 
 
