@@ -284,7 +284,7 @@ namespace PhotoFinish {
       intent = dest->intent();
 
     cmsHPROFILE profile = NULL;
-    if (dest->profile()->defined() && dest->profile()->filepath().defined())
+    if (dest->profile() && dest->profile()->filepath().defined())
       profile = cmsOpenProfileFromFile(dest->profile()->filepath()->c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
@@ -301,7 +301,7 @@ namespace PhotoFinish {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
 	  std::string profile_name = "icc";	// Default value
-	  if (dest->profile()->defined() && dest->profile()->name().defined())
+	  if (dest->profile() && dest->profile()->name().defined())
 	    profile_name = dest->profile()->name();
 	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
 	  png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);

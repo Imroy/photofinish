@@ -135,7 +135,7 @@ namespace PhotoFinish {
   };
 
   //! ICC profile parameters for destination
-  class D_profile : public Role_Definable {
+  class D_profile {
   private:
     definable<std::string> _name;
     definable<fs::path> _filepath;

@@ -223,8 +223,6 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("filename"))
       *n >> dp._filepath;
-
-    dp.set_defined();
   }
 
 

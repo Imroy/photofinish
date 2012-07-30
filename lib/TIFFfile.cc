@@ -100,7 +100,7 @@ namespace PhotoFinish {
     if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
       std::cerr << "\tImage has ICC profile." << std::endl;
       profile = cmsOpenProfileFromMem(profile_data, profile_len);
-      dest->set_profile("", profile_data, profile_len);
+      dest->set_profile("TIFFTAG_ICCPROFILE", profile_data, profile_len);
     }
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
@@ -212,7 +212,7 @@ namespace PhotoFinish {
       intent = dest->intent();
 
     cmsHPROFILE profile = NULL;
-    if (dest->profile()->defined() && dest->profile()->filepath().defined())
+    if (dest->profile() && dest->profile()->filepath().defined())
       profile = cmsOpenProfileFromFile(dest->profile()->filepath()->c_str(), "r");
 
     if (profile == NULL) {
