@@ -101,7 +101,9 @@ namespace PhotoFinish {
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	profile = cmsOpenProfileFromMem(profile_data, profile_len);
-	queue->destination()->set_profile(profile_name, profile_data, profile_len);
+	void *data_copy = malloc(profile_len);
+	memcpy(data_copy, profile_data, profile_len);
+	queue->destination()->set_profile(profile_name, data_copy, profile_len);
       }
     }
     if (profile == NULL) {
