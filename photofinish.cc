@@ -54,14 +54,16 @@ int main(int argc, char* argv[]) {
       std::cerr << "Argument \"" << argv[i] << " is neither a destination name, nor a filename." << std::endl;
   }
 
+  Tags::ptr defaulttags(new Tags);
+  if (fs::exists(".tags/default"))
+    defaulttags->load(".tags/default");
+
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
       ImageFile::ptr infile = ImageFile::create(*fi);
-      Tags::ptr tags(new Tags);
-      if (fs::exists(".tags/default"))
-	tags->load(".tags/default");
+      Tags::ptr tags = defaulttags->dupe();
       {
-	fs::path tagpath = (*fi).parent_path() / ("." + (*fi).stem().native() + ".tags");
+	fs::path tagpath = fi->parent_path() / ("." + fi->stem().native() + ".tags");
 	if (fs::exists(tagpath))
 	  tags->load(tagpath);
       }
@@ -112,7 +114,7 @@ int main(int argc, char* argv[]) {
 	    std::string format = "jpeg";
 	    if (destination->format().defined())
 	      format = destination->format();
-	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / (*fi).stem(), format);
+	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / fi->stem(), format);
 	    outfile->write(sharp_image, destination, tags);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;

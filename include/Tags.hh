@@ -48,10 +48,16 @@ namespace PhotoFinish {
     //! Empty Constructor
     Tags();
 
+    //! Copy constructor
+    Tags(const Tags &other);
+
     //! Constructor with a filepath from which to load tags (calls Load)
     Tags(fs::path filepath);
 
     typedef std::shared_ptr<Tags> ptr;
+
+    //! Duplicate the tags
+    ptr dupe(void) const;
 
     //! Accessor for the internal map of variables.
     inline multihash& variables(void) { return _variables; }

@@ -34,8 +34,19 @@ namespace PhotoFinish {
   Tags::Tags() {
   }
 
+  Tags::Tags(const Tags &other) :
+    _variables(other._variables),
+    _EXIFtags(other._EXIFtags),
+    _IPTCtags(other._IPTCtags),
+    _XMPtags(other._XMPtags)
+  {}
+
   Tags::Tags(fs::path filepath) {
     load(filepath);
+  }
+
+  Tags::ptr Tags::dupe(void) const {
+    return Tags::ptr(new Tags(*this));
   }
 
   void populate_EXIF_subst(hash& table);
