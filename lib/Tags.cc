@@ -35,6 +35,7 @@ namespace PhotoFinish {
   }
 
   Tags::Tags(const Tags &other) :
+    _searchpaths(other._searchpaths),
     _variables(other._variables),
     _EXIFtags(other._EXIFtags),
     _IPTCtags(other._IPTCtags),
@@ -138,7 +139,18 @@ namespace PhotoFinish {
       if (line.substr(0, 2) == "#@") {
 	int start = line.find_first_not_of(" \t", 2);
 	int end = line.find_last_not_of(" \t");
-	load(".tags" / fs::path(line.substr(start, end + 1 - start)));
+	fs::path filepath = line.substr(start, end + 1 - start);
+	bool loaded = false;
+	for (std::list<fs::path>::iterator pi = _searchpaths.begin(); pi != _searchpaths.end(); pi++) {
+	  fs::path fullpath = *pi / filepath;
+	  if (fs::exists(fullpath)) {
+	    load(fullpath);
+	    loaded = true;
+	    break;
+	  }
+	}
+	if (!loaded)
+	  std::cerr << "** Could not find a tag file named \"" << filepath << "\" in the search paths **" << std::endl;
 	continue;
       }
 

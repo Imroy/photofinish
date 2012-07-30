@@ -25,6 +25,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <list>
 #include "Image.hh"
 #include "Destination.hh"
 
@@ -39,6 +40,7 @@ namespace PhotoFinish {
   //! Reads and holds tag information
   class Tags {
   private:
+    std::list<fs::path> _searchpaths;
     multihash _variables;
     Exiv2::ExifData _EXIFtags;
     Exiv2::IptcData _IPTCtags;
@@ -58,6 +60,8 @@ namespace PhotoFinish {
 
     //! Duplicate the tags
     ptr dupe(void) const;
+
+    inline void add_searchpath(fs::path path) { _searchpaths.push_back(path); }
 
     //! Accessor for the internal map of variables.
     inline multihash& variables(void) { return _variables; }

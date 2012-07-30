@@ -55,6 +55,7 @@ int main(int argc, char* argv[]) {
   }
 
   Tags::ptr defaulttags(new Tags);
+  defaulttags->add_searchpath(".tags");
   if (fs::exists(".tags/default"))
     defaulttags->load(".tags/default");
 
