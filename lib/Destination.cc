@@ -172,8 +172,29 @@ namespace PhotoFinish {
 
 
 
-  D_profile::D_profile()
+  D_profile::D_profile() :
+    _data(NULL), _data_size(0)
   {}
+
+  D_profile::D_profile(std::string name, fs::path filepath) :
+    _name(name),
+    _filepath(filepath),
+    _data(NULL), _data_size(0)
+  {}
+
+  D_profile::D_profile(std::string name, void *data, unsigned int data_size) :
+    _name(name),
+    _data(data), _data_size(data_size)
+  {}
+
+  D_profile::~D_profile() {
+    if (_data != NULL) {
+      free(_data);
+      _data = NULL;
+      _data_size = 0;
+    }
+  }
+
 
   //! Read a D_profile record from a YAML file
   void operator >> (const YAML::Node& node, D_profile& dp) {
@@ -370,8 +391,10 @@ namespace PhotoFinish {
     if (const YAML::Node *n = node.FindValue("jpeg"))
       *n >> d._jpeg;
 
-    if (const YAML::Node *n = node.FindValue("profile"))
-      *n >> d._profile;
+    if (const YAML::Node *n = node.FindValue("profile")) {
+      d._profile = D_profile::ptr(new D_profile);
+      *n >> *(d._profile);
+    }
 
     if (const YAML::Node *n = node.FindValue("thumbnail"))
       *n >> d._thumbnail;

@@ -59,4 +59,10 @@ namespace PhotoFinish {
     throw UnknownFileType(format);
   }
 
+  Image::ptr ImageFile::read(void) const {
+    Destination::ptr temp(new Destination);
+    return this->read(temp);
+  }
+
+
 }

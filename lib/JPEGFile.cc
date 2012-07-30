@@ -39,7 +39,7 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
-  Image::ptr JPEGFile::read(void) const {
+  Image::ptr JPEGFile::read(Destination::ptr dest) const {
     throw Unimplemented("JPEGFile", "read()");
   }
 
@@ -85,7 +85,7 @@ namespace PhotoFinish {
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
-  void JPEGFile::write(std::ostream& os, Image::ptr img, const Destination &dest) const {
+  void JPEGFile::write(std::ostream& os, Image::ptr img, Destination::ptr dest) const {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
@@ -130,8 +130,8 @@ namespace PhotoFinish {
       int sample_h = 2, sample_v = 2;
       bool progressive = true;
 
-      if (dest.jpeg().defined()) {
-	const D_JPEG jpeg = dest.jpeg();
+      if (dest->jpeg().defined()) {
+	const D_JPEG jpeg = dest->jpeg();
 	if (jpeg.quality().defined())
 	  quality = jpeg.quality();
 	if (jpeg.progressive().defined())
@@ -169,7 +169,7 @@ namespace PhotoFinish {
 
     Ditherer ditherer(img->width(), cinfo.input_components);
 
-    transform_queue queue(img, cinfo.input_components, transform);
+    transform_queue queue(dest, img, cinfo.input_components, transform);
     for (unsigned int y = 0; y < cinfo.image_height; y++)
       queue.add(y);
 
@@ -215,7 +215,7 @@ namespace PhotoFinish {
     jpeg_destroy_compress(&cinfo);
   }
 
-  void JPEGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
+  void JPEGFile::write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
@@ -225,7 +225,7 @@ namespace PhotoFinish {
     ofs.close();
 
     std::cerr << "\tEmbedding metadata..." << std::endl;
-    tags.embed(_filepath);
+    tags->embed(_filepath);
     std::cerr << "Done." << std::endl;
   }
 

@@ -57,20 +57,20 @@ int main(int argc, char* argv[]) {
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
       ImageFile::ptr infile = ImageFile::create(*fi);
-      Tags tags;
+      Tags::ptr tags(new Tags);
       if (fs::exists(".tags/default"))
-	tags.load(".tags/default");
+	tags->load(".tags/default");
       {
 	fs::path tagpath = (*fi).parent_path() / ("." + (*fi).stem().native() + ".tags");
 	if (fs::exists(tagpath))
-	  tags.load(tagpath);
+	  tags->load(tagpath);
       }
 
       try {
 	Image::ptr image = infile->read();
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
-	  Destination::ptr destination = destinations[*di]->add_variables(tags.variables());
+	  Destination::ptr destination = destinations[*di]->add_variables(tags->variables());
 	  try {
 	    definable<double> size = destination->size();
 
@@ -99,11 +99,11 @@ int main(int argc, char* argv[]) {
 
 	    if (size.defined()) {
 	      sharp_image->set_resolution_from_size(size);
-	      tags.add_resolution(sharp_image);
+	      tags->add_resolution(sharp_image);
 	    }
 
 	    if (destination->thumbnail().defined() && destination->thumbnail().generate().defined() && destination->thumbnail().generate())
-	      tags.make_thumbnail(sharp_image, destination->thumbnail());
+	      tags->make_thumbnail(sharp_image, destination->thumbnail());
 
 	    if (!exists(destination->dir())) {
 	      std::cerr << "Creating directory " << destination->dir() << "." << std::endl;
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
 	    if (destination->format().defined())
 	      format = destination->format();
 	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / (*fi).stem(), format);
-	    outfile->write(sharp_image, *destination, tags);
+	    outfile->write(sharp_image, destination, tags);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

@@ -139,14 +139,22 @@ namespace PhotoFinish {
   private:
     definable<std::string> _name;
     definable<fs::path> _filepath;
+    void *_data;
+    unsigned int _data_size;
 
   public:
     D_profile();
+    D_profile(std::string name, fs::path filepath);
+    D_profile(std::string name, void *data, unsigned int data_size);
+
+    ~D_profile();
 
     inline definable<std::string> name(void) const { return _name; }
     inline definable<fs::path> filepath(void) const { return _filepath; }
 
     friend void operator >> (const YAML::Node& node, D_profile& dp);
+
+    typedef std::shared_ptr<D_profile> ptr;
   };
 
   //! Thumbnail parameters for destination

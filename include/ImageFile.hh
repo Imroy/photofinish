@@ -70,7 +70,14 @@ namespace PhotoFinish {
     /*!
       \return A new Image object
     */
-    virtual Image::ptr read(void) const = 0;
+    virtual Image::ptr read(void) const;
+
+    //! Read the file into an image
+    /*!
+      \param dest A Destination object where some information from the file will be placed
+      \return A new Image object
+    */
+    virtual Image::ptr read(Destination::ptr dest) const = 0;
 
     //! Write an image to the file
     /*!
@@ -78,7 +85,7 @@ namespace PhotoFinish {
       \param dest A Destination object, used for the JPEG/PNG/etc parameters
       \param tags A Tags object, used for writing EXIF/IPTC/XMP metadata to the new file
     */
-    virtual void write(Image::ptr img, const Destination &dest, const Tags &tags) const = 0;
+    virtual void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const = 0;
   };
 
   //! PNG file reader and writer
@@ -88,8 +95,8 @@ namespace PhotoFinish {
   public:
     PNGFile(const fs::path filepath);
 
-    Image::ptr read(void) const;
-    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
+    Image::ptr read(Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const;
   };
 
   //! JPEG file writer
@@ -99,10 +106,10 @@ namespace PhotoFinish {
   public:
     JPEGFile(const fs::path filepath);
 
-    Image::ptr read(void) const;
+    Image::ptr read(Destination::ptr dest) const;
     //! Special version of write() that takes an open ostream object
-    void write(std::ostream& ofs, Image::ptr img, const Destination &dest) const;
-    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
+    void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const;
   };
 
   //! TIFF file reader and writer
@@ -112,8 +119,8 @@ namespace PhotoFinish {
   public:
     TIFFfile(const fs::path filepath);
 
-    Image::ptr read(void) const;
-    void write(Image::ptr img, const Destination &dest, const Tags &tags) const;
+    Image::ptr read(Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const;
   };
 
 }

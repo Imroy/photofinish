@@ -23,22 +23,24 @@
 
 namespace PhotoFinish {
 
-  transform_queue::transform_queue() :
+  transform_queue::transform_queue(Destination::ptr dest) :
     _rowpointers(NULL),
     _rowlocks(),
     _rowlen(0),
     _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
+    _dest(dest),
     _transform(NULL),
     _finished(false)
   {
     omp_init_lock(_queue_lock);
   }
 
-  transform_queue::transform_queue(Image::ptr img, int channels, cmsHTRANSFORM transform) :
+  transform_queue::transform_queue(Destination::ptr dest, Image::ptr img, int channels, cmsHTRANSFORM transform) :
     _rowpointers((short unsigned int**)malloc(img->height() * sizeof(short unsigned int*))),
     _rowlocks(img->height()),
     _rowlen(img->width() * channels * sizeof(short unsigned int)),
     _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
+    _dest(dest),
     _img(img),
     _transform(transform),
     _finished(false)

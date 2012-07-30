@@ -62,7 +62,7 @@ namespace PhotoFinish {
 
     definable<cmsUInt32Number> _intent;	//! CMS rendering intent
 
-    D_profile _profile;
+    D_profile::ptr _profile;
 
     definable<bool> _forcergb;	//! Force the output to be RGB
     definable<bool> _forcegrey;	//! Force the output to be greyscale
@@ -109,6 +109,7 @@ namespace PhotoFinish {
     inline definable<std::string> format(void) const { return _format; }
 
     inline definable<int> depth(void) const { return _depth; }
+    inline void set_depth(int d) { _depth = d; }
 
     inline definable<bool> noresize(void) const { return _noresize; }
 
@@ -119,7 +120,9 @@ namespace PhotoFinish {
 
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 
-    inline const D_profile& profile(void) const { return _profile; }
+    inline const D_profile::ptr profile(void) const { return _profile; }
+    inline void set_profile(std::string name, fs::path filepath) { _profile = D_profile::ptr(new D_profile(name, filepath)); }
+    inline void set_profile(std::string name, void *data, unsigned int data_size) { _profile = D_profile::ptr(new D_profile(name, data, data_size)); }
 
     inline definable<bool> forcergb(void) const { return _forcergb; }
     inline definable<bool> forcegrey(void) const { return _forcegrey; }

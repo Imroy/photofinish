@@ -34,7 +34,7 @@ namespace PhotoFinish {
 
 #define TIFFcheck(x) if ((rc = TIFF##x) != 1) throw LibraryError("libtiff", "TIFF" #x " returned " + rc)
 
-  Image::ptr TIFFfile::read(void) const {
+  Image::ptr TIFFfile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
@@ -53,6 +53,7 @@ namespace PhotoFinish {
 
     uint16 bit_depth, photometric;
     TIFFcheck(GetField(tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));
+    dest->set_depth(bit_depth);
     std::cerr << "\tImage has a depth of " << bit_depth << std::endl;
     TIFFcheck(GetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric));
 
@@ -99,6 +100,7 @@ namespace PhotoFinish {
     if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
       std::cerr << "\tImage has ICC profile." << std::endl;
       profile = cmsOpenProfileFromMem(profile_data, profile_len);
+      dest->set_profile("", profile_data, profile_len);
     }
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
@@ -118,7 +120,7 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    transform_queue queue(img, T_CHANNELS(cmsType), transform);
+    transform_queue queue(dest, img, T_CHANNELS(cmsType), transform);
 
 #pragma omp parallel shared(queue)
     {
@@ -161,7 +163,7 @@ namespace PhotoFinish {
     return img;
   }
 
-  void TIFFfile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
+  void TIFFfile::write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -201,17 +203,17 @@ namespace PhotoFinish {
     }
 
     int depth = 8;	// Default value
-    if (dest.depth().defined())
-      depth = dest.depth();
+    if (dest->depth().defined())
+      depth = dest->depth();
     TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, depth));
 
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
-    if (dest.intent().defined())
-      intent = dest.intent();
+    if (dest->intent().defined())
+      intent = dest->intent();
 
     cmsHPROFILE profile = NULL;
-    if (dest.profile().defined() && dest.profile().filepath().defined())
-      profile = cmsOpenProfileFromFile(dest.profile().filepath()->c_str(), "r");
+    if (dest->profile()->defined() && dest->profile()->filepath().defined())
+      profile = cmsOpenProfileFromFile(dest->profile()->filepath()->c_str(), "r");
 
     if (profile == NULL) {
       if (img->is_colour()) {
@@ -244,7 +246,7 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    transform_queue queue(img, T_CHANNELS(cmsTempType), transform);
+    transform_queue queue(dest, img, T_CHANNELS(cmsTempType), transform);
     for (unsigned int y = 0; y < img->height(); y++)
       queue.add(y);
 
@@ -295,7 +297,7 @@ namespace PhotoFinish {
 
     std::cerr << "Done." << std::endl;
 
-    tags.embed(_filepath);
+    tags->embed(_filepath);
 
   }
 

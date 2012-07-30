@@ -24,6 +24,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <memory>
 #include "Image.hh"
 #include "Destination.hh"
 
@@ -49,6 +50,8 @@ namespace PhotoFinish {
 
     //! Constructor with a filepath from which to load tags (calls Load)
     Tags(fs::path filepath);
+
+    typedef std::shared_ptr<Tags> ptr;
 
     //! Accessor for the internal map of variables.
     inline multihash& variables(void) { return _variables; }

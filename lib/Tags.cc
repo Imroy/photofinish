@@ -239,8 +239,8 @@ namespace PhotoFinish {
     Frame frame(width, height, 0, 0, img->width(), img->height());
     Image::ptr thumbimage = frame.crop_resize(img, D_resize::lanczos(3.0));
 
-    Destination dest;
-    dest.set_jpeg(D_JPEG(50, 1, 1, false));
+    Destination::ptr dest(new Destination);
+    dest->set_jpeg(D_JPEG(50, 1, 1, false));
 
     JPEGFile thumbfile("");
     std::ostringstream oss;

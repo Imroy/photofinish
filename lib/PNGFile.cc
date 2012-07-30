@@ -54,6 +54,7 @@ namespace PhotoFinish {
     std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
     Image::ptr img(new Image(width, height));
+    queue->destination()->set_depth(bit_depth);
 
     cmsUInt32Number cmsType;
     switch (colour_type) {
@@ -100,6 +101,7 @@ namespace PhotoFinish {
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	profile = cmsOpenProfileFromMem(profile_data, profile_len);
+	queue->destination()->set_profile(profile_name, profile_data, profile_len);
       }
     }
     if (profile == NULL) {
@@ -145,7 +147,7 @@ namespace PhotoFinish {
     }
   }
 
-  Image::ptr PNGFile::read(void) const {
+  Image::ptr PNGFile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
@@ -176,7 +178,7 @@ namespace PhotoFinish {
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
-    transform_queue queue;
+    transform_queue queue(dest);
 
 #pragma omp parallel shared(queue)
     {
@@ -220,7 +222,7 @@ namespace PhotoFinish {
     os->flush();
   }
 
-  void PNGFile::write(Image::ptr img, const Destination &dest, const Tags &tags) const {
+  void PNGFile::write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -257,8 +259,8 @@ namespace PhotoFinish {
     }
 
     int depth = 8;	// Default value
-    if (dest.depth().defined())
-      depth = dest.depth();
+    if (dest->depth().defined())
+      depth = dest->depth();
 
     std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
 	      << " " << depth << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
@@ -276,12 +278,12 @@ namespace PhotoFinish {
     }
 
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
-    if (dest.intent().defined())
-      intent = dest.intent();
+    if (dest->intent().defined())
+      intent = dest->intent();
 
     cmsHPROFILE profile = NULL;
-    if (dest.profile().defined() && dest.profile().filepath().defined())
-      profile = cmsOpenProfileFromFile(dest.profile().filepath()->c_str(), "r");
+    if (dest->profile()->defined() && dest->profile()->filepath().defined())
+      profile = cmsOpenProfileFromFile(dest->profile()->filepath()->c_str(), "r");
 
     if ((profile == NULL) && (img->is_greyscale())) {
       std::cerr << "\tUsing default greyscale profile." << std::endl;
@@ -297,8 +299,8 @@ namespace PhotoFinish {
 	png_bytep profile_data = (png_bytep)malloc(len);
 	if (cmsSaveProfileToMem(profile, profile_data, &len)) {
 	  std::string profile_name = "icc";	// Default value
-	  if (dest.profile().defined() && dest.profile().name().defined())
-	    profile_name = dest.profile().name();
+	  if (dest->profile()->defined() && dest->profile()->name().defined())
+	    profile_name = dest->profile()->name();
 	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
 	  png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);
 	}
@@ -332,7 +334,7 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    transform_queue queue(img, png_channels, transform);
+    transform_queue queue(dest, img, png_channels, transform);
     if (depth == 8)
       for (unsigned int y = 0; y < img->height(); y++)
 	queue.add(y);
@@ -389,7 +391,7 @@ namespace PhotoFinish {
     std::cerr << "Done." << std::endl;
     fb.close();
 
-    tags.embed(_filepath);
+    tags->embed(_filepath);
   }
 
 }

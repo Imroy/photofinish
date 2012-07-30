@@ -25,6 +25,7 @@
 #include <omp.h>
 #include <lcms2.h>
 #include "Image.hh"
+#include "Destination.hh"
 
 namespace PhotoFinish {
 
@@ -38,24 +39,29 @@ namespace PhotoFinish {
     std::vector<omp_lock_t*> _rowlocks;
     size_t _rowlen;
     omp_lock_t *_queue_lock;
+    Destination::ptr _dest;
     Image::ptr _img;
     cmsHTRANSFORM _transform;
     bool _finished;
 
   public:
     //! Empty constructor
-    transform_queue();
+    transform_queue(Destination::ptr dest);
 
     //! Constructor
     /*!
+      \param dest A Destination object where some information from the file will be placed
       \param img The Image object from which the pixel data comes
       \param channels The number of channels in the output
       \param transform The LCMS2 transform for transforming the image data
     */
-    transform_queue(Image::ptr img, int channels, cmsHTRANSFORM transform);
+    transform_queue(Destination::ptr dest, Image::ptr img, int channels, cmsHTRANSFORM transform);
 
     //! Deconstructor
     ~transform_queue();
+
+    //! Get the image
+    inline Destination::ptr destination(void) const { return _dest; }
 
     //! Set the image
     void set_image(Image::ptr img, int channels);
