@@ -48,8 +48,9 @@ Crazy idea:
 == Libraries ==
 
 Photo Finish currently uses the following libraries:
-* [http://www.libpng.org/ LibPNG] for reading scans and optionally producing final output
+* [http://www.libpng.org/ LibPNG] for reading and writing PNG files
 * [http://www.ijg.org/ IJG]'s LibJPEG for writing JPEG's
+* [http://www.remotesensing.org/libtiff/ libTIFF] for reading and writing PNG files
 * [http://www.littlecms.com/ Little CMS] (LCMS) for transforming between colour profiles
 * [http://code.google.com/p/yaml-cpp/ libyaml] for reading YAML data files
 * [http://www.exiv2.org/ EXIV] for EXIF/IPTC/XMP metadata
