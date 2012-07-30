@@ -70,6 +70,24 @@ namespace PhotoFinish {
     }
     queue->set_image(img, T_CHANNELS(cmsType));
 
+    {
+      unsigned int xres, yres;
+      int unit_type;
+      if (png_get_pHYs(png, info, &xres, &yres, &unit_type)) {
+	switch (unit_type) {
+	case PNG_RESOLUTION_METER:
+	  img->set_resolution(xres * 0.0254, yres * 0.0254);
+	  break;
+	case PNG_RESOLUTION_UNKNOWN:
+	  break;
+	default:
+	  std::cerr << "** unknown unit type " << unit_type << " **" << std::endl;
+	}
+	if (img->xres().defined() && img->yres().defined())
+	  std::cerr << "\tImage has resolution of " << img->xres() << "×" << img->yres() << " PPI." << std::endl;
+      }
+    }
+
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHPROFILE profile = NULL;
 
@@ -250,6 +268,12 @@ namespace PhotoFinish {
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(png, Z_BEST_COMPRESSION);
+
+    if (img->xres().defined() && img->yres().defined()) {
+      unsigned int xres = round(img->xres() / 0.0254);
+      unsigned int yres = round(img->yres() / 0.0254);
+      png_set_pHYs(png, info, xres, yres, PNG_RESOLUTION_METER);
+    }
 
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
     if (dest.intent().defined())

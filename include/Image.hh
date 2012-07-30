@@ -31,7 +31,7 @@ namespace PhotoFinish {
     unsigned int _width, _height;
     bool _greyscale;		// Used by readers and writers when converting colour spaces
     SAMPLE **_rowdata;
-    definable<double> _resolution;		// PPI
+    definable<double> _xres, _yres;		// PPI
 
   public:
     typedef std::shared_ptr<Image> ptr;
@@ -67,13 +67,19 @@ namespace PhotoFinish {
     inline void set_colour(bool c = true) { _greyscale = !c; }
 
     //! Accessor
-    inline const definable<double> resolution(void) const { return _resolution; }
+    inline const definable<double> xres(void) const { return _xres; }
+
+    //! Accessor
+    inline const definable<double> yres(void) const { return _yres; }
 
     //! Setter
-    inline void set_resolution(double r) { _resolution = r; }
+    inline void set_resolution(double r) { _xres = _yres = r; }
+
+    //! Setter
+    inline void set_resolution(double xr, double yr) { _xres = xr; _yres = yr; }
 
     //! Set the resolution given the length of the longest side (in inches)
-    inline void set_resolution_from_size(double size) { _resolution = (_width > _height ? _width : _height) / size; }
+    inline void set_resolution_from_size(double size) { _xres = _yres = (_width > _height ? _width : _height) / size; }
 
     //! Pointer to pixel data at start of row
     inline SAMPLE* row(unsigned int y) const { return _rowdata[y]; }

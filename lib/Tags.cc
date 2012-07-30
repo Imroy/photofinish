@@ -253,17 +253,24 @@ namespace PhotoFinish {
   }
 
   void Tags::add_resolution(Image::ptr img) {
-    Exiv2::URationalValue v = Exiv2::URationalValue(parse_URational(img->resolution()));
-    std::cerr << "\tSetting resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->resolution() << ") ppi." << std::endl;
-    try {
-      _EXIFtags["Exif.Image.XResolution"] = v;
-    } catch (Exiv2::Error& e) {
-      std::cerr << "** EXIF key \"Exif.Image.XResolution\" not accepted **" << std::endl;
+    Exiv2::URationalValue v;
+    if (img->xres().defined()) {
+      v = Exiv2::URationalValue(parse_URational(img->xres()));
+      std::cerr << "\tSetting X resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->xres() << ") ppi." << std::endl;
+      try {
+	_EXIFtags["Exif.Image.XResolution"] = v;
+      } catch (Exiv2::Error& e) {
+	std::cerr << "** EXIF key \"Exif.Image.XResolution\" not accepted **" << std::endl;
+      }
     }
-    try {
-      _EXIFtags["Exif.Image.YResolution"] = v;
-    } catch (Exiv2::Error& e) {
-      std::cerr << "** EXIF key \"Exif.Image.YResolution\" not accepted **" << std::endl;
+    if (img->yres().defined()) {
+      v = Exiv2::URationalValue(parse_URational(img->yres()));
+      std::cerr << "\tSetting Y resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->yres() << ") ppi." << std::endl;
+      try {
+	_EXIFtags["Exif.Image.YResolution"] = v;
+      } catch (Exiv2::Error& e) {
+	std::cerr << "** EXIF key \"Exif.Image.YResolution\" not accepted **" << std::endl;
+      }
     }
     _EXIFtags["Exif.Image.ResolutionUnit"] = 2;	// Inches (yuck)
   }

@@ -48,7 +48,7 @@ namespace PhotoFinish {
     uint32 width, height;
     TIFFcheck(GetField(tiff, TIFFTAG_IMAGEWIDTH, &width));
     TIFFcheck(GetField(tiff, TIFFTAG_IMAGELENGTH, &height));
-    std::cerr << "\tImage is " << width << "x" << height << std::endl;
+    std::cerr << "\tImage is " << width << "×" << height << std::endl;
     Image::ptr img(new Image(width, height));
 
     uint16 bit_depth, photometric;
@@ -68,6 +68,27 @@ namespace PhotoFinish {
     default:
       std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
       exit(1);
+    }
+
+    {
+      float xres, yres;
+      short unsigned int resunit;
+      if ((TIFFGetField(tiff, TIFFTAG_XRESOLUTION, &xres) == 1)
+	  && (TIFFGetField(tiff, TIFFTAG_YRESOLUTION, &yres) == 1)
+	  && (TIFFGetField(tiff, TIFFTAG_RESOLUTIONUNIT, &resunit) == 1)) {
+	switch (resunit) {
+	case RESUNIT_INCH:
+	  img->set_resolution(xres, yres);
+	  break;
+	case RESUNIT_CENTIMETER:
+	  img->set_resolution((double)xres * 2.54, (double)yres * 2.54);
+	  break;
+	default:
+	  std::cerr << "** unknown resolution unit " << resunit << " **" << std::endl;
+	}
+	if (img->xres().defined() && img->yres().defined())
+	  std::cerr << "\tImage has resolution of " << img->xres() << "×" << img->yres() << " PPI." << std::endl;
+      }
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
@@ -159,9 +180,12 @@ namespace PhotoFinish {
     TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
     TIFFcheck(SetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
 
-    if (img->resolution().defined()) {
-      TIFFcheck(SetField (tiff, TIFFTAG_XRESOLUTION, img->resolution()));
-      TIFFcheck(SetField (tiff, TIFFTAG_YRESOLUTION, img->resolution()));
+    if (img->xres().defined()) {
+      TIFFcheck(SetField (tiff, TIFFTAG_XRESOLUTION, (float)img->xres()));
+      TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
+    }
+    if (img->yres().defined()) {
+      TIFFcheck(SetField (tiff, TIFFTAG_YRESOLUTION, (float)img->yres()));
       TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
     }
 
