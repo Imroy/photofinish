@@ -100,7 +100,9 @@ namespace PhotoFinish {
     if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
       std::cerr << "\tImage has ICC profile." << std::endl;
       profile = cmsOpenProfileFromMem(profile_data, profile_len);
-      dest->set_profile("TIFFTAG_ICCPROFILE", profile_data, profile_len);
+      void *data_copy = malloc(profile_len);
+      memcpy(data_copy, profile_data, profile_len);
+      dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
     }
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
@@ -157,7 +159,7 @@ namespace PhotoFinish {
       }
     }
 
-    TIFFFlush(tiff);
+    TIFFClose(tiff);
     fb.close();
 
     return img;
@@ -297,7 +299,7 @@ namespace PhotoFinish {
     cmsDeleteTransform(transform);
     std::cerr << std::endl;
 
-    TIFFFlush(tiff);
+    TIFFClose(tiff);
     fb.close();
 
     std::cerr << "Done." << std::endl;
