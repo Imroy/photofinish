@@ -46,19 +46,19 @@ namespace PhotoFinish {
   }
 
   void Kernel1Dvar::build(double from_start, double from_size, unsigned int from_max) throw(DestinationError) {
-    double scale = from_size / _to_size;
+    _scale = from_size / _to_size;
     double range, norm_fact;
-    if (scale < 1.0) {
+    if (_scale < 1.0) {
       range = this->range();
       norm_fact = 1.0;
     } else {
-      range = this->range() * scale;
+      range = this->range() * _scale;
       norm_fact = this->range() / ceil(range);
     }
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int i = 0; i < _to_size_i; i++) {
-      double centre = from_start + (i * scale);
+      double centre = from_start + (i * _scale);
       unsigned int left = floor(centre - range);
       if (range > centre)
 	left = 0;
@@ -125,6 +125,12 @@ namespace PhotoFinish {
   Image::ptr Kernel1Dvar::convolve_h(Image::ptr img) {
     Image::ptr ni(new Image(_to_size_i, img->height()));
 
+    ni->set_greyscale(img->is_greyscale());
+    if (img->xres().defined())
+      ni->set_xres(img->xres() / _scale);
+    if (img->yres().defined())
+      ni->set_yres(img->yres());
+
 #pragma omp parallel
     {
 #pragma omp master
@@ -155,13 +161,18 @@ namespace PhotoFinish {
     }
     std::cerr << "\r\tConvolved " << img->height() << " of " << img->height() << " rows." << std::endl;
 
-    ni->set_greyscale(img->is_greyscale());
     return ni;
   }
 
   //! Convolve an image vertically
   Image::ptr Kernel1Dvar::convolve_v(Image::ptr img) {
    Image::ptr ni(new Image(img->width(), _to_size_i));
+
+    ni->set_greyscale(img->is_greyscale());
+    if (img->xres().defined())
+      ni->set_xres(img->xres());
+    if (img->yres().defined())
+      ni->set_yres(img->yres() / _scale);
 
 #pragma omp parallel
     {
@@ -202,7 +213,6 @@ namespace PhotoFinish {
     }
     std::cerr << "\r\tConvolved " << _to_size_i << " of " << _to_size_i << " rows." << std::endl;
 
-    ni->set_greyscale(img->is_greyscale());
     return ni;
   }
 

@@ -76,6 +76,12 @@ namespace PhotoFinish {
     inline void set_resolution(double r) { _xres = _yres = r; }
 
     //! Setter
+    inline void set_xres(double r) { _xres = r; }
+
+    //! Setter
+    inline void set_yres(double r) { _yres = r; }
+
+    //! Setter
     inline void set_resolution(double xr, double yr) { _xres = xr; _yres = yr; }
 
     //! Set the resolution given the length of the longest side (in inches)

@@ -32,7 +32,7 @@ namespace PhotoFinish {
   protected:
     unsigned int *_size, *_start;
     SAMPLE **_weights;
-    double _to_size;
+    double _scale, _to_size;
     unsigned int _to_size_i;
 
     //! Private constructor
