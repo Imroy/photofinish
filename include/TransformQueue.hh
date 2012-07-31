@@ -89,6 +89,9 @@ namespace PhotoFinish {
     //! Return a row pointer
     short unsigned int* row(unsigned int y) const;
 
+    //! Free a row pointer
+    void free_row(unsigned int y);
+
     //! Add a new row to the queue
     void add(unsigned int num, void* data = NULL);
 

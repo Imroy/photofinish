@@ -58,6 +58,8 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < _img->height(); y++) {
       omp_destroy_lock(_rowlocks[y]);
       free(_rowlocks[y]);
+      if (_rowpointers[y] != NULL)
+	free(_rowpointers[y]);
     }
     free(_rowpointers);
     omp_destroy_lock(_queue_lock);
@@ -89,6 +91,15 @@ namespace PhotoFinish {
     short unsigned int *ret = _rowpointers[y];
     omp_unset_lock(_rowlocks[y]);
     return ret;
+  }
+
+  void transform_queue::free_row(unsigned int y) {
+    omp_set_lock(_rowlocks[y]);
+    if (_rowpointers[y] != NULL) {
+      free(_rowpointers[y]);
+      _rowpointers[y] = NULL;
+    }
+    omp_unset_lock(_rowlocks[y]);
   }
 
   void transform_queue::add(unsigned int num, void* data) {

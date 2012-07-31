@@ -360,32 +360,33 @@ namespace PhotoFinish {
 
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  short unsigned int *row = queue.row(y);
-	  while (!queue.empty() && (row == NULL)) {
-	    queue.writer_process_row();
-	    row = queue.row(y);
-	  }
+	  {
+	    short unsigned int *row = queue.row(y);
+	    while (!queue.empty() && (row == NULL)) {
+	      queue.writer_process_row();
+	      row = queue.row(y);
+	    }
 
-	  // If it's still not available, something has gone wrong
-	  if (row == NULL) {
-	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	    exit(2);
-	  }
+	    // If it's still not available, something has gone wrong
+	    if (row == NULL) {
+	      std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	      exit(2);
+	    }
 
-	  if (depth == 8) {
-	    ditherer.dither(row, png_rows[y], y == img->height() - 1);
-	    free(row);
+	    if (depth == 8)
+	      ditherer.dither(row, png_rows[y], y == img->height() - 1);
 	  }
+	  queue.free_row(y);
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";
 	}
+	std::cerr << std::endl;
       } else {	// Other thread(s) transform the image data
 	while (!queue.empty())
 	  queue.writer_process_row();
       }
     }
     cmsDeleteTransform(transform);
-    std::cerr << std::endl;
 
     std::cerr << "\tWriting PNG image data..." << std::endl;
     png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);

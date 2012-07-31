@@ -185,23 +185,27 @@ namespace PhotoFinish {
 	while (cinfo.next_scanline < cinfo.image_height) {
 	  unsigned int y = cinfo.next_scanline;
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  short unsigned int *row = queue.row(y);
-	  while (!queue.empty() && (row == NULL)) {
-	    queue.writer_process_row();
-	    row = queue.row(y);
-	  }
+	  {
+	    short unsigned int *row = queue.row(y);
+	    while (!queue.empty() && (row == NULL)) {
+	      queue.writer_process_row();
+	      row = queue.row(y);
+	    }
 
-	  // If it's still not available, something has gone wrong
-	  if (row == NULL) {
-	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << ") **" << std::endl;
-	    exit(2);
-	  }
+	    // If it's still not available, something has gone wrong
+	    if (row == NULL) {
+	      std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << ") **" << std::endl;
+	      exit(2);
+	    }
 
-	  ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
+	    ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
+	  }
+	  queue.free_row(y);
 	  jpeg_write_scanlines(&cinfo, jpeg_row, 1);
 	  std::cerr << "\r\tTransformed and written " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)   ";
 	}
+	std::cerr << std::endl;
 	free(jpeg_row[0]);
       } else {	// Other thread(s) transform the image data
 	while (!queue.empty())
@@ -209,7 +213,6 @@ namespace PhotoFinish {
       }
     }
     cmsDeleteTransform(transform);
-    std::cerr << std::endl;
 
     jpeg_finish_compress(&cinfo);
     jpeg_destroy_compress(&cinfo);
