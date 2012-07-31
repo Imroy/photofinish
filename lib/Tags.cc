@@ -246,6 +246,23 @@ namespace PhotoFinish {
     std::cerr << "Finished loading \"" << filepath.native() << "\"" << std::endl;
   }
 
+  void Tags::extract(fs::path filepath) {
+    Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
+    assert(image.get() != 0);
+
+    Exiv2::ExifData &exifData = image->exifData();
+    for (Exiv2::ExifData::const_iterator ei = exifData.begin(); ei != exifData.end(); ei++)
+      _EXIFtags.add(*ei);
+
+    Exiv2::IptcData &iptcData = image->iptcData();
+    for (Exiv2::IptcData::const_iterator ii = iptcData.begin(); ii != iptcData.end(); ii++)
+      _IPTCtags.add(*ii);
+
+    Exiv2::XmpData &xmpData = image->xmpData();
+    for (Exiv2::XmpData::const_iterator xi = xmpData.begin(); xi != xmpData.end(); xi++)
+      _XMPtags.add(*xi);
+  }
+
   void Tags::make_thumbnail(Image::ptr img, const D_thumbnail& dt) {
     double width, height;
 

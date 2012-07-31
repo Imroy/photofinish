@@ -79,6 +79,12 @@ namespace PhotoFinish {
     //! Load tags from supplied file path
     void load(fs::path filepath);
 
+    //! Extract EXIF/IPTC/XMP tags from an image file
+    void extract(fs::path filepath);
+
+    //! Extract EXIF/IPTC/XMP tags from an image file
+    void extract(ImageFile::ptr imagefile) { this->extract(imagefile->filepath()); }
+
     //! Create a thumbnail from the supplied image
     void make_thumbnail(Image::ptr img, const D_thumbnail& dt);
 
