@@ -206,10 +206,10 @@ namespace PhotoFinish {
     }
     queue.free_transform();
 
-    std::cerr << "Done." << std::endl;
     png_destroy_read_struct(&png, &info, NULL);
     fb.close();
 
+    std::cerr << "Done." << std::endl;
     return queue.image();
   }
 
@@ -396,11 +396,12 @@ namespace PhotoFinish {
     free(png_rows);
 
     png_destroy_write_struct(&png, &info);
-
-    std::cerr << "Done." << std::endl;
     fb.close();
 
+    std::cerr << "\tEmbedding metadata..." << std::endl;
     tags->embed(_filepath);
+
+    std::cerr << "Done." << std::endl;
   }
 
 }

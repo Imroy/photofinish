@@ -164,7 +164,6 @@ namespace PhotoFinish {
     fb.close();
 
     std::cerr << "Done." << std::endl;
-
     return img;
   }
 
@@ -307,10 +306,10 @@ namespace PhotoFinish {
     TIFFClose(tiff);
     fb.close();
 
-    std::cerr << "Done." << std::endl;
-
+    std::cerr << "\tEmbedding metadata..." << std::endl;
     tags->embed(_filepath);
 
+    std::cerr << "Done." << std::endl;
   }
 
 }

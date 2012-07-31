@@ -229,6 +229,7 @@ namespace PhotoFinish {
 
     std::cerr << "\tEmbedding metadata..." << std::endl;
     tags->embed(_filepath);
+
     std::cerr << "Done." << std::endl;
   }
 
