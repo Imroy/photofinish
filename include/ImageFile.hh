@@ -26,7 +26,6 @@
 #include <boost/filesystem/fstream.hpp>
 #include "Image.hh"
 #include "Destination.hh"
-#include "Tags.hh"
 #include "Exception.hh"
 #include "sample.h"
 
@@ -83,9 +82,8 @@ namespace PhotoFinish {
     /*!
       \param img The Image object to write
       \param dest A Destination object, used for the JPEG/PNG/etc parameters
-      \param tags A Tags object, used for writing EXIF/IPTC/XMP metadata to the new file
     */
-    virtual void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const = 0;
+    virtual void write(Image::ptr img, Destination::ptr dest) const = 0;
   };
 
   //! PNG file reader and writer
@@ -96,7 +94,7 @@ namespace PhotoFinish {
     PNGFile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const;
+    void write(Image::ptr img, Destination::ptr dest) const;
   };
 
   //! JPEG file writer
@@ -109,7 +107,7 @@ namespace PhotoFinish {
     Image::ptr read(Destination::ptr dest) const;
     //! Special version of write() that takes an open ostream object
     void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const;
+    void write(Image::ptr img, Destination::ptr dest) const;
   };
 
   //! TIFF file reader and writer
@@ -120,7 +118,7 @@ namespace PhotoFinish {
     TIFFfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const;
+    void write(Image::ptr img, Destination::ptr dest) const;
   };
 
 }

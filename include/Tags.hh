@@ -27,6 +27,7 @@
 #include <memory>
 #include <list>
 #include "Image.hh"
+#include "ImageFile.hh"
 #include "Destination.hh"
 
 namespace fs = boost::filesystem;
@@ -85,6 +86,9 @@ namespace PhotoFinish {
 
     //! Embed EXIF/IPTC/XMP tags into an image file
     void embed(fs::path filepath) const;
+
+    //! Embed EXIF/IPTC/XMP tags into an image file
+    inline void embed(ImageFile::ptr imagefile) const { this->embed(imagefile->filepath()); }
   };
 
 }

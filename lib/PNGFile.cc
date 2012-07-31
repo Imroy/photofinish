@@ -225,7 +225,7 @@ namespace PhotoFinish {
     os->flush();
   }
 
-  void PNGFile::write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const {
+  void PNGFile::write(Image::ptr img, Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -397,9 +397,6 @@ namespace PhotoFinish {
 
     png_destroy_write_struct(&png, &info);
     fb.close();
-
-    std::cerr << "\tEmbedding metadata..." << std::endl;
-    tags->embed(_filepath);
 
     std::cerr << "Done." << std::endl;
   }

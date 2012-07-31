@@ -116,7 +116,8 @@ int main(int argc, char* argv[]) {
 	    if (destination->format().defined())
 	      format = destination->format();
 	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / fi->stem(), format);
-	    outfile->write(sharp_image, destination, tags);
+	    outfile->write(sharp_image, destination);
+	    tags->embed(outfile);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

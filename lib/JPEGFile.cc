@@ -218,7 +218,7 @@ namespace PhotoFinish {
     jpeg_destroy_compress(&cinfo);
   }
 
-  void JPEGFile::write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const {
+  void JPEGFile::write(Image::ptr img, Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
@@ -226,9 +226,6 @@ namespace PhotoFinish {
 
     write(ofs, img, dest);
     ofs.close();
-
-    std::cerr << "\tEmbedding metadata..." << std::endl;
-    tags->embed(_filepath);
 
     std::cerr << "Done." << std::endl;
   }

@@ -167,7 +167,7 @@ namespace PhotoFinish {
     return img;
   }
 
-  void TIFFfile::write(Image::ptr img, Destination::ptr dest, Tags::ptr tags) const {
+  void TIFFfile::write(Image::ptr img, Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -305,9 +305,6 @@ namespace PhotoFinish {
 
     TIFFClose(tiff);
     fb.close();
-
-    std::cerr << "\tEmbedding metadata..." << std::endl;
-    tags->embed(_filepath);
 
     std::cerr << "Done." << std::endl;
   }
