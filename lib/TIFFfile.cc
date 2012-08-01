@@ -64,7 +64,7 @@ namespace PhotoFinish {
       img->set_greyscale();
       break;
     case PHOTOMETRIC_RGB:
-      cmsType = COLORSPACE_SH(PT_RGB) | DOSWAP_SH(1) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
+      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
       break;
     default:
       std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
