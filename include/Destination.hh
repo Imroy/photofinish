@@ -86,6 +86,9 @@ namespace PhotoFinish {
 
     typedef std::shared_ptr<Destination> ptr;
 
+    //! Duplicate
+    inline ptr dupe(void) { return Destination::ptr(new Destination(*this)); }
+
     //! Duplicate the current object and incorporate variables
     ptr add_variables(multihash& vars);
 
