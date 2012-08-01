@@ -24,7 +24,7 @@
 namespace PhotoFinish {
 
   transform_queue::transform_queue(Destination::ptr dest) :
-    _rowpointers(NULL),
+    _rows(),
     _rowlocks(),
     _rowlen(0),
     _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
@@ -36,7 +36,7 @@ namespace PhotoFinish {
   }
 
   transform_queue::transform_queue(Destination::ptr dest, Image::ptr img, int channels, cmsHTRANSFORM transform) :
-    _rowpointers((short unsigned int**)malloc(img->height() * sizeof(short unsigned int*))),
+    _rows(new row_ptr [img->height()]),
     _rowlocks(img->height()),
     _rowlen(img->width() * channels * sizeof(short unsigned int)),
     _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
@@ -48,7 +48,6 @@ namespace PhotoFinish {
     omp_init_lock(_queue_lock);
 
     for (unsigned int y = 0; y < _img->height(); y++) {
-      _rowpointers[y] = NULL;
       _rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
       omp_init_lock(_rowlocks[y]);
     }
@@ -58,22 +57,19 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < _img->height(); y++) {
       omp_destroy_lock(_rowlocks[y]);
       free(_rowlocks[y]);
-      if (_rowpointers[y] != NULL)
-	free(_rowpointers[y]);
     }
-    free(_rowpointers);
+    delete [] _rows;
     omp_destroy_lock(_queue_lock);
     free(_queue_lock);
   }
 
   void transform_queue::set_image(Image::ptr img, int channels) {
-    _rowpointers = (short unsigned int**)malloc(img->height() * sizeof(short unsigned int*));
+    _rows = new row_ptr [img->height()];
     _rowlocks.reserve(img->height());
     _rowlen = img->width() * channels * sizeof(short unsigned int);
     _img = img;
 
     for (unsigned int y = 0; y < _img->height(); y++) {
-      _rowpointers[y] = NULL;
       _rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
       omp_init_lock(_rowlocks[y]);
     }
@@ -88,23 +84,25 @@ namespace PhotoFinish {
 
   short unsigned int* transform_queue::row(unsigned int y) const {
     omp_set_lock(_rowlocks[y]);
-    short unsigned int *ret = _rowpointers[y];
+    short unsigned int *ret = NULL;
+    if (_rows[y])
+      ret = (short unsigned int*)_rows[y]->data;
     omp_unset_lock(_rowlocks[y]);
     return ret;
   }
 
   void transform_queue::free_row(unsigned int y) {
     omp_set_lock(_rowlocks[y]);
-    if (_rowpointers[y] != NULL) {
-      free(_rowpointers[y]);
-      _rowpointers[y] = NULL;
+    if (_rows[y] && (_rows[y]->data != NULL)) {
+      free(_rows[y]->data);
+      _rows[y]->data = NULL;
     }
     omp_unset_lock(_rowlocks[y]);
   }
 
   void transform_queue::add(unsigned int num, void* data) {
     omp_set_lock(_queue_lock);
-    _rowqueue.push(new row_t(num, data));
+    _rowqueue.push(row_ptr(new row_t(num, data)));
     omp_unset_lock(_queue_lock);
   }
 
@@ -113,7 +111,7 @@ namespace PhotoFinish {
     void *new_row = malloc(_rowlen);
     memcpy(new_row, data, _rowlen);
 
-    _rowqueue.push(new row_t(num, new_row));
+    _rowqueue.push(row_ptr(new row_t(num, new_row)));
     omp_unset_lock(_queue_lock);
   }
 
@@ -123,17 +121,16 @@ namespace PhotoFinish {
 
     omp_set_lock(_queue_lock);
     if (!_rowqueue.empty()) {
-      row_t *row = _rowqueue.front();
+      row_ptr row = _rowqueue.front();
       _rowqueue.pop();
 
-      omp_set_lock(_rowlocks[row->first]);	// Take out row lock before relinquishing the queue lock
+      omp_set_lock(_rowlocks[row->y]);	// Take out row lock before relinquishing the queue lock
       omp_unset_lock(_queue_lock);
 
-      cmsDoTransform(_transform, row->second, _img->row(row->first), _img->width());
-      free(row->second);
+      cmsDoTransform(_transform, row->data, _img->row(row->y), _img->width());
+      free(row->data);
 
-      omp_unset_lock(_rowlocks[row->first]);
-      delete row;
+      omp_unset_lock(_rowlocks[row->y]);
     } else
       omp_unset_lock(_queue_lock);
   }
@@ -144,20 +141,19 @@ namespace PhotoFinish {
 
     omp_set_lock(_queue_lock);
     if (!_rowqueue.empty()) {
-      row_t *row = _rowqueue.front();
+      row_ptr row = _rowqueue.front();
       _rowqueue.pop();
 
-      omp_set_lock(_rowlocks[row->first]);	// Take out row lock before relinquishing the queue lock
+      omp_set_lock(_rowlocks[row->y]);	// Take out row lock before relinquishing the queue lock
       omp_unset_lock(_queue_lock);
 
-      if (row->second == NULL)
-	row->second = malloc(_rowlen);
+      if (row->data == NULL)
+	row->data = malloc(_rowlen);
 
-      cmsDoTransform(_transform, _img->row(row->first), row->second, _img->width());
+      cmsDoTransform(_transform, _img->row(row->y), row->data, _img->width());
 
-      _rowpointers[row->first] = (short unsigned int*)row->second;
-      omp_unset_lock(_rowlocks[row->first]);
-      delete row;
+      _rows[row->y] = row;
+      omp_unset_lock(_rowlocks[row->y]);
     } else
       omp_unset_lock(_queue_lock);
   }

@@ -22,6 +22,7 @@
 #include <queue>
 #include <list>
 #include <vector>
+#include <memory>
 #include <omp.h>
 #include <lcms2.h>
 #include "Image.hh"
@@ -32,10 +33,17 @@ namespace PhotoFinish {
   //! Class holding information for the image writers
   class transform_queue {
   private:
-    typedef std::pair<unsigned int, void*> row_t;
+    struct row_t {
+      unsigned int y;
+      void *data;
 
-    std::queue<row_t*, std::list<row_t*> > _rowqueue;
-    short unsigned int **_rowpointers;
+      row_t(unsigned int ny) : y(ny), data(NULL) {}
+      row_t(unsigned int ny, void *d) : y(ny), data(d) {}
+    };
+    typedef std::shared_ptr<row_t> row_ptr;
+
+    std::queue<row_ptr, std::list<row_ptr> > _rowqueue;
+    row_ptr *_rows;
     std::vector<omp_lock_t*> _rowlocks;
     size_t _rowlen;
     omp_lock_t *_queue_lock;
