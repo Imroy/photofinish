@@ -373,10 +373,11 @@ namespace PhotoFinish {
 	      exit(2);
 	    }
 
-	    if (depth == 8)
+	    if (depth == 8) {
 	      ditherer.dither(row, png_rows[y], y == img->height() - 1);
+	      queue.free_row(y);
+	    }
 	  }
-	  queue.free_row(y);
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";
 	}
