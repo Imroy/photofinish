@@ -160,6 +160,8 @@ namespace PhotoFinish {
       }
     }
 
+    cinfo.dct_method = JDCT_FLOAT;
+
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
