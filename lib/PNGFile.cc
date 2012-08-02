@@ -288,7 +288,7 @@ namespace PhotoFinish {
     if (dest->profile()) {
       profile = dest->profile()->profile();
       if (dest->profile()->has_data()) {
-	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << " from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
+	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << "\" from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
 	png_set_iCCP(png, info, dest->profile()->name()->c_str(), 0, (unsigned char*)dest->profile()->data(), dest->profile()->data_size());
       }
     } else {
