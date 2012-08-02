@@ -1,4 +1,4 @@
-PROGRAMS=photofinish
+PROGRAMS=photofinish process_scans
 
 #PRECISION=double
 PRECISION=float
@@ -16,7 +16,7 @@ CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
-LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)` -ljpeg -ltiffxx -lboost_filesystem-mt -lboost_system-mt
+LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)` -ljpeg -ltiffxx -lboost_filesystem-mt -lboost_system-mt -lboost_program_options-mt
 
 all: $(PROGRAMS)
 
@@ -26,7 +26,7 @@ clean:
 install: $(PROGRAMS)
 	install -t $(BINDIR) $(PROGRAMS)
 
-$(PROGRAMS): %: %.o $(LIB_OBJS)
+$(PROGRAMS): %: $(LIB_OBJS) %.o
 	$(CXX) $(LDFLAGS) $^ $(LIBS) -o $@
 
 %.o: %.cc
