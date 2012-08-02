@@ -112,6 +112,17 @@ namespace PhotoFinish {
     return Exiv2::Rational(num, den);
   }
 
+  bool Tags::try_load(fs::path filepath) {
+    for (std::list<fs::path>::iterator pi = _searchpaths.begin(); pi != _searchpaths.end(); pi++) {
+      fs::path fullpath = *pi / filepath;
+      if (fs::exists(fullpath)) {
+	load(fullpath);
+	return true;
+      }
+    }
+    return false;
+  }
+
   void Tags::load(fs::path filepath) {
     std::cerr << "Loading \"" << filepath.native() << "\"..." << std::endl;
     std::ifstream fin(filepath.native());
@@ -140,16 +151,7 @@ namespace PhotoFinish {
 	int start = line.find_first_not_of(" \t", 2);
 	int end = line.find_last_not_of(" \t");
 	fs::path filepath = line.substr(start, end + 1 - start);
-	bool loaded = false;
-	for (std::list<fs::path>::iterator pi = _searchpaths.begin(); pi != _searchpaths.end(); pi++) {
-	  fs::path fullpath = *pi / filepath;
-	  if (fs::exists(fullpath)) {
-	    load(fullpath);
-	    loaded = true;
-	    break;
-	  }
-	}
-	if (!loaded)
+	if (!try_load(filepath))
 	  std::cerr << "** Could not find a tag file named \"" << filepath << "\" in the search paths **" << std::endl;
 	continue;
       }

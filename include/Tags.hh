@@ -76,6 +76,10 @@ namespace PhotoFinish {
     //! Accessor for the internal Exiv2::XmpData object.
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
+    //! Try to load tags from a file, looking in the search paths
+    //! \return if the file was found and loaded
+    bool try_load(fs::path filepath);
+
     //! Load tags from supplied file path
     void load(fs::path filepath);
 
