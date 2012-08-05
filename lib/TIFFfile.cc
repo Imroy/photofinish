@@ -72,6 +72,26 @@ namespace PhotoFinish {
     }
 
     {
+      uint16 extra_count, *extra_types;
+      if (TIFFGetField(tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
+	cmsType |= EXTRA_SH(extra_count & 0x07);
+	for (int i = 0; i < extra_count; i++) {
+	  std::cerr << "\tImage has an ";
+	  switch (extra_types[i]) {
+	  case EXTRASAMPLE_UNSPECIFIED: std::cerr << "unspecified ";
+	    break;
+	  case EXTRASAMPLE_ASSOCALPHA: std::cerr << "associated alpha ";
+	    break;
+	  case EXTRASAMPLE_UNASSALPHA: std::cerr << "unassociated alpha ";
+	    break;
+	  default: std::cerr << "unknown ";
+	  }
+	  std::cerr << "extra channel." << std::endl;
+	}
+      }
+    }
+
+    {
       float xres, yres;
       short unsigned int resunit;
       if ((TIFFGetField(tiff, TIFFTAG_XRESOLUTION, &xres) == 1)
