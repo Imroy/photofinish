@@ -33,7 +33,10 @@ namespace PhotoFinish {
     unsigned char num_markers = 0;
     std::map<unsigned char, jpeg_marker_struct*> app2_markers;
     for (jpeg_marker_struct *marker = cinfo->marker_list; marker != NULL; marker = marker->next)
-      if (marker->marker == JPEG_APP0 + 2) {
+      if ((marker->marker == JPEG_APP0 + 2)
+	  && (marker->data_length > 14)
+	  && (strncmp((char*)marker->data, "ICC_PROFILE", 11) == 0)) {
+
 	profile_size += marker->data_length - 14;
 	unsigned char i = *(marker->data + 12) - 1;
 	app2_markers[i] = marker;
@@ -43,6 +46,9 @@ namespace PhotoFinish {
 	  std::cerr << "** Got a different number of markers! (" << j << " != " << num_markers << ") **" << std::endl;
 	num_markers = j;
       }
+
+    if (profile_size == 0)	// Probably no APP2 markers
+      return NULL;
 
     if (num_markers != app2_markers.size()) {
       std::cerr << "** Supposed to have " << (int)num_markers << " APP2 markers, but only have " << app2_markers.size() << " in list **" << std::endl;
