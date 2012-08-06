@@ -102,7 +102,7 @@ namespace PhotoFinish {
 
   void transform_queue::add(unsigned int num, void* data) {
     omp_set_lock(_queue_lock);
-    _rowqueue.push(row_ptr(new row_t(num, data)));
+    _rowqueue.push(row_ptr(new row_t(num, data, false)));
     omp_unset_lock(_queue_lock);
   }
 
@@ -111,7 +111,7 @@ namespace PhotoFinish {
     void *new_row = malloc(_rowlen);
     memcpy(new_row, data, _rowlen);
 
-    _rowqueue.push(row_ptr(new row_t(num, new_row)));
+    _rowqueue.push(row_ptr(new row_t(num, new_row, true)));
     omp_unset_lock(_queue_lock);
   }
 
@@ -128,7 +128,8 @@ namespace PhotoFinish {
       omp_unset_lock(_queue_lock);
 
       cmsDoTransform(_transform, row->data, _img->row(row->y), _img->width());
-      free(row->data);
+      if (row->our_data)
+	free(row->data);
 
       omp_unset_lock(_rowlocks[row->y]);
     } else

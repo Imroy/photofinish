@@ -148,14 +148,14 @@ namespace PhotoFinish {
     {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
+	tdata_t buffer = _TIFFmalloc(TIFFScanlineSize(tiff));
 	std::cerr << "\tReading TIFF image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
 	for (unsigned int y = 0; y < height; y++) {
-	  tdata_t buffer = _TIFFmalloc(TIFFScanlineSize(tiff));
 	  TIFFcheck(ReadScanline(tiff, buffer, y));
 	  std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows ("
 		    << queue.num_rows() << " in queue for colour transformation)   ";
 
-	  queue.add(y, buffer);
+	  queue.add_copy(y, buffer);
 
 	  while (queue.num_rows() > 100) {
 	    queue.reader_process_row();
@@ -163,6 +163,7 @@ namespace PhotoFinish {
 		      << queue.num_rows() << " in queue for colour transformation)   ";
 	  }
 	}
+	free(buffer);
 	queue.set_finished();
 	while (!queue.empty()) {
 	  queue.reader_process_row();

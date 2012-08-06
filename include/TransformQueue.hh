@@ -36,9 +36,10 @@ namespace PhotoFinish {
     struct row_t {
       unsigned int y;
       void *data;
+      bool our_data;
 
       row_t(unsigned int ny) : y(ny), data(NULL) {}
-      row_t(unsigned int ny, void *d) : y(ny), data(d) {}
+      row_t(unsigned int ny, void *d, bool od = false) : y(ny), data(d), our_data(od) {}
     };
     typedef std::shared_ptr<row_t> row_ptr;
 
