@@ -16,16 +16,17 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream>
 #include <queue>
 #include <list>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+#include <string.h>
 #include <stdio.h>
 #include <jpeglib.h>
 #include <setjmp.h>
 #include <omp.h>
 #include <lcms2.h>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
 #include "TransformQueue.hh"
@@ -183,19 +184,12 @@ namespace PhotoFinish {
     cinfo.image_width = img->width();
     cinfo.image_height = img->height();
 
-    cmsHPROFILE profile = NULL;
     cmsUInt32Number cmsTempType;
     if (img->is_greyscale()) {
-      std::cerr << "\tUsing default greyscale profile." << std::endl;
-      cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-      cmsFreeToneCurve(gamma);
       cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
       cinfo.input_components = 1;
       cinfo.in_color_space = JCS_GRAYSCALE;
     } else {
-      std::cerr << "\tUsing default sRGB profile." << std::endl;
-      profile = cmsCreate_sRGBProfile();
       cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
       cinfo.input_components = 3;
       cinfo.in_color_space = JCS_RGB;
@@ -244,6 +238,58 @@ namespace PhotoFinish {
 
     cinfo.dct_method = JDCT_FLOAT;
 
+    jpeg_start_compress(&cinfo, TRUE);
+
+    cmsHPROFILE profile = NULL;
+    if (dest->profile()) {
+      unsigned char *profile_data = NULL;
+      unsigned int profile_size = 0;
+      if (dest->profile()->has_data()) {
+	profile_data = (unsigned char*)dest->profile()->data();
+	profile_size = dest->profile()->data_size();
+      } else {
+	fs::ifstream ifs(dest->profile()->filepath(), std::ios_base::in);
+	if (!ifs.fail()) {
+	  profile_size = file_size(dest->profile()->filepath());
+	  profile_data = (unsigned char*)malloc(profile_size);
+	  ifs.read((char*)profile_data, profile_size);
+	  ifs.close();
+	}
+      }
+
+      if (profile_size > 255 * 65519)
+	std::cerr << "** Profile is too big to fit in APP2 markers! **" << std::endl;
+      else if (profile_size > 0) {
+	profile = cmsOpenProfileFromMem(profile_data, profile_size);
+
+	unsigned char num_markers = ceil(profile_size / 65519.0); // max 65533 bytes in a marker, minus 14 bytes for the ICC overhead
+	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << "\" from data ("
+		  << profile_size << " bytes, " << (int)num_markers << " markers)." << std::endl;
+	unsigned int data_left = profile_size;
+	for (unsigned char i = 0; i < num_markers; i++) {
+	  int marker_data_size = data_left > 65519 ? 65519 : data_left;
+	  JOCTET *APP2 = (JOCTET*)malloc(marker_data_size + 14);
+	  strcpy((char*)APP2, "ICC_PROFILE");
+	  APP2[12] = i + 1;
+	  APP2[13] = num_markers;
+	  memcpy(APP2 + 14, profile_data, marker_data_size);
+	  jpeg_write_marker(&cinfo, JPEG_APP0 + 2, APP2, marker_data_size + 14);
+	  profile_data += marker_data_size;
+	}
+      }
+    }
+    if (profile == NULL) {
+      if (img->is_greyscale()) {
+	std::cerr << "\tUsing default greyscale profile." << std::endl;
+	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+	cmsFreeToneCurve(gamma);
+      } else {
+	std::cerr << "\tUsing default sRGB profile." << std::endl;
+	profile = cmsCreate_sRGBProfile();
+      }
+    }
+
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
@@ -265,7 +311,6 @@ namespace PhotoFinish {
 	jpeg_row[0] = (JSAMPROW)malloc(img->width() * cinfo.input_components * sizeof(JSAMPROW));
 
 	std::cerr << "\tTransforming from L*a*b* and writing " << img->width() << "×" << img->height() << " JPEG image using " << omp_get_num_threads() << " threads..." << std::endl;
-	jpeg_start_compress(&cinfo, TRUE);
 	while (cinfo.next_scanline < cinfo.image_height) {
 	  unsigned int y = cinfo.next_scanline;
 	  // Process rows until the one we need becomes available, or the queue is empty
