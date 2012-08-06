@@ -298,6 +298,8 @@ namespace PhotoFinish {
       return ("Error in " + _lib + ": " + _msg + ".").c_str();
     }
   };
+
+  void lcms2_error_adaptor(void);
 }
 
 #endif /* __EXCEPTION_HH__ */

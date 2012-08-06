@@ -17,12 +17,12 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <iostream>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <string>
 #include <deque>
 #include <boost/filesystem.hpp>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #include "Image.hh"
 #include "ImageFile.hh"
 #include "Destination.hh"
@@ -39,6 +39,8 @@ int main(int argc, char* argv[]) {
     std::cerr << argv[0] << "<input file> [<input file>...] <destination> [<destination>...]" << std::endl;
     exit(1);
   }
+
+  lcms2_error_adaptor();
 
   Destinations destinations("destinations.yml");
 
