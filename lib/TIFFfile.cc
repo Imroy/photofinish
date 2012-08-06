@@ -118,11 +118,19 @@ namespace PhotoFinish {
     uint32 profile_len;
     void *profile_data;
     if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
-      std::cerr << "\tImage has ICC profile." << std::endl;
       profile = cmsOpenProfileFromMem(profile_data, profile_len);
       void *data_copy = malloc(profile_len);
       memcpy(data_copy, profile_data, profile_len);
-      dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
+
+      unsigned int profile_name_len;
+      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
+	char *profile_name = (char*)malloc(profile_name_len);
+	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+	dest->set_profile(profile_name, data_copy, profile_len);
+	free(profile_name);
+      } else
+	dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
+      std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_len << " bytes)" << std::endl;
     }
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
