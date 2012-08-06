@@ -76,6 +76,12 @@ namespace PhotoFinish {
     }
     Image::ptr out = Image::ptr(new Image(img->width(), img->height()));
 
+    out->set_greyscale(img->is_greyscale());
+    if (img->xres().defined())
+      out->set_xres(img->xres());
+    if (img->yres().defined())
+      out->set_yres(img->yres());
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
       SAMPLE *outp = out->row(y);
