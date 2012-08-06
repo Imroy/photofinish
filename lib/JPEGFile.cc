@@ -41,7 +41,102 @@ namespace PhotoFinish {
   {}
 
   Image::ptr JPEGFile::read(Destination::ptr dest) const {
-    throw Unimplemented("JPEGFile", "read()");
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
+    fs::ifstream fb(_filepath, std::ios_base::in);
+    if (fb.fail())
+      throw FileOpenError(_filepath.native());
+
+    struct jpeg_decompress_struct cinfo;
+    jpeg_create_decompress(&cinfo);
+    struct jpeg_error_mgr jerr;
+    cinfo.err = jpeg_std_error(&jerr);
+
+    jpeg_istream_src(&cinfo, &fb);
+
+    jpeg_read_header(&cinfo, TRUE);
+    cinfo.dct_method = JDCT_FLOAT;
+
+    jpeg_start_decompress(&cinfo);
+
+    Image::ptr img(new Image(cinfo.output_width, cinfo.output_height));
+    dest->set_depth(8);
+
+    cmsUInt32Number cmsType;
+    switch (cinfo.output_components) {
+    case 1:
+      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(1);
+      img->set_greyscale();
+      break;
+    case 3:
+      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(1);
+      break;
+    default:
+      std::cerr << "** unsupported number of output components " << cinfo.output_components << " **" << std::endl;
+      exit(1);
+    }
+
+    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
+    cmsHPROFILE profile = NULL;
+    if (T_COLORSPACE(cmsType) == PT_RGB) {
+      std::cerr << "\tUsing default sRGB profile." << std::endl;
+      profile = cmsCreate_sRGBProfile();
+    } else {
+      std::cerr << "\tUsing default greyscale profile." << std::endl;
+      cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+      cmsFreeToneCurve(gamma);
+    }
+
+    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
+						 lab, IMAGE_TYPE,
+						 INTENT_PERCEPTUAL, 0);
+    cmsCloseProfile(lab);
+    cmsCloseProfile(profile);
+
+    transform_queue queue(dest, img, T_CHANNELS(cmsType), transform);
+
+#pragma omp parallel shared(queue)
+    {
+      int th_id = omp_get_thread_num();
+      if (th_id == 0) {		// Master thread
+	JSAMPROW jpeg_row[1];
+	jpeg_row[0] = (JSAMPROW)malloc(img->width() * cinfo.output_components * sizeof(JSAMPROW));
+	std::cerr << "\tReading JPEG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
+	while (cinfo.output_scanline < cinfo.output_height) {
+	  jpeg_read_scanlines(&cinfo, jpeg_row, 1);
+	  std::cerr << "\r\tRead " << cinfo.output_scanline << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " in queue for colour transformation)   ";
+
+	  queue.add_copy(cinfo.output_scanline - 1, jpeg_row[0]);
+
+	  while (queue.num_rows() > 100) {
+	    queue.reader_process_row();
+	    std::cerr << "\r\tRead " << cinfo.output_scanline << " of " << img->height() << " rows ("
+		      << queue.num_rows() << " in queue for colour transformation)   ";
+	  }
+	}
+	queue.set_finished();
+	while (!queue.empty()) {
+	  queue.reader_process_row();
+	  std::cerr << "\r\tRead " << img->height() << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " in queue for colour transformation)   ";
+	}
+	std::cerr << std::endl;
+      } else {
+	while (!(queue.empty() && queue.finished())) {
+	  while (queue.empty() && !queue.finished())
+	    usleep(100);
+	  queue.reader_process_row();
+	}
+      }
+    }
+    cmsDeleteTransform(transform);
+
+    jpeg_finish_decompress(&cinfo);
+    jpeg_istream_src_free(&cinfo);
+    jpeg_destroy_decompress(&cinfo);
+
+    return img;
   }
 
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
@@ -133,7 +228,7 @@ namespace PhotoFinish {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
 	JSAMPROW jpeg_row[1];
-	jpeg_row[0] = (JSAMPROW)malloc(img->height() * cinfo.input_components * sizeof(JSAMPROW));
+	jpeg_row[0] = (JSAMPROW)malloc(img->width() * cinfo.input_components * sizeof(JSAMPROW));
 
 	std::cerr << "\tTransforming from L*a*b* and writing " << img->width() << "×" << img->height() << " JPEG image using " << omp_get_num_threads() << " threads..." << std::endl;
 	jpeg_start_compress(&cinfo, TRUE);

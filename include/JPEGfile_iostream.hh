@@ -23,6 +23,12 @@
 
 namespace PhotoFinish {
 
+  //! Set up a "source manager" on the given JPEG decompression structure to read from an istream
+  void jpeg_istream_src(j_decompress_ptr cinfo, std::istream* is);
+
+  //! Free the data structures of the istream source manager
+  void jpeg_istream_src_free(j_decompress_ptr cinfo);
+
   //! Setup a "destination manager" on the given JPEG compression structure to write to an ostream
   void jpeg_ostream_dest(j_compress_ptr cinfo, std::ostream* os);
 
