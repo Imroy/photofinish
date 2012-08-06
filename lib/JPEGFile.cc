@@ -41,18 +41,22 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
+  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct*);
+
   Image::ptr JPEGFile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
       throw FileOpenError(_filepath.native());
 
-    struct jpeg_decompress_struct cinfo;
+    jpeg_decompress_struct cinfo;
     jpeg_create_decompress(&cinfo);
     struct jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
 
     jpeg_istream_src(&cinfo, &fb);
+
+    jpeg_save_markers(&cinfo, JPEG_APP0 + 2, 0xFFFF);
 
     jpeg_read_header(&cinfo, TRUE);
     cinfo.dct_method = JDCT_FLOAT;
@@ -90,7 +94,6 @@ namespace PhotoFinish {
       cmsType |= COLORSPACE_SH(PT_RGB);
       break;
 
-      /*
     case JCS_YCCK:
       cinfo.out_color_space = JCS_CMYK;
     case JCS_CMYK:
@@ -98,7 +101,6 @@ namespace PhotoFinish {
       if (cinfo.saw_Adobe_marker)
 	cmsType |= FLAVOR_SH(1);
       break;
-      */
 
     default:
       std::cerr << "** unsupported JPEG colour space " << cinfo.jpeg_color_space << " **" << std::endl;
@@ -106,16 +108,18 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHPROFILE profile = NULL;
+    cmsHPROFILE profile = jpegfile_read_profile(&cinfo);
 
-    if (T_COLORSPACE(cmsType) == PT_RGB) {
-      std::cerr << "\tUsing default sRGB profile." << std::endl;
-      profile = cmsCreate_sRGBProfile();
-    } else {
-      std::cerr << "\tUsing default greyscale profile." << std::endl;
-      cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-      cmsFreeToneCurve(gamma);
+    if (profile == NULL) {
+      if (T_COLORSPACE(cmsType) == PT_RGB) {
+	std::cerr << "\tUsing default sRGB profile." << std::endl;
+	profile = cmsCreate_sRGBProfile();
+      } else {
+	std::cerr << "\tUsing default greyscale profile." << std::endl;
+	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
+	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+	cmsFreeToneCurve(gamma);
+      }
     }
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
@@ -172,6 +176,8 @@ namespace PhotoFinish {
 
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
+
+  void jpegfile_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
   void JPEGFile::write(std::ostream& os, Image::ptr img, Destination::ptr dest) const {
     jpeg_compress_struct cinfo;
@@ -261,21 +267,7 @@ namespace PhotoFinish {
 	std::cerr << "** Profile is too big to fit in APP2 markers! **" << std::endl;
       else if (profile_size > 0) {
 	profile = cmsOpenProfileFromMem(profile_data, profile_size);
-
-	unsigned char num_markers = ceil(profile_size / 65519.0); // max 65533 bytes in a marker, minus 14 bytes for the ICC overhead
-	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << "\" from data ("
-		  << profile_size << " bytes, " << (int)num_markers << " markers)." << std::endl;
-	unsigned int data_left = profile_size;
-	for (unsigned char i = 0; i < num_markers; i++) {
-	  int marker_data_size = data_left > 65519 ? 65519 : data_left;
-	  JOCTET *APP2 = (JOCTET*)malloc(marker_data_size + 14);
-	  strcpy((char*)APP2, "ICC_PROFILE");
-	  APP2[12] = i + 1;
-	  APP2[13] = num_markers;
-	  memcpy(APP2 + 14, profile_data, marker_data_size);
-	  jpeg_write_marker(&cinfo, JPEG_APP0 + 2, APP2, marker_data_size + 14);
-	  profile_data += marker_data_size;
-	}
+	jpegfile_write_profile(&cinfo, profile_data, profile_size);
       }
     }
     if (profile == NULL) {
