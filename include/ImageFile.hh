@@ -78,6 +78,8 @@ namespace PhotoFinish {
     */
     virtual Image::ptr read(Destination::ptr dest) const = 0;
 
+    static cmsHPROFILE default_profile(cmsUInt32Number cmsType);
+
     //! Write an image to the file
     /*!
       \param img The Image object to write

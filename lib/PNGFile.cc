@@ -106,17 +106,8 @@ namespace PhotoFinish {
 	queue->destination()->set_profile(profile_name, data_copy, profile_len);
       }
     }
-    if (profile == NULL) {
-      if (T_COLORSPACE(cmsType) == PT_RGB) {
-	std::cerr << "\tUsing default sRGB profile." << std::endl;
-	profile = cmsCreate_sRGBProfile();
-      } else {
-	std::cerr << "\tUsing default greyscale profile." << std::endl;
-	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	cmsFreeToneCurve(gamma);
-      }
-    }
+    if (profile == NULL)
+      profile = ImageFile::default_profile(cmsType);
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
 						 lab, IMAGE_TYPE,

@@ -64,5 +64,27 @@ namespace PhotoFinish {
     return this->read(temp);
   }
 
+  cmsHPROFILE ImageFile::default_profile(cmsUInt32Number cmsType) {
+    cmsHPROFILE profile = NULL;
+    cmsToneCurve *gamma;
+    switch (T_COLORSPACE(cmsType)) {
+    case PT_RGB:
+      std::cerr << "\tUsing default sRGB profile." << std::endl;
+      profile = cmsCreate_sRGBProfile();
+      break;
+
+    case PT_GRAY:
+      std::cerr << "\tUsing default greyscale profile." << std::endl;
+      gamma = cmsBuildGamma(NULL, 2.2);
+      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+      cmsFreeToneCurve(gamma);
+      break;
+
+    default:
+      std::cerr << "** Cannot assign a default profile for colour space " << T_COLORSPACE(cmsType) << " **" << std::endl;
+    }
+
+    return profile;
+  }
 
 }

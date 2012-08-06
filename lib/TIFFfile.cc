@@ -51,21 +51,30 @@ namespace PhotoFinish {
     std::cerr << "\tImage is " << width << "×" << height << std::endl;
     Image::ptr img(new Image(width, height));
 
-    uint16 bit_depth, photometric;
+    uint16 bit_depth, channels, photometric;
     TIFFcheck(GetField(tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));
     dest->set_depth(bit_depth);
     std::cerr << "\tImage has a depth of " << bit_depth << std::endl;
+    TIFFcheck(GetField(tiff, TIFFTAG_SAMPLESPERPIXEL, &channels));
     TIFFcheck(GetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric));
 
-    cmsUInt32Number cmsType;
+    cmsUInt32Number cmsType = CHANNELS_SH(channels) | BYTES_SH(bit_depth >> 3);
     switch (photometric) {
+    case PHOTOMETRIC_MINISWHITE:
+      cmsType |= FLAVOR_SH(1);
     case PHOTOMETRIC_MINISBLACK:
-      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
+      cmsType |= COLORSPACE_SH(PT_GRAY);
       img->set_greyscale();
       break;
+
     case PHOTOMETRIC_RGB:
-      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
+      cmsType |= COLORSPACE_SH(PT_RGB);
       break;
+
+    case PHOTOMETRIC_SEPARATED:
+      cmsType |= COLORSPACE_SH(PT_CMYK);
+      break;
+
     default:
       std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
       exit(1);
@@ -132,17 +141,8 @@ namespace PhotoFinish {
 	dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
       std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_len << " bytes)" << std::endl;
     }
-    if (profile == NULL) {
-      if (T_COLORSPACE(cmsType) == PT_RGB) {
-	std::cerr << "\tUsing default sRGB profile." << std::endl;
-	profile = cmsCreate_sRGBProfile();
-      } else {
-	std::cerr << "\tUsing default greyscale profile." << std::endl;
-	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	cmsFreeToneCurve(gamma);
-      }
-    }
+    if (profile == NULL)
+      profile = this->default_profile(cmsType);
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
 						 lab, IMAGE_TYPE,
@@ -252,17 +252,8 @@ namespace PhotoFinish {
 	TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, dest->profile()->data_size(), dest->profile()->data()));
       }
     } else {
-      if (profile == NULL) {
-	if (img->is_colour()) {
-	  std::cerr << "\tUsing default sRGB profile." << std::endl;
-	  profile = cmsCreate_sRGBProfile();
-	} else {
-	  std::cerr << "\tUsing default greyscale profile." << std::endl;
-	  cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	  profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	  cmsFreeToneCurve(gamma);
-	}
-      }
+      if (profile == NULL)
+	profile = this->default_profile(cmsTempType);
 
       if (profile != NULL) {
 	cmsUInt32Number len;

@@ -77,7 +77,7 @@ namespace PhotoFinish {
 	break;
 
       default:
-	std::cerr << "** Unknown density unit (" << cinfo.density_unit << ") **" << std::endl;
+	std::cerr << "** Unknown density unit (" << (int)cinfo.density_unit << ") **" << std::endl;
       }
     }
 
@@ -110,17 +110,8 @@ namespace PhotoFinish {
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHPROFILE profile = jpegfile_read_profile(&cinfo, dest);
 
-    if (profile == NULL) {
-      if (T_COLORSPACE(cmsType) == PT_RGB) {
-	std::cerr << "\tUsing default sRGB profile." << std::endl;
-	profile = cmsCreate_sRGBProfile();
-      } else {
-	std::cerr << "\tUsing default greyscale profile." << std::endl;
-	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	cmsFreeToneCurve(gamma);
-      }
-    }
+    if (profile == NULL)
+      profile = this->default_profile(cmsType);
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
 						 lab, IMAGE_TYPE,
@@ -270,17 +261,8 @@ namespace PhotoFinish {
 	jpegfile_write_profile(&cinfo, profile_data, profile_size);
       }
     }
-    if (profile == NULL) {
-      if (img->is_greyscale()) {
-	std::cerr << "\tUsing default greyscale profile." << std::endl;
-	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	cmsFreeToneCurve(gamma);
-      } else {
-	std::cerr << "\tUsing default sRGB profile." << std::endl;
-	profile = cmsCreate_sRGBProfile();
-      }
-    }
+    if (profile == NULL)
+      profile = this->default_profile(cmsTempType);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
