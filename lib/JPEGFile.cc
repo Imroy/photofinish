@@ -61,22 +61,37 @@ namespace PhotoFinish {
     Image::ptr img(new Image(cinfo.output_width, cinfo.output_height));
     dest->set_depth(8);
 
-    cmsUInt32Number cmsType;
-    switch (cinfo.output_components) {
-    case 1:
-      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(1);
+    cmsUInt32Number cmsType = CHANNELS_SH(cinfo.num_components) | BYTES_SH(1);
+    switch (cinfo.jpeg_color_space) {
+    case JCS_GRAYSCALE:
+      cmsType |= COLORSPACE_SH(PT_GRAY);
       img->set_greyscale();
       break;
-    case 3:
-      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(1);
+
+    case JCS_YCbCr:
+      cinfo.out_color_space = JCS_RGB;
+    case JCS_RGB:
+      cmsType |= COLORSPACE_SH(PT_RGB);
       break;
+
+      /*
+    case JCS_YCCK:
+      cinfo.out_color_space = JCS_CMYK;
+    case JCS_CMYK:
+      cmsType |= COLORSPACE_SH(PT_CMYK);
+      if (cinfo.saw_Adobe_marker)
+	cmsType |= FLAVOR_SH(1);
+      break;
+      */
+
     default:
-      std::cerr << "** unsupported number of output components " << cinfo.output_components << " **" << std::endl;
+      std::cerr << "** unsupported JPEG colour space " << cinfo.jpeg_color_space << " **" << std::endl;
       exit(1);
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHPROFILE profile = NULL;
+
     if (T_COLORSPACE(cmsType) == PT_RGB) {
       std::cerr << "\tUsing default sRGB profile." << std::endl;
       profile = cmsCreate_sRGBProfile();
