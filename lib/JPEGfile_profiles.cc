@@ -24,10 +24,11 @@
 #include <math.h>
 #include <jpeglib.h>
 #include <lcms2.h>
+#include "Destination.hh"
 
 namespace PhotoFinish {
 
-  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct* cinfo) {
+  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct* cinfo, Destination::ptr dest) {
     unsigned int profile_size = 0;
     unsigned char num_markers = 0;
     std::map<unsigned char, jpeg_marker_struct*> app2_markers;
@@ -56,8 +57,17 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE profile = cmsOpenProfileFromMem(profile_data, profile_size);
-    if (profile != NULL)
-      std::cerr << "\tRead embedded profile (" << profile_size << " bytes in " << (int)num_markers << " APP2 markers)" << std::endl;
+    if (profile != NULL) {
+      unsigned int profile_name_len;
+      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
+	char *profile_name = (char*)malloc(profile_name_len);
+	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+	dest->set_profile(profile_name, profile_data, profile_size);
+	free(profile_name);
+      } else
+	dest->set_profile("JPEG APP2", profile_data, profile_size);
+      std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_size << " bytes in " << (int)num_markers << " APP2 markers)" << std::endl;
+    }
 
     return profile;
   }

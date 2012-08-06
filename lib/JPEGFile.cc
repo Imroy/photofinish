@@ -41,7 +41,7 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
-  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct*);
+  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
   Image::ptr JPEGFile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
@@ -108,7 +108,7 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHPROFILE profile = jpegfile_read_profile(&cinfo);
+    cmsHPROFILE profile = jpegfile_read_profile(&cinfo, dest);
 
     if (profile == NULL) {
       if (T_COLORSPACE(cmsType) == PT_RGB) {
