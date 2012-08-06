@@ -61,6 +61,21 @@ namespace PhotoFinish {
     Image::ptr img(new Image(cinfo.output_width, cinfo.output_height));
     dest->set_depth(8);
 
+    if (cinfo.saw_JFIF_marker) {
+      switch (cinfo.density_unit) {
+      case 1:	// pixels per inch (yuck)
+	img->set_resolution(cinfo.X_density, cinfo.Y_density);
+	break;
+
+      case 2:	// pixels per centimetre
+	img->set_resolution(cinfo.X_density * 2.54, cinfo.Y_density * 2.54);
+	break;
+
+      default:
+	std::cerr << "** Unknown density unit (" << cinfo.density_unit << ") **" << std::endl;
+      }
+    }
+
     cmsUInt32Number cmsType = CHANNELS_SH(cinfo.num_components) | BYTES_SH(1);
     switch (cinfo.jpeg_color_space) {
     case JCS_GRAYSCALE:
@@ -222,6 +237,10 @@ namespace PhotoFinish {
 	cinfo.comp_info[0].v_samp_factor = sample_v;
       }
     }
+
+    cinfo.density_unit = 1;	// PPI
+    cinfo.X_density = round(img->xres());
+    cinfo.Y_density = round(img->yres());
 
     cinfo.dct_method = JDCT_FLOAT;
 
