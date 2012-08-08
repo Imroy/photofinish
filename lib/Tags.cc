@@ -284,7 +284,7 @@ namespace PhotoFinish {
     Destination::ptr dest(new Destination);
     dest->set_jpeg(D_JPEG(50, 1, 1, false));
 
-    JPEGFile thumbfile("");
+    JPEGfile thumbfile("");
     std::ostringstream oss;
     thumbfile.write(oss, thumbimage, dest);
 

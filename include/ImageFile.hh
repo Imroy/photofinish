@@ -89,22 +89,22 @@ namespace PhotoFinish {
   };
 
   //! PNG file reader and writer
-  class PNGFile : public ImageFile {
+  class PNGfile : public ImageFile {
   private:
 
   public:
-    PNGFile(const fs::path filepath);
+    PNGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
     void write(Image::ptr img, Destination::ptr dest) const;
   };
 
-  //! JPEG file writer
-  class JPEGFile : public ImageFile {
+  //! JPEG file reader and writer
+  class JPEGfile : public ImageFile {
   private:
 
   public:
-    JPEGFile(const fs::path filepath);
+    JPEGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
     //! Special version of write() that takes an open ostream object

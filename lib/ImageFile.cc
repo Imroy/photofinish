@@ -31,11 +31,11 @@ namespace PhotoFinish {
 
   ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
     if (boost::iequals(filepath.extension().generic_string(), ".png"))
-      return ImageFile::ptr(new PNGFile(filepath));
+      return ImageFile::ptr(new PNGfile(filepath));
 
     if (boost::iequals(filepath.extension().generic_string(), ".jpeg")
 	|| boost::iequals(filepath.extension().generic_string(), ".jpg"))
-      return ImageFile::ptr(new JPEGFile(filepath));
+      return ImageFile::ptr(new JPEGfile(filepath));
 
     if (boost::iequals(filepath.extension().generic_string(), ".tiff")
 	|| boost::iequals(filepath.extension().generic_string(), ".tif"))
@@ -46,11 +46,11 @@ namespace PhotoFinish {
 
   ImageFile::ptr ImageFile::create(fs::path filepath, const std::string format) throw(UnknownFileType) {
     if (boost::iequals(format, "png"))
-      return ImageFile::ptr(new PNGFile(filepath.replace_extension(".png")));
+      return ImageFile::ptr(new PNGfile(filepath.replace_extension(".png")));
 
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
-      return ImageFile::ptr(new JPEGFile(filepath.replace_extension(".jpeg")));
+      return ImageFile::ptr(new JPEGfile(filepath.replace_extension(".jpeg")));
 
     if (boost::iequals(format, "tiff")
 	|| boost::iequals(format, "tif"))

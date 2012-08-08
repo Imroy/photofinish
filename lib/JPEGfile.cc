@@ -37,13 +37,13 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  JPEGFile::JPEGFile(const fs::path filepath) :
+  JPEGfile::JPEGfile(const fs::path filepath) :
     ImageFile(filepath)
   {}
 
   cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
-  Image::ptr JPEGFile::read(Destination::ptr dest) const {
+  Image::ptr JPEGfile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
@@ -170,7 +170,7 @@ namespace PhotoFinish {
 
   void jpegfile_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
-  void JPEGFile::write(std::ostream& os, Image::ptr img, Destination::ptr dest) const {
+  void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest) const {
     jpeg_compress_struct cinfo;
     jpeg_create_compress(&cinfo);
     jpeg_error_mgr jerr;
@@ -322,7 +322,7 @@ namespace PhotoFinish {
     jpeg_destroy_compress(&cinfo);
   }
 
-  void JPEGFile::write(Image::ptr img, Destination::ptr dest) const {
+  void JPEGfile::write(Image::ptr img, Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())

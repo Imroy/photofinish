@@ -34,7 +34,7 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  PNGFile::PNGFile(const fs::path filepath) :
+  PNGfile::PNGfile(const fs::path filepath) :
     ImageFile(filepath)
   {}
 
@@ -140,7 +140,7 @@ namespace PhotoFinish {
     }
   }
 
-  Image::ptr PNGFile::read(Destination::ptr dest) const {
+  Image::ptr PNGfile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
@@ -216,7 +216,7 @@ namespace PhotoFinish {
     os->flush();
   }
 
-  void PNGFile::write(Image::ptr img, Destination::ptr dest) const {
+  void PNGfile::write(Image::ptr img, Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
