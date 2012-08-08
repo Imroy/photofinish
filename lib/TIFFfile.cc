@@ -215,6 +215,29 @@ namespace PhotoFinish {
     TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
     TIFFcheck(SetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
 
+    // For some reason none of this information shows up in the written TIFF file
+    /*
+    TIFFcheck(SetField(tiff, TIFFTAG_SOFTWARE, "PhotoFinish"));
+    TIFFcheck(SetField(tiff, TIFFTAG_DOCUMENTNAME, _filepath.filename().c_str()));
+    {
+      char *hostname = (char*)malloc(101);
+      if (gethostname(hostname, 100) == 0) {
+	std::cerr << "\tSetting hostcomputer tag to \"" << hostname << "\"" << std::endl;
+	TIFFcheck(SetField(tiff, TIFFTAG_HOSTCOMPUTER, hostname));
+      }
+    }
+    {
+      time_t t = time(NULL);
+      tm *lt = localtime(&t);
+      if (lt != NULL) {
+	char *datetime = (char*)malloc(20);
+	strftime(datetime, 20, "%Y:%m:%d %H:%M:%S", lt);
+	std::cerr << "\tSetting datetime tag to \"" << datetime << "\"" << std::endl;
+	TIFFcheck(SetField(tiff, TIFFTAG_DATETIME, datetime));
+      }
+    }
+    */
+
     if (img->xres().defined()) {
       TIFFcheck(SetField (tiff, TIFFTAG_XRESOLUTION, (float)img->xres()));
       TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
