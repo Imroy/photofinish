@@ -31,7 +31,6 @@
 #include "Image.hh"
 #include "TransformQueue.hh"
 #include "Ditherer.hh"
-#include "JPEGfile_iostream.hh"
 
 namespace fs = boost::filesystem;
 
@@ -41,7 +40,13 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
-  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
+  //! Set up a "source manager" on the given JPEG decompression structure to read from an istream
+  void jpeg_istream_src(j_decompress_ptr cinfo, std::istream* is);
+
+  //! Free the data structures of the istream source manager
+  void jpeg_istream_src_free(j_decompress_ptr cinfo);
+
+  cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
   Image::ptr JPEGfile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
@@ -108,7 +113,7 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHPROFILE profile = jpegfile_read_profile(&cinfo, dest);
+    cmsHPROFILE profile = jpeg_read_profile(&cinfo, dest);
 
     if (profile == NULL)
       profile = this->default_profile(cmsType);
@@ -165,10 +170,16 @@ namespace PhotoFinish {
     return img;
   }
 
+  //! Setup a "destination manager" on the given JPEG compression structure to write to an ostream
+  void jpeg_ostream_dest(j_compress_ptr cinfo, std::ostream* os);
+
+  //! Free the data structures of the ostream destination manager
+  void jpeg_ostream_dest_free(j_compress_ptr cinfo);
+
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
-  void jpegfile_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
+  void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
   void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest) const {
     jpeg_compress_struct cinfo;
@@ -258,7 +269,7 @@ namespace PhotoFinish {
 	std::cerr << "** Profile is too big to fit in APP2 markers! **" << std::endl;
       else if (profile_size > 0) {
 	profile = cmsOpenProfileFromMem(profile_data, profile_size);
-	jpegfile_write_profile(&cinfo, profile_data, profile_size);
+	jpeg_write_profile(&cinfo, profile_data, profile_size);
       }
     }
     if (profile == NULL)

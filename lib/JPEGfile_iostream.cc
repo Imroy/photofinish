@@ -18,7 +18,7 @@
 */
 #include <iostream>
 #include <stdio.h>
-#include "JPEGfile_iostream.hh"
+#include <jpeglib.h>
 #include "Exception.hh"
 
 namespace PhotoFinish {

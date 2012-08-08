@@ -28,7 +28,7 @@
 
 namespace PhotoFinish {
 
-  cmsHPROFILE jpegfile_read_profile(jpeg_decompress_struct* cinfo, Destination::ptr dest) {
+  cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct* cinfo, Destination::ptr dest) {
     unsigned int profile_size = 0;
     unsigned char num_markers = 0;
     std::map<unsigned char, jpeg_marker_struct*> app2_markers;
@@ -78,7 +78,7 @@ namespace PhotoFinish {
     return profile;
   }
 
-  void jpegfile_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size) {
+  void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size) {
     unsigned char num_markers = ceil(size / 65519.0); // max 65533 bytes in a marker, minus 14 bytes for the ICC overhead
     std::cerr << "\tEmbedding profile from data (" << size << " bytes, " << (int)num_markers << " markers)." << std::endl;
     unsigned int data_left = size;
