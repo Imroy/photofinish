@@ -23,7 +23,7 @@ My focus has been on image quality and correctness, so many computations are don
 
 === Image file formats ===
 
-* Reads and writes JPEG, PNG, and TIFF files
+* Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000) files
 * Embedded ICC profiles are used when reading, and created when writing
 * Falls back to sRGB or a similar greyscale profile
 * Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)
@@ -48,7 +48,7 @@ My focus has been on image quality and correctness, so many computations are don
 
 == Todo ==
 
-* Add other image formats e.g JPEG 2000, RAW formats (reading only)
+* Add other image formats e.g RAW formats (reading only)
 * Use YAML (or something else?) for the "tags" format
 
 Crazy idea:
