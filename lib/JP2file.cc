@@ -43,6 +43,24 @@ namespace PhotoFinish {
     std::cerr << "\tOpenJPEG:" << msg << std::endl;
   }
 
+  template <typename T>
+  void* planar_to_packed(unsigned int width, unsigned char channels, opj_image_t* image, unsigned int& index) {
+    T *row = (T*)malloc(width * channels * sizeof(T));
+    T *out = row;
+    for (unsigned int x = 0; x < width; x++, index++)
+      for (unsigned char c = 0; c < channels; c++)
+	*out++ = image->comps[c].data[index];
+    return (void*)row;
+  }
+
+  template <typename T>
+  void packed_to_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int& index) {
+    T *in = row;
+    for (unsigned int x = 0; x < width; x++, index++)
+      for (unsigned char c = 0; c < channels; c++)
+	image->comps[c].data[index] = *in++;
+  }
+
   Image::ptr JP2file::read(Destination::ptr dest) const {
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
@@ -142,23 +160,10 @@ namespace PhotoFinish {
 	unsigned int index = 0;
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  void *buffer = NULL;
-	  if (depth == 8) {
-	    unsigned char *row = (unsigned char*)malloc(img->width() * T_CHANNELS(cmsType));
-	    unsigned char *out = row;
-	    for (unsigned int x = 0; x < img->width(); x++, index++)
-	      for (unsigned char c = 0; c < T_CHANNELS(cmsType); c++)
-		*out++ = jp2_image->comps[c].data[index];
-
-	    buffer = (void*)row;
-	  } else {
-	    unsigned short *row = (unsigned short*)malloc(img->width() * T_CHANNELS(cmsType) * sizeof(unsigned short));
-	    unsigned short *out = row;
-	    for (unsigned int x = 0; x < img->width(); x++, index++)
-	      for (unsigned char c = 0; c < T_CHANNELS(cmsType); c++)
-		*out++ = jp2_image->comps[c].data[index];
-
-	    buffer = (void*)row;
-	  }
+	  if (depth == 8)
+	    buffer = planar_to_packed<unsigned char>(img->width(), T_CHANNELS(cmsType), jp2_image, index);
+	  else
+	    buffer = planar_to_packed<unsigned short>(img->width(), T_CHANNELS(cmsType), jp2_image, index);
 
 	  std::cerr << "\r\tRead " << (y + 1) << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " in queue for colour transformation)   ";
@@ -268,6 +273,7 @@ namespace PhotoFinish {
 
 	Ditherer ditherer(img->width(), T_CHANNELS(cmsTempType));
 
+	unsigned int index = 0;
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
 	  {
@@ -283,21 +289,13 @@ namespace PhotoFinish {
 	      exit(2);
 	    }
 
-	    unsigned int index = y * img->width();
 	    if (depth == 8) {
 	      ditherer.dither(row, rows[y], y == img->height() - 1);
 	      queue.free_row(y);
 
-	      unsigned char *in = rows[y];
-	      for (unsigned int x = 0; x < img->width(); x++, index++)
-		for (unsigned char c = 0; c < T_CHANNELS(cmsTempType); c++)
-		  jp2_image->comps[c].data[index] = *in++;
-	    } else {
-	      unsigned short *in = row;
-	      for (unsigned int x = 0; x < img->width(); x++, index++)
-		for (unsigned char c = 0; c < T_CHANNELS(cmsTempType); c++)
-		  jp2_image->comps[c].data[index] = *in++;
-	    }
+	      packed_to_planar<unsigned char>(img->width(), T_CHANNELS(cmsTempType), rows[y], jp2_image, index);
+	    } else
+	      packed_to_planar<unsigned short>(img->width(), T_CHANNELS(cmsTempType), row, jp2_image, index);
 	  }
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";
