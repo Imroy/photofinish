@@ -44,7 +44,152 @@ namespace PhotoFinish {
   }
 
   Image::ptr JP2file::read(Destination::ptr dest) const {
-    throw Unimplemented("JPEGFile", "read()");
+    opj_event_mgr_t event_mgr;
+    memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
+    event_mgr.error_handler = error_callback;
+    event_mgr.warning_handler = warning_callback;
+    event_mgr.info_handler = info_callback;
+
+    opj_dparameters_t parameters;
+    opj_set_default_decoder_parameters(&parameters);
+
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
+    fs::ifstream ifs(_filepath, std::ios_base::in);
+    if (ifs.fail())
+      throw FileOpenError(_filepath.native());
+
+    unsigned int file_size = fs::file_size(_filepath);
+    unsigned char *src = (unsigned char *)malloc(file_size);
+    ifs.read((char*)src, file_size);
+
+    opj_dinfo_t *dinfo = opj_create_decompress(CODEC_JP2);
+    opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, (void*)this);
+    opj_setup_decoder(dinfo, &parameters);
+    opj_cio_t *cio = opj_cio_open((opj_common_ptr)dinfo, src, file_size);
+    opj_image_t *jp2_image = opj_decode(dinfo, cio);
+    if (jp2_image == NULL)
+      throw LibraryError("OpenJPEG", "Could not decode file");
+
+    opj_cio_close(cio);
+    free(src);
+
+    // Is this necessary?
+    if (jp2_image->numcomps > 1)
+      for (unsigned char c = 1; c < jp2_image->numcomps; c++) {
+	if (jp2_image->comps[c].dx != jp2_image->comps[0].dx)
+	  std::cerr << "** Component " << (int)c << " has a different dx to the first! **" << std::endl;
+	if (jp2_image->comps[c].dy != jp2_image->comps[0].dy)
+	  std::cerr << "** Component " << (int)c << " has a different dy to the first! **" << std::endl;
+	if (jp2_image->comps[c].w != jp2_image->comps[0].w)
+	  std::cerr << "** Component " << (int)c << " has a different w to the first! **" << std::endl;
+	if (jp2_image->comps[c].h != jp2_image->comps[0].h)
+	  std::cerr << "** Component " << (int)c << " has a different h to the first! **" << std::endl;
+	if (jp2_image->comps[c].x0 != jp2_image->comps[0].x0)
+	  std::cerr << "** Component " << (int)c << " has a different x0 to the first! **" << std::endl;
+	if (jp2_image->comps[c].y0 != jp2_image->comps[0].y0)
+	  std::cerr << "** Component " << (int)c << " has a different y0 to the first! **" << std::endl;
+	if (jp2_image->comps[c].prec != jp2_image->comps[0].prec)
+	  std::cerr << "** Component " << (int)c << " has a different prec to the first! **" << std::endl;
+	if (jp2_image->comps[c].bpp != jp2_image->comps[0].bpp)
+	  std::cerr << "** Component " << (int)c << " has a different bpp to the first! **" << std::endl;
+	if (jp2_image->comps[c].sgnd != jp2_image->comps[0].sgnd)
+	  std::cerr << "** Component " << (int)c << " has a different sgnd to the first! **" << std::endl;
+      }
+
+    Image::ptr img(new Image(jp2_image->x1 - jp2_image->x0, jp2_image->y1 - jp2_image->y0));
+
+    int depth = jp2_image->comps[0].prec;
+    cmsUInt32Number cmsType = CHANNELS_SH(jp2_image->numcomps) | BYTES_SH(depth >> 3);
+    switch (jp2_image->color_space) {
+    case CLRSPC_SRGB:
+      cmsType |= COLORSPACE_SH(PT_RGB);
+      break;
+
+    case CLRSPC_GRAY:
+      img->set_greyscale();
+      cmsType |= COLORSPACE_SH(PT_GRAY);
+      break;
+
+    case CLRSPC_SYCC:
+      cmsType |= COLORSPACE_SH(PT_YUV);
+      break;
+
+    default:
+      std::cerr << "** Unknown colour space " << jp2_image->color_space << " **" << std::endl;
+      throw LibraryError("OpenJPEG", "color_space");
+    }
+
+    cmsHPROFILE profile;
+    if (jp2_image->icc_profile_buf != NULL)
+      profile = cmsOpenProfileFromMem(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
+    else
+      profile = ImageFile::default_profile(cmsType);
+
+    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
+    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
+						 lab, IMAGE_TYPE,
+						 INTENT_PERCEPTUAL, 0);
+    cmsCloseProfile(lab);
+    cmsCloseProfile(profile);
+
+    transform_queue queue(dest, img, T_CHANNELS(cmsType), transform);
+
+#pragma omp parallel shared(queue)
+    {
+      int th_id = omp_get_thread_num();
+      if (th_id == 0) {		// Master thread
+	std::cerr << "\tTransforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
+	unsigned int index = 0;
+	for (unsigned int y = 0; y < img->height(); y++) {
+	  void *buffer = NULL;
+	  if (depth == 8) {
+	    unsigned char *row = (unsigned char*)malloc(img->width() * T_CHANNELS(cmsType));
+	    unsigned char *out = row;
+	    for (unsigned int x = 0; x < img->width(); x++, index++)
+	      for (unsigned char c = 0; c < T_CHANNELS(cmsType); c++)
+		*out++ = jp2_image->comps[c].data[index];
+
+	    buffer = (void*)row;
+	  } else {
+	    unsigned short *row = (unsigned short*)malloc(img->width() * T_CHANNELS(cmsType) * sizeof(unsigned short));
+	    unsigned short *out = row;
+	    for (unsigned int x = 0; x < img->width(); x++, index++)
+	      for (unsigned char c = 0; c < T_CHANNELS(cmsType); c++)
+		*out++ = jp2_image->comps[c].data[index];
+
+	    buffer = (void*)row;
+	  }
+
+	  std::cerr << "\r\tRead " << (y + 1) << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " in queue for colour transformation)   ";
+
+	  queue.add_copy(y, buffer);
+
+	  while (queue.num_rows() > 100) {
+	    queue.reader_process_row();
+	    std::cerr << "\r\tRead " << (y + 1) << " of " << img->height() << " rows ("
+		      << queue.num_rows() << " in queue for colour transformation)   ";
+	  }
+	}
+	queue.set_finished();
+	while (!queue.empty()) {
+	  queue.reader_process_row();
+	  std::cerr << "\r\tRead " << img->height() << " of " << img->height() << " rows ("
+		    << queue.num_rows() << " in queue for colour transformation)   ";
+	}
+	std::cerr << std::endl;
+      } else {
+	while (!(queue.empty() && queue.finished())) {
+	  while (queue.empty() && !queue.finished())
+	    usleep(100);
+	  queue.reader_process_row();
+	}
+      }
+    }
+    cmsDeleteTransform(transform);
+
+    std::cerr << "Done." << std::endl;
+    return img;
   }
 
   void JP2file::write(Image::ptr img, Destination::ptr dest) const {
