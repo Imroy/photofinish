@@ -16,7 +16,7 @@ CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 LIB_OBJS = $(patsubst %.cc,%.o,$(wildcard lib/*.cc))
 
-LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)` -ljpeg -ltiffxx -lboost_filesystem-mt -lboost_system-mt -lboost_program_options-mt
+LIBS = -lm -lstdc++ -lgomp `pkg-config --libs $(PKGS)` -ljpeg -ltiffxx -lopenjpeg -lboost_filesystem-mt -lboost_system-mt -lboost_program_options-mt
 
 all: $(PROGRAMS)
 

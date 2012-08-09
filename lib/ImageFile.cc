@@ -41,6 +41,9 @@ namespace PhotoFinish {
 	|| boost::iequals(filepath.extension().generic_string(), ".tif"))
       return ImageFile::ptr(new TIFFfile(filepath));
 
+    if (boost::iequals(filepath.extension().generic_string(), ".jp2"))
+      return ImageFile::ptr(new JP2file(filepath));
+
     throw UnknownFileType(filepath.generic_string());
   }
 
@@ -55,6 +58,9 @@ namespace PhotoFinish {
     if (boost::iequals(format, "tiff")
 	|| boost::iequals(format, "tif"))
       return ImageFile::ptr(new TIFFfile(filepath.replace_extension(".tiff")));
+
+    if (boost::iequals(format, "jp2"))
+      return ImageFile::ptr(new JP2file(filepath.replace_extension(".jp2")));
 
     throw UnknownFileType(format);
   }

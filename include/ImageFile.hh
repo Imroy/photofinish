@@ -123,6 +123,17 @@ namespace PhotoFinish {
     void write(Image::ptr img, Destination::ptr dest) const;
   };
 
+  //! JPEG 2000 file reader and writer
+  class JP2file : public ImageFile {
+  private:
+
+  public:
+    JP2file(const fs::path filepath);
+
+    Image::ptr read(Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest) const;
+  };
+
 }
 
 #endif // __IMAGEFILE_HH__
