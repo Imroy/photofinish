@@ -243,7 +243,18 @@ namespace PhotoFinish {
     if (dest->intent().defined())
       intent = dest->intent();
 
-    cmsHPROFILE profile = this->default_profile(cmsTempType);
+    cmsHPROFILE profile = NULL;
+    if (dest->profile()) {
+      profile = dest->profile()->profile();
+      if (dest->profile()->has_data()) {
+	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << " from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
+	jp2_image->icc_profile_buf = (unsigned char*)dest->profile()->data();
+	jp2_image->icc_profile_len = dest->profile()->data_size();
+      }
+    }
+    if (profile == NULL)
+      profile = this->default_profile(cmsTempType);
+
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
 						 profile, cmsTempType,
