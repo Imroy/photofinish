@@ -211,6 +211,11 @@ namespace PhotoFinish {
   }
 
   void JP2file::write(Image::ptr img, Destination::ptr dest) const {
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
+    fs::ofstream ofs(_filepath, std::ios_base::out);
+    if (ofs.fail())
+      throw FileOpenError(_filepath.native());
+
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
     event_mgr.error_handler = error_callback;
@@ -396,11 +401,6 @@ namespace PhotoFinish {
     opj_setup_encoder(cinfo, &parameters, jp2_image);
     opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
     opj_encode(cinfo, cio, jp2_image, NULL);
-
-    std::cerr << "Opening file " << _filepath << "..." << std::endl;
-    fs::ofstream ofs(_filepath, std::ios_base::out);
-    if (ofs.fail())
-      throw FileOpenError(_filepath.native());
 
     int size = cio_tell(cio);
     std::cerr << "\tWriting " << size << " bytes..." << std::endl;
