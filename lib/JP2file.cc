@@ -207,25 +207,32 @@ namespace PhotoFinish {
     opj_cparameters_t parameters;
     opj_set_default_encoder_parameters(&parameters);
 
+    parameters.tcp_rates[0] = 0;
+    parameters.tcp_numlayers++;
+    parameters.cp_disto_alloc = 1;
     parameters.tile_size_on = 0;
 
     OPJ_COLOR_SPACE colour_space;
+    unsigned char channels;
     cmsUInt32Number cmsTempType = BYTES_SH(2);
     if (img->is_colour()) {
       colour_space = CLRSPC_SRGB;
-      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
+      channels = 3;
+      cmsTempType |= COLORSPACE_SH(PT_RGB);
     } else {
       colour_space = CLRSPC_GRAY;
-      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
+      channels = 1;
+      cmsTempType |= COLORSPACE_SH(PT_GRAY);
     }
+    cmsTempType |= CHANNELS_SH(channels);
 
     int depth = 8;	// Default value
     if (dest->depth().defined())
       depth = dest->depth();
 
-    opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(T_CHANNELS(cmsTempType) * sizeof(opj_image_cmptparm_t));
-    memset(components, 0, T_CHANNELS(cmsTempType) * sizeof(opj_image_cmptparm_t));
-    for (unsigned char i = 0; i < T_CHANNELS(cmsTempType); i++) {
+    opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(channels * sizeof(opj_image_cmptparm_t));
+    memset(components, 0, channels * sizeof(opj_image_cmptparm_t));
+    for (unsigned char i = 0; i < channels; i++) {
       components[i].dx = parameters.subsampling_dx;
       components[i].dy = parameters.subsampling_dy;
       components[i].w = img->width();
@@ -234,7 +241,7 @@ namespace PhotoFinish {
       components[i].prec = components[i].bpp = depth;
       components[i].sgnd = 0;
     }
-    opj_image_t *jp2_image = opj_image_create(T_CHANNELS(cmsTempType), components, colour_space);
+    opj_image_t *jp2_image = opj_image_create(channels, components, colour_space);
 
     if (jp2_image == NULL)
       return;
@@ -264,11 +271,11 @@ namespace PhotoFinish {
 
     unsigned char **rows = (unsigned char**)malloc(img->height() * sizeof(unsigned char*));
     size_t channel_size = img->width() * (depth >> 3);
-    size_t row_size = channel_size * T_CHANNELS(cmsTempType);
+    size_t row_size = channel_size * channels;
     for (unsigned int y = 0; y < img->height(); y++)
       rows[y] = (unsigned char*)malloc(row_size);
 
-    transform_queue queue(dest, img, T_CHANNELS(cmsTempType), transform);
+    transform_queue queue(dest, img, channels, transform);
     if (depth == 8)
       for (unsigned int y = 0; y < img->height(); y++)
 	queue.add(y);
@@ -282,7 +289,7 @@ namespace PhotoFinish {
       if (th_id == 0) {		// Master thread
 	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
 
-	Ditherer ditherer(img->width(), T_CHANNELS(cmsTempType));
+	Ditherer ditherer(img->width(), channels);
 
 	unsigned int index = 0;
 	for (unsigned int y = 0; y < img->height(); y++) {
@@ -304,9 +311,9 @@ namespace PhotoFinish {
 	      ditherer.dither(row, rows[y], y == img->height() - 1);
 	      queue.free_row(y);
 
-	      packed_to_planar<unsigned char>(img->width(), T_CHANNELS(cmsTempType), rows[y], jp2_image, index);
+	      packed_to_planar<unsigned char>(img->width(), channels, rows[y], jp2_image, index);
 	    } else
-	      packed_to_planar<unsigned short>(img->width(), T_CHANNELS(cmsTempType), row, jp2_image, index);
+	      packed_to_planar<unsigned short>(img->width(), channels, row, jp2_image, index);
 	  }
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";
