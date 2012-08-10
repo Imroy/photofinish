@@ -31,6 +31,10 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  void operator >> (const YAML::Node& node, bool& b);
+  void operator >> (const YAML::Node& node, fs::path& p);
+
+
   typedef std::map<std::string, std::string> hash;
   typedef std::vector<std::string> stringlist;
   typedef std::map<std::string, stringlist > multihash;
@@ -132,6 +136,26 @@ namespace PhotoFinish {
     D_PNG();
 
     friend void operator >> (const YAML::Node& node, D_PNG& dp);
+  };
+
+  //! TIFF parameters for destination
+  class D_TIFF : public Role_Definable {
+  private:
+    definable<std::string> _artist, _copyright;
+    definable<std::string> _compression;
+
+  public:
+    //! Empty constructor
+    D_TIFF();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    inline definable<std::string> artist(void) const { return _artist; }
+    inline definable<std::string> copyright(void) const { return _copyright; }
+    inline definable<std::string> compression(void) const { return _compression; }
+
+    friend void operator >> (const YAML::Node& node, D_TIFF& dt);
   };
 
   //! ICC profile parameters for destination

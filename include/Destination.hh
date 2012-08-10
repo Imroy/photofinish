@@ -59,6 +59,7 @@ namespace PhotoFinish {
 
     D_JPEG _jpeg;
     D_PNG _png;
+    D_TIFF _tiff;
 
     definable<cmsUInt32Number> _intent;	//! CMS rendering intent
 
@@ -116,10 +117,12 @@ namespace PhotoFinish {
 
     inline definable<bool> noresize(void) const { return _noresize; }
 
-    inline const D_PNG& png(void) const { return _png; }
-
     inline const D_JPEG& jpeg(void) const { return _jpeg; }
     inline void set_jpeg(const D_JPEG& j) { _jpeg = j; }
+
+    inline const D_PNG& png(void) const { return _png; }
+
+    inline const D_TIFF& tiff(void) const { return _tiff; }
 
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 

@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <tiffio.h>
@@ -211,9 +212,34 @@ namespace PhotoFinish {
     TIFFcheck(SetField(tiff, TIFFTAG_IMAGEWIDTH, img->width()));
     TIFFcheck(SetField(tiff, TIFFTAG_IMAGELENGTH, img->height()));
     TIFFcheck(SetField(tiff, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT));
-    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_DEFLATE));
-    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
     TIFFcheck(SetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
+
+    {
+      bool compression_set = false;
+      if (dest->tiff().defined()) {
+	// Note that EXIV2 appears to overwrite the artist and copyright fields with its own information (if it's set)
+	if (dest->tiff().artist().defined())
+	  TIFFcheck(SetField(tiff, TIFFTAG_ARTIST, dest->tiff().artist().get().c_str()));
+	if (dest->tiff().copyright().defined())
+	  TIFFcheck(SetField(tiff, TIFFTAG_COPYRIGHT, dest->tiff().copyright().get().c_str()));
+
+	if (dest->tiff().compression().defined()) {
+	  std::string compression = dest->tiff().compression().get();
+	  if (boost::iequals(compression, "deflate")) {
+	    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_DEFLATE));
+	    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
+	    compression_set = true;
+	  } else if (boost::iequals(compression, "lzw")) {
+	    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_LZW));
+	    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
+	    compression_set = true;
+	  }
+	}
+      }
+      // Default to no compression (best compatibility and TIFF's compression doesn't make much difference)
+      if (!compression_set)
+	TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_NONE));
+    }
 
     // For some reason none of this information shows up in the written TIFF file
     /*
