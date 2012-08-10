@@ -65,11 +65,6 @@ namespace PhotoFinish {
     throw UnknownFileType(format);
   }
 
-  Image::ptr ImageFile::read(void) const {
-    Destination::ptr temp(new Destination);
-    return this->read(temp);
-  }
-
   cmsHPROFILE ImageFile::default_profile(cmsUInt32Number cmsType) {
     cmsHPROFILE profile = NULL;
     cmsToneCurve *gamma;
@@ -91,6 +86,23 @@ namespace PhotoFinish {
     }
 
     return profile;
+  }
+
+  void ImageFile::add_variables(Destination::ptr dest, multihash& vars) {
+    std::string format = dest->format().get();
+    if (boost::iequals(format, "jpeg")
+	|| boost::iequals(format, "jpg"))
+      const_cast<D_JPEG&>(dest->jpeg()).add_variables(vars);
+    if (boost::iequals(format, "tiff")
+	|| boost::iequals(format, "tif"))
+      const_cast<D_TIFF&>(dest->tiff()).add_variables(vars);
+    if (boost::iequals(format, "jp2"))
+      const_cast<D_JP2&>(dest->jp2()).add_variables(vars);
+  }
+
+  Image::ptr ImageFile::read(void) const {
+    Destination::ptr temp(new Destination);
+    return this->read(temp);
   }
 
 }

@@ -211,6 +211,110 @@ namespace PhotoFinish {
 
 
 
+  D_JP2::D_JP2()
+  {}
+
+  void D_JP2::add_variables(multihash& vars) {
+    multihash::iterator vi;
+    if (!_numresolutions.defined() && ((vi = vars.find("numresolutions")) != vars.end())) {
+      _numresolutions = boost::lexical_cast<int>(vi->second[0]);
+      vars.erase(vi);
+      set_defined();
+    }
+
+    if (!_prog_order.defined() && ((vi = vars.find("prog_order")) != vars.end())) {
+      _prog_order = vi->second[0];
+      vars.erase(vi);
+      set_defined();
+    }
+
+    if ((_rates.size() == 0) && ((vi = vars.find("rate")) != vars.end())) {
+      std::string rate = vi->second[0];
+      size_t sep = rate.find_first_of(",/");
+      while (sep != std::string::npos) {
+	try {
+	  _rates.push_back(boost::lexical_cast<float>(rate.substr(0, sep)));
+	  vars.erase(vi);
+	  set_defined();
+	  rate = rate.substr(sep + 1, rate.length() - sep -1);
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	  break;
+	}
+	sep = rate.find_first_of(",/");
+      }
+      try {
+	_rates.push_back(boost::lexical_cast<float>(rate));
+      } catch (boost::bad_lexical_cast &ex) {
+      }
+    }
+
+    if (!_tile_size.defined() && ((vi = vars.find("tile")) != vars.end())) {
+      std::string tile_size = vi->second[0];
+      size_t sep = tile_size.find_first_of("x×/,");
+      if (sep != std::string::npos) {
+	try {
+	  int h = boost::lexical_cast<int>(tile_size.substr(0, sep));
+	  int v = boost::lexical_cast<int>(tile_size.substr(sep + 1, tile_size.length() - sep - 1));
+	  _tile_size = std::pair<int, int>(h, v);
+	  vars.erase(vi);
+	  set_defined();
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	}
+      } else
+	std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
+    }
+  }
+
+  void operator >> (const YAML::Node& node, D_JP2& dj) {
+    if (const YAML::Node *n = node.FindValue("numresolutions"))
+      *n >> dj._numresolutions;
+
+    if (const YAML::Node *n = node.FindValue("prog_order"))
+      *n >> dj._prog_order;
+
+    if (const YAML::Node *n = node.FindValue("rate")) {
+      std::string rate;
+      *n >> rate;
+      size_t sep = rate.find_first_of(",/");
+      while (sep != std::string::npos) {
+	try {
+	  dj._rates.push_back(boost::lexical_cast<float>(rate.substr(0, sep)));
+	  rate = rate.substr(sep + 1, rate.length() - sep -1);
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	  break;
+	}
+	sep = rate.find_first_of(",/");
+      }
+      try {
+	dj._rates.push_back(boost::lexical_cast<float>(rate));
+      } catch (boost::bad_lexical_cast &ex) {
+      }
+    }
+
+    if (const YAML::Node *n = node.FindValue("tile")) {
+      std::string tile_size;
+      *n >> tile_size;
+      size_t sep = tile_size.find_first_of("x×/,");
+      if (sep != std::string::npos) {
+	try {
+	  int h = boost::lexical_cast<int>(tile_size.substr(0, sep));
+	  int v = boost::lexical_cast<int>(tile_size.substr(sep + 1, tile_size.length() - sep - 1));
+	  dj._tile_size = std::pair<int, int>(h, v);
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	}
+      } else
+	std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
+    }
+    dj.set_defined();
+  }
+
+
+
+
   D_profile::D_profile() :
     _data(NULL), _data_size(0)
   {}

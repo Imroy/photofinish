@@ -21,6 +21,7 @@
 
 #include <string>
 #include <memory>
+#include <deque>
 #include "yaml-cpp/yaml.h"
 #include <lcms2.h>
 #include <boost/filesystem.hpp>
@@ -156,6 +157,30 @@ namespace PhotoFinish {
     inline definable<std::string> compression(void) const { return _compression; }
 
     friend void operator >> (const YAML::Node& node, D_TIFF& dt);
+  };
+
+  //! JP2 parameters for destination
+  class D_JP2 : public Role_Definable {
+  private:
+    definable<int> _numresolutions;
+    definable<std::string> _prog_order;
+    std::deque<float> _rates;
+    definable< std::pair<int, int> > _tile_size;
+
+  public:
+    //! Empty constructor
+    D_JP2();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    inline definable<int> numresolutions(void) const { return _numresolutions; }
+    inline definable<std::string> prog_order(void) const { return _prog_order; }
+    inline int num_rates(void) const { return _rates.size(); }
+    inline float rate(int n) const { return _rates[n]; }
+    inline definable< std::pair<int, int> > tile_size(void) const { return _tile_size; }
+
+    friend void operator >> (const YAML::Node& node, D_JP2& dj);
   };
 
   //! ICC profile parameters for destination

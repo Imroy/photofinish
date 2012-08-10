@@ -62,6 +62,12 @@ namespace PhotoFinish {
     */
     static ImageFile::ptr create(fs::path filepath, const std::string format) throw(UnknownFileType);
 
+    //! Create either an sRGB or greyscale profile depending on image type
+    static cmsHPROFILE default_profile(cmsUInt32Number cmsType);
+
+    //! Add variables to one of the configuration objects based on destination format
+    static void add_variables(Destination::ptr dest, multihash& vars);
+
     //! Accessor
     inline virtual const fs::path filepath(void) const { return _filepath; }
 
@@ -77,8 +83,6 @@ namespace PhotoFinish {
       \return A new Image object
     */
     virtual Image::ptr read(Destination::ptr dest) const = 0;
-
-    static cmsHPROFILE default_profile(cmsUInt32Number cmsType);
 
     //! Write an image to the file
     /*!

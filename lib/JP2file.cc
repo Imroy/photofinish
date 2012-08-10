@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <boost/algorithm/string.hpp>
 #include <openjpeg.h>
 #include <lcms2.h>
 #include "ImageFile.hh"
@@ -207,8 +208,53 @@ namespace PhotoFinish {
     opj_cparameters_t parameters;
     opj_set_default_encoder_parameters(&parameters);
 
-    parameters.tcp_rates[0] = 0;
-    parameters.tcp_numlayers++;
+    if (dest->jp2().defined()) {
+      D_JP2 d = dest->jp2();
+      if (d.numresolutions().defined()) {
+	std::cerr << "\tUsing " << d.numresolutions() << " resolutions." << std::endl;
+	parameters.numresolution = d.numresolutions();
+      }
+      if (d.prog_order().defined()) {
+	std::string po = d.prog_order().get();
+	if (boost::iequals(po, "lrcp")) {
+	  std::cerr << "\tLayer-resolution-component-precinct order." << std::endl;
+	  parameters.prog_order = LRCP;
+	} else if (boost::iequals(po, "rlcp")) {
+	  std::cerr << "\tResolution-layer-component-precinct order." << std::endl;
+	  parameters.prog_order = RLCP;
+	} else if (boost::iequals(po, "rpcl")) {
+	  std::cerr << "\tResolution-precinct-component-layer order." << std::endl;
+	  parameters.prog_order = RPCL;
+	} else if (boost::iequals(po, "pcrl")) {
+	  std::cerr << "\tPrecinct-component-resolution-layer order." << std::endl;
+	  parameters.prog_order = PCRL;
+	} else if (boost::iequals(po, "cprl")) {
+	  std::cerr << "\tComponent-precinct-resolution-layer order." << std::endl;
+	  parameters.prog_order = CPRL;
+	}
+      }
+      if (d.num_rates() > 0) {
+	std::cerr << "\tRate:";
+	for (int i = 0; i < d.num_rates(); i++) {
+	  parameters.tcp_rates[i] = d.rate(i);
+	  if (i > 0)
+	    std::cerr << ",";
+	  std::cerr << " " << d.rate(i);
+	}
+	std::cerr << "." << std::endl;
+	parameters.tcp_numlayers = d.num_rates();
+      }
+      if (d.tile_size().defined()) {
+	std::cerr << "\tTile size of " << d.tile_size()->first << "×" << d.tile_size()->second << std::endl;
+	parameters.cp_tdx = d.tile_size()->first;
+	parameters.cp_tdy = d.tile_size()->second;
+      }
+    }
+
+    if (parameters.tcp_numlayers == 0) {
+      parameters.tcp_rates[0] = 0;
+      parameters.tcp_numlayers++;
+    }
     parameters.cp_disto_alloc = 1;
     parameters.tile_size_on = 0;
 

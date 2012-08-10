@@ -25,6 +25,7 @@
 #include "Destination_items.hh"
 #include "Destination.hh"
 #include "CropSolution.hh"
+#include "ImageFile.hh"
 #include "Exception.hh"
 
 namespace PhotoFinish {
@@ -39,7 +40,8 @@ namespace PhotoFinish {
     _format(other._format),
     _depth(other._depth),
     _noresize(other._noresize),
-    _jpeg(other._jpeg), _png(other._png), _tiff(other._tiff),
+    _jpeg(other._jpeg), _png(other._png),
+    _tiff(other._tiff), _jp2(other._jp2),
     _intent(other._intent),
     _profile(other._profile),
     _forcergb(other._forcergb),
@@ -67,6 +69,7 @@ namespace PhotoFinish {
       _jpeg = b._jpeg;
       _png = b._png;
       _tiff = b._tiff;
+      _jp2 = b._jp2;
       _intent = b._intent;
       _profile = b._profile;
       _forcergb = b._forcergb;
@@ -83,7 +86,8 @@ namespace PhotoFinish {
 
   Destination::ptr Destination::add_variables(multihash& vars) {
     Destination::ptr ret = Destination::ptr(new Destination(*this));
-    ret->_jpeg.add_variables(vars);
+
+    ImageFile::add_variables(ret, vars);
     ret->_variables = vars;
 
     return ret;
@@ -188,14 +192,17 @@ namespace PhotoFinish {
     if (const YAML::Node *n = node.FindValue("resize"))
       *n >> d._resize;
 
+    if (const YAML::Node *n = node.FindValue("jpeg"))
+      *n >> d._jpeg;
+
     if (const YAML::Node *n = node.FindValue("png"))
       *n >> d._png;
 
     if (const YAML::Node *n = node.FindValue("tiff"))
       *n >> d._tiff;
 
-    if (const YAML::Node *n = node.FindValue("jpeg"))
-      *n >> d._jpeg;
+    if (const YAML::Node *n = node.FindValue("jp2"))
+      *n >> d._jp2;
 
     if (const YAML::Node *n = node.FindValue("profile")) {
       d._profile = D_profile::ptr(new D_profile);
