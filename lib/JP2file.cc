@@ -137,11 +137,23 @@ namespace PhotoFinish {
       std::cerr << "** Unknown colour space " << jp2_image->color_space << " **" << std::endl;
       throw LibraryError("OpenJPEG", "color_space");
     }
+    dest->set_depth(depth);
 
     cmsHPROFILE profile;
-    if (jp2_image->icc_profile_buf != NULL)
+    if (jp2_image->icc_profile_buf != NULL) {
       profile = cmsOpenProfileFromMem(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
-    else
+      void *data_copy = malloc(jp2_image->icc_profile_len);
+      memcpy(data_copy, jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
+      char *profile_name = NULL;
+      unsigned int profile_name_len;
+      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
+	profile_name = (char*)malloc(profile_name_len);
+	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+	dest->set_profile(profile_name, data_copy, jp2_image->icc_profile_len);
+	free(profile_name);
+      } else
+	dest->set_profile("JP2 ICC profile", data_copy, jp2_image->icc_profile_len);
+    } else
       profile = ImageFile::default_profile(cmsType);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
