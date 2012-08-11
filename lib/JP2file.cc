@@ -45,7 +45,7 @@ namespace PhotoFinish {
   }
 
   template <typename T>
-  void* planar_to_packed(unsigned int width, unsigned char channels, opj_image_t* image, unsigned int& index) {
+  inline void* planar_to_packed(unsigned int width, unsigned char channels, opj_image_t* image, unsigned int& index) {
     T *row = (T*)malloc(width * channels * sizeof(T));
     T *out = row;
     for (unsigned int x = 0; x < width; x++, index++)
@@ -55,7 +55,7 @@ namespace PhotoFinish {
   }
 
   template <typename T>
-  void packed_to_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int& index) {
+  inline void packed_to_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int& index) {
     T *in = row;
     for (unsigned int x = 0; x < width; x++, index++)
       for (unsigned char c = 0; c < channels; c++)
@@ -210,7 +210,7 @@ namespace PhotoFinish {
     return img;
   }
 
-  void JP2file::write(Image::ptr img, Destination::ptr dest) const {
+  void JP2file::write(Image::ptr img, Destination::ptr dest, bool can_free) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
@@ -377,6 +377,8 @@ namespace PhotoFinish {
 	      packed_to_planar<unsigned char>(img->width(), channels, rows[y], jp2_image, index);
 	    } else
 	      packed_to_planar<unsigned short>(img->width(), channels, row, jp2_image, index);
+	    if (can_free)
+	      img->free_row(y);
 	  }
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";

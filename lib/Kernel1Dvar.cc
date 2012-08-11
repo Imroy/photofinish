@@ -122,7 +122,7 @@ namespace PhotoFinish {
   }
 
   //! Convolve an image horizontally
-  Image::ptr Kernel1Dvar::convolve_h(Image::ptr img) {
+  Image::ptr Kernel1Dvar::convolve_h(Image::ptr img, bool can_free) {
     Image::ptr ni(new Image(_to_size_i, img->height()));
 
     ni->set_greyscale(img->is_greyscale());
@@ -156,6 +156,8 @@ namespace PhotoFinish {
 	  out[2] += in[2] * *weight;
 	}
       }
+      if (can_free)
+	img->free_row(y);
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << y + 1 << " of " << img->height() << " rows.";
     }
@@ -165,7 +167,7 @@ namespace PhotoFinish {
   }
 
   //! Convolve an image vertically
-  Image::ptr Kernel1Dvar::convolve_v(Image::ptr img) {
+  Image::ptr Kernel1Dvar::convolve_v(Image::ptr img, bool can_free) {
    Image::ptr ni(new Image(img->width(), _to_size_i));
 
     ni->set_greyscale(img->is_greyscale());
@@ -174,15 +176,26 @@ namespace PhotoFinish {
     if (img->yres().defined())
       ni->set_yres(img->yres() / _scale);
 
+    int num_threads;
 #pragma omp parallel
     {
 #pragma omp master
       {
+	num_threads = omp_get_num_threads();
 	std::cerr << "Convolving image vertically " << img->height() << " => "
 		  << std::setprecision(2) << std::fixed << _to_size_i
-		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
+		  << " using " << num_threads << " threads..." << std::endl;
       }
     }
+    int *row_needs;
+    if (can_free) {
+      row_needs = (int*)malloc(img->height() * sizeof(int));
+      for (unsigned int y = 0; y < img->height(); y++)
+	row_needs[y] = num_threads;
+    }
+    unsigned int next_freed = 0;
+    omp_lock_t freed_lock;
+    omp_init_lock(&freed_lock);
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int ny = 0; ny < _to_size_i; ny++) {
       unsigned int max = size(ny);
@@ -208,8 +221,20 @@ namespace PhotoFinish {
 	  out[2] += in[2] * *weight;
 	}
       }
+      if (can_free && (((ny < _to_size_i - 1) && (this->start(ny + 1) > ystart)) || (ny == _to_size_i - 1))) {
+	omp_set_lock(&freed_lock);
+	row_needs[ystart]--;
+	for (;row_needs[next_freed] == 0; next_freed++)
+	  img->free_row(next_freed);
+	omp_unset_lock(&freed_lock);
+      }
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << ny + 1 << " of " << _to_size_i << " rows.";
+    }
+    if (can_free) {
+      free(row_needs);
+      for (; next_freed < img->height(); next_freed++)
+	img->free_row(next_freed);
     }
     std::cerr << "\rConvolved " << _to_size_i << " of " << _to_size_i << " rows.        " << std::endl;
 

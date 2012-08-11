@@ -181,7 +181,7 @@ namespace PhotoFinish {
 
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
-  void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest) const {
+  void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) const {
     jpeg_compress_struct cinfo;
     jpeg_create_compress(&cinfo);
     jpeg_error_mgr jerr;
@@ -312,6 +312,8 @@ namespace PhotoFinish {
 	      exit(2);
 	    }
 
+	    if (can_free)
+	      img->free_row(y);
 	    ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
 	  }
 	  queue.free_row(y);
@@ -333,13 +335,13 @@ namespace PhotoFinish {
     jpeg_destroy_compress(&cinfo);
   }
 
-  void JPEGfile::write(Image::ptr img, Destination::ptr dest) const {
+  void JPEGfile::write(Image::ptr img, Destination::ptr dest, bool can_free) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
       throw FileOpenError(_filepath.native());
 
-    write(ofs, img, dest);
+    write(ofs, img, dest, can_free);
     ofs.close();
 
     std::cerr << "Done." << std::endl;

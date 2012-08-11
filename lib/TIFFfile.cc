@@ -197,7 +197,7 @@ namespace PhotoFinish {
     return img;
   }
 
-  void TIFFfile::write(Image::ptr img, Destination::ptr dest) const {
+  void TIFFfile::write(Image::ptr img, Destination::ptr dest, bool can_free) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
@@ -352,6 +352,8 @@ namespace PhotoFinish {
 	      exit(2);
 	    }
 
+	    if (can_free)
+	      img->free_row(y);
 	    if (depth == 8) {
 	      ditherer.dither(row, tiff_row, y == img->height() - 1);
 	      TIFFWriteScanline(tiff, tiff_row, y, 0);

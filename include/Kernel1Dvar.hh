@@ -67,10 +67,20 @@ namespace PhotoFinish {
     ~Kernel1Dvar();
 
     //! Convolve an image horizontally with this kernel
-    Image::ptr convolve_h(Image::ptr img);
+    /*!
+      \param img Source image
+      \param can_free Can each row of the image be freed after it is convolved?
+      \return New image
+     */
+    Image::ptr convolve_h(Image::ptr img, bool can_free = false);
 
     //! Convolve an image vertically with this kernel
-    Image::ptr convolve_v(Image::ptr img);
+    /*!
+      \param img Source image
+      \param can_free Can each row of the image be freed after it is convolved?
+      \return New image
+     */
+    Image::ptr convolve_v(Image::ptr img, bool can_free = false);
 
     //! Accessor for the size of the weights
     inline const unsigned int& size(unsigned int i) const { return _size[i]; }

@@ -88,8 +88,9 @@ namespace PhotoFinish {
     /*!
       \param img The Image object to write
       \param dest A Destination object, used for the JPEG/PNG/etc parameters
+      \param can_free Can each row of the image be freed after it is written?
     */
-    virtual void write(Image::ptr img, Destination::ptr dest) const = 0;
+    virtual void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const = 0;
   };
 
   //! PNG file reader and writer
@@ -100,7 +101,7 @@ namespace PhotoFinish {
     PNGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
 
   //! JPEG file reader and writer
@@ -112,8 +113,8 @@ namespace PhotoFinish {
 
     Image::ptr read(Destination::ptr dest) const;
     //! Special version of write() that takes an open ostream object
-    void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest) const;
+    void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false) const;
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
 
   //! TIFF file reader and writer
@@ -124,7 +125,7 @@ namespace PhotoFinish {
     TIFFfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
 
   //! JPEG 2000 file reader and writer
@@ -135,7 +136,7 @@ namespace PhotoFinish {
     JP2file(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest) const;
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
 
 }

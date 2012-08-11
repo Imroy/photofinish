@@ -68,7 +68,12 @@ namespace PhotoFinish {
     inline SAMPLE& at(short unsigned int x, short unsigned int y) const { return _values[y][x]; }
 
     //! Convolve and image with this kernel and produce a new image
-    Image::ptr convolve(Image::ptr img);
+    /*!
+      \param img Source image
+      \param can_free Can each row of the image be freed after it is convolved?
+      \return New image
+     */
+    Image::ptr convolve(Image::ptr img, bool can_free = false);
   };
 
   //! GaussianSharpen kernel

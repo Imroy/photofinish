@@ -64,14 +64,16 @@ namespace PhotoFinish {
     }
   }
 
-  Image::ptr Kernel2D::convolve(Image::ptr img) {
+  Image::ptr Kernel2D::convolve(Image::ptr img, bool can_free) {
+    int num_threads;
 #pragma omp parallel
     {
 #pragma omp master
       {
+	num_threads = omp_get_num_threads();
 	std::cerr << "Convolving " << img->width() << "×" << img->height()
 		  << " image with " << _width << "×" << _height
-		  << " kernel using " << omp_get_num_threads() << " threads..." << std::endl;
+		  << " kernel using " << num_threads << " threads..." << std::endl;
       }
     }
     Image::ptr out = Image::ptr(new Image(img->width(), img->height()));
@@ -82,6 +84,15 @@ namespace PhotoFinish {
     if (img->yres().defined())
       out->set_yres(img->yres());
 
+    int *row_needs;
+    if (can_free) {
+      row_needs = (int*)malloc(img->height() * sizeof(int));
+      for (unsigned int y = 0; y < img->height(); y++)
+	row_needs[y] = num_threads;
+    }
+    unsigned int next_freed = 0;
+    omp_lock_t freed_lock;
+    omp_init_lock(&freed_lock);
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
       SAMPLE *outp = out->row(y);
@@ -111,9 +122,21 @@ namespace PhotoFinish {
 	  outp[2] *= weight;
 	}
       }
+      if (can_free && (y > _centrey)) {
+	omp_set_lock(&freed_lock);
+	row_needs[y + ky_start - _centrey]--;
+	for (;row_needs[next_freed] == 0; next_freed++)
+	  img->free_row(next_freed);
+	omp_unset_lock(&freed_lock);
+      }
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << y + 1 << " of " << img->height() << " rows.";
+    }
+    if (can_free) {
+      free(row_needs);
+      for (; next_freed < img->height(); next_freed++)
+	img->free_row(next_freed);
     }
     std::cerr << "\rConvolved " << img->height() << " of " << img->height() << " rows.        " << std::endl;
 
