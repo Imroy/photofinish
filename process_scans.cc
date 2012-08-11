@@ -168,7 +168,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	if (do_conversion) {
-	  std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << "\"" << std::endl;
+	  std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << std::endl;
 	  rename(di->path().c_str(), (convert_dir / di->path().filename()).c_str());
 	}
       } catch (std::exception& ex) {
