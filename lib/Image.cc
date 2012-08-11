@@ -38,13 +38,16 @@ namespace PhotoFinish {
   {
     _rowdata = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
     for (unsigned int y = 0; y < _height; y++)
-      _rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
+      _rowdata[y] = NULL;
   }
 
   Image::~Image() {
     if (_rowdata != NULL) {
       for (unsigned int y = 0; y < _height; y++)
-	free(_rowdata[y]);
+	if (_rowdata[y] != NULL) {
+	  free(_rowdata[y]);
+	  _rowdata[y] = NULL;
+	}
       free(_rowdata);
       _rowdata = NULL;
     }

@@ -33,6 +33,11 @@ namespace PhotoFinish {
     SAMPLE **_rowdata;
     definable<double> _xres, _yres;		// PPI
 
+    inline void _check_rowdata_alloc(unsigned int y) {
+      if (_rowdata[y] == NULL)
+	_rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
+    }
+
   public:
     typedef std::shared_ptr<Image> ptr;
 
@@ -88,13 +93,31 @@ namespace PhotoFinish {
     inline void set_resolution_from_size(double size) { _xres = _yres = (_width > _height ? _width : _height) / size; }
 
     //! Pointer to pixel data at start of row
-    inline SAMPLE* row(unsigned int y) const { return _rowdata[y]; }
+    inline SAMPLE* row(unsigned int y) {
+      _check_rowdata_alloc(y);
+      return _rowdata[y];
+    }
 
     //! Pointer to pixel data at coordinates
-    inline SAMPLE* at(unsigned int x, unsigned int y) const { return &(_rowdata[y][x * 3]); }
+    inline SAMPLE* at(unsigned int x, unsigned int y) {
+      _check_rowdata_alloc(y);
+      return &(_rowdata[y][x * 3]);
+    }
 
     //! Reference to pixel data at coordinates and of a given channel
-    inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) const { return _rowdata[y][c + (x * 3)]; }
+    inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) {
+      _check_rowdata_alloc(y);
+      return _rowdata[y][c + (x * 3)];
+    }
+
+    //! Free the memory storing row 'y'
+    inline void free_row(unsigned int y) {
+      if (_rowdata[y] != NULL) {
+	free(_rowdata[y]);
+	_rowdata[y] = NULL;
+      }
+    }
+
   };
 
 }
