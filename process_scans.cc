@@ -78,10 +78,10 @@ int main(int argc, char* argv[]) {
 
     po::options_description config_options("Configuration");
     config_options.add_options()
-      ("convert-dir", po::value<fs::path>(&convert_dir)->default_value("originals")->composing(), "Directory to place converted files")
-      ("convert-format", po::value<std::string>(&convert_format)->default_value("png")->composing(), "Format of converted images")
-      ("preview-format", po::value<std::string>(&preview_format)->default_value("jpeg")->composing(), "Format of preview images")
-      ("works-dir", po::value<fs::path>(&works_dir)->default_value("works")->composing(), "Directory to find works in progress")
+      ("convert-dir", po::value<fs::path>(&convert_dir)->default_value("originals"), "Directory to place converted files")
+      ("convert-format", po::value<std::string>(&convert_format)->default_value("png"), "Format of converted images")
+      ("preview-format", po::value<std::string>(&preview_format)->default_value("jpeg"), "Format of preview images")
+      ("works-dir", po::value<fs::path>(&works_dir)->default_value("works"), "Directory to find works in progress")
       ("include-path,I", po::value< pathlist >(&include_paths)->composing(), "include path for tag files")
       ;
 
