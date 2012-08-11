@@ -72,19 +72,20 @@ int main(int argc, char* argv[]) {
       }
 
       try {
-	Image::ptr image = infile->read();
+	Image::ptr orig_image = infile->read();
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
+	  bool last_dest = (di + 1 == arg_destinations.end());
 	  Destination::ptr destination = destinations[*di]->add_variables(tags->variables());
 	  try {
 	    definable<double> size = destination->size();
 
 	    Image::ptr sized_image;
 	    if (destination->noresize().defined() && destination->noresize()) {
-	      sized_image = image;
+	      sized_image = orig_image;
 	    } else {
-	      Frame::ptr frame = destination->best_frame(image);
-	      sized_image = frame->crop_resize(image, destination->resize());
+	      Frame::ptr frame = destination->best_frame(orig_image);
+	      sized_image = frame->crop_resize(orig_image, destination->resize(), last_dest);
 	      if (destination->forcergb().defined() && destination->forcergb())
 		sized_image->set_colour();
 	      if (destination->forcegrey().defined() && destination->forcegrey())
@@ -96,7 +97,7 @@ int main(int argc, char* argv[]) {
 	    Image::ptr sharp_image;
 	    if (destination->sharpen().defined()) {
 	      Kernel2D::ptr sharpen = Kernel2D::create(destination->sharpen());
-	      sharp_image = sharpen->convolve(sized_image);
+	      sharp_image = sharpen->convolve(sized_image, (sized_image != orig_image) || last_dest);
 	    } else {
 	      sharp_image = sized_image;
 	    }
@@ -118,7 +119,7 @@ int main(int argc, char* argv[]) {
 	    if (destination->format().defined())
 	      format = destination->format();
 	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / fi->stem(), format);
-	    outfile->write(sharp_image, destination);
+	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
 	    tags->embed(outfile);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;

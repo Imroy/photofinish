@@ -43,7 +43,7 @@ namespace po = boost::program_options;
 
 using namespace PhotoFinish;
 
-void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file) {
+void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
   Destination::ptr resized_dest = orig_dest->dupe();
 
   resized_dest->set_depth(8);
@@ -53,8 +53,8 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 			     0, 0,
 			     orig_image->width(), orig_image->height()));
 
-  Image::ptr resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3));
-  preview_file->write(resized_image, resized_dest);
+  Image::ptr resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
+  preview_file->write(resized_image, resized_dest, can_free);
   filetags->embed(preview_file);
 }
 
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
 	      fs::create_directory(convert_dir);
 	    }
 
-	    converted_file->write(orig_image, orig_dest);
+	    converted_file->write(orig_image, orig_dest, !do_preview);
 	    filetags->embed(converted_file);
 	  }
 	} catch (std::exception& ex) {
@@ -162,13 +162,15 @@ int main(int argc, char* argv[]) {
 	try {
 	  ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
 	  if (do_preview && (!exists(preview_file->filepath()) || (last_write_time(preview_file->filepath()) < last_write_time(infile->filepath()))))
-	    make_preview(orig_image, orig_dest, filetags, preview_file);
+	    make_preview(orig_image, orig_dest, filetags, preview_file, true);
 	} catch (std::exception& ex) {
 	  std::cerr << ex.what() << std::endl;
 	}
 
-	std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << "\"" << std::endl;
-	rename(di->path().c_str(), (convert_dir / di->path().filename()).c_str());
+	if (do_conversion) {
+	  std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << "\"" << std::endl;
+	  rename(di->path().c_str(), (convert_dir / di->path().filename()).c_str());
+	}
       } catch (std::exception& ex) {
 	std::cerr << ex.what() << std::endl;
       }
@@ -200,7 +202,7 @@ int main(int argc, char* argv[]) {
 	Tags::ptr filetags = defaulttags->dupe();
 	filetags->extract(infile);
 
-	make_preview(orig_image, orig_dest, filetags, preview_file);
+	make_preview(orig_image, orig_dest, filetags, preview_file, true);
       } catch (std::exception& ex) {
 	std::cerr << ex.what() << std::endl;
       }
