@@ -30,37 +30,52 @@ namespace PhotoFinish {
   {}
 
   ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
-    if (boost::iequals(filepath.extension().generic_string(), ".png"))
+    std::string ext = filepath.extension().generic_string().substr(1);
+#ifdef HAZ_PNG
+    if (boost::iequals(ext, "png"))
       return ImageFile::ptr(new PNGfile(filepath));
+#endif
 
-    if (boost::iequals(filepath.extension().generic_string(), ".jpeg")
-	|| boost::iequals(filepath.extension().generic_string(), ".jpg"))
+#ifdef HAZ_JPEG
+    if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg"))
       return ImageFile::ptr(new JPEGfile(filepath));
+#endif
 
-    if (boost::iequals(filepath.extension().generic_string(), ".tiff")
-	|| boost::iequals(filepath.extension().generic_string(), ".tif"))
+#ifdef HAZ_TIFF
+    if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif"))
       return ImageFile::ptr(new TIFFfile(filepath));
+#endif
 
-    if (boost::iequals(filepath.extension().generic_string(), ".jp2"))
+#ifdef HAZ_JP2
+    if (boost::iequals(ext, "jp2"))
       return ImageFile::ptr(new JP2file(filepath));
+#endif
 
     throw UnknownFileType(filepath.generic_string());
   }
 
   ImageFile::ptr ImageFile::create(fs::path filepath, const std::string format) throw(UnknownFileType) {
+#ifdef HAZ_PNG
     if (boost::iequals(format, "png"))
       return ImageFile::ptr(new PNGfile(filepath.replace_extension(".png")));
+#endif
 
+#ifdef HAZ_JPEG
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
       return ImageFile::ptr(new JPEGfile(filepath.replace_extension(".jpeg")));
+#endif
 
+#ifdef HAZ_TIFF
     if (boost::iequals(format, "tiff")
 	|| boost::iequals(format, "tif"))
       return ImageFile::ptr(new TIFFfile(filepath.replace_extension(".tiff")));
+#endif
 
+#ifdef HAZ_JP2
     if (boost::iequals(format, "jp2"))
       return ImageFile::ptr(new JP2file(filepath.replace_extension(".jp2")));
+#endif
 
     throw UnknownFileType(format);
   }
@@ -93,9 +108,11 @@ namespace PhotoFinish {
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
       const_cast<D_JPEG&>(dest->jpeg()).add_variables(vars);
+
     if (boost::iequals(format, "tiff")
 	|| boost::iequals(format, "tif"))
       const_cast<D_TIFF&>(dest->tiff()).add_variables(vars);
+
     if (boost::iequals(format, "jp2"))
       const_cast<D_JP2&>(dest->jp2()).add_variables(vars);
   }

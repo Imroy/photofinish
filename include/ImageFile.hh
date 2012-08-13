@@ -93,6 +93,7 @@ namespace PhotoFinish {
     virtual void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const = 0;
   };
 
+#ifdef HAZ_PNG
   //! PNG file reader and writer
   class PNGfile : public ImageFile {
   private:
@@ -103,7 +104,9 @@ namespace PhotoFinish {
     Image::ptr read(Destination::ptr dest) const;
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
+#endif
 
+#ifdef HAZ_JPEG
   //! JPEG file reader and writer
   class JPEGfile : public ImageFile {
   private:
@@ -116,7 +119,9 @@ namespace PhotoFinish {
     void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false) const;
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
+#endif
 
+#ifdef HAZ_TIFF
   //! TIFF file reader and writer
   class TIFFfile : public ImageFile {
   private:
@@ -127,7 +132,9 @@ namespace PhotoFinish {
     Image::ptr read(Destination::ptr dest) const;
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
+#endif
 
+#ifdef HAZ_JP2
   //! JPEG 2000 file reader and writer
   class JP2file : public ImageFile {
   private:
@@ -138,6 +145,7 @@ namespace PhotoFinish {
     Image::ptr read(Destination::ptr dest) const;
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
   };
+#endif
 
 }
 

@@ -266,6 +266,7 @@ namespace PhotoFinish {
   }
 
   void Tags::make_thumbnail(Image::ptr img, const D_thumbnail& dt) {
+#ifdef HAZ_JPEG
     double width, height;
 
     if (dt.maxwidth() * img->height() < dt.maxheight() * img->width()) {
@@ -292,6 +293,7 @@ namespace PhotoFinish {
     EXIFthumb.setJpegThumbnail((unsigned char*)oss.str().data(), oss.str().length());
 
     std::cerr << "Done." << std::endl;
+#endif
   }
 
   void Tags::add_resolution(Image::ptr img) {
