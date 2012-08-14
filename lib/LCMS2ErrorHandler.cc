@@ -21,6 +21,7 @@
 
 namespace PhotoFinish {
 
+  //! Throw a LibraryError exception whem LCMS2 returns an error
   void lcms2_errorhandler(cmsContext ContextID, cmsUInt32Number ErrorCode, const char *Text) {
     throw LibraryError("LCMS2", Text);
   }

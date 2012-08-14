@@ -48,6 +48,7 @@ namespace PhotoFinish {
     virtual SAMPLE eval(double x) const throw(Uninitialised) = 0;
 
   public:
+    //! Shared pointer for a Kernel1Dvar
     typedef std::shared_ptr<Kernel1Dvar> ptr;
 
     //! Emoty constructor
@@ -82,16 +83,16 @@ namespace PhotoFinish {
      */
     Image::ptr convolve_v(Image::ptr img, bool can_free = false);
 
-    //! Accessor for the size of the weights
+    //! The size of the weights
     inline const unsigned int& size(unsigned int i) const { return _size[i]; }
 
-    //! Accessor for the starting point of the weights
+    //! The starting point of the weights
     inline unsigned int& start(unsigned int i) const { return _start[i]; }
 
-    //! Accessor for the weights array
+    //! The weights array at a certain row
     inline const SAMPLE* row(unsigned int i) const { return _weights[i]; }
 
-    //! Accessor for the weights array
+    //! The weights array at a certain point
     inline const SAMPLE& at(unsigned int f, unsigned int i) const { return _weights[i][f]; }
 
   };

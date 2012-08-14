@@ -29,9 +29,13 @@
 
 namespace PhotoFinish {
 
+  //! Ruler paramaters - percentage of final image vs. pixel position in original
   typedef std::pair<double, double> rulerpair;
+
+  //! A list of rulers
   typedef std::vector< rulerpair > rulerlist;
 
+  //! Class for finding the best frame position for cropping
   class CropSolver {
   private:
     rulerlist _h_rulers, _v_rulers;

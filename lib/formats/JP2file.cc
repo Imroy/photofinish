@@ -30,20 +30,24 @@ namespace PhotoFinish {
     ImageFile(filepath)
   {}
 
+  //! Error callback for OpenJPEG - throw a LibraryError exception
   void error_callback(const char* msg, void* client_data) {
     throw LibraryError("OpenJPEG", msg);
   }
 
+  //! Warning callback for OpenJPEG - print the message to STDERR
   void warning_callback(const char* msg, void* client_data) {
     ((char*)msg)[strlen(msg) - 1] = 0;
     std::cerr << "** OpenJPEG:" << msg << " **" << std::endl;
   }
 
+  //! Info callback for OpenJPEG - print the indented message to STDERR
   void info_callback(const char* msg, void* client_data) {
     ((char*)msg)[strlen(msg) - 1] = 0;
     std::cerr << "\tOpenJPEG:" << msg << std::endl;
   }
 
+  //! Read a row of image data from OpenJPEG's planar components into a packed pixel array
   template <typename T>
   inline void* planar_to_packed(unsigned int width, unsigned char channels, opj_image_t* image, unsigned int& index) {
     T *row = (T*)malloc(width * channels * sizeof(T));
@@ -54,6 +58,7 @@ namespace PhotoFinish {
     return (void*)row;
   }
 
+  //! Read from a row of packed pixel data into OpenJPEG's planar components
   template <typename T>
   inline void packed_to_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int& index) {
     T *in = row;

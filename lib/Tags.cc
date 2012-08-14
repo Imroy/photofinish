@@ -54,7 +54,8 @@ namespace PhotoFinish {
   void populate_IPTC_subst(hash& table);
   void populate_XMP_subst(hash& table);
 
-  Exiv2::URational parse_URational(double value) {
+  //! Find a close unsigned rational fraction given a floating-point value
+  Exiv2::URational closest_URational(double value) {
     double margin = fabs(value) * 1e-6;
     unsigned int num = 0, den;
     for (den = 1; den < INT_MAX; den++) {
@@ -70,10 +71,11 @@ namespace PhotoFinish {
     return Exiv2::URational(num, den);
   }
 
+  //! Parse a string into an unsigned rational fraction
   Exiv2::URational parse_URational(std::string s) {
     size_t slash = s.find_first_of('/');
     if (slash == std::string::npos)
-      return parse_URational(boost::lexical_cast<double>(s));
+      return closest_URational(boost::lexical_cast<double>(s));
 
     unsigned int num, den;
     num = boost::lexical_cast<unsigned int>(s.substr(0, slash));
@@ -82,7 +84,8 @@ namespace PhotoFinish {
     return Exiv2::URational(num, den);
   }
 
-  Exiv2::Rational parse_Rational(double value) {
+  //! Find a close rational fraction given a floating-point value
+  Exiv2::Rational closest_Rational(double value) {
     double margin = fabs(value) * 1e-6;
     signed int num = 0;
     unsigned int den;
@@ -99,10 +102,11 @@ namespace PhotoFinish {
     return Exiv2::Rational(num, den);
   }
 
+  //! Parse a string into a rational fraction
   Exiv2::Rational parse_Rational(std::string s) {
     size_t slash = s.find_first_of('/');
     if (slash == std::string::npos)
-      return parse_Rational(boost::lexical_cast<double>(s));
+      return closest_Rational(boost::lexical_cast<double>(s));
 
     signed int num;
     unsigned int den;
@@ -299,7 +303,7 @@ namespace PhotoFinish {
   void Tags::add_resolution(Image::ptr img) {
     Exiv2::URationalValue v;
     if (img->xres().defined()) {
-      v = Exiv2::URationalValue(parse_URational(img->xres()));
+      v = Exiv2::URationalValue(closest_URational(img->xres()));
       std::cerr << "\tSetting X resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->xres() << ") ppi." << std::endl;
       try {
 	_EXIFtags["Exif.Image.XResolution"] = v;
@@ -308,7 +312,7 @@ namespace PhotoFinish {
       }
     }
     if (img->yres().defined()) {
-      v = Exiv2::URationalValue(parse_URational(img->yres()));
+      v = Exiv2::URationalValue(closest_URational(img->yres()));
       std::cerr << "\tSetting Y resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->yres() << ") ppi." << std::endl;
       try {
 	_EXIFtags["Exif.Image.YResolution"] = v;

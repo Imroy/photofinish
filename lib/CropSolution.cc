@@ -27,6 +27,12 @@
 
 namespace PhotoFinish {
 
+  //! Parse named variables into a list of rulers
+  /*!
+    \param vars The tag variables
+    \param key The name of the variables to parse
+    \param rulers The list of rulers to add to
+   */
   void add_rulers(multihash& vars, std::string key, rulerlist& rulers) {
     multihash::iterator vi;
     if ((vi = vars.find(key)) != vars.end())
@@ -43,6 +49,7 @@ namespace PhotoFinish {
     add_rulers(vars, "vruler", _v_rulers);
   }
 
+  //! Add rulers to the either side of an image if there aren't enough
   void add_ruler_pins(rulerlist& rulers, unsigned int max) {
     bool has_first = false, has_last = false;
     for (rulerlist::iterator ti = rulers.begin(); ti != rulers.end(); ti++) {

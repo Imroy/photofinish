@@ -195,6 +195,7 @@ namespace PhotoFinish {
     }
   }
 
+  //! Read a D_TIFF record from a YAML file
   void operator >> (const YAML::Node& node, D_TIFF& dt) {
     if (const YAML::Node *n = node.FindValue("artist"))
       *n >> dt._artist;
@@ -267,6 +268,7 @@ namespace PhotoFinish {
     }
   }
 
+  //! Read a D_JP2 record from a YAML file
   void operator >> (const YAML::Node& node, D_JP2& dj) {
     if (const YAML::Node *n = node.FindValue("numresolutions"))
       *n >> dj._numresolutions;

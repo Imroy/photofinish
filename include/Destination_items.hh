@@ -32,12 +32,20 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  //! Read a boolean value from a YAML file. Why doesn't yaml-cpp define this ?
   void operator >> (const YAML::Node& node, bool& b);
+
+  //! Read a boost.filesystem path from a YAML file
   void operator >> (const YAML::Node& node, fs::path& p);
 
 
+  //! A simple hash
   typedef std::map<std::string, std::string> hash;
+
+  //! A list of strings
   typedef std::vector<std::string> stringlist;
+
+  //! A hash of string lists
   typedef std::map<std::string, stringlist > multihash;
 
   //! Sharpen parameters for destination
@@ -210,23 +218,27 @@ namespace PhotoFinish {
     //! Assignment operator
     D_profile& operator=(const D_profile& b);
 
-    //! Accessor
+    //! Name of the profile
     inline definable<std::string> name(void) const { return _name; }
 
-    //! Accessor
+    //! File path for reading the profile
     inline definable<fs::path> filepath(void) const { return _filepath; }
 
-    //! Accessor
+    //! Do we have the profile data instead of a file path?
     inline bool has_data(void) const { return _data != NULL; }
 
+    //! The profile data for LCMS2
     cmsHPROFILE profile(void) const;
 
+    //! The profile data
     inline void* data(void) const { return _data; }
 
+    //! The size of the profile data
     inline unsigned int data_size(void) const { return _data_size; }
 
     friend void operator >> (const YAML::Node& node, D_profile& dp);
 
+    //! Shared pointer for a D_profile
     typedef std::shared_ptr<D_profile> ptr;
   };
 

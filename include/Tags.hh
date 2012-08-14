@@ -34,10 +34,6 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  typedef std::map<std::string, std::string> hash;
-  typedef std::vector<std::string> stringlist;
-  typedef std::map<std::string, stringlist > multihash;
-
   //! Reads and holds tag information
   class Tags {
   private:
@@ -57,6 +53,7 @@ namespace PhotoFinish {
     //! Constructor with a filepath from which to load tags (calls Load)
     Tags(fs::path filepath);
 
+    //! Shared pointer for a Tags object
     typedef std::shared_ptr<Tags> ptr;
 
     //! Duplicate the tags
@@ -64,16 +61,16 @@ namespace PhotoFinish {
 
     inline void add_searchpath(fs::path path) { _searchpaths.push_back(path); }
 
-    //! Accessor for the internal map of variables.
+    //! The map of variables.
     inline multihash& variables(void) { return _variables; }
 
-    //! Accessor for the internal Exiv2::ExifData object.
+    //! The Exiv2::ExifData object.
     inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
 
-    //! Accessor for the internal Exiv2::IptcData object.
+    //! The Exiv2::IptcData object.
     inline Exiv2::IptcData& IPTCtags(void) { return _IPTCtags; }
 
-    //! Accessor for the internal Exiv2::XmpData object.
+    //! The Exiv2::XmpData object.
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
     //! Try to load tags from a file, looking in the search paths

@@ -32,12 +32,6 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  //! Read a boolean value from a YAML file. Why doesn't yaml-cpp define this ?
-  void operator >> (const YAML::Node& node, bool& b);
-
-  //! Read a boost.filesystem path from a YAML file
-  void operator >> (const YAML::Node& node, fs::path& p);
-
   //! Represents a destination, read from destinations.yml
   class Destination {
   private:
@@ -86,6 +80,7 @@ namespace PhotoFinish {
     //! Assignment operator
     Destination& operator=(const Destination& b);
 
+    //! Shared pointer for a Destination
     typedef std::shared_ptr<Destination> ptr;
 
     //! Duplicate
@@ -156,7 +151,10 @@ namespace PhotoFinish {
 
     void Load(fs::path filepath);
 
+    //! Iterator for stepping through destinations
     typedef std::map<std::string, Destination::ptr>::iterator iterator;
+
+    //! Constant iterator for stepping through destinations
     typedef std::map<std::string, Destination::ptr>::const_iterator const_iterator;
 
     inline std::map<std::string, Destination::ptr>::size_type count(const std::string& key) const { return _destinations.count(key); }

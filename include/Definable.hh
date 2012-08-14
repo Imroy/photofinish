@@ -34,14 +34,18 @@ namespace PhotoFinish {
 
   public:
     //! Empty constructor
-    //! This sets the object to undefined and the item is initialised with its empty constructor
+    /*!
+      This sets the object to undefined and the item is initialised with its empty constructor
+    */
     definable() :
       _defined(false),
       _item()
     {}
 
     //! Construct from an item
-    //! This obvious also sets the object to 'defined'
+    /*!
+      This obviously also sets the object to 'defined'
+    */
     definable(const T &i) :
       _defined(true),
       _item(i)
@@ -79,7 +83,9 @@ namespace PhotoFinish {
     }
 
     //! Allow the contained data to be output to an ostream.
-    //! Outputs "[undefined]" if the value is not defined.
+    /*!
+      Outputs "[undefined]" if the value is not defined.
+    */
     inline friend std::ostream& operator << (std::ostream& out, definable<T>& data) {
       if (data._defined)
 	out << data._item;
@@ -109,7 +115,9 @@ namespace PhotoFinish {
 
   public:
     //! Empty constructor
-    //! Sets defined to false
+    /*!
+      Sets defined to false
+    */
     Role_Definable() :
       _defined(false)
     {}

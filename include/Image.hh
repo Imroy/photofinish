@@ -39,6 +39,7 @@ namespace PhotoFinish {
     }
 
   public:
+    //! Shared pointer for an Image
     typedef std::shared_ptr<Image> ptr;
 
     //! Empty constructor
@@ -53,40 +54,40 @@ namespace PhotoFinish {
     //! Destructor
     ~Image();
 
-    //! Accessor
+    //! The width of this image
     inline const unsigned int width(void) const { return _width; }
 
-    //! Accessor
+    //! The height of this image
     inline const unsigned int height(void) const { return _height; }
 
-    //! Accessor
+    //! Is this image greyscale?
     inline const bool is_greyscale(void) const { return _greyscale; }
 
-    //! Accessor (negative of is_greyscale)
+    //! Is this image colour? i.e opposite of is_greyscale()
     inline const bool is_colour(void) const { return !_greyscale; }
 
-    //! Setter
+    //! Set this image as greyscale
     inline void set_greyscale(bool g = true) { _greyscale = g; }
 
-    //! Setter (negative of set_greyscale)
+    //! Set this image as colour i.e opposite of set_greyscale
     inline void set_colour(bool c = true) { _greyscale = !c; }
 
-    //! Accessor
+    //! The X resolution of this image (PPI)
     inline const definable<double> xres(void) const { return _xres; }
 
-    //! Accessor
+    //! The Y resolution of this image (PPI)
     inline const definable<double> yres(void) const { return _yres; }
 
-    //! Setter
+    //! Set both the X and Y resolution (PPI)
     inline void set_resolution(double r) { _xres = _yres = r; }
 
-    //! Setter
+    //! Set the X resolution (PPI)
     inline void set_xres(double r) { _xres = r; }
 
-    //! Setter
+    //! Set the Y resolution (PPI)
     inline void set_yres(double r) { _yres = r; }
 
-    //! Setter
+    //! Set the X and Y resolutions (PPI)
     inline void set_resolution(double xr, double yr) { _xres = xr; _yres = yr; }
 
     //! Set the resolution given the length of the longest side (in inches)

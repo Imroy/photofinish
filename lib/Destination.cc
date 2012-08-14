@@ -146,6 +146,7 @@ namespace PhotoFinish {
     return best_frame;
   }
 
+  //! Read a Destination record from a YAML file
   void operator >> (const YAML::Node& node, Destination& d) {
     if (const YAML::Node *n = node.FindValue("name"))
       *n >> d._name;

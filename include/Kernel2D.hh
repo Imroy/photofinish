@@ -42,6 +42,7 @@ namespace PhotoFinish {
     Kernel2D(short unsigned int size, short unsigned int centre);
 
   public:
+    //! Shared pointer for a Kernel2D
     typedef std::shared_ptr<Kernel2D> ptr;
 
     //! Empty constructor
@@ -61,10 +62,10 @@ namespace PhotoFinish {
     inline const short unsigned int centrex(void) const { return _centrex; }
     inline const short unsigned int centrey(void) const { return _centrey; }
 
-    //! Accessor for the values array
+    //! The values array at a certain row
     inline SAMPLE* row(short unsigned int y) const { return _values[y]; }
 
-    //! Accessor for the values array
+    //! The values array at a certain point
     inline SAMPLE& at(short unsigned int x, short unsigned int y) const { return _values[y][x]; }
 
     //! Convolve and image with this kernel and produce a new image

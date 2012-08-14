@@ -41,6 +41,7 @@ namespace PhotoFinish {
     const fs::path _filepath;
 
   public:
+    //! Shared pointer for an ImageFile
     typedef std::shared_ptr<ImageFile> ptr;
 
     //! Constructor
@@ -68,7 +69,7 @@ namespace PhotoFinish {
     //! Add variables to one of the configuration objects based on destination format
     static void add_variables(Destination::ptr dest, multihash& vars);
 
-    //! Accessor
+    //! File path of this image file
     inline virtual const fs::path filepath(void) const { return _filepath; }
 
     //! Read the file into an image

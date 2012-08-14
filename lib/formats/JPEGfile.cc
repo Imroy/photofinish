@@ -46,6 +46,7 @@ namespace PhotoFinish {
   //! Free the data structures of the istream source manager
   void jpeg_istream_src_free(j_decompress_ptr cinfo);
 
+  //! Read an ICC profile from APP2 markers in a JPEG file
   cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
   Image::ptr JPEGfile::read(Destination::ptr dest) const {
@@ -176,9 +177,13 @@ namespace PhotoFinish {
   //! Free the data structures of the ostream destination manager
   void jpeg_ostream_dest_free(j_compress_ptr cinfo);
 
+  //! Create a scan "script" for an RGB image
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
+
+  //! Create a scan "script" for a greyscale image
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
+  //! Write an ICC profile into APP2 markers in a JPEG file
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
   void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) const {
