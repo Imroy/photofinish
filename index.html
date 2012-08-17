@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Photofinish : A tool for processing digital images in the (presumably) last stage of publishing a photo" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Photofinish</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Imroy/photofinish">View on GitHub</a>
+
+          <h1 id="project_title">Photofinish</h1>
+          <h2 id="project_tagline">A tool for processing digital images in the (presumably) last stage of publishing a photo</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Imroy/photofinish/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Imroy/photofinish/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>Photo Finish is a command-line tool for automatically processing digital images in the (presumably) last stage of publishing a photo. I run a "hybrid" workflow that starts with film scans, but this could also be of use to digital photographers.</p>
+
+<h1>Description</h1>
+
+<p>So what does Photo Finish do?</p>
+
+<ol>
+<li>It decides on the correct cropping window for a specified "destination"</li>
+<li>Does the crop and rescaling</li>
+<li>Saves the result with custom EXIF/IPTC/XMP metadata</li>
+</ol><h1>Features</h1>
+
+<p>My focus has been on image quality and correctness, so many computations are done in floating-point. The 1990's are long passed, so why limit ourselves to small integers? We have the computational power and memory storage to easily do this the right way.</p>
+
+<ul>
+<li>The list of "destinations" is read from a YAML file
+
+<ul>
+<li>Destinations describe the size, format, and other specifics of the output</li>
+</ul>
+</li>
+<li>Each input file can have its own list of "tags" - EXIF/IPTC/XMP metadata, as well as "variables", some of which override destination parameters
+
+<ul>
+<li>This is an artefact of my original shell script (which used exiftool) and expanded in my Perl version (using <a href="http://www.sno.phy.queensu.ca/%7Ephil/exiftool/">Image::Exiftool</a>); perhaps this should be replaced by YAML?</li>
+</ul>
+</li>
+</ul><h2>Image file formats</h2>
+
+<ul>
+<li>Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000) files</li>
+<li>Embedded ICC profiles are used when reading, and created when writing</li>
+<li>Falls back to sRGB or a similar greyscale profile</li>
+<li>Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)</li>
+</ul><h2>Data structures and processing</h2>
+
+<ul>
+<li>Image pixel data is stored internally in the <a href="http://en.wikipedia.org/wiki/Lab_color_space">CIE L* a* b* colour space</a> using floating-point components
+
+<ul>
+<li>This colour space is perceptually uniform, so it is ideal for rescaling of images</li>
+<li>Even when the input and output(s) are greyscale, this colour space is used (partly for simplicity, but also because greyscale can have colour to it)</li>
+<li>Configurable as either single or double precision at compile-time (DP adds almost nothing in my limited tests)</li>
+</ul>
+</li>
+<li>Rescaling is done using a Lanczos filter</li>
+<li>OpenMP is used in several places to take advantage of SMP systems</li>
+<li>Dithers using Floyd-Steinberg error diffusion when producing 8-bit component output
+
+<ul>
+<li>Not sure if this improves the output or not, it just seemed like the right thing to do</li>
+</ul>
+</li>
+</ul><h1>Current limitations</h1>
+
+<ul>
+<li>Probably only compiles on Linux for now</li>
+</ul><h1>Todo</h1>
+
+<ul>
+<li>Add other image formats e.g RAW formats (reading only)</li>
+<li>Use YAML (or something else?) for the "tags" format</li>
+</ul><p>Crazy idea:</p>
+
+<ul>
+<li>An entirely workqueue-based version to keep multiple processors/cores busy at all time</li>
+</ul><h1>Libraries</h1>
+
+<p>Photo Finish currently uses the following libraries:</p>
+
+<ul>
+<li>
+<a href="http://www.libpng.org/">LibPNG</a> for reading and writing PNG files</li>
+<li>
+<a href="http://www.ijg.org/">IJG</a>'s LibJPEG for writing JPEG's</li>
+<li>
+<a href="http://www.remotesensing.org/libtiff/">libTIFF</a> for reading and writing PNG files</li>
+<li>
+<a href="http://www.littlecms.com/">Little CMS</a> (LCMS) for transforming between colour profiles</li>
+<li>
+<a href="http://code.google.com/p/yaml-cpp/">libyaml-cpp</a> for reading YAML data files</li>
+<li>
+<a href="http://www.exiv2.org/">EXIV2</a> for EXIF/IPTC/XMP metadata</li>
+<li>Several boost libraries:
+
+<ul>
+<li><a href="http://www.boost.org/doc/libs/1_50_0/libs/filesystem/doc/">Boost.Filesystem</a></li>
+<li><a href="http://www.boost.org/doc/libs/1_50_0/doc/html/program_options.html">Boost.Program_options</a></li>
+<li><a href="http://www.boost.org/doc/libs/1_50_0/doc/html/boost_lexical_cast.html">Boost.Lexical_Cast</a></li>
+<li>a bit of <a href="http://www.boost.org/doc/libs/1_50_0/libs/algorithm/doc/html/index.html">Boost.Algorithm</a> (iequals)</li>
+</ul>
+</li>
+</ul><h1>License</h1>
+
+<p>Copyright 2012 Ian Tester &lt;imroykun@gmail.com&gt;</p>
+
+<p>Photo Finish is licensed under the GNU GPL version 3 or later.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Photofinish maintained by <a href="https://github.com/Imroy">Imroy</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
