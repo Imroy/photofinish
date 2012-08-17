@@ -1,5 +1,8 @@
-Photo Finish is a command-line tool for automatically processing digital images in the (presumably) last stage of publishing a photo. I run a "hybrid" workflow that starts with film scans, but this could also be of use to digital photographers.
+Photo Finish is a set of command-line tools for automatically processing digital images with a focus on film scans. The eponymous <tt>photofinish</tt> crops, scales, and converts images in the (presumably) last stage of publishing a photo. I run a "hybrid" work-flow that starts with film scans, but this could also be of use to digital photographers.
 
+A second tool, <tt>process_scans</tt> converts original TIFF scans into PNG or JP2 (JPEG 2000) files, in a sub-directory, and produces scaled previews. The conversion is useful because most software working with TIFF files does not use any compression. Saving 10~20&nbsp;MB might not sound like much, but after scanning a whole roll of film (36+ exposures) it quickly adds up. Producing scaled previews and moving the originals to a sub-directory is useful because many programs want to create thumbnails of image files and this can be a very slow process with large, high-resolution scans (e.g ~120&nbsp;MB each), especially over a network. So use the previews to identify a scan and open the original file manually.
+
+The rest of this page deals primarily with <tt>photofinish</tt>, although all tools use the same library of classes.
 
 == Description ==
 
