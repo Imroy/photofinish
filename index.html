@@ -4,7 +4,7 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Photofinish : A tool for processing digital images in the (presumably) last stage of publishing a photo" />
+    <meta name="description" content="Photofinish : Tools for processing digital images, with a focus on film scans" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -19,7 +19,7 @@
           <a id="forkme_banner" href="https://github.com/Imroy/photofinish">View on GitHub</a>
 
           <h1 id="project_title">Photofinish</h1>
-          <h2 id="project_tagline">A tool for processing digital images in the (presumably) last stage of publishing a photo</h2>
+          <h2 id="project_tagline">Tools for processing digital images, with a focus on film scans</h2>
 
             <section id="downloads">
               <a class="zip_download_link" href="https://github.com/Imroy/photofinish/zipball/master">Download this project as a .zip file</a>
@@ -31,7 +31,11 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>Photo Finish is a command-line tool for automatically processing digital images in the (presumably) last stage of publishing a photo. I run a "hybrid" workflow that starts with film scans, but this could also be of use to digital photographers.</p>
+        <p>Photo Finish is a set of command-line tools for automatically processing digital images, with a focus on film scans. The eponymous <code>photofinish</code> crops, scales, and converts images in the (presumably) last stage of publishing a photo. I run a "hybrid" work-flow that starts with film scans, but this could also be of use to digital photographers.</p>
+
+<p>A second tool, <code>process_scans</code> converts original TIFF scans into PNG or JP2 (JPEG 2000) files, in a sub-directory, and produces scaled previews. The conversion is useful because most software working with TIFF files does not use any compression. Saving 10~20 MB might not sound like much, but after scanning a whole roll of film (36+ exposures) it quickly adds up. Producing scaled previews and moving the originals to a sub-directory is useful because many programs want to create thumbnails of image files and this can be a very slow process with large, high-resolution scans (e.g ~120 MB each), especially over a network. So use the previews to identify a scan and open the original file manually.</p>
+
+<p>The rest of this page deals primarily with <code>photofinish</code>, although all tools use the same library of classes.</p>
 
 <h1>Description</h1>
 
