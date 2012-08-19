@@ -95,6 +95,7 @@ namespace PhotoFinish {
       // OpenMP can't parallelise a for loop using floating point values
       // So put them into a list and loop over that
       std::vector<double> xvalues;
+      xvalues.reserve(ceil((maxx - minx) / step));
       for (double x = minx; x < maxx; x += step)
 	xvalues.push_back(x);
 
@@ -116,9 +117,7 @@ namespace PhotoFinish {
 	      continue;
 
 	    double distance = 0;
-
 	    rulerlist::iterator ti;
-
 	    for (ti = h_rulers.begin(); (ti != h_rulers.end()) && ((!best_frame) || (distance < best_distance)); ti++)
 	      distance += sqr(ti->second - (x + (ti->first * width)));
 
