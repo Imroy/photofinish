@@ -171,7 +171,7 @@ namespace PhotoFinish {
 	if ((vi = _variables.find(key)) != _variables.end())
 	  vi->second.push_back(value);
 	else {
-	  std::vector<std::string> list;
+	  stringlist list;
 	  list.push_back(value);
 	  _variables[key] = list;
 	}
