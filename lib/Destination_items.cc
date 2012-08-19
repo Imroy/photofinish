@@ -212,7 +212,8 @@ namespace PhotoFinish {
 
 
 
-  D_JP2::D_JP2()
+  D_JP2::D_JP2() :
+    _rates()
   {}
 
   void D_JP2::add_variables(multihash& vars) {
