@@ -37,7 +37,7 @@ namespace PhotoFinish {
 
   transform_queue::transform_queue(Destination::ptr dest, Image::ptr img, int channels, cmsHTRANSFORM transform) :
     _rows(new row_ptr [img->height()]),
-    _rowlocks(img->height()),
+    _rowlocks(),
     _rowlen(img->width() * channels * sizeof(short unsigned int)),
     _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
     _dest(dest),
@@ -47,6 +47,7 @@ namespace PhotoFinish {
   {
     omp_init_lock(_queue_lock);
 
+    _rowlocks.reserve(img->height());
     for (unsigned int y = 0; y < _img->height(); y++) {
       _rowlocks[y] = (omp_lock_t*)malloc(sizeof(omp_lock_t));
       omp_init_lock(_rowlocks[y]);
