@@ -24,7 +24,7 @@
 #include <ostream>
 #include <string>
 #include <utility>
-#include <vector>
+#include <list>
 #include "Frame.hh"
 
 namespace PhotoFinish {
@@ -33,7 +33,7 @@ namespace PhotoFinish {
   typedef std::pair<double, double> rulerpair;
 
   //! A list of rulers
-  typedef std::vector< rulerpair > rulerlist;
+  typedef std::list< rulerpair > rulerlist;
 
   //! Class for finding the best frame position for cropping
   class CropSolver {
