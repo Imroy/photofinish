@@ -21,7 +21,7 @@
 
 #include <string>
 #include <memory>
-#include <deque>
+#include <vector>
 #include "yaml-cpp/yaml.h"
 #include <lcms2.h>
 #include <boost/filesystem.hpp>
@@ -172,7 +172,7 @@ namespace PhotoFinish {
   private:
     definable<int> _numresolutions;
     definable<std::string> _prog_order;
-    std::deque<float> _rates;
+    std::vector<float> _rates;
     definable< std::pair<int, int> > _tile_size;
 
   public:
