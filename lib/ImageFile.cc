@@ -83,6 +83,9 @@ namespace PhotoFinish {
   cmsHPROFILE ImageFile::default_profile(cmsUInt32Number cmsType) {
     cmsHPROFILE profile = NULL;
     cmsToneCurve *gamma;
+    double Parameters[5];
+    cmsCIExyY D65;
+    cmsMLU *DescriptionMLU;
     switch (T_COLORSPACE(cmsType)) {
     case PT_RGB:
       std::cerr << "\tUsing default sRGB profile." << std::endl;
@@ -91,9 +94,24 @@ namespace PhotoFinish {
 
     case PT_GRAY:
       std::cerr << "\tUsing default greyscale profile." << std::endl;
-      gamma = cmsBuildGamma(NULL, 2.2);
-      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
+      // Build a greyscale profile with the same gamma curve and white point as sRGB.
+      // Copied from cmsCreate_sRGBProfileTHR() and Build_sRGBGamma().
+      cmsWhitePointFromTemp(&D65, 6504);
+      Parameters[0] = 2.4;
+      Parameters[1] = 1.0 / 1.055;
+      Parameters[2] = 0.055 / 1.055;
+      Parameters[3] = 1.0 / 12.92;
+      Parameters[4] = 0.04045;
+      gamma = cmsBuildParametricToneCurve(NULL, 4, Parameters);
+      profile = cmsCreateGrayProfile(&D65, gamma);
       cmsFreeToneCurve(gamma);
+
+      DescriptionMLU = cmsMLUalloc(NULL, 1);
+      if (DescriptionMLU != NULL) {
+	if (cmsMLUsetWide(DescriptionMLU,  "en", "AU", L"sGrey built-in"))
+	  cmsWriteTag(profile, cmsSigProfileDescriptionTag,  DescriptionMLU);
+	cmsMLUfree(DescriptionMLU);
+      }
       break;
 
     default:
