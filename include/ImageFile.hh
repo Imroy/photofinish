@@ -20,10 +20,24 @@
 #define __IMAGEFILE_HH__
 
 #include <string>
-#include <lcms2.h>
 #include <memory>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <lcms2.h>
+
+#ifdef HAZ_PNG
+#include <png.h>
+#endif
+#ifdef HAZ_JPEG
+#include <jpeglib.h>
+#endif
+#ifdef HAZ_TIFF
+#include <tiffio.h>
+#endif
+#ifdef HAZ_JP2
+#include <openjpeg.h>
+#endif
+
 #include "Image.hh"
 #include "Destination.hh"
 #include "Exception.hh"
@@ -39,6 +53,12 @@ namespace PhotoFinish {
   class ImageFile {
   protected:
     const fs::path _filepath;
+    bool _is_open;
+
+    virtual void mark_sGrey(cmsUInt32Number intent) const = 0;
+    virtual void mark_sRGB(cmsUInt32Number intent) const = 0;
+    virtual void embed_icc(std::string name, unsigned char *data, unsigned int len) const = 0;
+    cmsHPROFILE get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent);
 
   public:
     //! Shared pointer for an ImageFile
@@ -76,14 +96,14 @@ namespace PhotoFinish {
     /*!
       \return A new Image object
     */
-    virtual Image::ptr read(void) const;
+    virtual Image::ptr read(void);
 
     //! Read the file into an image
     /*!
       \param dest A Destination object where some information from the file will be placed
       \return A new Image object
     */
-    virtual Image::ptr read(Destination::ptr dest) const = 0;
+    virtual Image::ptr read(Destination::ptr dest) = 0;
 
     //! Write an image to the file
     /*!
@@ -91,19 +111,25 @@ namespace PhotoFinish {
       \param dest A Destination object, used for the JPEG/PNG/etc parameters
       \param can_free Can each row of the image be freed after it is written?
     */
-    virtual void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const = 0;
+    virtual void write(Image::ptr img, Destination::ptr dest, bool can_free = false) = 0;
   };
 
 #ifdef HAZ_PNG
   //! PNG file reader and writer
   class PNGfile : public ImageFile {
   private:
+    png_structp _png;
+    png_infop _info;
+
+    void mark_sGrey(cmsUInt32Number intent) const;
+    void mark_sRGB(cmsUInt32Number intent) const;
+    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     PNGfile(const fs::path filepath);
 
-    Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
+    Image::ptr read(Destination::ptr dest);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
 
@@ -111,14 +137,20 @@ namespace PhotoFinish {
   //! JPEG file reader and writer
   class JPEGfile : public ImageFile {
   private:
+    jpeg_decompress_struct *_dinfo;
+    jpeg_compress_struct *_cinfo;
+
+    void mark_sGrey(cmsUInt32Number intent) const;
+    void mark_sRGB(cmsUInt32Number intent) const;
+    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     JPEGfile(const fs::path filepath);
 
-    Image::ptr read(Destination::ptr dest) const;
+    Image::ptr read(Destination::ptr dest);
     //! Special version of write() that takes an open ostream object
-    void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false) const;
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
+    void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
 
@@ -126,12 +158,17 @@ namespace PhotoFinish {
   //! TIFF file reader and writer
   class TIFFfile : public ImageFile {
   private:
+    TIFF *_tiff;
+
+    void mark_sGrey(cmsUInt32Number intent) const;
+    void mark_sRGB(cmsUInt32Number intent) const;
+    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     TIFFfile(const fs::path filepath);
 
-    Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
+    Image::ptr read(Destination::ptr dest);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
 
@@ -139,12 +176,17 @@ namespace PhotoFinish {
   //! JPEG 2000 file reader and writer
   class JP2file : public ImageFile {
   private:
+    opj_image_t *_jp2_image;
+
+    void mark_sGrey(cmsUInt32Number intent) const;
+    void mark_sRGB(cmsUInt32Number intent) const;
+    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     JP2file(const fs::path filepath);
 
-    Image::ptr read(Destination::ptr dest) const;
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false) const;
+    Image::ptr read(Destination::ptr dest);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
 

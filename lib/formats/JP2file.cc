@@ -27,7 +27,8 @@
 namespace PhotoFinish {
 
   JP2file::JP2file(const fs::path filepath) :
-    ImageFile(filepath)
+    ImageFile(filepath),
+    _jp2_image(NULL)
   {}
 
   //! Error callback for OpenJPEG - throw a LibraryError exception
@@ -67,7 +68,11 @@ namespace PhotoFinish {
 	image->comps[c].data[index] = *in++;
   }
 
-  Image::ptr JP2file::read(Destination::ptr dest) const {
+  Image::ptr JP2file::read(Destination::ptr dest) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
     event_mgr.error_handler = error_callback;
@@ -90,41 +95,41 @@ namespace PhotoFinish {
     opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, (void*)this);
     opj_setup_decoder(dinfo, &parameters);
     opj_cio_t *cio = opj_cio_open((opj_common_ptr)dinfo, src, file_size);
-    opj_image_t *jp2_image = opj_decode(dinfo, cio);
-    if (jp2_image == NULL)
+    _jp2_image = opj_decode(dinfo, cio);
+    if (_jp2_image == NULL)
       throw LibraryError("OpenJPEG", "Could not decode file");
 
     opj_cio_close(cio);
     free(src);
 
     // Is this necessary?
-    if (jp2_image->numcomps > 1)
-      for (unsigned char c = 1; c < jp2_image->numcomps; c++) {
-	if (jp2_image->comps[c].dx != jp2_image->comps[0].dx)
+    if (_jp2_image->numcomps > 1)
+      for (unsigned char c = 1; c < _jp2_image->numcomps; c++) {
+	if (_jp2_image->comps[c].dx != _jp2_image->comps[0].dx)
 	  std::cerr << "** Component " << (int)c << " has a different dx to the first! **" << std::endl;
-	if (jp2_image->comps[c].dy != jp2_image->comps[0].dy)
+	if (_jp2_image->comps[c].dy != _jp2_image->comps[0].dy)
 	  std::cerr << "** Component " << (int)c << " has a different dy to the first! **" << std::endl;
-	if (jp2_image->comps[c].w != jp2_image->comps[0].w)
+	if (_jp2_image->comps[c].w != _jp2_image->comps[0].w)
 	  std::cerr << "** Component " << (int)c << " has a different w to the first! **" << std::endl;
-	if (jp2_image->comps[c].h != jp2_image->comps[0].h)
+	if (_jp2_image->comps[c].h != _jp2_image->comps[0].h)
 	  std::cerr << "** Component " << (int)c << " has a different h to the first! **" << std::endl;
-	if (jp2_image->comps[c].x0 != jp2_image->comps[0].x0)
+	if (_jp2_image->comps[c].x0 != _jp2_image->comps[0].x0)
 	  std::cerr << "** Component " << (int)c << " has a different x0 to the first! **" << std::endl;
-	if (jp2_image->comps[c].y0 != jp2_image->comps[0].y0)
+	if (_jp2_image->comps[c].y0 != _jp2_image->comps[0].y0)
 	  std::cerr << "** Component " << (int)c << " has a different y0 to the first! **" << std::endl;
-	if (jp2_image->comps[c].prec != jp2_image->comps[0].prec)
+	if (_jp2_image->comps[c].prec != _jp2_image->comps[0].prec)
 	  std::cerr << "** Component " << (int)c << " has a different prec to the first! **" << std::endl;
-	if (jp2_image->comps[c].bpp != jp2_image->comps[0].bpp)
+	if (_jp2_image->comps[c].bpp != _jp2_image->comps[0].bpp)
 	  std::cerr << "** Component " << (int)c << " has a different bpp to the first! **" << std::endl;
-	if (jp2_image->comps[c].sgnd != jp2_image->comps[0].sgnd)
+	if (_jp2_image->comps[c].sgnd != _jp2_image->comps[0].sgnd)
 	  std::cerr << "** Component " << (int)c << " has a different sgnd to the first! **" << std::endl;
       }
 
-    Image::ptr img(new Image(jp2_image->x1 - jp2_image->x0, jp2_image->y1 - jp2_image->y0));
+    Image::ptr img(new Image(_jp2_image->x1 - _jp2_image->x0, _jp2_image->y1 - _jp2_image->y0));
 
-    int depth = jp2_image->comps[0].prec;
-    cmsUInt32Number cmsType = CHANNELS_SH(jp2_image->numcomps) | BYTES_SH(depth >> 3);
-    switch (jp2_image->color_space) {
+    int depth = _jp2_image->comps[0].prec;
+    cmsUInt32Number cmsType = CHANNELS_SH(_jp2_image->numcomps) | BYTES_SH(depth >> 3);
+    switch (_jp2_image->color_space) {
     case CLRSPC_SRGB:
       cmsType |= COLORSPACE_SH(PT_RGB);
       break;
@@ -139,25 +144,25 @@ namespace PhotoFinish {
       break;
 
     default:
-      std::cerr << "** Unknown colour space " << jp2_image->color_space << " **" << std::endl;
+      std::cerr << "** Unknown colour space " << _jp2_image->color_space << " **" << std::endl;
       throw LibraryError("OpenJPEG", "color_space");
     }
     dest->set_depth(depth);
 
     cmsHPROFILE profile;
-    if (jp2_image->icc_profile_buf != NULL) {
-      profile = cmsOpenProfileFromMem(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
-      void *data_copy = malloc(jp2_image->icc_profile_len);
-      memcpy(data_copy, jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
+    if (_jp2_image->icc_profile_buf != NULL) {
+      profile = cmsOpenProfileFromMem(_jp2_image->icc_profile_buf, _jp2_image->icc_profile_len);
+      void *data_copy = malloc(_jp2_image->icc_profile_len);
+      memcpy(data_copy, _jp2_image->icc_profile_buf, _jp2_image->icc_profile_len);
       char *profile_name = NULL;
       unsigned int profile_name_len;
       if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
 	profile_name = (char*)malloc(profile_name_len);
 	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
-	dest->set_profile(profile_name, data_copy, jp2_image->icc_profile_len);
+	dest->set_profile(profile_name, data_copy, _jp2_image->icc_profile_len);
 	free(profile_name);
       } else
-	dest->set_profile("JP2 ICC profile", data_copy, jp2_image->icc_profile_len);
+	dest->set_profile("JP2 ICC profile", data_copy, _jp2_image->icc_profile_len);
     } else
       profile = ImageFile::default_profile(cmsType);
 
@@ -179,9 +184,9 @@ namespace PhotoFinish {
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  void *buffer = NULL;
 	  if (depth == 8)
-	    buffer = planar_to_packed<unsigned char>(img->width(), T_CHANNELS(cmsType), jp2_image, index);
+	    buffer = planar_to_packed<unsigned char>(img->width(), T_CHANNELS(cmsType), _jp2_image, index);
 	  else
-	    buffer = planar_to_packed<unsigned short>(img->width(), T_CHANNELS(cmsType), jp2_image, index);
+	    buffer = planar_to_packed<unsigned short>(img->width(), T_CHANNELS(cmsType), _jp2_image, index);
 
 	  std::cerr << "\r\tRead " << (y + 1) << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " in queue for colour transformation)   ";
@@ -210,12 +215,36 @@ namespace PhotoFinish {
       }
     }
     cmsDeleteTransform(transform);
+    _is_open = false;
 
     std::cerr << "Done." << std::endl;
     return img;
   }
 
-  void JP2file::write(Image::ptr img, Destination::ptr dest, bool can_free) const {
+  void JP2file::mark_sGrey(cmsUInt32Number intent) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+  }
+
+  void JP2file::mark_sRGB(cmsUInt32Number intent) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+  }
+
+  void JP2file::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+
+    std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
+    _jp2_image->icc_profile_buf = data;
+    _jp2_image->icc_profile_len = len;
+  }
+
+  void JP2file::write(Image::ptr img, Destination::ptr dest, bool can_free) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     std::cerr << "Preparing for file " << _filepath << "..." << std::endl;
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
@@ -305,26 +334,16 @@ namespace PhotoFinish {
       components[i].prec = components[i].bpp = depth;
       components[i].sgnd = 0;
     }
-    opj_image_t *jp2_image = opj_image_create(channels, components, colour_space);
+    _jp2_image = opj_image_create(channels, components, colour_space);
 
-    if (jp2_image == NULL)
+    if (_jp2_image == NULL)
       return;
 
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
     if (dest->intent().defined())
       intent = dest->intent();
 
-    cmsHPROFILE profile = NULL;
-    if (dest->profile()) {
-      profile = dest->profile()->profile();
-      if (dest->profile()->has_data()) {
-	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << " from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
-	jp2_image->icc_profile_buf = (unsigned char*)dest->profile()->data();
-	jp2_image->icc_profile_len = dest->profile()->data_size();
-      }
-    }
-    if (profile == NULL)
-      profile = this->default_profile(cmsTempType);
+    cmsHPROFILE profile = this->get_and_embed_profile(dest, cmsTempType, intent);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
@@ -375,9 +394,9 @@ namespace PhotoFinish {
 	      ditherer.dither(row, rows[y], y == img->height() - 1);
 	      queue.free_row(y);
 
-	      packed_to_planar<unsigned char>(img->width(), channels, rows[y], jp2_image, index);
+	      packed_to_planar<unsigned char>(img->width(), channels, rows[y], _jp2_image, index);
 	    } else
-	      packed_to_planar<unsigned short>(img->width(), channels, row, jp2_image, index);
+	      packed_to_planar<unsigned short>(img->width(), channels, row, _jp2_image, index);
 	    if (can_free)
 	      img->free_row(y);
 	  }
@@ -392,18 +411,18 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    jp2_image->x0 = parameters.image_offset_x0;
-    jp2_image->y0 = parameters.image_offset_y0;
-    jp2_image->x1 = jp2_image->x0 + (img->width() - 1) * parameters.subsampling_dx + 1;
-    jp2_image->y1 = jp2_image->y0 + (img->height() - 1) * parameters.subsampling_dy + 1;
+    _jp2_image->x0 = parameters.image_offset_x0;
+    _jp2_image->y0 = parameters.image_offset_y0;
+    _jp2_image->x1 = _jp2_image->x0 + (img->width() - 1) * parameters.subsampling_dx + 1;
+    _jp2_image->y1 = _jp2_image->y0 + (img->height() - 1) * parameters.subsampling_dy + 1;
 
-    parameters.tcp_mct = jp2_image->numcomps == 3 ? 1 : 0;
+    parameters.tcp_mct = _jp2_image->numcomps == 3 ? 1 : 0;
 
     opj_cinfo_t* cinfo = opj_create_compress(CODEC_JP2);
     opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, (void*)this);
-    opj_setup_encoder(cinfo, &parameters, jp2_image);
+    opj_setup_encoder(cinfo, &parameters, _jp2_image);
     opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
-    opj_encode(cinfo, cio, jp2_image, NULL);
+    opj_encode(cinfo, cio, _jp2_image, NULL);
 
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
@@ -415,7 +434,9 @@ namespace PhotoFinish {
     ofs.close();
     opj_cio_close(cio);
     opj_destroy_compress(cinfo);
-    opj_image_destroy(jp2_image);
+    opj_image_destroy(_jp2_image);
+    _jp2_image = NULL;
+    _is_open = false;
 
     std::cerr << "Done." << std::endl;
   }

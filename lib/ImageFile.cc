@@ -26,7 +26,8 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   ImageFile::ImageFile(const fs::path filepath) :
-    _filepath(filepath)
+    _filepath(filepath),
+    _is_open(false)
   {}
 
   ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
@@ -121,6 +122,42 @@ namespace PhotoFinish {
     return profile;
   }
 
+  cmsHPROFILE ImageFile::get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent) {
+    cmsHPROFILE profile = NULL;
+    std::string profile_name;
+    unsigned char *profile_data = NULL;
+    unsigned int profile_len = 0;
+
+    if (dest->profile()) {
+      profile = dest->profile()->profile();
+      profile_name = dest->profile()->name();
+      if (dest->profile()->has_data()) {
+	profile_data = (unsigned char*)dest->profile()->data();
+	profile_len = dest->profile()->data_size();
+      }
+    } else {
+      profile = ImageFile::default_profile(cmsType);
+      if (T_COLORSPACE(cmsType) == PT_GRAY) {
+	profile_name = "sGrey";
+	this->mark_sGrey(intent);
+      } else {
+	profile_name = "sRGB";
+	this->mark_sRGB(intent);
+      }
+    }
+
+    if (profile_data == NULL) {
+      cmsSaveProfileToMem(profile, NULL, &profile_len);
+      if (profile_len > 0) {
+	profile_data = (unsigned char*)malloc(profile_len);
+	cmsSaveProfileToMem(profile, profile_data, &profile_len);
+      }
+    }
+
+    this->embed_icc(profile_name, profile_data, profile_len);
+    return profile;
+  }
+
   void ImageFile::add_variables(Destination::ptr dest, multihash& vars) {
     std::string format = dest->format().get();
     if (boost::iequals(format, "jpeg")
@@ -135,7 +172,7 @@ namespace PhotoFinish {
       const_cast<D_JP2&>(dest->jp2()).add_variables(vars);
   }
 
-  Image::ptr ImageFile::read(void) const {
+  Image::ptr ImageFile::read(void) {
     Destination::ptr temp(new Destination);
     return this->read(temp);
   }

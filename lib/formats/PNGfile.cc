@@ -35,7 +35,8 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   PNGfile::PNGfile(const fs::path filepath) :
-    ImageFile(filepath)
+    ImageFile(filepath),
+    _png(NULL), _info(NULL)
   {}
 
   //! Called by libPNG when the iHDR chunk has been read with the main "header" information
@@ -140,7 +141,11 @@ namespace PhotoFinish {
     }
   }
 
-  Image::ptr PNGfile::read(Destination::ptr dest) const {
+  Image::ptr PNGfile::read(Destination::ptr dest) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
@@ -154,19 +159,19 @@ namespace PhotoFinish {
       fb.seekg(0, std::ios_base::beg);
     }
 
-    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+    _png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
 					     NULL, NULL, NULL);
-    if (!png)
+    if (!_png)
       throw LibraryError("libpng", "Could not create PNG read structure");
 
-    png_infop info = png_create_info_struct(png);
-    if (!info) {
-      png_destroy_read_struct(&png, (png_infopp)NULL, (png_infopp)NULL);
+    _info = png_create_info_struct(_png);
+    if (!_info) {
+      png_destroy_read_struct(&_png, (png_infopp)NULL, (png_infopp)NULL);
       throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
-    if (setjmp(png_jmpbuf(png))) {
-      png_destroy_read_struct(&png, &info, NULL);
+    if (setjmp(png_jmpbuf(_png))) {
+      png_destroy_read_struct(&_png, &_info, NULL);
       fb.close();
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
@@ -178,13 +183,13 @@ namespace PhotoFinish {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
 	std::cerr << "\tReading PNG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
-	png_set_progressive_read_fn(png, (void *)&queue, png_info_cb, png_row_cb, png_end_cb);
+	png_set_progressive_read_fn(_png, (void *)&queue, png_info_cb, png_row_cb, png_end_cb);
 	png_byte buffer[1048576];
 	size_t length;
 	do {
 	  fb.read((char*)buffer, 1048576);
 	  length = fb.gcount();
-	  png_process_data(png, info, buffer, length);
+	  png_process_data(_png, _info, buffer, length);
 	  while (queue.num_rows() > 100)
 	    queue.reader_process_row();
 	} while (length > 0);
@@ -197,8 +202,9 @@ namespace PhotoFinish {
     }
     queue.free_transform();
 
-    png_destroy_read_struct(&png, &info, NULL);
+    png_destroy_read_struct(&_png, &_info, NULL);
     fb.close();
+    _is_open = false;
 
     std::cerr << "Done." << std::endl;
     return queue.image();
@@ -216,29 +222,55 @@ namespace PhotoFinish {
     os->flush();
   }
 
-  void PNGfile::write(Image::ptr img, Destination::ptr dest, bool can_free) const {
+  void PNGfile::mark_sGrey(cmsUInt32Number intent) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+
+    png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
+  }
+
+  void PNGfile::mark_sRGB(cmsUInt32Number intent) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+
+    png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
+  }
+
+  void PNGfile::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+
+    std::cerr << "\tEmbedding profile \"" << name << "\" (" << len << " bytes)." << std::endl;
+    png_set_iCCP(_png, _info, name.c_str(), 0, data, len);
+  }
+
+  void PNGfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
 
-    png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
+    _png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 					      NULL, NULL, NULL);
-    if (!png)
+    if (!_png)
       throw LibraryError("libpng", "Could not create PNG write structure");
 
-    png_infop info = png_create_info_struct(png);
-    if (!info) {
-      png_destroy_write_struct(&png, (png_infopp)NULL);
+    _info = png_create_info_struct(_png);
+    if (!_info) {
+      png_destroy_write_struct(&_png, (png_infopp)NULL);
       throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
-    if (setjmp(png_jmpbuf(png))) {
-      png_destroy_write_struct(&png, &info);
+    if (setjmp(png_jmpbuf(_png))) {
+      png_destroy_write_struct(&_png, &_info);
       fb.close();
       throw LibraryError("libpng", "Something went wrong writing the PNG");
     }
 
-    png_set_write_fn(png, &fb, png_write_ostream_cb, png_flush_ostream_cb);
+    png_set_write_fn(_png, &fb, png_write_ostream_cb, png_flush_ostream_cb);
 
     int png_colour_type, png_channels;
     cmsUInt32Number cmsTempType;
@@ -259,56 +291,23 @@ namespace PhotoFinish {
     std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
 	      << " " << depth << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
 	      << " PNG image..." << std::endl;
-    png_set_IHDR(png, info,
+    png_set_IHDR(_png, _info,
 		 img->width(), img->height(), depth, png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-    png_set_filter(png, 0, PNG_ALL_FILTERS);
-    png_set_compression_level(png, Z_BEST_COMPRESSION);
+    png_set_filter(_png, 0, PNG_ALL_FILTERS);
+    png_set_compression_level(_png, Z_BEST_COMPRESSION);
 
     if (img->xres().defined() && img->yres().defined()) {
       unsigned int xres = round(img->xres() / 0.0254);
       unsigned int yres = round(img->yres() / 0.0254);
-      png_set_pHYs(png, info, xres, yres, PNG_RESOLUTION_METER);
+      png_set_pHYs(_png, _info, xres, yres, PNG_RESOLUTION_METER);
     }
 
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
     if (dest->intent().defined())
       intent = dest->intent();
 
-    cmsHPROFILE profile = NULL;
-    if (dest->profile()) {
-      profile = dest->profile()->profile();
-      if (dest->profile()->has_data()) {
-	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << "\" from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
-	png_set_iCCP(png, info, dest->profile()->name()->c_str(), 0, (unsigned char*)dest->profile()->data(), dest->profile()->data_size());
-      }
-    } else {
-      if ((profile == NULL) && (img->is_greyscale())) {
-	std::cerr << "\tUsing default greyscale profile." << std::endl;
-	cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);
-	profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);
-	cmsFreeToneCurve(gamma);
-      }
-
-      if (profile != NULL) {
-	cmsUInt32Number len;
-	cmsSaveProfileToMem(profile, NULL, &len);
-	if (len > 0) {
-	  png_bytep profile_data = (png_bytep)malloc(len);
-	  if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	    std::string profile_name = "icc";	// Default value
-	    if (dest->profile() && dest->profile()->name().defined())
-	      profile_name = dest->profile()->name();
-	    std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << len << " bytes)." << std::endl;
-	    png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);
-	  }
-	}
-      } else {
-	std::cerr << "\tUsing default sRGB profile." << std::endl;
-	profile = cmsCreate_sRGBProfile();
-	png_set_sRGB_gAMA_and_cHRM(png, info, intent);
-      }
-    }
+    cmsHPROFILE profile = this->get_and_embed_profile(dest, cmsTempType, intent);
 
     {
       time_t t = time(NULL);
@@ -316,7 +315,7 @@ namespace PhotoFinish {
 	png_time ptime;
 	png_convert_from_time_t(&ptime, t);
 	std::cerr << "\tAdding time chunk." << std::endl;
-	png_set_tIME(png, info, &ptime);
+	png_set_tIME(_png, _info, &ptime);
       }
     }
 
@@ -324,7 +323,7 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < img->height(); y++)
       png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (depth >> 3));
 
-    png_set_rows(png, info, png_rows);
+    png_set_rows(_png, _info, png_rows);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
@@ -383,14 +382,15 @@ namespace PhotoFinish {
     cmsDeleteTransform(transform);
 
     std::cerr << "\tWriting PNG image data..." << std::endl;
-    png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
+    png_write_png(_png, _info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
 
     for (unsigned int y = 0; y < img->height(); y++)
       free(png_rows[y]);
     free(png_rows);
 
-    png_destroy_write_struct(&png, &info);
+    png_destroy_write_struct(&_png, &_info);
     fb.close();
+    _is_open = false;
 
     std::cerr << "Done." << std::endl;
   }

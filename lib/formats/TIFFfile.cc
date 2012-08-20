@@ -30,34 +30,39 @@ namespace fs = boost::filesystem;
 namespace PhotoFinish {
 
   TIFFfile::TIFFfile(const fs::path filepath) :
-    ImageFile(filepath)
+    ImageFile(filepath),
+    _tiff(NULL)
   {}
 
 #define TIFFcheck(x) if ((rc = TIFF##x) != 1) throw LibraryError("libtiff", "TIFF" #x " returned " + rc)
 
-  Image::ptr TIFFfile::read(Destination::ptr dest) const {
+  Image::ptr TIFFfile::read(Destination::ptr dest) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ifstream fb(_filepath, std::ios_base::in);
     if (fb.fail())
       throw FileOpenError(_filepath.native());
 
-    TIFF *tiff = TIFFStreamOpen("", &fb);
-    if (tiff == NULL)
+    _tiff = TIFFStreamOpen("", &fb);
+    if (_tiff == NULL)
       throw FileOpenError(_filepath.native());
 
     int rc;
     uint32 width, height;
-    TIFFcheck(GetField(tiff, TIFFTAG_IMAGEWIDTH, &width));
-    TIFFcheck(GetField(tiff, TIFFTAG_IMAGELENGTH, &height));
+    TIFFcheck(GetField(_tiff, TIFFTAG_IMAGEWIDTH, &width));
+    TIFFcheck(GetField(_tiff, TIFFTAG_IMAGELENGTH, &height));
     std::cerr << "\tImage is " << width << "×" << height << std::endl;
     Image::ptr img(new Image(width, height));
 
     uint16 bit_depth, channels, photometric;
-    TIFFcheck(GetField(tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));
+    TIFFcheck(GetField(_tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));
     dest->set_depth(bit_depth);
     std::cerr << "\tImage has a depth of " << bit_depth << std::endl;
-    TIFFcheck(GetField(tiff, TIFFTAG_SAMPLESPERPIXEL, &channels));
-    TIFFcheck(GetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric));
+    TIFFcheck(GetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, &channels));
+    TIFFcheck(GetField(_tiff, TIFFTAG_PHOTOMETRIC, &photometric));
 
     cmsUInt32Number cmsType = CHANNELS_SH(channels) | BYTES_SH(bit_depth >> 3);
     switch (photometric) {
@@ -83,7 +88,7 @@ namespace PhotoFinish {
 
     {
       uint16 extra_count, *extra_types;
-      if (TIFFGetField(tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
+      if (TIFFGetField(_tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
 	cmsType |= EXTRA_SH(extra_count & 0x07);
 	for (int i = 0; i < extra_count; i++) {
 	  std::cerr << "\tImage has an ";
@@ -104,9 +109,9 @@ namespace PhotoFinish {
     {
       float xres, yres;
       short unsigned int resunit;
-      if ((TIFFGetField(tiff, TIFFTAG_XRESOLUTION, &xres) == 1)
-	  && (TIFFGetField(tiff, TIFFTAG_YRESOLUTION, &yres) == 1)
-	  && (TIFFGetField(tiff, TIFFTAG_RESOLUTIONUNIT, &resunit) == 1)) {
+      if ((TIFFGetField(_tiff, TIFFTAG_XRESOLUTION, &xres) == 1)
+	  && (TIFFGetField(_tiff, TIFFTAG_YRESOLUTION, &yres) == 1)
+	  && (TIFFGetField(_tiff, TIFFTAG_RESOLUTIONUNIT, &resunit) == 1)) {
 	switch (resunit) {
 	case RESUNIT_INCH:
 	  img->set_resolution(xres, yres);
@@ -127,7 +132,7 @@ namespace PhotoFinish {
 
     uint32 profile_len;
     void *profile_data;
-    if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
+    if (TIFFGetField(_tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
       profile = cmsOpenProfileFromMem(profile_data, profile_len);
       void *data_copy = malloc(profile_len);
       memcpy(data_copy, profile_data, profile_len);
@@ -157,10 +162,10 @@ namespace PhotoFinish {
     {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
-	tdata_t buffer = _TIFFmalloc(TIFFScanlineSize(tiff));
+	tdata_t buffer = _TIFFmalloc(TIFFScanlineSize(_tiff));
 	std::cerr << "\tReading TIFF image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
 	for (unsigned int y = 0; y < height; y++) {
-	  TIFFcheck(ReadScanline(tiff, buffer, y));
+	  TIFFcheck(ReadScanline(_tiff, buffer, y));
 	  std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows ("
 		    << queue.num_rows() << " in queue for colour transformation)   ";
 
@@ -190,66 +195,91 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    TIFFClose(tiff);
+    TIFFClose(_tiff);
+    _tiff = NULL;
     fb.close();
+    _is_open = false;
 
     std::cerr << "Done." << std::endl;
     return img;
   }
 
-  void TIFFfile::write(Image::ptr img, Destination::ptr dest, bool can_free) const {
+  void TIFFfile::mark_sGrey(cmsUInt32Number intent) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+  }
+
+  void TIFFfile::mark_sRGB(cmsUInt32Number intent) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+  }
+
+  void TIFFfile::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
+    if (!_is_open)
+      throw FileOpenError("not open");
+
+    std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
+    int rc;
+    TIFFcheck(SetField(_tiff, TIFFTAG_ICCPROFILE, len, data));
+  }
+
+  void TIFFfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream fb;
     fb.open(_filepath, std::ios_base::out);
 
-    TIFF *tiff = TIFFStreamOpen("", &fb);
-    if (tiff == NULL)
+    _tiff = TIFFStreamOpen("", &fb);
+    if (_tiff == NULL)
       throw FileOpenError(_filepath.native());
 
     int rc;
 
-    TIFFcheck(SetField(tiff, TIFFTAG_SUBFILETYPE, 0));
-    TIFFcheck(SetField(tiff, TIFFTAG_IMAGEWIDTH, img->width()));
-    TIFFcheck(SetField(tiff, TIFFTAG_IMAGELENGTH, img->height()));
-    TIFFcheck(SetField(tiff, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT));
-    TIFFcheck(SetField(tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
+    TIFFcheck(SetField(_tiff, TIFFTAG_SUBFILETYPE, 0));
+    TIFFcheck(SetField(_tiff, TIFFTAG_IMAGEWIDTH, img->width()));
+    TIFFcheck(SetField(_tiff, TIFFTAG_IMAGELENGTH, img->height()));
+    TIFFcheck(SetField(_tiff, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT));
+    TIFFcheck(SetField(_tiff, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG));
 
     {
       bool compression_set = false;
       if (dest->tiff().defined()) {
 	// Note that EXIV2 appears to overwrite the artist and copyright fields with its own information (if it's set)
 	if (dest->tiff().artist().defined())
-	  TIFFcheck(SetField(tiff, TIFFTAG_ARTIST, dest->tiff().artist().get().c_str()));
+	  TIFFcheck(SetField(_tiff, TIFFTAG_ARTIST, dest->tiff().artist().get().c_str()));
 	if (dest->tiff().copyright().defined())
-	  TIFFcheck(SetField(tiff, TIFFTAG_COPYRIGHT, dest->tiff().copyright().get().c_str()));
+	  TIFFcheck(SetField(_tiff, TIFFTAG_COPYRIGHT, dest->tiff().copyright().get().c_str()));
 
 	if (dest->tiff().compression().defined()) {
 	  std::string compression = dest->tiff().compression().get();
 	  if (boost::iequals(compression, "deflate")) {
-	    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_DEFLATE));
-	    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
+	    TIFFcheck(SetField(_tiff, TIFFTAG_COMPRESSION, COMPRESSION_DEFLATE));
+	    TIFFcheck(SetField(_tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
 	    compression_set = true;
 	  } else if (boost::iequals(compression, "lzw")) {
-	    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_LZW));
-	    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
+	    TIFFcheck(SetField(_tiff, TIFFTAG_COMPRESSION, COMPRESSION_LZW));
+	    TIFFcheck(SetField(_tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
 	    compression_set = true;
 	  }
 	}
       }
       // Default to no compression (best compatibility and TIFF's compression doesn't make much difference)
       if (!compression_set)
-	TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_NONE));
+	TIFFcheck(SetField(_tiff, TIFFTAG_COMPRESSION, COMPRESSION_NONE));
     }
 
     // For some reason none of this information shows up in the written TIFF file
     /*
-    TIFFcheck(SetField(tiff, TIFFTAG_SOFTWARE, "PhotoFinish"));
-    TIFFcheck(SetField(tiff, TIFFTAG_DOCUMENTNAME, _filepath.filename().c_str()));
+    TIFFcheck(SetField(_tiff, TIFFTAG_SOFTWARE, "PhotoFinish"));
+    TIFFcheck(SetField(_tiff, TIFFTAG_DOCUMENTNAME, _filepath.filename().c_str()));
     {
       char *hostname = (char*)malloc(101);
       if (gethostname(hostname, 100) == 0) {
 	std::cerr << "\tSetting hostcomputer tag to \"" << hostname << "\"" << std::endl;
-	TIFFcheck(SetField(tiff, TIFFTAG_HOSTCOMPUTER, hostname));
+	TIFFcheck(SetField(_tiff, TIFFTAG_HOSTCOMPUTER, hostname));
       }
     }
     {
@@ -259,63 +289,41 @@ namespace PhotoFinish {
 	char *datetime = (char*)malloc(20);
 	strftime(datetime, 20, "%Y:%m:%d %H:%M:%S", lt);
 	std::cerr << "\tSetting datetime tag to \"" << datetime << "\"" << std::endl;
-	TIFFcheck(SetField(tiff, TIFFTAG_DATETIME, datetime));
+	TIFFcheck(SetField(_tiff, TIFFTAG_DATETIME, datetime));
       }
     }
     */
 
     if (img->xres().defined()) {
-      TIFFcheck(SetField (tiff, TIFFTAG_XRESOLUTION, (float)img->xres()));
-      TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
+      TIFFcheck(SetField (_tiff, TIFFTAG_XRESOLUTION, (float)img->xres()));
+      TIFFcheck(SetField (_tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
     }
     if (img->yres().defined()) {
-      TIFFcheck(SetField (tiff, TIFFTAG_YRESOLUTION, (float)img->yres()));
-      TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
+      TIFFcheck(SetField (_tiff, TIFFTAG_YRESOLUTION, (float)img->yres()));
+      TIFFcheck(SetField (_tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
     }
 
     cmsUInt32Number cmsTempType;
     if (img->is_colour()) {
-      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB));
-      TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 3));
+      TIFFcheck(SetField(_tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB));
+      TIFFcheck(SetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, 3));
       cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
     } else {
-      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK));
-      TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, 1));
+      TIFFcheck(SetField(_tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK));
+      TIFFcheck(SetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, 1));
       cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
 
     int depth = 8;	// Default value
     if (dest->depth().defined())
       depth = dest->depth();
-    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, depth));
+    TIFFcheck(SetField(_tiff, TIFFTAG_BITSPERSAMPLE, depth));
 
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
     if (dest->intent().defined())
       intent = dest->intent();
 
-    cmsHPROFILE profile = NULL;
-    if (dest->profile()) {
-      profile = dest->profile()->profile();
-      if (dest->profile()->has_data()) {
-	std::cerr << "\tEmbedding profile \"" << dest->profile()->name().get() << " from data (" << dest->profile()->data_size() << " bytes)." << std::endl;
-	TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, dest->profile()->data_size(), dest->profile()->data()));
-      }
-    } else {
-      if (profile == NULL)
-	profile = this->default_profile(cmsTempType);
-
-      if (profile != NULL) {
-	cmsUInt32Number len;
-	cmsSaveProfileToMem(profile, NULL, &len);
-	if (len > 0) {
-	  void *profile_data = malloc(len);
-	  if (cmsSaveProfileToMem(profile, profile_data, &len)) {
-	    std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
-	    TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, len, profile_data));
-	  }
-	}
-      }
-    }
+    cmsHPROFILE profile = this->get_and_embed_profile(dest, cmsTempType, intent);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
@@ -356,9 +364,9 @@ namespace PhotoFinish {
 	      img->free_row(y);
 	    if (depth == 8) {
 	      ditherer.dither(row, tiff_row, y == img->height() - 1);
-	      TIFFWriteScanline(tiff, tiff_row, y, 0);
+	      TIFFWriteScanline(_tiff, tiff_row, y, 0);
 	    } else
-	      TIFFWriteScanline(tiff, row, y, 0);
+	      TIFFWriteScanline(_tiff, row, y, 0);
 	  }
 	  queue.free_row(y);
 
@@ -374,8 +382,10 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    TIFFClose(tiff);
+    TIFFClose(_tiff);
+    _tiff = NULL;
     fb.close();
+    _is_open = false;
 
     std::cerr << "Done." << std::endl;
   }
