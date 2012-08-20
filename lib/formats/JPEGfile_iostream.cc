@@ -31,9 +31,9 @@ namespace PhotoFinish {
   };
 
   //! Initialise the istream source manager
-  void jpeg_istream_init_source(j_decompress_ptr cinfo) {
-    jpeg_source_mgr *smgr = (jpeg_source_mgr*)(cinfo->src);
-    jpeg_source_state_t *ss = (jpeg_source_state_t*)(cinfo->client_data);
+  void jpeg_istream_init_source(j_decompress_ptr dinfo) {
+    jpeg_source_mgr *smgr = (jpeg_source_mgr*)(dinfo->src);
+    jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
     ss->is->seekg(0, std::ios_base::beg);
     ss->buffer = (JOCTET*)malloc(ss->buffer_size);
     if (ss->buffer == NULL)
@@ -42,9 +42,9 @@ namespace PhotoFinish {
   }
 
   //! Fill the buffer
-  boolean jpeg_istream_fill_input_buffer(j_decompress_ptr cinfo) {
-    jpeg_source_mgr *smgr = (jpeg_source_mgr*)(cinfo->src);
-    jpeg_source_state_t *ss = (jpeg_source_state_t*)(cinfo->client_data);
+  boolean jpeg_istream_fill_input_buffer(j_decompress_ptr dinfo) {
+    jpeg_source_mgr *smgr = (jpeg_source_mgr*)(dinfo->src);
+    jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
 
     ss->is->read((char*)ss->buffer, ss->buffer_size);
     smgr->next_input_byte = ss->buffer;
@@ -54,11 +54,11 @@ namespace PhotoFinish {
   }
 
   //! Skip some data
-  void jpeg_istream_skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
+  void jpeg_istream_skip_input_data(j_decompress_ptr dinfo, long num_bytes) {
     if (num_bytes < 1)
       return;
-    jpeg_source_mgr *smgr = (jpeg_source_mgr*)(cinfo->src);
-    jpeg_source_state_t *ss = (jpeg_source_state_t*)(cinfo->client_data);
+    jpeg_source_mgr *smgr = (jpeg_source_mgr*)(dinfo->src);
+    jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
 
     if ((unsigned long)num_bytes > smgr->bytes_in_buffer) {
       ss->is->seekg(num_bytes - smgr->bytes_in_buffer, std::ios_base::cur);
@@ -71,21 +71,21 @@ namespace PhotoFinish {
   }
 
   //! Resync to start?!?
-  boolean jpeg_istream_resync_to_restart(j_decompress_ptr cinfo, int desired) {
-    return jpeg_resync_to_restart(cinfo, desired);
+  boolean jpeg_istream_resync_to_restart(j_decompress_ptr dinfo, int desired) {
+    return jpeg_resync_to_restart(dinfo, desired);
   }
 
   //! Terminate the istream source manager
-  void jpeg_istream_term_source(j_decompress_ptr cinfo) {
-    jpeg_source_state_t *ss = (jpeg_source_state_t*)(cinfo->client_data);
+  void jpeg_istream_term_source(j_decompress_ptr dinfo) {
+    jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
     free(ss->buffer);
   }
 
-  void jpeg_istream_src(j_decompress_ptr cinfo, std::istream* is) {
+  void jpeg_istream_src(j_decompress_ptr dinfo, std::istream* is) {
     jpeg_source_state_t *ss = (jpeg_source_state_t*)malloc(sizeof(jpeg_source_state_t));
     ss->is = is;
     ss->buffer_size = 1048576;
-    cinfo->client_data = (void*)ss;
+    dinfo->client_data = (void*)ss;
 
     jpeg_source_mgr *smgr = (jpeg_source_mgr*)malloc(sizeof(jpeg_source_mgr));
     smgr->init_source = jpeg_istream_init_source;
@@ -93,12 +93,12 @@ namespace PhotoFinish {
     smgr->skip_input_data = jpeg_istream_skip_input_data;
     smgr->resync_to_restart = jpeg_istream_resync_to_restart;
     smgr->term_source = jpeg_istream_term_source;
-    cinfo->src = smgr;
+    dinfo->src = smgr;
   }
 
-  void jpeg_istream_src_free(j_decompress_ptr cinfo) {
-    free((jpeg_source_state_t*)cinfo->client_data);
-    free(cinfo->src);
+  void jpeg_istream_src_free(j_decompress_ptr dinfo) {
+    free((jpeg_source_state_t*)dinfo->client_data);
+    free(dinfo->src);
   }
 
 

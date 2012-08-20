@@ -41,80 +41,80 @@ namespace PhotoFinish {
   {}
 
   //! Set up a "source manager" on the given JPEG decompression structure to read from an istream
-  void jpeg_istream_src(j_decompress_ptr cinfo, std::istream* is);
+  void jpeg_istream_src(j_decompress_ptr dinfo, std::istream* is);
 
   //! Free the data structures of the istream source manager
-  void jpeg_istream_src_free(j_decompress_ptr cinfo);
+  void jpeg_istream_src_free(j_decompress_ptr dinfo);
 
   //! Read an ICC profile from APP2 markers in a JPEG file
   cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
   Image::ptr JPEGfile::read(Destination::ptr dest) const {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
-    fs::ifstream fb(_filepath, std::ios_base::in);
-    if (fb.fail())
+    fs::ifstream ifs(_filepath, std::ios_base::in);
+    if (ifs.fail())
       throw FileOpenError(_filepath.native());
 
-    jpeg_decompress_struct cinfo;
-    jpeg_create_decompress(&cinfo);
+    jpeg_decompress_struct dinfo;
+    jpeg_create_decompress(&dinfo);
     struct jpeg_error_mgr jerr;
-    cinfo.err = jpeg_std_error(&jerr);
+    dinfo.err = jpeg_std_error(&jerr);
 
-    jpeg_istream_src(&cinfo, &fb);
+    jpeg_istream_src(&dinfo, &ifs);
 
-    jpeg_save_markers(&cinfo, JPEG_APP0 + 2, 0xFFFF);
+    jpeg_save_markers(&dinfo, JPEG_APP0 + 2, 0xFFFF);
 
-    jpeg_read_header(&cinfo, TRUE);
-    cinfo.dct_method = JDCT_FLOAT;
+    jpeg_read_header(&dinfo, TRUE);
+    dinfo.dct_method = JDCT_FLOAT;
 
-    jpeg_start_decompress(&cinfo);
+    jpeg_start_decompress(&dinfo);
 
-    Image::ptr img(new Image(cinfo.output_width, cinfo.output_height));
+    Image::ptr img(new Image(dinfo.output_width, dinfo.output_height));
     dest->set_depth(8);
 
-    if (cinfo.saw_JFIF_marker) {
-      switch (cinfo.density_unit) {
+    if (dinfo.saw_JFIF_marker) {
+      switch (dinfo.density_unit) {
       case 1:	// pixels per inch (yuck)
-	img->set_resolution(cinfo.X_density, cinfo.Y_density);
+	img->set_resolution(dinfo.X_density, dinfo.Y_density);
 	break;
 
       case 2:	// pixels per centimetre
-	img->set_resolution(cinfo.X_density * 2.54, cinfo.Y_density * 2.54);
+	img->set_resolution(dinfo.X_density * 2.54, dinfo.Y_density * 2.54);
 	break;
 
       default:
-	std::cerr << "** Unknown density unit (" << (int)cinfo.density_unit << ") **" << std::endl;
+	std::cerr << "** Unknown density unit (" << (int)dinfo.density_unit << ") **" << std::endl;
       }
     }
 
-    cmsUInt32Number cmsType = CHANNELS_SH(cinfo.num_components) | BYTES_SH(1);
-    switch (cinfo.jpeg_color_space) {
+    cmsUInt32Number cmsType = CHANNELS_SH(dinfo.num_components) | BYTES_SH(1);
+    switch (dinfo.jpeg_color_space) {
     case JCS_GRAYSCALE:
       cmsType |= COLORSPACE_SH(PT_GRAY);
       img->set_greyscale();
       break;
 
     case JCS_YCbCr:
-      cinfo.out_color_space = JCS_RGB;
+      dinfo.out_color_space = JCS_RGB;
     case JCS_RGB:
       cmsType |= COLORSPACE_SH(PT_RGB);
       break;
 
     case JCS_YCCK:
-      cinfo.out_color_space = JCS_CMYK;
+      dinfo.out_color_space = JCS_CMYK;
     case JCS_CMYK:
       cmsType |= COLORSPACE_SH(PT_CMYK);
-      if (cinfo.saw_Adobe_marker)
+      if (dinfo.saw_Adobe_marker)
 	cmsType |= FLAVOR_SH(1);
       break;
 
     default:
-      std::cerr << "** unsupported JPEG colour space " << cinfo.jpeg_color_space << " **" << std::endl;
+      std::cerr << "** unsupported JPEG colour space " << dinfo.jpeg_color_space << " **" << std::endl;
       exit(1);
     }
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHPROFILE profile = jpeg_read_profile(&cinfo, dest);
+    cmsHPROFILE profile = jpeg_read_profile(&dinfo, dest);
 
     if (profile == NULL)
       profile = this->default_profile(cmsType);
@@ -132,18 +132,18 @@ namespace PhotoFinish {
       int th_id = omp_get_thread_num();
       if (th_id == 0) {		// Master thread
 	JSAMPROW jpeg_row[1];
-	jpeg_row[0] = (JSAMPROW)malloc(img->width() * cinfo.output_components * sizeof(JSAMPROW));
+	jpeg_row[0] = (JSAMPROW)malloc(img->width() * dinfo.output_components * sizeof(JSAMPROW));
 	std::cerr << "\tReading JPEG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
-	while (cinfo.output_scanline < cinfo.output_height) {
-	  jpeg_read_scanlines(&cinfo, jpeg_row, 1);
-	  std::cerr << "\r\tRead " << cinfo.output_scanline << " of " << img->height() << " rows ("
+	while (dinfo.output_scanline < dinfo.output_height) {
+	  jpeg_read_scanlines(&dinfo, jpeg_row, 1);
+	  std::cerr << "\r\tRead " << dinfo.output_scanline << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " in queue for colour transformation)   ";
 
-	  queue.add_copy(cinfo.output_scanline - 1, jpeg_row[0]);
+	  queue.add_copy(dinfo.output_scanline - 1, jpeg_row[0]);
 
 	  while (queue.num_rows() > 100) {
 	    queue.reader_process_row();
-	    std::cerr << "\r\tRead " << cinfo.output_scanline << " of " << img->height() << " rows ("
+	    std::cerr << "\r\tRead " << dinfo.output_scanline << " of " << img->height() << " rows ("
 		      << queue.num_rows() << " in queue for colour transformation)   ";
 	  }
 	}
@@ -164,9 +164,9 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    jpeg_finish_decompress(&cinfo);
-    jpeg_istream_src_free(&cinfo);
-    jpeg_destroy_decompress(&cinfo);
+    jpeg_finish_decompress(&dinfo);
+    jpeg_istream_src_free(&dinfo);
+    jpeg_destroy_decompress(&dinfo);
 
     return img;
   }
