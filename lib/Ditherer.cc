@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <vector>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -23,15 +24,26 @@
 
 namespace PhotoFinish {
 
-  Ditherer::Ditherer(unsigned int width, unsigned char channels) :
+  Ditherer::Ditherer(unsigned int width, unsigned char channels, std::vector<unsigned char> maxvalues) :
     _width(width), _channels(channels),
     _error_rows(NULL),
-    _curr_row(0), _next_row(1)
+    _curr_row(0), _next_row(1),
+    _maxvalues(maxvalues),
+    _scale(NULL), _unscale(NULL)
   {
     _error_rows = (short int**)malloc(2 * sizeof(short int*));
     for (unsigned int y = 0; y < 2; y++)
       _error_rows[y] = (short int*)malloc(_width * _channels * sizeof(short int));
     memset(_error_rows[_next_row], 0, _width * _channels * sizeof(short int));
+
+    _scale = (int*)malloc(_channels * sizeof(int));
+    _unscale = (int*)malloc(_channels * sizeof(int));
+    for (unsigned char c = 0; c < _channels; c++) {
+      if (c >= _maxvalues.size())
+	_maxvalues[c] = 255;
+      _scale[c] = ((long long)_maxvalues[c] << 32) / 65535;
+      _unscale[c] = ((long long)65535 << 23) / _maxvalues[c];
+    }
   }
 
   Ditherer::~Ditherer() {
@@ -40,7 +52,24 @@ namespace PhotoFinish {
 	free(_error_rows[y]);
       free(_error_rows);
       _error_rows = NULL;
+
+      free(_scale);
+      _scale = NULL;
+      free(_unscale);
+      _unscale = NULL;
     }
+  }
+
+  inline unsigned char Ditherer::attemptvalue(int target, unsigned char channel) {
+    if (target < 0)
+      return 0;
+    if (target > 65535)
+      return _maxvalues[channel];
+    return ((long long)target * _scale[channel]) >> 32;
+  }
+
+  inline int Ditherer::actualvalue(unsigned char attempt, unsigned char channel) {
+    return ((long long)attempt * _unscale[channel]) >> 23;
   }
 
 #define pos ((x * _channels) + c)
@@ -61,21 +90,21 @@ namespace PhotoFinish {
 	// All but last pixel
 	for (; x < _width - 1; x++, in += _channels, out += _channels) {
 	  int target = *in + (_error_rows[_curr_row][pos] >> 4);
-	  *out = round(target * (1.0 / 257));
-	  int error = target - ((int)*out * 257);
+	  *out = attemptvalue(target, c);
+	  int error = target - actualvalue(*out, c);
 
 	  _error_rows[_curr_row][nextpos] += error * 7;
 	}
 	// Last pixel
 	if (x < _width) {
 	  int target = *in + (_error_rows[_curr_row][pos] >> 4);
-	  *out = round(target * (1.0 / 257));
+	  *out = attemptvalue(target, c);
 	}
       } else {
 	// First pixel
 	int target = *in + (_error_rows[_curr_row][pos] >> 4);
-	*out = round(target * (1.0 / 257));
-	int error = target - ((int)*out * 257);
+	*out = attemptvalue(target, c);
+	int error = target - actualvalue(*out, c);
 
 	_error_rows[_next_row][pos] += error * 5;
 	if (x < _width - 1) {
@@ -89,8 +118,8 @@ namespace PhotoFinish {
 	// Most pixels
 	while (x < _width - 1) {
 	  target = *in + (_error_rows[_curr_row][pos] >> 4);
-	  *out = round(target * (1.0 / 257));
-	  error = target - ((int)*out * 257);
+	  *out = attemptvalue(target, c);
+	  error = target - actualvalue(*out, c);
 	  _error_rows[_next_row][prevpos] += error * 3;
 	  _error_rows[_next_row][nextpos] += error;
 	  _error_rows[_curr_row][nextpos] += error * 7;
@@ -101,8 +130,8 @@ namespace PhotoFinish {
 	// Last pixel
 	if (x < _width) {
 	  target = *in + (_error_rows[_curr_row][pos] >> 4);
-	  *out = round(target * (1.0 / 257));
-	  error = target - ((int)*out * 257);
+	  *out = attemptvalue(target, c);
+	  error = target - actualvalue(*out, c);
 	  _error_rows[_next_row][prevpos] += error * 3;
 	}
       }

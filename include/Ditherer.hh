@@ -28,14 +28,20 @@ namespace PhotoFinish {
     unsigned char _channels;
     short int **_error_rows;
     unsigned char _curr_row, _next_row;
+    std::vector<unsigned char> _maxvalues;
+    int *_scale, *_unscale;
+
+    unsigned char attemptvalue(int target, unsigned char channel);
+    int actualvalue(unsigned char attempt, unsigned char channel);
 
   public:
     //! Constructor
     /*!
       \param width Width of the image
       \param channels Number of channels of the image
+      \param maxvalues The maximum values for each channel, defaults to 255 for each
     */
-    Ditherer(unsigned int width, unsigned char channels);
+    Ditherer(unsigned int width, unsigned char channels, std::vector<unsigned char> maxvalues = {});
 
     //! Destructor
     ~Ditherer();
