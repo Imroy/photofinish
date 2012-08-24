@@ -190,6 +190,27 @@ namespace PhotoFinish {
   };
 #endif
 
+  //! Write the boot logo files for use on Motorola Atrix 4G and possibly other phones
+  /*!
+    I haven't been able to find any documentation about this format.
+    It starts with the ASCII string "SOL:" followed by eight null bytes.
+    Then comes the width and height as big-endian 32-bit values.
+    The image data is as uncompressed 5-6-5 bit pixels i.e 16 bits per pixel.
+    No footer.
+   */
+  class SOLfile : public ImageFile {
+  private:
+    void mark_sGrey(cmsUInt32Number intent) const {}
+    void mark_sRGB(cmsUInt32Number intent) const {}
+    void embed_icc(std::string name, unsigned char *data, unsigned int len) const {}
+
+  public:
+    SOLfile(const fs::path filepath);
+
+    Image::ptr read(Destination::ptr dest);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  };
+
 }
 
 #endif // __IMAGEFILE_HH__

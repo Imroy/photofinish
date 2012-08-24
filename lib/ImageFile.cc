@@ -78,6 +78,9 @@ namespace PhotoFinish {
       return ImageFile::ptr(new JP2file(filepath.replace_extension(".jp2")));
 #endif
 
+    if (boost::iequals(format, "sol"))
+      return ImageFile::ptr(new SOLfile(filepath.replace_extension(".bin")));
+
     throw UnknownFileType(format);
   }
 
@@ -136,7 +139,7 @@ namespace PhotoFinish {
 	profile_len = dest->profile()->data_size();
       }
     } else {
-      profile = ImageFile::default_profile(cmsType);
+      profile = this->default_profile(cmsType);
       if (T_COLORSPACE(cmsType) == PT_GRAY) {
 	profile_name = "sGrey";
 	this->mark_sGrey(intent);

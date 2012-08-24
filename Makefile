@@ -14,9 +14,9 @@ BINDIR = $(PREFIX)/bin
 # Libraries with pkg-config data
 PKGS = lcms2 exiv2 yaml-cpp
 
-COMMON_FLAGS = -Wall -Iinclude -fopenmp -g -DSAMPLE=$(PRECISION) -finput-charset=UTF-8
+COMMON_FLAGS = -Wall -Iinclude -fopenmp -DSAMPLE=$(PRECISION) -finput-charset=UTF-8
 LIBS = -lm -lstdc++ -lgomp -lboost_filesystem-mt -lboost_system-mt -lboost_program_options-mt
-LIB_OBJS = $(patsubst %.cc,%.o, $(wildcard lib/*.cc))
+LIB_OBJS = $(patsubst %.cc,%.o, $(wildcard lib/*.cc)) lib/formats/SOLfile.o
 
 ifeq ($(HAZ_PNG), 1)
 COMMON_FLAGS += -DHAZ_PNG
