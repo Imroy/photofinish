@@ -147,16 +147,16 @@ namespace PhotoFinish {
     _is_open = true;
 
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
-    fs::ifstream fb(_filepath, std::ios_base::in);
-    if (fb.fail())
+    fs::ifstream ifs(_filepath, std::ios_base::in);
+    if (ifs.fail())
       throw FileOpenError(_filepath.native());
 
     {
       unsigned char header[8];
-      fb.read((char*)header, 8);
+      ifs.read((char*)header, 8);
       if (png_sig_cmp(header, 0, 8))
 	throw FileContentError(_filepath.string(), "is not a PNG file");
-      fb.seekg(0, std::ios_base::beg);
+      ifs.seekg(0, std::ios_base::beg);
     }
 
     _png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
@@ -172,7 +172,7 @@ namespace PhotoFinish {
 
     if (setjmp(png_jmpbuf(_png))) {
       png_destroy_read_struct(&_png, &_info, NULL);
-      fb.close();
+      ifs.close();
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
@@ -187,8 +187,8 @@ namespace PhotoFinish {
 	png_byte buffer[1048576];
 	size_t length;
 	do {
-	  fb.read((char*)buffer, 1048576);
-	  length = fb.gcount();
+	  ifs.read((char*)buffer, 1048576);
+	  length = ifs.gcount();
 	  png_process_data(_png, _info, buffer, length);
 	  while (queue.num_rows() > 100)
 	    queue.reader_process_row();
@@ -203,7 +203,7 @@ namespace PhotoFinish {
     queue.free_transform();
 
     png_destroy_read_struct(&_png, &_info, NULL);
-    fb.close();
+    ifs.close();
     _is_open = false;
 
     std::cerr << "Done." << std::endl;
@@ -250,8 +250,8 @@ namespace PhotoFinish {
     _is_open = true;
 
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
-    fs::ofstream fb;
-    fb.open(_filepath, std::ios_base::out);
+    fs::ofstream ofs;
+    ofs.open(_filepath, std::ios_base::out);
 
     _png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
 					      NULL, NULL, NULL);
@@ -266,11 +266,11 @@ namespace PhotoFinish {
 
     if (setjmp(png_jmpbuf(_png))) {
       png_destroy_write_struct(&_png, &_info);
-      fb.close();
+      ofs.close();
       throw LibraryError("libpng", "Something went wrong writing the PNG");
     }
 
-    png_set_write_fn(_png, &fb, png_write_ostream_cb, png_flush_ostream_cb);
+    png_set_write_fn(_png, &ofs, png_write_ostream_cb, png_flush_ostream_cb);
 
     int png_colour_type, png_channels;
     cmsUInt32Number cmsTempType;
@@ -389,7 +389,7 @@ namespace PhotoFinish {
     free(png_rows);
 
     png_destroy_write_struct(&_png, &_info);
-    fb.close();
+    ofs.close();
     _is_open = false;
 
     std::cerr << "Done." << std::endl;
