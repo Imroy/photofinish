@@ -61,10 +61,10 @@ namespace PhotoFinish {
     /*!
       \param dest A Destination object where some information from the file will be placed
       \param img The Image object from which the pixel data comes
-      \param channels The number of channels in the output
+      \param cmsType The LCMS2 type for each sample
       \param transform The LCMS2 transform for transforming the image data
     */
-    transform_queue(Destination::ptr dest, Image::ptr img, int channels, cmsHTRANSFORM transform);
+    transform_queue(Destination::ptr dest, Image::ptr img, cmsUInt32Number cmsType, cmsHTRANSFORM transform);
 
     //! Deconstructor
     ~transform_queue();
@@ -73,7 +73,7 @@ namespace PhotoFinish {
     inline Destination::ptr destination(void) const { return _dest; }
 
     //! Set the image
-    void set_image(Image::ptr img, int channels);
+    void set_image(Image::ptr img, cmsUInt32Number cmsType);
 
     //! Get the image
     inline Image::ptr image(void) const { return _img; }
@@ -96,7 +96,7 @@ namespace PhotoFinish {
     inline void set_finished(void) { _finished = true; }
 
     //! Return a row pointer
-    short unsigned int* row(unsigned int y) const;
+    void* row(unsigned int y) const;
 
     //! Free a row pointer
     void free_row(unsigned int y);

@@ -35,10 +35,12 @@ namespace PhotoFinish {
     omp_init_lock(_queue_lock);
   }
 
-  transform_queue::transform_queue(Destination::ptr dest, Image::ptr img, int channels, cmsHTRANSFORM transform) :
+#define T_BYTES_REAL(t) (T_BYTES(t) == 0 ? 8 : T_BYTES(t))
+
+  transform_queue::transform_queue(Destination::ptr dest, Image::ptr img, cmsUInt32Number cmsType, cmsHTRANSFORM transform) :
     _rows(new row_ptr [img->height()]),
     _rowlocks(),
-    _rowlen(img->width() * channels * sizeof(short unsigned int)),
+    _rowlen(img->width() * (T_CHANNELS(cmsType) + T_EXTRA(cmsType)) * T_BYTES_REAL(cmsType)),
     _queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t))),
     _dest(dest),
     _img(img),
@@ -64,10 +66,10 @@ namespace PhotoFinish {
     free(_queue_lock);
   }
 
-  void transform_queue::set_image(Image::ptr img, int channels) {
+  void transform_queue::set_image(Image::ptr img, cmsUInt32Number cmsType) {
     _rows = new row_ptr [img->height()];
     _rowlocks.reserve(img->height());
-    _rowlen = img->width() * channels * sizeof(short unsigned int);
+    _rowlen = img->width() * (T_CHANNELS(cmsType) + T_EXTRA(cmsType)) * T_BYTES_REAL(cmsType);
     _img = img;
 
     for (unsigned int y = 0; y < _img->height(); y++) {
@@ -83,11 +85,11 @@ namespace PhotoFinish {
     return ret;
   }
 
-  short unsigned int* transform_queue::row(unsigned int y) const {
+  void* transform_queue::row(unsigned int y) const {
     omp_set_lock(_rowlocks[y]);
-    short unsigned int *ret = NULL;
+    void *ret = NULL;
     if (_rows[y])
-      ret = (short unsigned int*)_rows[y]->data;
+      ret = _rows[y]->data;
     omp_unset_lock(_rowlocks[y]);
     return ret;
   }

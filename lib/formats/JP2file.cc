@@ -173,7 +173,7 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    transform_queue queue(dest, img, T_CHANNELS(cmsType), transform);
+    transform_queue queue(dest, img, cmsType, transform);
 
 #pragma omp parallel shared(queue)
     {
@@ -358,7 +358,7 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < img->height(); y++)
       rows[y] = (unsigned char*)malloc(row_size);
 
-    transform_queue queue(dest, img, channels, transform);
+    transform_queue queue(dest, img, cmsTempType, transform);
     if (depth == 8)
       for (unsigned int y = 0; y < img->height(); y++)
 	queue.add(y);
@@ -378,10 +378,10 @@ namespace PhotoFinish {
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
 	  {
-	    short unsigned int *row = queue.row(y);
+	    short unsigned int *row = (short unsigned int*)queue.row(y);
 	    while (!queue.empty() && (row == NULL)) {
 	      queue.writer_process_row();
-	      row = queue.row(y);
+	      row = (short unsigned int*)queue.row(y);
 	    }
 
 	    // If it's still not available, something has gone wrong

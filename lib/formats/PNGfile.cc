@@ -70,7 +70,7 @@ namespace PhotoFinish {
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
-    queue->set_image(img, T_CHANNELS(cmsType));
+    queue->set_image(img, cmsType);
 
     {
       unsigned int xres, yres;
@@ -332,7 +332,7 @@ namespace PhotoFinish {
     cmsCloseProfile(lab);
     cmsCloseProfile(profile);
 
-    transform_queue queue(dest, img, png_channels, transform);
+    transform_queue queue(dest, img, cmsTempType, transform);
     if (depth == 8)
       for (unsigned int y = 0; y < img->height(); y++)
 	queue.add(y);
@@ -351,10 +351,10 @@ namespace PhotoFinish {
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
 	  {
-	    short unsigned int *row = queue.row(y);
+	    short unsigned *row = (short unsigned int*)queue.row(y);
 	    while (!queue.empty() && (row == NULL)) {
 	      queue.writer_process_row();
-	      row = queue.row(y);
+	      row = (short unsigned int*)queue.row(y);
 	    }
 
 	    // If it's still not available, something has gone wrong
