@@ -349,25 +349,24 @@ namespace PhotoFinish {
 
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  {
-	    short unsigned *row = (short unsigned int*)queue.row(y);
-	    while (!queue.empty() && (row == NULL)) {
-	      queue.writer_process_row();
-	      row = (short unsigned int*)queue.row(y);
-	    }
+	  short unsigned *row = (short unsigned int*)queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.writer_process_row();
+	    row = (short unsigned int*)queue.row(y);
+	  }
 
-	    // If it's still not available, something has gone wrong
-	    if (row == NULL) {
-	      std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	      exit(2);
-	    }
+	  // If it's still not available, something has gone wrong
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	    exit(2);
+	  }
 
-	    if (can_free)
-	      img->free_row(y);
-	    if (depth == 8) {
-	      ditherer.dither(row, png_rows[y], y == img->height() - 1);
-	      queue.free_row(y);
-	    }
+	  if (can_free)
+	    img->free_row(y);
+
+	  if (depth == 8) {
+	    ditherer.dither(row, png_rows[y], y == img->height() - 1);
+	    queue.free_row(y);
 	  }
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";

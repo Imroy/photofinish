@@ -346,28 +346,28 @@ namespace PhotoFinish {
 
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  {
-	    short unsigned int *row = (short unsigned int*)queue.row(y);
-	    while (!queue.empty() && (row == NULL)) {
-	      queue.writer_process_row();
-	      row = (short unsigned int*)queue.row(y);
-	    }
-
-	    // If it's still not available, something has gone wrong
-	    if (row == NULL) {
-	      std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	      exit(2);
-	    }
-
-	    if (can_free)
-	      img->free_row(y);
-	    if (depth == 8) {
-	      ditherer.dither(row, tiff_row, y == img->height() - 1);
-	      TIFFWriteScanline(_tiff, tiff_row, y, 0);
-	    } else
-	      TIFFWriteScanline(_tiff, row, y, 0);
+	  short unsigned int *row = (short unsigned int*)queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.writer_process_row();
+	    row = (short unsigned int*)queue.row(y);
 	  }
-	  queue.free_row(y);
+
+	  // If it's still not available, something has gone wrong
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	    exit(2);
+	  }
+
+	  if (can_free)
+	    img->free_row(y);
+
+	  if (depth == 8) {
+	    ditherer.dither(row, tiff_row, y == img->height() - 1);
+	    queue.free_row(y);
+
+	    TIFFWriteScanline(_tiff, tiff_row, y, 0);
+	  } else
+	    TIFFWriteScanline(_tiff, row, y, 0);
 
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";

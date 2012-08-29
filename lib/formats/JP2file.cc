@@ -374,29 +374,29 @@ namespace PhotoFinish {
 	unsigned int index = 0;
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  {
-	    short unsigned int *row = (short unsigned int*)queue.row(y);
-	    while (!queue.empty() && (row == NULL)) {
-	      queue.writer_process_row();
-	      row = (short unsigned int*)queue.row(y);
-	    }
-
-	    // If it's still not available, something has gone wrong
-	    if (row == NULL) {
-	      std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	      exit(2);
-	    }
-
-	    if (depth == 8) {
-	      ditherer.dither(row, rows[y], y == img->height() - 1);
-	      queue.free_row(y);
-
-	      packed_to_planar<unsigned char>(img->width(), channels, rows[y], _jp2_image, index);
-	    } else
-	      packed_to_planar<unsigned short>(img->width(), channels, row, _jp2_image, index);
-	    if (can_free)
-	      img->free_row(y);
+	  short unsigned int *row = (short unsigned int*)queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.writer_process_row();
+	    row = (short unsigned int*)queue.row(y);
 	  }
+
+	  // If it's still not available, something has gone wrong
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
+	    exit(2);
+	  }
+
+	  if (can_free)
+	    img->free_row(y);
+
+	  if (depth == 8) {
+	    ditherer.dither(row, rows[y], y == img->height() - 1);
+	    queue.free_row(y);
+
+	    packed_to_planar<unsigned char>(img->width(), channels, rows[y], _jp2_image, index);
+	  } else
+	    packed_to_planar<unsigned short>(img->width(), channels, row, _jp2_image, index);
+
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";
 	}

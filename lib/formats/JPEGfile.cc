@@ -314,25 +314,26 @@ namespace PhotoFinish {
 	while (_cinfo->next_scanline < _cinfo->image_height) {
 	  unsigned int y = _cinfo->next_scanline;
 	  // Process rows until the one we need becomes available, or the queue is empty
-	  {
-	    short unsigned int *row = (short unsigned int*)queue.row(y);
-	    while (!queue.empty() && (row == NULL)) {
-	      queue.writer_process_row();
-	      row = (short unsigned int*)queue.row(y);
-	    }
-
-	    // If it's still not available, something has gone wrong
-	    if (row == NULL) {
-	      std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << ") **" << std::endl;
-	      exit(2);
-	    }
-
-	    if (can_free)
-	      img->free_row(y);
-	    ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
+	  short unsigned int *row = (short unsigned int*)queue.row(y);
+	  while (!queue.empty() && (row == NULL)) {
+	    queue.writer_process_row();
+	    row = (short unsigned int*)queue.row(y);
 	  }
+
+	  // If it's still not available, something has gone wrong
+	  if (row == NULL) {
+	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << ") **" << std::endl;
+	    exit(2);
+	  }
+
+	  if (can_free)
+	    img->free_row(y);
+
+	  ditherer.dither(row, jpeg_row[0], y == img->height() - 1);
 	  queue.free_row(y);
+
 	  jpeg_write_scanlines(_cinfo, jpeg_row, 1);
+
 	  std::cerr << "\r\tTransformed and written " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)   ";
 	}
