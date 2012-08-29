@@ -303,16 +303,15 @@ namespace PhotoFinish {
       TIFFcheck(SetField (_tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
     }
 
-    cmsUInt32Number cmsTempType;
+    cmsUInt32Number cmsTempType = Ditherer::cmsBaseType;
     if (img->is_colour()) {
+      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       TIFFcheck(SetField(_tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB));
-      TIFFcheck(SetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, 3));
-      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
     } else {
+      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       TIFFcheck(SetField(_tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK));
-      TIFFcheck(SetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, 1));
-      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
+    TIFFcheck(SetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, T_CHANNELS(cmsTempType)));
 
     int depth = 8;	// Default value
     if (dest->depth().defined())

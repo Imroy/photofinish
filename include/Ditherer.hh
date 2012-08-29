@@ -18,6 +18,7 @@
 */
 #ifndef __DITHERER_HH__
 #define __DITHERER_HH__
+#include <lcms2.h>
 
 namespace PhotoFinish {
 
@@ -45,6 +46,12 @@ namespace PhotoFinish {
 
     //! Destructor
     ~Ditherer();
+
+    //! Base LCMS2 base type the ditherer expects the pixels to be in
+    /*!
+      Users of this class need to add the colour space and number of channels to this base type to be useable.
+     */
+    static const cmsUInt32Number cmsBaseType = BYTES_SH(2);
 
     //! Dither a row of image data
     /*!

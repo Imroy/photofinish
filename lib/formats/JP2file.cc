@@ -306,18 +306,15 @@ namespace PhotoFinish {
     parameters.tile_size_on = 0;
 
     OPJ_COLOR_SPACE colour_space;
-    unsigned char channels;
-    cmsUInt32Number cmsTempType = BYTES_SH(2);
+    cmsUInt32Number cmsTempType = Ditherer::cmsBaseType;
     if (img->is_colour()) {
+      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       colour_space = CLRSPC_SRGB;
-      channels = 3;
-      cmsTempType |= COLORSPACE_SH(PT_RGB);
     } else {
+      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       colour_space = CLRSPC_GRAY;
-      channels = 1;
-      cmsTempType |= COLORSPACE_SH(PT_GRAY);
     }
-    cmsTempType |= CHANNELS_SH(channels);
+    unsigned char channels = T_CHANNELS(cmsTempType);
 
     int depth = 8;	// Default value
     if (dest->depth().defined())

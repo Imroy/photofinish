@@ -229,16 +229,15 @@ namespace PhotoFinish {
     _cinfo->image_width = img->width();
     _cinfo->image_height = img->height();
 
-    cmsUInt32Number cmsTempType;
+    cmsUInt32Number cmsTempType = Ditherer::cmsBaseType;
     if (img->is_greyscale()) {
-      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
-      _cinfo->input_components = 1;
+      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       _cinfo->in_color_space = JCS_GRAYSCALE;
     } else {
-      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
-      _cinfo->input_components = 3;
+      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       _cinfo->in_color_space = JCS_RGB;
     }
+    _cinfo->input_components = T_CHANNELS(cmsTempType);
 
     jpeg_set_defaults(_cinfo);
     {

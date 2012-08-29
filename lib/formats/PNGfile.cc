@@ -273,16 +273,15 @@ namespace PhotoFinish {
     png_set_write_fn(_png, &ofs, png_write_ostream_cb, png_flush_ostream_cb);
 
     int png_colour_type, png_channels;
-    cmsUInt32Number cmsTempType;
+    cmsUInt32Number cmsTempType = Ditherer::cmsBaseType;
     if (img->is_colour()) {
+      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       png_colour_type = PNG_COLOR_TYPE_RGB;
-      png_channels = 3;
-      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
     } else {
+      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       png_colour_type = PNG_COLOR_TYPE_GRAY;
-      png_channels = 1;
-      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);
     }
+    png_channels = T_CHANNELS(cmsTempType);
 
     int depth = 8;	// Default value
     if (dest->depth().defined())

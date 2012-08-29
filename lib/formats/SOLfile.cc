@@ -59,7 +59,7 @@ namespace PhotoFinish {
       write_be(&height, 4, ofs);
     }
 
-    cmsUInt32Number cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);
+    cmsUInt32Number cmsType = Ditherer::cmsBaseType | COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
     if (dest->intent().defined())
       intent = dest->intent();
