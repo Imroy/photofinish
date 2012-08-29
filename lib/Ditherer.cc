@@ -38,6 +38,7 @@ namespace PhotoFinish {
 
     _scale = (int*)malloc(_channels * sizeof(int));
     _unscale = (int*)malloc(_channels * sizeof(int));
+    _maxvalues.reserve(_channels);
     for (unsigned char c = 0; c < _channels; c++) {
       if (c >= _maxvalues.size())
 	_maxvalues[c] = 255;
