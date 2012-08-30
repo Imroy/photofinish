@@ -36,14 +36,14 @@ namespace PhotoFinish {
       _error_rows[y] = (short int*)malloc(_width * _channels * sizeof(short int));
     memset(_error_rows[_next_row], 0, _width * _channels * sizeof(short int));
 
-    _scale = (int*)malloc(_channels * sizeof(int));
-    _unscale = (int*)malloc(_channels * sizeof(int));
+    _scale = (SAMPLE*)malloc(_channels * sizeof(SAMPLE));
+    _unscale = (SAMPLE*)malloc(_channels * sizeof(SAMPLE));
     _maxvalues.reserve(_channels);
     for (unsigned char c = 0; c < _channels; c++) {
       if (c >= _maxvalues.size())
 	_maxvalues[c] = 255;
-      _scale[c] = ((long long)_maxvalues[c] << 32) / 65535;
-      _unscale[c] = ((long long)65535 << 23) / _maxvalues[c];
+      _scale[c] = _maxvalues[c] / 65535.0;
+      _unscale[c] = 65535.0 / _maxvalues[c];
     }
   }
 
@@ -66,11 +66,11 @@ namespace PhotoFinish {
       return 0;
     if (target > 65535)
       return _maxvalues[channel];
-    return ((long long)target * _scale[channel]) >> 32;
+    return round(target * _scale[channel]);
   }
 
   inline int Ditherer::actualvalue(unsigned char attempt, unsigned char channel) {
-    return ((long long)attempt * _unscale[channel]) >> 23;
+    return round(attempt * _unscale[channel]);
   }
 
 #define pos ((x * _channels) + c)

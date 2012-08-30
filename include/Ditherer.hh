@@ -30,7 +30,7 @@ namespace PhotoFinish {
     short int **_error_rows;
     unsigned char _curr_row, _next_row;
     std::vector<unsigned char> _maxvalues;
-    int *_scale, *_unscale;
+    SAMPLE *_scale, *_unscale;
 
     unsigned char attemptvalue(int target, unsigned char channel);
     int actualvalue(unsigned char attempt, unsigned char channel);
