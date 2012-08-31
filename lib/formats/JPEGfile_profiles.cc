@@ -28,11 +28,11 @@
 
 namespace PhotoFinish {
 
-  cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct* cinfo, Destination::ptr dest) {
+  cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct* dinfo, Destination::ptr dest) {
     unsigned int profile_size = 0;
     unsigned char num_markers = 0;
     std::map<unsigned char, jpeg_marker_struct*> app2_markers;
-    for (jpeg_marker_struct *marker = cinfo->marker_list; marker != NULL; marker = marker->next)
+    for (jpeg_marker_struct *marker = dinfo->marker_list; marker != NULL; marker = marker->next)
       if ((marker->marker == JPEG_APP0 + 2)
 	  && (marker->data_length > 14)
 	  && (strncmp((char*)marker->data, "ICC_PROFILE", 11) == 0)) {
