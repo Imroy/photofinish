@@ -127,6 +127,7 @@ namespace PhotoFinish {
     inline const D_profile::ptr profile(void) const { return _profile; }
     inline void set_profile(std::string name, fs::path filepath) { _profile = D_profile::ptr(new D_profile(name, filepath)); }
     inline void set_profile(std::string name, void *data, unsigned int data_size) { _profile = D_profile::ptr(new D_profile(name, data, data_size)); }
+    inline void clear_profile(void) { _profile = NULL; }
 
     inline definable<bool> forcergb(void) const { return _forcergb; }
     inline definable<bool> forcegrey(void) const { return _forcegrey; }

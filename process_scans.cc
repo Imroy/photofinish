@@ -48,6 +48,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 
   resized_dest->set_depth(8);
   resized_dest->set_jpeg(D_JPEG(60, 1, 1, true));
+  resized_dest->clear_profile();
 
   Frame::ptr frame(new Frame(orig_image->width() * 0.25, orig_image->height() * 0.25,
 			     0, 0,
