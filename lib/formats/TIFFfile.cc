@@ -61,10 +61,34 @@ namespace PhotoFinish {
     TIFFcheck(GetField(_tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));
     dest->set_depth(bit_depth);
     std::cerr << "\tImage has a depth of " << bit_depth << std::endl;
-    TIFFcheck(GetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, &channels));
-    TIFFcheck(GetField(_tiff, TIFFTAG_PHOTOMETRIC, &photometric));
 
-    cmsUInt32Number cmsType = CHANNELS_SH(channels) | BYTES_SH(bit_depth >> 3);
+    TIFFcheck(GetField(_tiff, TIFFTAG_SAMPLESPERPIXEL, &channels));
+
+    cmsUInt32Number cmsType = BYTES_SH(bit_depth >> 3);
+    {
+      uint16 extra_count, *extra_types;
+      if (TIFFGetField(_tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
+	cmsType |= EXTRA_SH(extra_count & 0x07);
+	for (int i = 0; i < extra_count; i++) {
+	  std::cerr << "\tImage has an ";
+	  switch (extra_types[i]) {
+	  case EXTRASAMPLE_UNSPECIFIED: std::cerr << "unspecified ";
+	    break;
+	  case EXTRASAMPLE_ASSOCALPHA: std::cerr << "associated alpha ";
+	    break;
+	  case EXTRASAMPLE_UNASSALPHA: std::cerr << "unassociated alpha ";
+	    break;
+	  default: std::cerr << "unknown ";
+	  }
+	  std::cerr << "extra channel." << std::endl;
+	}
+	channels -= extra_count;
+      }
+    }
+    std::cerr << "\tImage has " << channels << " channels." << std::endl;
+    cmsType |= CHANNELS_SH(channels);
+
+    TIFFcheck(GetField(_tiff, TIFFTAG_PHOTOMETRIC, &photometric));
     switch (photometric) {
     case PHOTOMETRIC_MINISWHITE:
       cmsType |= FLAVOR_SH(1);
@@ -84,26 +108,6 @@ namespace PhotoFinish {
     default:
       std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
       exit(1);
-    }
-
-    {
-      uint16 extra_count, *extra_types;
-      if (TIFFGetField(_tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
-	cmsType |= EXTRA_SH(extra_count & 0x07);
-	for (int i = 0; i < extra_count; i++) {
-	  std::cerr << "\tImage has an ";
-	  switch (extra_types[i]) {
-	  case EXTRASAMPLE_UNSPECIFIED: std::cerr << "unspecified ";
-	    break;
-	  case EXTRASAMPLE_ASSOCALPHA: std::cerr << "associated alpha ";
-	    break;
-	  case EXTRASAMPLE_UNASSALPHA: std::cerr << "unassociated alpha ";
-	    break;
-	  default: std::cerr << "unknown ";
-	  }
-	  std::cerr << "extra channel." << std::endl;
-	}
-      }
     }
 
     {
