@@ -53,7 +53,7 @@ namespace PhotoFinish {
       \param can_free Can each row of the image be freed after it is convolved?
       \return A new cropped and resized image
     */
-    Image::ptr crop_resize(Image::ptr img, const D_resize &dr, bool can_free = false);
+    ImageHeader::ptr crop_resize(ImageHeader::ptr img, const D_resize &dr, bool can_free = false);
 
     //! The left-most border of the crop window
     inline const double crop_x(void) const { return _crop_x; }
@@ -65,7 +65,7 @@ namespace PhotoFinish {
     inline const double crop_h(void) const { return _crop_h; }
 
     //! How much of the original image is wasted by this crop frame
-    const double waste(Image::ptr img) const;
+    const double waste(ImageHeader::ptr img) const;
 
     //! Shared pointer for a Frame
     typedef std::shared_ptr<Frame> ptr;

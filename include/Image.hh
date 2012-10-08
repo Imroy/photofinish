@@ -19,40 +19,35 @@
 #ifndef __IMAGE_HH__
 #define __IMAGE_HH__
 
+#include <list>
 #include <memory>
+#include <lcms2.h>
+#include <omp.h>
 #include "Definable.hh"
+#include "Worker.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
 
-  //! A floating-point, L*a*b* image class
-  class Image {
-  private:
+  class ImageRow;
+
+  //! Image header information
+  class ImageHeader {
+  protected:
     unsigned int _width, _height;
-    bool _greyscale;		// Used by readers and writers when converting colour spaces
-    SAMPLE **_rowdata;
+    cmsHPROFILE _profile;
+    cmsUInt32Number _cmsType;
     definable<double> _xres, _yres;		// PPI
 
-    inline void _check_rowdata_alloc(unsigned int y) {
-      if (_rowdata[y] == NULL)
-	_rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
-    }
-
   public:
-    //! Shared pointer for an Image
-    typedef std::shared_ptr<Image> ptr;
-
     //! Empty constructor
-    Image();
+    ImageHeader();
 
     //! Constructor
     /*!
       \param w,h Width and height of the image
     */
-    Image(unsigned int w, unsigned int h);
-
-    //! Destructor
-    ~Image();
+    ImageHeader(unsigned int w, unsigned int h);
 
     //! The width of this image
     inline const unsigned int width(void) const { return _width; }
@@ -60,17 +55,17 @@ namespace PhotoFinish {
     //! The height of this image
     inline const unsigned int height(void) const { return _height; }
 
-    //! Is this image greyscale?
-    inline const bool is_greyscale(void) const { return _greyscale; }
+    //! Set the ICC profile
+    inline void set_profile(cmsHPROFILE p) { _profile = p; }
 
-    //! Is this image colour? i.e opposite of is_greyscale()
-    inline const bool is_colour(void) const { return !_greyscale; }
+    //! Get the ICC profile
+    inline cmsHPROFILE profile(void) const { return _profile; }
 
-    //! Set this image as greyscale
-    inline void set_greyscale(bool g = true) { _greyscale = g; }
+    //! Set the CMS type
+    inline void set_cmsType(cmsUInt32Number t) { _cmsType = t; }
 
-    //! Set this image as colour i.e opposite of set_greyscale
-    inline void set_colour(bool c = true) { _greyscale = !c; }
+    //! Get the CMS type
+    inline cmsUInt32Number cmsType(void) const { return _cmsType; }
 
     //! The X resolution of this image (PPI)
     inline const definable<double> xres(void) const { return _xres; }
@@ -93,33 +88,129 @@ namespace PhotoFinish {
     //! Set the resolution given the length of the longest side (in inches)
     inline void set_resolution_from_size(double size) { _xres = _yres = (_width > _height ? _width : _height) / size; }
 
-    //! Pointer to pixel data at start of row
-    inline SAMPLE* row(unsigned int y) {
-      _check_rowdata_alloc(y);
-      return _rowdata[y];
-    }
+    ImageRow* new_row(unsigned int y);
 
-    //! Pointer to pixel data at coordinates
-    inline SAMPLE* at(unsigned int x, unsigned int y) {
-      _check_rowdata_alloc(y);
-      return &(_rowdata[y][x * 3]);
-    }
+    typedef std::shared_ptr<ImageHeader> ptr;
+  }; // class ImageHeader
 
-    //! Reference to pixel data at coordinates and of a given channel
-    inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) {
-      _check_rowdata_alloc(y);
-      return _rowdata[y][c + (x * 3)];
-    }
 
-    //! Free the memory storing row 'y'
-    inline void free_row(unsigned int y) {
-      if (_rowdata[y] != NULL) {
-	free(_rowdata[y]);
-	_rowdata[y] = NULL;
-      }
-    }
 
-  };
+  //! Image row data
+  class ImageRow {
+  protected:
+    unsigned int _y;
+    void *_data;
+    omp_lock_t *_lock;
+
+  public:
+    //! Constructor
+    /*!
+      \param y Y coordinate of the row
+     */
+    ImageRow(unsigned int y);
+
+    //! Constructor
+    /*!
+      \param y Y coordinate of the row
+      \param d Data pointer for row pixels
+     */
+    ImageRow(unsigned int y, void* d);
+
+    //! Destructor
+    ~ImageRow();
+
+    //! Y coordinate of row
+    inline unsigned int y(void) const { return _y; }
+
+    //! Set the row pixel data pointer
+    inline void set_data(void* d) { _data = d; }
+
+    //! Get the row pixel data pointer
+    inline void* data(void) const { return _data; }
+
+    //! Lock this row for exclusive use
+    inline void lock(void) { omp_set_lock(_lock); }
+
+    //! Release lock for this row
+    inline void unlock(void) { omp_unset_lock(_lock); }
+
+    typedef std::shared_ptr<ImageRow> ptr;
+  }; // class ImageRow
+
+
+
+  //! Semi-abstract base "role" class for any classes who will receive image data
+  class ImageSink : public Worker {
+  protected:
+    ImageHeader::ptr _sink_header;
+    typedef std::list<ImageRow::ptr> _sink_rowqueue_type;
+    _sink_rowqueue_type _sink_rowqueue;
+    omp_lock_t *_sink_queue_lock;
+
+    //! Lock the queue for exclusive use
+    inline void _lock_sink_queue(void) { omp_set_lock(_sink_queue_lock); }
+
+    //! Release lock for the queue
+    inline void _unlock_sink_queue(void) { omp_unset_lock(_sink_queue_lock); }
+
+    //! Do something with a row
+    virtual void _work_on_row(ImageRow::ptr row) = 0;
+
+  public:
+    //! Empty constructor
+    ImageSink();
+
+    //! Destructor
+    virtual ~ImageSink();
+
+    //! Receive an image header object
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+    //! Receive a row of image data
+    virtual void receive_image_row(ImageRow::ptr row);
+
+    //! Receive a notification that the image has ended (no data)
+    virtual void receive_image_end(void);
+
+    //! Pop a row off of the queue and hand it to _work_on_row()
+    virtual void do_work(void);
+
+    typedef std::shared_ptr<ImageSink> ptr;
+    typedef std::list<ptr> list;
+  }; // class ImageSink
+
+
+
+  //! Abstract base "role" class for any classes who will produce image data
+  class ImageSource {
+  protected:
+    ImageSink::list _src_sinks;
+
+    //! Send an image header to all sinks registered with this source
+    void _send_image_header(ImageHeader::ptr header);
+
+    //! Send an image row to all sinks registered with this source
+    void _send_image_row(ImageRow::ptr row);
+
+    //! Send an image end to all sinks registered with this source
+    void _send_image_end(void);
+
+  public:
+    ImageSource();
+
+    //! Add a sink to the list
+    void add_sink(ImageSink* s);
+
+    //! Add sinks to the list from another list
+    void add_sinks(ImageSink::list sl);
+
+    //! Add sinks to the list from another list
+    void add_sinks(ImageSink::list::iterator begin, ImageSink::list::iterator end);
+
+    typedef std::shared_ptr<ImageSink> ptr;
+  }; // class ImageSource
+
+
 
 }
 

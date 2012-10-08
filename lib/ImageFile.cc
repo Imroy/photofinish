@@ -25,66 +25,121 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  ImageFile::ImageFile(const fs::path filepath) :
+  ImageFilepath::ImageFilepath(const fs::path filepath, const std::string format) :
     _filepath(filepath),
-    _is_open(false)
+    _format(format)
   {}
 
-  ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
+  ImageFilepath::ImageFilepath(const fs::path filepath) throw(UnknownFileType) :
+    _filepath(filepath)
+  {
     std::string ext = filepath.extension().generic_string().substr(1);
 #ifdef HAZ_PNG
     if (boost::iequals(ext, "png"))
-      return ImageFile::ptr(new PNGfile(filepath));
+      _format = "png";
 #endif
 
 #ifdef HAZ_JPEG
     if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg"))
-      return ImageFile::ptr(new JPEGfile(filepath));
+      _format = "jpeg";
 #endif
 
 #ifdef HAZ_TIFF
     if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif"))
-      return ImageFile::ptr(new TIFFfile(filepath));
+      _format = "tiff";
 #endif
 
 #ifdef HAZ_JP2
     if (boost::iequals(ext, "jp2"))
-      return ImageFile::ptr(new JP2file(filepath));
+      _format = "jp2";
 #endif
 
     throw UnknownFileType(filepath.generic_string());
   }
 
-  ImageFile::ptr ImageFile::create(fs::path filepath, const std::string format) throw(UnknownFileType) {
+
+
+  ImageReader::ImageReader(std::istream* is) :
+    _is(is),
+    _read_state(0)
+  {}
+
+  ImageReader::ptr ImageReader::open(const ImageFilepath ifp) throw(UnknownFileType) {
 #ifdef HAZ_PNG
-    if (boost::iequals(format, "png"))
-      return ImageFile::ptr(new PNGfile(filepath.replace_extension(".png")));
+    if (boost::iequals(ifp.format(), "png"))
+      return ImageReader::ptr(new PNGreader(new fs::ifstream(ifp.filepath())));
 #endif
 
 #ifdef HAZ_JPEG
-    if (boost::iequals(format, "jpeg")
-	|| boost::iequals(format, "jpg"))
-      return ImageFile::ptr(new JPEGfile(filepath.replace_extension(".jpeg")));
+    if (boost::iequals(ifp.format(), "jpeg"))
+      return ImageReader::ptr(new JPEGreader(new fs::ifstream(ifp.filepath())));
 #endif
 
 #ifdef HAZ_TIFF
-    if (boost::iequals(format, "tiff")
-	|| boost::iequals(format, "tif"))
-      return ImageFile::ptr(new TIFFfile(filepath.replace_extension(".tiff")));
+    if (boost::iequals(ifp.format(), "tiff"))
+      return ImageReader::ptr(new TIFFreader(new fs::ifstream(ifp.filepath())));
 #endif
 
 #ifdef HAZ_JP2
-    if (boost::iequals(format, "jp2"))
-      return ImageFile::ptr(new JP2file(filepath.replace_extension(".jp2")));
+    if (boost::iequals(ifp.format(), "jp2"))
+      return ImageReader::ptr(new JP2reader(new fs::ifstream(ifp.filepath())));
 #endif
 
-    if (boost::iequals(format, "sol"))
-      return ImageFile::ptr(new SOLfile(filepath.replace_extension(".bin")));
-
-    throw UnknownFileType(format);
+    throw UnknownFileType(ifp.format());
   }
 
-  cmsHPROFILE ImageFile::default_profile(cmsUInt32Number cmsType) {
+
+
+  ImageWriter::ImageWriter(std::ostream* os, Destination::ptr dest) :
+    ImageSink(),
+    _os(os),
+    _dest(dest)
+  {}
+
+  ImageWriter::ptr ImageWriter::open(const ImageFilepath ifp, Destination::ptr dest) throw(UnknownFileType) {
+#ifdef HAZ_PNG
+    if (boost::iequals(ifp.format(), "png"))
+      return ImageWriter::ptr(new PNGwriter(new fs::ofstream(ifp.filepath().replace_extension(".png")), dest));
+#endif
+
+#ifdef HAZ_JPEG
+    if (boost::iequals(ifp.format(), "jpeg")
+	|| boost::iequals(ifp.format(), "jpg"))
+      return ImageWriter::ptr(new JPEGwriter(new fs::ofstream(ifp.filepath().replace_extension(".jpeg")), dest));
+#endif
+
+#ifdef HAZ_TIFF
+    if (boost::iequals(ifp.format(), "tiff")
+	|| boost::iequals(ifp.format(), "tif"))
+      return ImageWriter::ptr(new TIFFwriter(new fs::ofstream(ifp.filepath().replace_extension(".tiff")), dest));
+#endif
+
+#ifdef HAZ_JP2
+    if (boost::iequals(ifp.format(), "jp2"))
+      return ImageWriter::ptr(new JP2writer(new fs::ofstream(ifp.filepath().replace_extension(".jp2")), dest));
+#endif
+
+    if (boost::iequals(ifp.format(), "sol"))
+      return ImageWriter::ptr(new SOLwriter(new fs::ofstream(ifp.filepath().replace_extension(".bin")), dest));
+
+    throw UnknownFileType(ifp.format());
+  }
+
+  void ImageWriter::receive_image_header(ImageHeader::ptr header) {
+    ImageSink::receive_image_header(header);
+  }
+
+  void ImageWriter::receive_image_row(ImageRow::ptr row) {
+    ImageSink::receive_image_row(row);
+  }
+
+  void ImageWriter::receive_image_end(void) {
+    ImageSink::receive_image_end();
+  }
+
+
+
+  cmsHPROFILE default_profile(cmsUInt32Number cmsType) {
     cmsHPROFILE profile = NULL;
     switch (T_COLORSPACE(cmsType)) {
     case PT_RGB:
@@ -127,7 +182,7 @@ namespace PhotoFinish {
     return profile;
   }
 
-  cmsHPROFILE ImageFile::get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent) {
+  cmsHPROFILE ImageWriter::get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent) {
     cmsHPROFILE profile = NULL;
     std::string profile_name;
     unsigned char *profile_data = NULL;
@@ -141,7 +196,7 @@ namespace PhotoFinish {
 	profile_len = dest->profile()->data_size();
       }
     } else {
-      profile = this->default_profile(cmsType);
+      profile = default_profile(cmsType);
       if (T_COLORSPACE(cmsType) == PT_GRAY) {
 	profile_name = "sGrey";
 	this->mark_sGrey(intent);
@@ -163,7 +218,7 @@ namespace PhotoFinish {
     return profile;
   }
 
-  void ImageFile::add_variables(Destination::ptr dest, multihash& vars) {
+  void add_format_variables(Destination::ptr dest, multihash& vars) {
     std::string format = dest->format().get();
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
@@ -175,11 +230,6 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "jp2"))
       const_cast<D_JP2&>(dest->jp2()).add_variables(vars);
-  }
-
-  Image::ptr ImageFile::read(void) {
-    Destination::ptr temp(new Destination);
-    return this->read(temp);
   }
 
 }

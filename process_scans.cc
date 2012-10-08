@@ -59,6 +59,64 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   filetags->embed(preview_file);
 }
 
+void preview_dir(fs::path dir, std::string preview_format, Tags::ptr tags, std::vector<std::string> only_formats = {}, std::vector<std::string> not_formats = {}) {
+  std::vector<fs::directory_entry> dir_list;
+  for (fs::directory_iterator di(dir); di != fs::directory_iterator(); di++)
+    dir_list.push_back(*di);
+  sort(dir_list.begin(), dir_list.end());
+
+  for (std::vector<fs::directory_entry>::iterator di = dir_list.begin(); di != dir_list.end(); di++) {
+    std::cerr << "preview_dir: " << *di << std::endl;
+    try {
+      ImageFile::ptr infile = ImageFile::create(di->path());
+      if (only_formats.size() > 0) {
+	bool valid = false;
+	std::string format = infile->format();
+	std::cerr << "format = \"" << format << "\"" << std::endl;
+	for (std::vector<std::string>::iterator fi = only_formats.begin(); fi != only_formats.end(); fi++) {
+	  std::cerr << "only_format = \"" << *fi << "\"" << std::endl;
+	  if (boost::iequals(format, *fi)) {
+	    std::cerr << "Format \"" << format << "\" matches \"" << *fi << "\", valid." << std::endl;
+	    valid = true;
+	    break;
+	  }
+	}
+	if (!valid)
+	  continue;
+      } else if (not_formats.size() > 0) {
+	bool valid = true;
+	std::string format = infile->format();
+	std::cerr << "format = \"" << format << "\"" << std::endl;
+	for (std::vector<std::string>::iterator fi = not_formats.begin(); fi != not_formats.end(); fi++) {
+	  std::cerr << "not_format = \"" << *fi << "\"" << std::endl;
+	  if (boost::iequals(format, *fi)) {
+	    std::cerr << "Format \"" << format << "\" matches \"" << *fi << "\", invalid." << std::endl;
+	    valid = false;
+	    break;
+	  }
+	}
+	if (!valid)
+	  continue;
+      }
+
+      ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
+
+      if (exists(preview_file->filepath())
+	  && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
+	continue;
+
+      Destination::ptr orig_dest(new Destination);
+      Image::ptr orig_image = infile->read(orig_dest);
+      Tags::ptr filetags = tags->dupe();
+      filetags->extract(infile);
+
+      make_preview(orig_image, orig_dest, filetags, preview_file, true);
+    } catch (std::exception& ex) {
+      std::cerr << ex.what() << std::endl;
+    }
+  }
+}
+
 int main(int argc, char* argv[]) {
   // Variables that are to be loaded from the config file and command line
   bool do_conversion, do_preview;
@@ -179,34 +237,11 @@ int main(int argc, char* argv[]) {
   }
 
   if (do_preview) {
+    preview_dir(convert_dir, preview_format, defaulttags, { "tiff", "png" });
     if (!exists(works_dir)) {
       std::cerr << "Creating directory " << works_dir << "." << std::endl;
       create_directory(works_dir);
-    }
-    std::vector<fs::directory_entry> dir_list;
-    for (fs::directory_iterator di(works_dir); di != fs::directory_iterator(); di++)
-      dir_list.push_back(*di);
-    sort(dir_list.begin(), dir_list.end());
-
-    for (std::vector<fs::directory_entry>::iterator di = dir_list.begin(); di != dir_list.end(); di++) {
-      std::cerr << *di << std::endl;
-      try {
-	ImageFile::ptr infile = ImageFile::create(di->path());
-	ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
-
-	if (exists(preview_file->filepath())
-	    && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
-	  continue;
-
-	Destination::ptr orig_dest(new Destination);
-	Image::ptr orig_image = infile->read(orig_dest);
-	Tags::ptr filetags = defaulttags->dupe();
-	filetags->extract(infile);
-
-	make_preview(orig_image, orig_dest, filetags, preview_file, true);
-      } catch (std::exception& ex) {
-	std::cerr << ex.what() << std::endl;
-      }
-    }
+    } else
+      preview_dir(works_dir, preview_format, defaulttags);
   }
 }

@@ -135,6 +135,8 @@ namespace PhotoFinish {
     inline definable<bool> progressive(void) const { return _progressive; }
 
     friend void operator >> (const YAML::Node& node, D_JPEG& dj);
+
+    typedef std::shared_ptr<D_JPEG> ptr;
   };
 
   //! PNG parameters for destination
@@ -145,6 +147,8 @@ namespace PhotoFinish {
     D_PNG();
 
     friend void operator >> (const YAML::Node& node, D_PNG& dp);
+
+    typedef std::shared_ptr<D_PNG> ptr;
   };
 
   //! TIFF parameters for destination
@@ -165,6 +169,8 @@ namespace PhotoFinish {
     inline definable<std::string> compression(void) const { return _compression; }
 
     friend void operator >> (const YAML::Node& node, D_TIFF& dt);
+
+    typedef std::shared_ptr<D_TIFF> ptr;
   };
 
   //! JP2 parameters for destination
@@ -189,6 +195,8 @@ namespace PhotoFinish {
     inline definable< std::pair<int, int> > tile_size(void) const { return _tile_size; }
 
     friend void operator >> (const YAML::Node& node, D_JP2& dj);
+
+    typedef std::shared_ptr<D_JP2> ptr;
   };
 
   //! ICC profile parameters for destination

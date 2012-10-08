@@ -49,114 +49,202 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  //! Abstract base class for image files
-  class ImageFile {
+  //! Class for holding filename and the image format
+  class ImageFilepath {
   protected:
     const fs::path _filepath;
-    bool _is_open;
+    std::string _format;
+
+  public:
+    //! Constructor
+    /*!
+      \param filepath The path of the image file
+      \param format Format of the image file
+    */
+    ImageFilepath(const fs::path filepath, const std::string format);
+
+    //! Constructor
+    /*!
+      Guess the format from the file extension.
+      \param filepath The path of the image file
+    */
+    ImageFilepath(const fs::path filepath) throw(UnknownFileType);
+
+    //! File path of this image file
+    inline virtual fs::path filepath(void) const { return _filepath; }
+
+    //! Format of this image file
+    inline virtual std::string format(void) const { return _format; }
+  }; // ImageFilepath
+
+
+
+  class Image {
+  };
+
+  //! Base class for reading image files
+  class ImageReader : public ImageSource, public Worker {
+  protected:
+    std::istream *_is;
+    int _read_state;
+
+    ImageReader(std::istream* is);
+
+  public:
+    typedef std::shared_ptr<ImageReader> ptr;
+
+    //! Named constructor
+    /*! Use the extension of the file path to decide what class to use
+      \param filepath File path
+    */
+    static ImageReader::ptr open(const ImageFilepath ifp) throw(UnknownFileType);
+
+    virtual const std::string format(void) const = 0;
+
+    //! Read the image file and send header, rows, and finally the end to registered sinks
+    virtual void do_work(void) = 0;
+  }; // class ImageReader
+
+
+
+  //! Base class for writing image files
+  class ImageWriter : public ImageSink {
+  protected:
+    std::ostream *_os;
+    Destination::ptr _dest;
+
+    ImageWriter(std::ostream* os, Destination::ptr dest);
 
     virtual void mark_sGrey(cmsUInt32Number intent) const = 0;
     virtual void mark_sRGB(cmsUInt32Number intent) const = 0;
     virtual void embed_icc(std::string name, unsigned char *data, unsigned int len) const = 0;
     cmsHPROFILE get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent);
 
-  public:
-    //! Shared pointer for an ImageFile
-    typedef std::shared_ptr<ImageFile> ptr;
+    inline virtual void _work_on_row(ImageRow::ptr row) {}
 
-    //! Constructor
-    /*!
-      \param filepath The path of the image file
-    */
-    ImageFile(const fs::path filepath);
+  public:
+    typedef std::shared_ptr<ImageWriter> ptr;
 
     //! Named constructor
     /*! Use the extension of the file path to decide what class to use
       \param filepath File path
     */
-    static ImageFile::ptr create(const fs::path filepath) throw(UnknownFileType);
+    static ImageWriter::ptr open(const ImageFilepath ifp, Destination::ptr dest) throw(UnknownFileType);
 
-    //! Named constructor
-    /*! Use the format to decide what class to use
-      \param filepath File path
-      \param format File format
-    */
-    static ImageFile::ptr create(fs::path filepath, const std::string format) throw(UnknownFileType);
+    virtual const std::string format(void) const = 0;
 
-    //! Create either an sRGB or greyscale profile depending on image type
-    static cmsHPROFILE default_profile(cmsUInt32Number cmsType);
+    virtual void receive_image_header(ImageHeader::ptr header);
+    virtual void receive_image_row(ImageRow::ptr row);
+    virtual void receive_image_end(void);
+    virtual void do_work(void) = 0;
+  }; // class ImageWriter
 
-    //! Add variables to one of the configuration objects based on destination format
-    static void add_variables(Destination::ptr dest, multihash& vars);
 
-    //! File path of this image file
-    inline virtual const fs::path filepath(void) const { return _filepath; }
 
-    //! Read the file into an image
-    /*!
-      \return A new Image object
-    */
-    virtual Image::ptr read(void);
+  //! Create either an sRGB or greyscale profile depending on image type
+  cmsHPROFILE default_profile(cmsUInt32Number cmsType);
 
-    //! Read the file into an image
-    /*!
-      \param dest A Destination object where some information from the file will be placed
-      \return A new Image object
-    */
-    virtual Image::ptr read(Destination::ptr dest) = 0;
+  //! Add variables to one of the configuration objects based on destination format
+  void add_format_variables(Destination::ptr dest, multihash& vars);
 
-    //! Write an image to the file
-    /*!
-      \param img The Image object to write
-      \param dest A Destination object, used for the JPEG/PNG/etc parameters
-      \param can_free Can each row of the image be freed after it is written?
-    */
-    virtual void write(Image::ptr img, Destination::ptr dest, bool can_free = false) = 0;
-  };
+
 
 #ifdef HAZ_PNG
-  //! PNG file reader and writer
-  class PNGfile : public ImageFile {
+  //! PNG file reader
+  class PNGreader : public ImageReader {
   private:
     png_structp _png;
     png_infop _info;
+
+    PNGreader(std::istream* is);
+    friend class ImageReader;
+
+  public:
+    inline const std::string format(void) const { return "png"; }
+
+    void do_work(void);
+  };
+
+  //! PNG file writer
+  class PNGwriter : public ImageWriter {
+  private:
+    png_structp _png;
+    png_infop _info;
+    unsigned int _next_y;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-  public:
-    PNGfile(const fs::path filepath);
+    PNGwriter(std::ostream* os, Destination::ptr dest);
+    friend class ImageWriter;
 
-    Image::ptr read(Destination::ptr dest);
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  public:
+    inline const std::string format(void) const { return "png"; }
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+    virtual void do_work(void);
+
+    virtual void receive_image_end(void);
   };
 #endif
 
 #ifdef HAZ_JPEG
-  //! JPEG file reader and writer
-  class JPEGfile : public ImageFile {
+  //! JPEG file reader
+  class JPEGreader : public ImageReader {
   private:
     jpeg_decompress_struct *_dinfo;
+
+    JPEGreader(std::istream* is);
+    friend class ImageReader;
+
+  public:
+    inline const std::string format(void) const { return "jpeg"; }
+
+    void do_work(void);
+  };
+
+  //! JPEG file writer
+  class JPEGwriter : public ImageWriter {
+  private:
     jpeg_compress_struct *_cinfo;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-  public:
-    JPEGfile(const fs::path filepath);
+    JPEGwriter(std::ostream* os, Destination::ptr dest);
+    friend class ImageWriter;
 
-    Image::ptr read(Destination::ptr dest);
-    //! Special version of write() that takes an open ostream object
-    void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false);
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  public:
+    inline const std::string format(void) const { return "jpeg"; }
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+    virtual void do_work(void);
+
+    virtual void receive_image_end(void);
   };
 #endif
 
 #ifdef HAZ_TIFF
-  //! TIFF file reader and writer
-  class TIFFfile : public ImageFile {
+  //! TIFF file reader
+  class TIFFreader : public ImageReader {
+  private:
+    TIFF *_tiff;
+
+    TIFFreader(std::istream* is);
+    friend class ImageReader;
+
+  public:
+    inline const std::string format(void) const { return "tiff"; }
+
+    void do_work(void);
+  };
+
+  //! TIFF file writer
+  class TIFFwriter : public ImageWriter {
   private:
     TIFF *_tiff;
 
@@ -164,17 +252,37 @@ namespace PhotoFinish {
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-  public:
-    TIFFfile(const fs::path filepath);
+    TIFFwriter(std::ostream* os, Destination::ptr dest);
+    friend class ImageWriter;
 
-    Image::ptr read(Destination::ptr dest);
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  public:
+    inline const std::string format(void) const { return "tiff"; }
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+    virtual void do_work(void);
+
+    virtual void receive_image_end(void);
   };
 #endif
 
 #ifdef HAZ_JP2
-  //! JPEG 2000 file reader and writer
-  class JP2file : public ImageFile {
+  //! JPEG 2000 file reader
+  class JP2reader : public ImageReader {
+  private:
+    opj_image_t *_jp2_image;
+
+    JP2reader(std::istream* is);
+    friend class ImageReader;
+
+  public:
+    inline const std::string format(void) const { return "jp2"; }
+
+    void do_work(void);
+  };
+
+  //! JPEG 2000 file writer
+  class JP2writer : public ImageWriter {
   private:
     opj_image_t *_jp2_image;
 
@@ -182,11 +290,17 @@ namespace PhotoFinish {
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-  public:
-    JP2file(const fs::path filepath);
+    JP2writer(std::ostream* os, Destination::ptr dest);
+    friend class ImageWriter;
 
-    Image::ptr read(Destination::ptr dest);
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  public:
+    inline const std::string format(void) const { return "jp2"; }
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+    virtual void do_work(void);
+
+    virtual void receive_image_end(void);
   };
 #endif
 
@@ -198,17 +312,23 @@ namespace PhotoFinish {
     The image data is as uncompressed 5-6-5 bit pixels i.e 16 bits per pixel.
     No footer.
    */
-  class SOLfile : public ImageFile {
+  class SOLwriter : public ImageWriter {
   private:
     void mark_sGrey(cmsUInt32Number intent) const {}
     void mark_sRGB(cmsUInt32Number intent) const {}
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const {}
 
-  public:
-    SOLfile(const fs::path filepath);
+    SOLwriter(std::ostream* os, Destination::ptr dest);
+    friend class ImageWriter;
 
-    Image::ptr read(Destination::ptr dest);
-    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  public:
+    inline const std::string format(void) const { return "sol"; }
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+    virtual void do_work(void);
+
+    virtual void receive_image_end(void);
   };
 
 }

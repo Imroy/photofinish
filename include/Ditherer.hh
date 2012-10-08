@@ -19,17 +19,16 @@
 #ifndef __DITHERER_HH__
 #define __DITHERER_HH__
 #include <lcms2.h>
+#include "Image.hh"
 
 namespace PhotoFinish {
 
   //! Class for dithering images down to 8-bit components
-  class Ditherer {
+  class Ditherer : public ImageSink, public ImageSource {
   private:
-    unsigned int _width;
-    unsigned char _channels;
-    short int **_error_rows;
+    SAMPLE **_error_rows;
     unsigned char _curr_row, _next_row;
-    std::vector<unsigned char> _maxvalues;
+    std::vector<unsigned short int> _maxvalues;
     SAMPLE *_scale, *_unscale;
 
     unsigned char attemptvalue(int target, unsigned char channel);

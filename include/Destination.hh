@@ -38,7 +38,7 @@ namespace PhotoFinish {
     definable<std::string> _name;	//! Name of this destination
     definable<fs::path> _dir;		//! Destination directory
 
-    definable<double> _size;			//! Size of long edge in inches (yuck)
+    definable<double> _size;		//! Size of long edge in inches (yuck)
 
     D_sharpen _sharpen;
     D_resize _resize;
@@ -47,7 +47,7 @@ namespace PhotoFinish {
 
     definable<std::string> _format;	//! Output format
 
-    definable<int> _depth;			//! Output bit depth
+    definable<int> _depth;		//! Output bit depth
 
     definable<bool> _noresize;
 
@@ -90,7 +90,7 @@ namespace PhotoFinish {
     ptr add_variables(multihash& vars);
 
     //! Find the best crop+rescaling frame for an image
-    Frame::ptr best_frame(Image::ptr img);
+    Frame::ptr best_frame(ImageHeader::ptr img);
 
     inline definable<std::string> name(void) const { return _name; }
 

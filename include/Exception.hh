@@ -299,6 +299,23 @@ namespace PhotoFinish {
     }
   };
 
+  class CMSError : public ErrorMsg {
+  private:
+
+  public:
+    //! Constructor
+    /*!
+      \param m Error message
+    */
+    CMSError(const std::string& m) :
+      ErrorMsg(m)
+    {}
+
+    const char* what() const throw() {
+      return _msg.c_str();
+    }
+  }; // class CMSError
+
   //! Set up an error handler with LCMS2 that will throw a LibraryError exception
   void lcms2_error_adaptor(void);
 }
