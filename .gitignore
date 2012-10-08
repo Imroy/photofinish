@@ -2,8 +2,17 @@
 *.o
 *.s
 photofinish
+process_scans
 *.png
 *.jpeg
 *.jpg
 *.tiff
 *.tif
+*.jp2
+*.j2k
+*.jpf
+*.jpx
+*.jpm
+*.mjp
+*.jpc
+*.bin
