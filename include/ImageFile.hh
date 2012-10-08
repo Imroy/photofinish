@@ -276,7 +276,11 @@ namespace PhotoFinish {
   //! JPEG 2000 file reader
   class JP2reader : public ImageReader {
   private:
+    opj_dinfo_t *_dinfo;
+    unsigned char *_src;
+    opj_cio_t *_cio;
     opj_image_t *_jp2_image;
+    unsigned int _width, _height, _next_y;
 
     JP2reader(std::istream* is);
     friend class ImageReader;
@@ -290,7 +294,9 @@ namespace PhotoFinish {
   //! JPEG 2000 file writer
   class JP2writer : public ImageWriter {
   private:
+    opj_cparameters_t _parameters;
     opj_image_t *_jp2_image;
+    unsigned int _width, _height, _next_y;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
