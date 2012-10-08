@@ -237,6 +237,7 @@ namespace PhotoFinish {
   class TIFFreader : public ImageReader {
   private:
     TIFF *_tiff;
+    unsigned int _next_y;
 
     TIFFreader(std::istream* is);
     friend class ImageReader;
@@ -251,6 +252,7 @@ namespace PhotoFinish {
   class TIFFwriter : public ImageWriter {
   private:
     TIFF *_tiff;
+    unsigned int _next_y;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
