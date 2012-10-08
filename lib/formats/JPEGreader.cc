@@ -145,8 +145,12 @@ namespace PhotoFinish {
       _dinfo = NULL;
       this->_send_image_end();
 
+      _read_state = 99;
+
       break;
-      
+
+    default:
+      break;
     }
   }
 
