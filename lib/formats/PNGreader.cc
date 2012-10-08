@@ -32,16 +32,21 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  void png_info_cb(png_structp png, png_infop info);
+  void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass);
+  void png_end_cb(png_structp png, png_infop info);
+
   PNGreader::PNGreader(std::istream* is) :
     ImageReader(is),
-    _png(NULL), _info(NULL)
+    _png(NULL), _info(NULL),
+    _buffer((unsigned char*)malloc(32768))
   {
     {
       unsigned char header[8];
-      ifs.read((char*)header, 8);
+      _is->read((char*)header, 8);
       if (png_sig_cmp(header, 0, 8))
-	throw FileContentError(_filepath.string(), "is not a PNG file");
-      ifs.seekg(0, std::ios_base::beg);
+	throw FileContentError("stream", "is not a PNG file");
+      _is->seekg(0, std::ios_base::beg);
     }
 
     _png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
@@ -57,14 +62,37 @@ namespace PhotoFinish {
 
     if (setjmp(png_jmpbuf(_png))) {
       png_destroy_read_struct(&_png, &_info, NULL);
-      ifs.close();
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
+
+    png_set_progressive_read_fn(_png, (void *)this, png_info_cb, png_row_cb, png_end_cb);
   }
 
-  void JPEGreader::do_work(void) {
+  PNGreader::~PNGreader() {
+    free(_buffer);
+    _buffer = NULL;
+  }
+
+  void PNGreader::do_work(void) {
+    size_t length;
     switch (_read_state) {
     case 0:
+      _is->read((char*)_buffer, 32768);
+      length = _is->gcount();
+      if (length > 0)
+	png_process_data(_png, _info, _buffer, length);
+      if (_is->eof())
+	_read_state = 1;
+      break;
+
+    case 1:
+      png_destroy_read_struct(&_png, &_info, NULL);
+
+      _read_state = 99;
+      break;
+
+    default:
+      break;
     }
   }
 
@@ -76,30 +104,29 @@ namespace PhotoFinish {
     png_set_swap(png);
     png_read_update_info(png, info);
 
-    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
+    PNGreader *self = (PNGreader*)png_get_progressive_ptr(png);
 
     unsigned int width, height;
     int bit_depth, colour_type;
     png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
-    std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
-    Image::ptr img(new Image(width, height));
-    queue->destination()->set_depth(bit_depth);
+    ImageHeader::ptr header(new ImageHeader(width, height));
 
     cmsUInt32Number cmsType;
     switch (colour_type) {
     case PNG_COLOR_TYPE_GRAY:
       cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
-      img->set_greyscale();
       break;
+
     case PNG_COLOR_TYPE_RGB:
       cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
       break;
+
     default:
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
-    queue->set_image(img, cmsType);
+    header->set_cmsType(cmsType);
 
     {
       unsigned int xres, yres;
@@ -107,19 +134,16 @@ namespace PhotoFinish {
       if (png_get_pHYs(png, info, &xres, &yres, &unit_type)) {
 	switch (unit_type) {
 	case PNG_RESOLUTION_METER:
-	  img->set_resolution(xres * 0.0254, yres * 0.0254);
+	  header->set_resolution(xres * 0.0254, yres * 0.0254);
 	  break;
 	case PNG_RESOLUTION_UNKNOWN:
 	  break;
 	default:
 	  std::cerr << "** unknown unit type " << unit_type << " **" << std::endl;
 	}
-	if (img->xres().defined() && img->yres().defined())
-	  std::cerr << "\tImage has resolution of " << img->xres() << "×" << img->yres() << " PPI." << std::endl;
       }
     }
 
-    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHPROFILE profile = NULL;
 
     if (png_get_valid(png, info, PNG_INFO_iCCP)) {
@@ -131,79 +155,28 @@ namespace PhotoFinish {
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	profile = cmsOpenProfileFromMem(profile_data, profile_len);
-	void *data_copy = malloc(profile_len);
-	memcpy(data_copy, profile_data, profile_len);
-	queue->destination()->set_profile(profile_name, data_copy, profile_len);
+	header->set_profile(profile);
       }
     }
-    if (profile == NULL)
-      profile = ImageFile::default_profile(cmsType);
+    if (profile == NULL) {
+      profile = default_profile(cmsType);
+      header->set_profile(profile);
+    }
 
-    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
-						 lab, IMAGE_TYPE,
-						 INTENT_PERCEPTUAL, 0);
-    cmsCloseProfile(lab);
-    cmsCloseProfile(profile);
-
-    queue->set_transform(transform);
+    self->_send_image_header(header);
   }
 
   //! Called by libPNG when a row of image data has been read
   void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
-    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
-    std::cerr << "\r\tRead " << (row_num + 1) << " of " << queue->image()->height() << " rows ("
-	      << queue->num_rows() << " in queue for colour transformation)   ";
-    queue->add_copy(row_num, row_data);
+    PNGreader *self = (PNGreader*)png_get_progressive_ptr(png);
+    ImageRow::ptr row(new ImageRow(row_num, row_data));
+    self->_send_image_row(row);
   }
 
   //! Called by libPNG when the image data has finished
   void png_end_cb(png_structp png, png_infop info) {
-    //    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
-  }
-
-  //! Loop, processing rows from the workqueue until it's empty and reading is finished
-  void png_run_workqueue(transform_queue *queue) {
-    while (!(queue->empty() && queue->finished())) {
-      while (queue->empty() && !queue->finished())
-	usleep(100);
-      queue->reader_process_row();
-    }
-  }
-
-  Image::ptr PNGreader::read(Destination::ptr dest) {
-
-    transform_queue queue(dest);
-
-#pragma omp parallel shared(queue)
-    {
-      int th_id = omp_get_thread_num();
-      if (th_id == 0) {		// Master thread
-	std::cerr << "\tReading PNG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
-	png_set_progressive_read_fn(_png, (void *)&queue, png_info_cb, png_row_cb, png_end_cb);
-	png_byte buffer[1048576];
-	size_t length;
-	do {
-	  ifs.read((char*)buffer, 1048576);
-	  length = ifs.gcount();
-	  png_process_data(_png, _info, buffer, length);
-	  while (queue.num_rows() > 100)
-	    queue.reader_process_row();
-	} while (length > 0);
-	std::cerr << std::endl;
-	queue.set_finished();
-	png_run_workqueue(&queue);	// Help finish off the transforming of image data
-      } else {
-	png_run_workqueue(&queue);	// Worker threads just run the workqueue
-      }
-    }
-    queue.free_transform();
-
-    png_destroy_read_struct(&_png, &_info, NULL);
-    ifs.close();
-    _is_open = false;
-
-    std::cerr << "Done." << std::endl;
-    return queue.image();
+    PNGreader *self = (PNGreader*)png_get_progressive_ptr(png);
+    self->_send_image_end();
   }
 
 }

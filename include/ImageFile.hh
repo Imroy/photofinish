@@ -79,9 +79,6 @@ namespace PhotoFinish {
 
 
 
-  class Image {
-  };
-
   //! Base class for reading image files
   class ImageReader : public ImageSource, public Worker {
   protected:
@@ -155,9 +152,16 @@ namespace PhotoFinish {
   private:
     png_structp _png;
     png_infop _info;
+    unsigned char *_buffer;
 
     PNGreader(std::istream* is);
     friend class ImageReader;
+
+    ~PNGreader();
+
+    friend void png_info_cb(png_structp png, png_infop info);
+    friend void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass);
+    friend void png_end_cb(png_structp png, png_infop info);
 
   public:
     inline const std::string format(void) const { return "png"; }
