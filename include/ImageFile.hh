@@ -326,6 +326,8 @@ namespace PhotoFinish {
    */
   class SOLwriter : public ImageWriter {
   private:
+    unsigned int _next_y;
+
     void mark_sGrey(cmsUInt32Number intent) const {}
     void mark_sRGB(cmsUInt32Number intent) const {}
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const {}
@@ -339,8 +341,6 @@ namespace PhotoFinish {
     virtual void receive_image_header(ImageHeader::ptr header);
 
     virtual void do_work(void);
-
-    virtual void receive_image_end(void);
   };
 
 }
