@@ -56,6 +56,9 @@ namespace PhotoFinish {
   cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct*);
 
   void JPEGreader::do_work(void) {
+    if (!this->_test_reader_lock())
+      return;
+
     switch (_read_state) {
     case 0:
       jpeg_save_markers(_dinfo, JPEG_APP0 + 2, 0xFFFF);
@@ -152,6 +155,7 @@ namespace PhotoFinish {
     default:
       break;
     }
+    this->_unlock_reader();
   }
 
 }

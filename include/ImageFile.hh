@@ -84,11 +84,23 @@ namespace PhotoFinish {
   protected:
     std::istream *_is;
     int _read_state;
+    omp_lock_t *_reader_lock;
 
     ImageReader(std::istream* is);
 
+    //! Lock the reader for exclusive use
+    inline void _lock_reader(void) { omp_set_lock(_reader_lock); }
+
+    //! Test the lock for the reader
+    inline int _test_reader_lock(void) { return omp_test_lock(_reader_lock); }
+
+    //! Release lock for the reader
+    inline void _unlock_reader(void) { omp_unset_lock(_reader_lock); }
+
   public:
     typedef std::shared_ptr<ImageReader> ptr;
+
+    ~ImageReader();
 
     //! Named constructor
     /*! Use the extension of the file path to decide what class to use
@@ -157,13 +169,13 @@ namespace PhotoFinish {
     PNGreader(std::istream* is);
     friend class ImageReader;
 
-    ~PNGreader();
-
     friend void png_info_cb(png_structp png, png_infop info);
     friend void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass);
     friend void png_end_cb(png_structp png, png_infop info);
 
   public:
+    ~PNGreader();
+
     inline const std::string format(void) const { return "png"; }
 
     void do_work(void);

@@ -74,6 +74,9 @@ namespace PhotoFinish {
   }
 
   void PNGreader::do_work(void) {
+    if (!this->_test_reader_lock())
+      return;
+
     size_t length;
     switch (_read_state) {
     case 0:
@@ -94,6 +97,7 @@ namespace PhotoFinish {
     default:
       break;
     }
+    this->_unlock_reader();
   }
 
   //! Called by libPNG when the iHDR chunk has been read with the main "header" information

@@ -40,6 +40,9 @@ namespace PhotoFinish {
   }
 
   void TIFFreader::do_work(void) {
+    if (!this->_test_reader_lock())
+      return;
+
     int rc;
     switch (_read_state) {
     case 0:
@@ -154,6 +157,7 @@ namespace PhotoFinish {
     default:
       break;
     }
+    this->_unlock_reader();
   }
 
 }

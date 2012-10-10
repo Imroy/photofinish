@@ -18,6 +18,7 @@
 */
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <omp.h>
 #include "ImageFile.hh"
 #include "Exception.hh"
 
@@ -61,8 +62,16 @@ namespace PhotoFinish {
 
   ImageReader::ImageReader(std::istream* is) :
     _is(is),
-    _read_state(0)
-  {}
+    _read_state(0),
+    _reader_lock((omp_lock_t*)malloc(sizeof(omp_lock_t)))
+  {
+    omp_init_lock(_reader_lock);
+  }
+
+  ImageReader::~ImageReader() {
+    omp_destroy_lock(_reader_lock);
+    free(_reader_lock);
+  }
 
   ImageReader::ptr ImageReader::open(const ImageFilepath ifp) throw(UnknownFileType) {
 #ifdef HAZ_PNG
