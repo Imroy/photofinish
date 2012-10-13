@@ -24,22 +24,9 @@
 
 namespace PhotoFinish {
 
-  //! Error callback for OpenJPEG - throw a LibraryError exception
-  void error_callback(const char* msg, void* client_data) {
-    throw LibraryError("OpenJPEG", msg);
-  }
-
-  //! Warning callback for OpenJPEG - print the message to STDERR
-  void warning_callback(const char* msg, void* client_data) {
-    ((char*)msg)[strlen(msg) - 1] = 0;
-    std::cerr << "** OpenJPEG:" << msg << " **" << std::endl;
-  }
-
-  //! Info callback for OpenJPEG - print the indented message to STDERR
-  void info_callback(const char* msg, void* client_data) {
-    ((char*)msg)[strlen(msg) - 1] = 0;
-    std::cerr << "\tOpenJPEG:" << msg << std::endl;
-  }
+  void error_callback(const char* msg, void* client_data);
+  void warning_callback(const char* msg, void* client_data);
+  void info_callback(const char* msg, void* client_data);
 
   JP2reader::JP2reader(std::istream* is) :
     ImageReader(is),
