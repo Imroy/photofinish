@@ -118,7 +118,7 @@ namespace PhotoFinish {
     cmsUInt32Number intent = INTENT_PERCEPTUAL; // Default value
     if (_dest->intent().defined())
       intent = _dest->intent();
-    this->get_and_embed_profile(_dest, header->cmsType(), intent);
+    this->get_and_embed_profile(header->profile(), header->cmsType(), intent);
 
     {
       time_t t = time(NULL);
@@ -151,8 +151,8 @@ namespace PhotoFinish {
   }
 
   void PNGwriter::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
-    std::cerr << omp_get_thread_num() << ": Embedding ICC profile in PNG." << std::endl;
-    png_set_iCCP(_png, _info, name.c_str(), 0, data, len);
+    std::cerr << omp_get_thread_num() << ": Embedding ICC profile \"" << name << "\" (" << len << " bytes) in PNG." << std::endl;
+    png_set_iCCP(_png, _info, name.c_str(), PNG_COMPRESSION_TYPE_BASE, data, len);
   }
 
   void PNGwriter::do_work(void) {

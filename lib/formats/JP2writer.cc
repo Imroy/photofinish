@@ -120,7 +120,7 @@ namespace PhotoFinish {
     cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
     if (_dest->intent().defined())
       intent = _dest->intent();
-    this->get_and_embed_profile(_dest, header->cmsType(), intent);
+    this->get_and_embed_profile(header->profile(), header->cmsType(), intent);
   }
 
   void JP2writer::mark_sGrey(cmsUInt32Number intent) const {}

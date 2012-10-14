@@ -128,7 +128,7 @@ namespace PhotoFinish {
     if (_dest->intent().defined())
       intent = _dest->intent();
 
-    this->get_and_embed_profile(_dest, header->cmsType(), intent);
+    this->get_and_embed_profile(header->profile(), header->cmsType(), intent);
   }
 
   void TIFFwriter::mark_sGrey(cmsUInt32Number intent) const {}

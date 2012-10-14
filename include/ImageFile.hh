@@ -125,7 +125,7 @@ namespace PhotoFinish {
     virtual void mark_sGrey(cmsUInt32Number intent) const = 0;
     virtual void mark_sRGB(cmsUInt32Number intent) const = 0;
     virtual void embed_icc(std::string name, unsigned char *data, unsigned int len) const = 0;
-    cmsHPROFILE get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent);
+    void get_and_embed_profile(cmsHPROFILE profile, cmsUInt32Number cmsType, cmsUInt32Number intent);
 
     inline virtual void _work_on_row(ImageRow::ptr row) {}
 

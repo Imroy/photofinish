@@ -201,40 +201,33 @@ namespace PhotoFinish {
     return profile;
   }
 
-  cmsHPROFILE ImageWriter::get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent) {
-    cmsHPROFILE profile = NULL;
-    std::string profile_name;
-    unsigned char *profile_data = NULL;
-    unsigned int profile_len = 0;
-
-    if (dest->profile()) {
-      profile = dest->profile()->profile();
-      profile_name = dest->profile()->name();
-      if (dest->profile()->has_data()) {
-	profile_data = (unsigned char*)dest->profile()->data();
-	profile_len = dest->profile()->data_size();
-      }
-    } else {
-      profile = default_profile(cmsType);
-      if (T_COLORSPACE(cmsType) == PT_GRAY) {
-	profile_name = "sGrey";
+  void ImageWriter::get_and_embed_profile(cmsHPROFILE profile, cmsUInt32Number cmsType, cmsUInt32Number intent) {
+    if (profile == NULL) {
+      if (T_COLORSPACE(cmsType) == PT_GRAY)
 	this->mark_sGrey(intent);
-      } else {
-	profile_name = "sRGB";
+      else
 	this->mark_sRGB(intent);
+    } else {
+      char *profile_name = NULL;
+      unsigned int profile_name_len;
+      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
+        profile_name = (char*)malloc(profile_name_len);
+        cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+      } else {
+        profile_name = (char*)malloc(1);
+	profile_name[0] = 0;
       }
-    }
 
-    if (profile_data == NULL) {
+      unsigned int profile_len;
       cmsSaveProfileToMem(profile, NULL, &profile_len);
       if (profile_len > 0) {
-	profile_data = (unsigned char*)malloc(profile_len);
+	unsigned char *profile_data = (unsigned char*)malloc(profile_len);
 	cmsSaveProfileToMem(profile, profile_data, &profile_len);
+	this->embed_icc(profile_name, profile_data, profile_len);
       }
+      if (profile_name != NULL)
+        free(profile_name);
     }
-
-    this->embed_icc(profile_name, profile_data, profile_len);
-    return profile;
   }
 
   void add_format_variables(Destination::ptr dest, multihash& vars) {
