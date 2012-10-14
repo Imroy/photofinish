@@ -43,8 +43,6 @@
 #include "Exception.hh"
 #include "sample.h"
 
-#define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
-
 namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
