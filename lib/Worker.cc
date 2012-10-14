@@ -27,31 +27,52 @@ namespace PhotoFinish {
 
 
 
-  WorkGang::WorkGang() {}
+  WorkGang::WorkGang() :
+    _workers()
+  {}
 
-  void WorkGang::add_worker(Worker* w) {
-    _workers.push_back(Worker::ptr(w));
+  void WorkGang::add_worker(Worker::ptr w) {
+    _workers.push_back(w);
   }
 
   void WorkGang::work_until_finished(void) {
-    unsigned int next = 0;
+    if (_workers.size() == 0)
+      return;
+
+    Worker::list::iterator next = _workers.begin();
     omp_lock_t lock;
     omp_init_lock(&lock);
 
 #pragma omp parallel shared(next)
     {
+      unsigned int unfinished ;
       do {
-	omp_set_lock(&lock);
-	unsigned int i = next++;
-	if (next > _workers.size())
-	  next = 0;
-	omp_unset_lock(&lock);
+	unfinished = 0;
+	for (Worker::list::iterator wi = _workers.begin(); wi != _workers.end(); wi++)
+	  if (!(*wi)->work_finished())
+	    unfinished++;
 
-	if (i < _workers.size()) {
-	  Worker::ptr worker = _workers[i];
-	  worker->do_work();
+	if (unfinished > 0) {
+	  omp_set_lock(&lock);
+	  unsigned int retries = _workers.size();
+	  while (((*next)->work_finished()) && (retries > 0)) {
+	    next++;
+	    if (next == _workers.end())
+	      next = _workers.begin();
+	    retries--;
+	  }
+	  if (!(*next)->work_finished()) {
+	    Worker::ptr worker = *next;
+	    next++;
+	    if (next == _workers.end())
+	      next = _workers.begin();
+	    omp_unset_lock(&lock);
+	    worker->do_work();
+	  } else
+	    omp_unset_lock(&lock);
 	}
-      } while (1);
+
+      } while (unfinished > 0);
     }
 
     omp_destroy_lock(&lock);

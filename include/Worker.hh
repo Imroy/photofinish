@@ -20,7 +20,7 @@
 #define __WORKER_HH__
 
 #include <memory>
-#include <vector>
+#include <list>
 #include <omp.h>
 
 namespace PhotoFinish {
@@ -30,11 +30,11 @@ namespace PhotoFinish {
   protected:
     bool _work_finished;
 
+    inline void _set_work_finished(void) { _work_finished = true; }
+
   public:
     //! Empty constructor
     Worker();
-
-    inline void set_work_finished(void) { _work_finished = true; }
 
     inline bool work_finished(void) const { return _work_finished; }
 
@@ -42,6 +42,7 @@ namespace PhotoFinish {
     virtual void do_work(void) = 0;
 
     typedef std::shared_ptr<Worker> ptr;
+    typedef std::list<ptr> list;
   }; // class Worker
 
 
@@ -49,15 +50,17 @@ namespace PhotoFinish {
   //! 
   class WorkGang {
   private:
-    std::vector<Worker::ptr> _workers;
+    Worker::list _workers;
 
   public:
     //! Empty constructor
     WorkGang();
 
-    void add_worker(Worker* w);
+    void add_worker(Worker::ptr w);
 
     void work_until_finished(void);
+
+    typedef std::shared_ptr<WorkGang> ptr;
   }; // class WorkGang
 
 } // namespace PhotoFinish
