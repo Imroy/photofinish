@@ -35,27 +35,37 @@ namespace PhotoFinish {
     _filepath(filepath)
   {
     std::string ext = filepath.extension().generic_string().substr(1);
+    bool unknown = true;
 #ifdef HAZ_PNG
-    if (boost::iequals(ext, "png"))
+    if (boost::iequals(ext, "png")) {
       _format = "png";
+      unknown = false;
+    }
 #endif
 
 #ifdef HAZ_JPEG
-    if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg"))
+    if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg")) {
       _format = "jpeg";
+      unknown = false;
+    }
 #endif
 
 #ifdef HAZ_TIFF
-    if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif"))
+    if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif")) {
       _format = "tiff";
+      unknown = false;
+    }
 #endif
 
 #ifdef HAZ_JP2
-    if (boost::iequals(ext, "jp2"))
+    if (boost::iequals(ext, "jp2")) {
       _format = "jp2";
+      unknown = false;
+    }
 #endif
 
-    throw UnknownFileType(filepath.generic_string());
+    if (unknown)
+      throw UnknownFileType(filepath.generic_string());
   }
 
 
