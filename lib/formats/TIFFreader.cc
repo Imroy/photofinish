@@ -144,7 +144,6 @@ namespace PhotoFinish {
 	tdata_t buffer = _TIFFmalloc(TIFFScanlineSize(_tiff));
 	TIFFcheck(ReadScanline(_tiff, buffer, _next_y));
 	ImageRow::ptr row(new ImageRow(_next_y, buffer));
-	std::cerr << omp_get_thread_num() << ": Sending row " << _next_y << "..." << std::endl;
 	_next_y++;
 	this->_send_image_row(row);
       }
@@ -153,7 +152,6 @@ namespace PhotoFinish {
       break;
 
     case 2:
-      std::cerr << "Closing TIFF file after reading." << std::endl;
       TIFFClose(_tiff);
       _tiff = NULL;
       _read_state = 99;

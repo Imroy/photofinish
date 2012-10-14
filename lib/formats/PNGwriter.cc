@@ -35,7 +35,6 @@ namespace PhotoFinish {
   //! libPNG callback for writing to an ostream
   void png_write_ostream_cb(png_structp png, png_bytep buffer, png_size_t length) {
     PNGwriter *self = (PNGwriter*)png_get_io_ptr(png);
-    std::cerr << omp_get_thread_num() << ": Writing " << length << " bytes to PNG file..." << std::endl;
     self->_os->write((char*)buffer, length);
     self->_os->flush(); // Need this for some reason
   }
@@ -43,7 +42,6 @@ namespace PhotoFinish {
   //! libPNG callback for flushing an ostream
   void png_flush_ostream_cb(png_structp png) {
     PNGwriter *self = (PNGwriter*)png_get_io_ptr(png);
-    std::cerr << omp_get_thread_num() << ": Flushing PNG file..." << std::endl;
     self->_os->flush();
   }
 
@@ -69,7 +67,6 @@ namespace PhotoFinish {
     }
 
     png_set_write_fn(_png, this, png_write_ostream_cb, png_flush_ostream_cb);
-    std::cerr << omp_get_thread_num() << ": Initialised PNG writer." << std::endl;
 
     png_set_filter(_png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(_png, Z_BEST_COMPRESSION);
@@ -125,13 +122,11 @@ namespace PhotoFinish {
       if (t > 0) {
 	png_time ptime;
 	png_convert_from_time_t(&ptime, t);
-	std::cerr << "\tAdding time chunk." << std::endl;
 	png_set_tIME(_png, _info, &ptime);
       }
     }
 
     png_write_info(_png, _info);
-    std::cerr << omp_get_thread_num() << ": Wrote PNG header." << std::endl;
 
     if (depth > 8)
       png_set_swap(_png);
@@ -141,17 +136,14 @@ namespace PhotoFinish {
   }
 
   void PNGwriter::mark_sGrey(cmsUInt32Number intent) const {
-    std::cerr << omp_get_thread_num() << ": Marking PNG as sGrey." << std::endl;
     png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
   }
 
   void PNGwriter::mark_sRGB(cmsUInt32Number intent) const {
-    std::cerr << omp_get_thread_num() << ": Marking PNG as sRGB." << std::endl;
     png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
   }
 
   void PNGwriter::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
-    std::cerr << omp_get_thread_num() << ": Embedding ICC profile \"" << name << "\" (" << len << " bytes) in PNG." << std::endl;
     png_set_iCCP(_png, _info, name.c_str(), PNG_COMPRESSION_TYPE_BASE, data, len);
   }
 
@@ -167,11 +159,9 @@ namespace PhotoFinish {
     this->_unlock_sink_queue();
 
     if (row) {
-      std::cerr << omp_get_thread_num() << ": Writing PNG row " << row->y() << "..." << std::endl;
       png_write_row(_png, (png_const_bytep)row->data());
       _next_y++;
       if (_next_y == _sink_header->height()) {
-	std::cerr << omp_get_thread_num() << ": Finishing PNG file after writing." << std::endl;
 	png_write_end(_png, _info);
 	png_destroy_write_struct(&_png, &_info);
 	this->_set_work_finished();
