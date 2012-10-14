@@ -94,7 +94,6 @@ namespace PhotoFinish {
   }
 
   void ImageSink::receive_image_end(void) {
-    _work_finished = true;
   }
 
   void ImageSink::do_work(void) {
@@ -125,8 +124,8 @@ namespace PhotoFinish {
       (*ri)->receive_image_end();
   }
 
-  void ImageSource::add_sink(ImageSink* s) {
-    _src_sinks.push_back(ImageSink::ptr(s));
+  void ImageSource::add_sink(ImageSink::ptr s) {
+    _src_sinks.push_back(s);
   }
 
   void ImageSource::add_sinks(ImageSink::list sl) {

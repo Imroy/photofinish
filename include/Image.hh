@@ -199,7 +199,7 @@ namespace PhotoFinish {
     ImageSource();
 
     //! Add a sink to the list
-    void add_sink(ImageSink* s);
+    void add_sink(ImageSink::ptr s);
 
     //! Add sinks to the list from another list
     void add_sinks(ImageSink::list sl);
