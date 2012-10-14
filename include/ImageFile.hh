@@ -195,7 +195,12 @@ namespace PhotoFinish {
     PNGwriter(std::ostream* os, Destination::ptr dest);
     friend class ImageWriter;
 
+    friend void png_write_ostream_cb(png_structp png, png_bytep buffer, png_size_t length);
+    friend void png_flush_ostream_cb(png_structp png);
+
   public:
+    ~PNGwriter();
+
     inline const std::string format(void) const { return "png"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
@@ -249,7 +254,7 @@ namespace PhotoFinish {
   class TIFFreader : public ImageReader {
   private:
     TIFF *_tiff;
-    unsigned int _next_y;
+    unsigned int _height, _next_y;
 
     TIFFreader(std::istream* is);
     friend class ImageReader;
