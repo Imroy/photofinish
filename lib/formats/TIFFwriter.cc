@@ -154,12 +154,15 @@ namespace PhotoFinish {
     if (row) {
       TIFFWriteScanline(_tiff, row->data(), _next_y, 0);
       _next_y++;
+      if (_next_y == _sink_header->height()) {
+	TIFFClose(_tiff);
+	_tiff = NULL;
+	this->_set_work_finished();
+      }
     }
   }
 
   void TIFFwriter::receive_image_end(void) {
-    TIFFClose(_tiff);
-    _tiff = NULL;
   }
 
 }

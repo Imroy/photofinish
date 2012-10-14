@@ -140,14 +140,16 @@ namespace PhotoFinish {
       JSAMPROW jpeg_row[1];
       jpeg_row[0] = (JSAMPROW)row->data();
       jpeg_write_scanlines(_cinfo, jpeg_row, 1);
+      if (_cinfo->next_scanline == _sink_header->height()) {
+	jpeg_finish_compress(_cinfo);
+	jpeg_ostream_dest_free(_cinfo);
+	jpeg_destroy_compress(_cinfo);
+	this->_set_work_finished();
+      }
     }
   }
 
   void JPEGwriter::receive_image_end(void) {
-    jpeg_finish_compress(_cinfo);
-    jpeg_ostream_dest_free(_cinfo);
-    jpeg_destroy_compress(_cinfo);
-
   }
 
   void JPEGwriter::mark_sGrey(cmsUInt32Number intent) const {

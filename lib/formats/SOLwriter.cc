@@ -78,6 +78,9 @@ namespace PhotoFinish {
 	_os->put(b | ((g & 0x07) << 5));
 	_os->put((g >> 3) | (r << 3));
       }
+      _next_y++;
+      if (_next_y == _sink_header->height())
+	this->_set_work_finished();
     }
   }
 
