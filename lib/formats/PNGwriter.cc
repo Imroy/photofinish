@@ -37,6 +37,7 @@ namespace PhotoFinish {
     PNGwriter *self = (PNGwriter*)png_get_io_ptr(png);
     std::cerr << omp_get_thread_num() << ": Writing " << length << " bytes to PNG file..." << std::endl;
     self->_os->write((char*)buffer, length);
+    self->_os->flush(); // Need this for some reason
   }
 
   //! libPNG callback for flushing an ostream
@@ -69,6 +70,12 @@ namespace PhotoFinish {
 
     png_set_write_fn(_png, this, png_write_ostream_cb, png_flush_ostream_cb);
     std::cerr << omp_get_thread_num() << ": Initialised PNG writer." << std::endl;
+
+    png_set_filter(_png, 0, PNG_ALL_FILTERS);
+    png_set_compression_level(_png, Z_BEST_COMPRESSION);
+    png_set_compression_mem_level(_png, 8);
+    png_set_compression_strategy(_png, Z_FILTERED);
+    png_set_compression_buffer_size(_png, 32768);
   }
 
   PNGwriter::~PNGwriter() {
@@ -97,17 +104,11 @@ namespace PhotoFinish {
     default:
       break;
     }
-    if (T_FLAVOR(header->cmsType()))
-      png_set_invert_mono(_png);
-
     int depth = T_BYTES(header->cmsType()) * 8;
 
     png_set_IHDR(_png, _info,
 		 header->width(), header->height(), depth, png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-    png_set_filter(_png, 0, PNG_ALL_FILTERS);
-    png_set_compression_level(_png, Z_BEST_COMPRESSION);
-
     if (header->xres().defined() && header->yres().defined()) {
       unsigned int xres = round(header->xres() / 0.0254);
       unsigned int yres = round(header->yres() / 0.0254);
@@ -129,11 +130,14 @@ namespace PhotoFinish {
       }
     }
 
+    png_write_info(_png, _info);
+    std::cerr << omp_get_thread_num() << ": Wrote PNG header." << std::endl;
+
     if (depth > 8)
       png_set_swap(_png);
 
-    png_write_info(_png, _info);
-    std::cerr << omp_get_thread_num() << ": Wrote PNG header." << std::endl;
+    if (T_FLAVOR(header->cmsType()))
+      png_set_invert_mono(_png);
   }
 
   void PNGwriter::mark_sGrey(cmsUInt32Number intent) const {
