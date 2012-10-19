@@ -85,6 +85,8 @@ namespace PhotoFinish {
     inline definable<double> support(void) const { return _support; }
 
     friend void operator >> (const YAML::Node& node, D_resize& dr);
+
+    typedef std::shared_ptr<D_resize> ptr;
   };
 
   //! Target parameters for destination
