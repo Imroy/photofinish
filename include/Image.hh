@@ -207,11 +207,28 @@ namespace PhotoFinish {
     //! Add sinks to the list from another list
     void add_sinks(ImageSink::list::iterator begin, ImageSink::list::iterator end);
 
-    typedef std::shared_ptr<ImageSink> ptr;
+    typedef std::shared_ptr<ImageSource> ptr;
   }; // class ImageSource
 
 
 
+  //! Abstract base "role" class for any classes that will spawn new image sinks once the header information is received
+  class ImageModifier : public ImageSink {
+  protected:
+    ImageSource::ptr _imgsrc;
+
+  public:
+    //! Constructor
+    /*!
+      \param imgsrc The image source we will attach to as a sink, and to which we will add new sinks
+     */
+    ImageModifier(ImageSource::ptr imgsrc);
+
+    //! Receive an image header object
+    virtual void receive_image_header(ImageHeader::ptr header) = 0;
+
+    typedef std::shared_ptr<ImageModifier> ptr;
+  }; // class ImageModifier
 }
 
 #endif // __IMAGE_HH__

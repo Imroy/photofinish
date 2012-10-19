@@ -137,4 +137,12 @@ namespace PhotoFinish {
     std::copy(begin, end, _src_sinks.end());
   }
 
+
+
+  ImageModifier::ImageModifier(ImageSource::ptr imgsrc) :
+    _imgsrc(imgsrc)
+  {
+    _imgsrc->add_sink(ImageSink::ptr(this));
+  }
+
 }
