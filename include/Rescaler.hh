@@ -70,8 +70,6 @@ namespace PhotoFinish {
     ~Rescaler();
 
     virtual void receive_image_header(ImageHeader::ptr header) = 0;
-    virtual void receive_image_row(ImageRow::ptr row) = 0;
-    virtual void receive_image_end(void) = 0;
   };
 
 
@@ -79,29 +77,38 @@ namespace PhotoFinish {
   //! Crop and/or rescale in the horizontal direction
   class Rescaler_width : public Rescaler {
   protected:
+    virtual void _work_on_row(ImageRow::ptr row);
+
     template <typename P>
     void _scale_row(ImageRow::ptr row);
 
   public:
-    //! Constructor
-    Rescaler_width(Function1D::ptr func, double from_start, double from_size, unsigned int from_max, double to_size);
-
     virtual void receive_image_header(ImageHeader::ptr header);
-    virtual void receive_image_row(ImageRow::ptr row);
-    virtual void receive_image_end(void);
+
   }; // class Rescaler_width
 
 
 
   //! Crop and/or rescale in the vertical direction
   class Rescaler_height : public Rescaler {
+  protected:
+    unsigned int *_row_counts;
+    ImageRow::ptr *_rows;
+
+    virtual void _work_on_row(ImageRow::ptr row);
+
+    template <typename P>
+    void _scale_row(ImageRow::ptr row);
+
   public:
     //! Constructor
     Rescaler_height(Function1D::ptr func, double from_start, double from_size, unsigned int from_max, double to_size);
 
+    ~Rescaler_height();
+
     virtual void receive_image_header(ImageHeader::ptr header);
     virtual void receive_image_row(ImageRow::ptr row);
-    virtual void receive_image_end(void);
+
   }; // class Rescaler_height
 
 } // namespace PhotoFinish
