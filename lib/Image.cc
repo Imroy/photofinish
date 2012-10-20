@@ -148,10 +148,11 @@ namespace PhotoFinish {
 
 
 
-  ImageModifier::ImageModifier(ImageSource::ptr imgsrc) :
-    _imgsrc(imgsrc)
+  ImageModifier::ImageModifier(ImageSource::ptr source, WorkGang::ptr workgang) :
+    _source(source),
+    _workgang(workgang)
   {
-    _imgsrc->add_sink(ImageSink::ptr(this));
+    _source->add_sink(ImageSink::ptr(this));
   }
 
 }

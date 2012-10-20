@@ -216,14 +216,16 @@ namespace PhotoFinish {
   //! Abstract base "role" class for any classes that will spawn new image sinks once the header information is received
   class ImageModifier : public ImageSink {
   protected:
-    ImageSource::ptr _imgsrc;
+    ImageSource::ptr _source;
+    WorkGang::ptr _workgang;
 
   public:
     //! Constructor
     /*!
-      \param imgsrc The image source we will attach to as a sink, and to which we will add new sinks
+      \param source The image source we will attach to as a sink, and to which we will add new sinks
+      \param workgang The WorkGang for any workers we make
      */
-    ImageModifier(ImageSource::ptr imgsrc);
+    ImageModifier(ImageSource::ptr source, WorkGang::ptr workgang);
 
     //! Receive an image header object
     virtual void receive_image_header(ImageHeader::ptr header) = 0;
