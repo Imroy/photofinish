@@ -41,9 +41,11 @@ namespace PhotoFinish {
     rulerlist _h_rulers, _v_rulers;
 
   public:
-    CropSolver(multihash& vars);
+    CropSolver(const multihash& vars);
 
-    Frame::ptr solve(Image::ptr img, D_target::ptr target);
+    Frame::ptr solve(ImageHeader::ptr header, D_target::ptr target);
+
+    typedef std::shared_ptr<CropSolver> ptr;
   };
 
 };

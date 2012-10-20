@@ -33,10 +33,10 @@ namespace PhotoFinish {
     \param key The name of the variables to parse
     \param rulers The list of rulers to add to
    */
-  void add_rulers(multihash& vars, std::string key, rulerlist& rulers) {
-    multihash::iterator vi;
+  void add_rulers(const multihash& vars, std::string key, rulerlist& rulers) {
+    multihash::const_iterator vi;
     if ((vi = vars.find(key)) != vars.end())
-      for (stringlist::iterator si = vi->second.begin(); si != vi->second.end(); si++) {
+      for (stringlist::const_iterator si = vi->second.begin(); si != vi->second.end(); si++) {
 	int at = si->find_first_of('@', 0);
 	double fx = boost::lexical_cast<double>(si->substr(0, at));
 	double tx = boost::lexical_cast<double>(si->substr(at + 1, si->length() - at - 1));
@@ -44,7 +44,7 @@ namespace PhotoFinish {
       }
   }
 
-  CropSolver::CropSolver(multihash& vars) {
+  CropSolver::CropSolver(const multihash& vars) {
     add_rulers(vars, "hruler", _h_rulers);
     add_rulers(vars, "vruler", _v_rulers);
   }
@@ -65,29 +65,29 @@ namespace PhotoFinish {
       rulers.push_back(rulerpair(1, max - 1));
   }
 
-  Frame::ptr CropSolver::solve(Image::ptr img, D_target::ptr target) {
+  Frame::ptr CropSolver::solve(ImageHeader::ptr header, D_target::ptr target) {
     rulerlist h_rulers(_h_rulers), v_rulers(_v_rulers);
-    if ((target->width() * img->height() > target->height() * img->width())
+    if ((target->width() * header->height() > target->height() * header->width())
 	&& (h_rulers.size() < 2))
-      add_ruler_pins(h_rulers, img->width());
+      add_ruler_pins(h_rulers, header->width());
 
-    if ((target->width() * img->height() < target->height() * img->width())
+    if ((target->width() * header->height() < target->height() * header->width())
 	&& (v_rulers.size() < 2))
-      add_ruler_pins(v_rulers, img->height());
+      add_ruler_pins(v_rulers, header->height());
 
     Frame::ptr best_frame;
     double best_distance = 0;
     omp_lock_t best_lock;
     omp_init_lock(&best_lock);
 
-    double imgsize = max(img->width(), img->height());
+    double imgsize = max(header->width(), header->height());
     double tsize = max(target->width(), target->height());
     double width_factor = target->width() / tsize;
     double height_factor = target->height() / tsize;
 
     double step = 8;
-    double minx = 0, maxx = img->width();
-    double miny = 0, maxy = img->height();
+    double minx = 0, maxx = header->width();
+    double miny = 0, maxy = header->height();
     double minsize = step, maxsize = step;
     bool first = true, new_best = false;
 
@@ -102,18 +102,18 @@ namespace PhotoFinish {
 #pragma omp parallel for schedule(dynamic, 1)
       for (size_t xi = 0; xi < xvalues.size(); xi++) {
 	double x = xvalues[xi];
-	double xsize = (img->width() - x) / width_factor;
+	double xsize = (header->width() - x) / width_factor;
 
 	for (double y = miny; y < maxy; y += step) {
 	  if (first)
-	    maxsize = min(xsize, (img->height() - y) / height_factor);
+	    maxsize = min(xsize, (header->height() - y) / height_factor);
 
 	  for (double size = minsize; size < maxsize; size += step) {
 	    double width = size * width_factor;
-	    if (x + width > img->width())
+	    if (x + width > header->width())
 	      continue;
 	    double height = size * height_factor;
-	    if (y + height > img->height())
+	    if (y + height > header->height())
 	      continue;
 
 	    double distance = 0;
@@ -149,15 +149,15 @@ namespace PhotoFinish {
       maxx = best_frame->crop_x() + step * 2;
       if (minx < 0)
 	minx = 0;
-      else if (maxx > img->width())
-	maxx = img->width();
+      else if (maxx > header->width())
+	maxx = header->width();
 
       miny = best_frame->crop_y() - step * 2;
       maxy = best_frame->crop_y() + step * 2;
       if (miny < 0)
 	miny = 0;
-      else if (maxy > img->height())
-	maxy = img->height();
+      else if (maxy > header->height())
+	maxy = header->height();
 
       double best_size = max(best_frame->crop_w(), best_frame->crop_h());
       minsize = best_size - step * 2;
