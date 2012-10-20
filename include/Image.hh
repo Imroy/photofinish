@@ -38,6 +38,7 @@ namespace PhotoFinish {
     cmsHPROFILE _profile;
     cmsUInt32Number _cmsType;
     definable<double> _xres, _yres;		// PPI
+    size_t _row_size;
 
   public:
     //! Empty constructor

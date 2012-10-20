@@ -27,19 +27,28 @@ namespace PhotoFinish {
 
   ImageHeader::ImageHeader() :
     _width(-1),
-    _height(-1)
+    _height(-1),
+    _profile(NULL),
+    _cmsType(0),
+    _row_size(0)
   {}
 
   ImageHeader::ImageHeader(unsigned int w, unsigned int h) :
     _width(w),
-    _height(h)
-  {}
-
-  ImageRow* ImageHeader::new_row(unsigned int y) {
+    _height(h),
+    _profile(NULL),
+    _cmsType(0),
+    _row_size(0)
+  {
     unsigned char bytes = T_BYTES(_cmsType);
     if (T_FLOAT(_cmsType) && (bytes == 0)) // Double-precision floating-point format
       bytes = 8;
-    void *data = malloc((T_CHANNELS(_cmsType) + T_EXTRA(_cmsType)) * bytes);
+    _row_size = _width * (T_CHANNELS(_cmsType) + T_EXTRA(_cmsType)) * bytes;
+  }
+
+  ImageRow* ImageHeader::new_row(unsigned int y) {
+    void *data = malloc(_row_size);
+    memset(data, 0, _row_size);
     return new ImageRow(y, data);
   }
 
