@@ -89,8 +89,7 @@ namespace PhotoFinish {
     //! Duplicate the current object and incorporate variables
     ptr add_variables(multihash& vars);
 
-    //! Find the best crop+rescaling frame for an image
-    Frame::ptr best_frame(ImageHeader::ptr img);
+    inline const multihash& variables(void) const { return _variables; }
 
     inline definable<std::string> name(void) const { return _name; }
 

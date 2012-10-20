@@ -123,9 +123,22 @@ namespace PhotoFinish {
 
 
 
-  class FixedFactorRescaler : public ImageModifier {
+  class BaseRescaler : public ImageModifier {
   protected:
     ImageSink::ptr _sink;
+
+    void _add_rescalers(ImageHeader::ptr header, Function1D::ptr func, double crop_x, double crop_y, double crop_w, double crop_h, double new_width, double new_height);
+
+  public:
+    BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang);
+
+    virtual void receive_image_header(ImageHeader::ptr header) = 0;
+  }; // class BaseRescaler
+
+
+
+  class FixedFactorRescaler : public BaseRescaler {
+  protected:
     double _factor;
 
   public:
@@ -138,9 +151,8 @@ namespace PhotoFinish {
 
 
 
-  class FixedSizeRescaler : public ImageModifier {
+  class FixedSizeRescaler : public BaseRescaler {
   protected:
-    ImageSink::ptr _sink;
     double _width, _height;
     bool _upscale, _inside;
 
@@ -150,6 +162,19 @@ namespace PhotoFinish {
     virtual void receive_image_header(ImageHeader::ptr header);
 
   }; // class FixedSizeRescaler
+
+
+
+  class DestinationRescaler : public BaseRescaler {
+  protected:
+    Destination::ptr _dest;
+
+  public:
+    DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest);
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+  }; // class DestinationRescaler
 
 } // namespace PhotoFinish
 

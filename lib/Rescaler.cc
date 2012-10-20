@@ -16,7 +16,10 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream>
+#include <iomanip>
 #include "Rescaler.hh"
+#include "CropSolution.hh"
 
 namespace PhotoFinish {
 
@@ -269,33 +272,28 @@ namespace PhotoFinish {
 
 
 
-  FixedFactorRescaler::FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) :
+  BaseRescaler::BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang) :
     ImageModifier(source, workgang),
-    _sink(sink),
-    _factor(factor)
+    _sink(sink)
   {}
 
-  void FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
-    double new_width = header->width() * _factor;
-    double new_height = header->height() * _factor;
-    Function1D::ptr lanczos(new Lanczos());
-
+  void BaseRescaler::_add_rescalers(ImageHeader::ptr header, Function1D::ptr func, double crop_x, double crop_y, double crop_w, double crop_h, double new_width, double new_height) {
     if (new_width * header->height() < header->width() * new_height) {
-      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
+      Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
       _source->add_sink(ImageSink::ptr(re_w));
       _workgang->add_worker(Worker::ptr(re_w));
 
-      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
+      Rescaler_height *re_h = new Rescaler_height(func, crop_y, crop_h, header->height(), new_height);
       re_w->add_sink(ImageSink::ptr(re_h));
       _workgang->add_worker(Worker::ptr(re_h));
 
       re_h->add_sink(_sink);
     } else {
-      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
+      Rescaler_height *re_h = new Rescaler_height(func, crop_y, crop_h, header->height(), new_height);
       _source->add_sink(ImageSink::ptr(re_h));
       _workgang->add_worker(Worker::ptr(re_h));
 
-      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
+      Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
       re_h->add_sink(ImageSink::ptr(re_w));
       _workgang->add_worker(Worker::ptr(re_w));
 
@@ -305,9 +303,22 @@ namespace PhotoFinish {
 
 
 
+  FixedFactorRescaler::FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) :
+    BaseRescaler(source, sink, workgang),
+    _factor(factor)
+  {}
+
+  void FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
+    double new_width = header->width() * _factor;
+    double new_height = header->height() * _factor;
+    Function1D::ptr lanczos(new Lanczos());
+    this->_add_rescalers(header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+  }
+
+
+
   FixedSizeRescaler::FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) :
-    ImageModifier(source, workgang),
-    _sink(sink),
+    BaseRescaler(source, sink, workgang),
     _width(width), _height(height),
     _upscale(upscale), _inside(inside)
   {}
@@ -333,30 +344,74 @@ namespace PhotoFinish {
     double new_width = header->width() * factor;
     double new_height = header->height() * factor;
     Function1D::ptr lanczos(new Lanczos());
-
-    if (new_width * header->height() < header->width() * new_height) {
-      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
-      _source->add_sink(ImageSink::ptr(re_w));
-      _workgang->add_worker(Worker::ptr(re_w));
-
-      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
-      re_w->add_sink(ImageSink::ptr(re_h));
-      _workgang->add_worker(Worker::ptr(re_h));
-
-      re_h->add_sink(_sink);
-    } else {
-      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
-      _source->add_sink(ImageSink::ptr(re_h));
-      _workgang->add_worker(Worker::ptr(re_h));
-
-      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
-      re_h->add_sink(ImageSink::ptr(re_w));
-      _workgang->add_worker(Worker::ptr(re_w));
-
-      re_w->add_sink(_sink);
-    }
+    this->_add_rescalers(header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
   }
 
 
+
+
+  DestinationRescaler::DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest) :
+    BaseRescaler(source, sink, workgang),
+    _dest(dest)
+  {}
+
+  void DestinationRescaler::receive_image_header(ImageHeader::ptr header) {
+    if (_dest->targets().size() == 0)
+      throw NoTargets(_dest->name());
+
+    std::cerr << "Finding best target from \"" << _dest->name().get() << "\" to fit image " << header->width() << "×" << header->height() << "..." << std::endl;
+    CropSolver solver(_dest->variables());
+    Frame::ptr best_frame;
+    double best_waste = 0;
+    for (std::map<std::string, D_target::ptr>::const_iterator ti = _dest->targets().begin(); ti != _dest->targets().end(); ti++) {
+      D_target::ptr target = ti->second;
+      std::cerr << "\tTarget \"" << target->name() << "\" (" << target->width() << "×" << target->height() << "):" << std::endl;
+
+      if ((target->width() > header->width()) && (target->height() > header->height())) {
+	std::cerr << "\tSkipping because the target is larger than the original image in both dimensions." << std::endl;
+	continue;
+      }
+
+      if (target->width() * target->height() > header->width() * header->height()) {
+	std::cerr << "\tSkipping because the target has more pixels than the original image." << std::endl;
+	continue;
+      }
+
+      Frame::ptr frame = solver.solve(header, target);
+
+      if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
+	std::cerr << "\tSkipping because the target is larger than the cropped image in both dimensions." << std::endl;
+	continue;
+      }
+
+      if (target->width() * target->height() > frame->crop_w() * frame->crop_h()) {
+	std::cerr << "\tSkipping because the target has more pixels than the cropped image." << std::endl;
+	continue;
+      }
+
+      double waste = frame->waste(header);
+
+      std::cerr << "\tWaste from ("
+		<< std::setprecision(2) << std::fixed << frame->crop_x() << ", " << frame->crop_y() << ") + ("
+		<< frame->crop_w() << "×" << frame->crop_h() << ") = "
+		<< waste << "." << std::endl;
+      if ((!best_frame) || (waste < best_waste)) {
+	best_frame.swap(frame);
+	best_waste = waste;
+      }
+    }
+
+    if (!best_frame)
+      throw NoResults("Destination", "best_frame");
+
+    std::cerr << "Least waste was from frame \"" << best_frame->name() << "\" = " << best_waste << "." << std::endl;
+
+    Function1D::ptr lanczos(new Lanczos());
+    this->_add_rescalers(header, lanczos,
+			 best_frame->crop_x(), best_frame->crop_y(),
+			 best_frame->crop_w(), best_frame->crop_h(),
+			 best_frame->width().get(), best_frame->height().get());
+
+  }
 
 } // namespace PhotoFinish
