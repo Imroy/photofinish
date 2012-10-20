@@ -20,8 +20,8 @@
 
 namespace PhotoFinish {
 
-  Lanczos::Lanczos(D_resize::ptr dr) :
-    _radius(dr->support().defined() ? dr->support().get() : 3.0),
+  Lanczos::Lanczos(double radius) :
+    _radius(radius < 0 ? 3.0 : radius),
     _r_radius(1.0 / _radius)
   {}
 
@@ -97,6 +97,10 @@ namespace PhotoFinish {
   }
 
 
+
+  Rescaler_width::Rescaler_width(Function1D::ptr func, double from_start, double from_size, unsigned int from_max, double to_size) :
+    Rescaler(func, from_start, from_size, from_max, to_size)
+  {}
 
   void Rescaler_width::receive_image_header(ImageHeader::ptr header) {
     _rescaled_header = ImageHeader::ptr(new ImageHeader(_to_size_i, header->height()));
@@ -257,5 +261,97 @@ namespace PhotoFinish {
       }
     }
   }
+
+
+
+  FixedFactorRescaler::FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) :
+    ImageModifier(source, workgang),
+    _sink(sink),
+    _factor(factor)
+  {}
+
+  void FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
+    double new_width = header->width() * _factor;
+    double new_height = header->height() * _factor;
+    Function1D::ptr lanczos(new Lanczos(3));
+
+    if (new_width * header->height() < header->width() * new_height) {
+      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
+      _source->add_sink(ImageSink::ptr(re_w));
+      _workgang->add_worker(Worker::ptr(re_w));
+
+      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
+      re_w->add_sink(ImageSink::ptr(re_h));
+      _workgang->add_worker(Worker::ptr(re_h));
+
+      re_h->add_sink(_sink);
+    } else {
+      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
+      _source->add_sink(ImageSink::ptr(re_h));
+      _workgang->add_worker(Worker::ptr(re_h));
+
+      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
+      re_h->add_sink(ImageSink::ptr(re_w));
+      _workgang->add_worker(Worker::ptr(re_w));
+
+      re_w->add_sink(_sink);
+    }
+  }
+
+
+
+  FixedSizeRescaler::FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) :
+    ImageModifier(source, workgang),
+    _sink(sink),
+    _width(width), _height(height),
+    _upscale(upscale), _inside(inside)
+  {}
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
+  void FixedSizeRescaler::receive_image_header(ImageHeader::ptr header) {
+    double wf = _width / header->width();
+    double hf = _height / header->height();
+
+    if ((!_upscale) && (wf >= 1.0) && (hf >= 1.0)) {
+      _source->add_sink(_sink);
+      return;
+    }
+
+    double factor;
+    if (_inside)
+      factor = min(wf, hf);
+    else
+      factor = max(wf, hf);
+
+    double new_width = header->width() * factor;
+    double new_height = header->height() * factor;
+    Function1D::ptr lanczos(new Lanczos(3));
+
+    if (new_width * header->height() < header->width() * new_height) {
+      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
+      _source->add_sink(ImageSink::ptr(re_w));
+      _workgang->add_worker(Worker::ptr(re_w));
+
+      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
+      re_w->add_sink(ImageSink::ptr(re_h));
+      _workgang->add_worker(Worker::ptr(re_h));
+
+      re_h->add_sink(_sink);
+    } else {
+      Rescaler_height *re_h = new Rescaler_height(lanczos, 0.0, header->height(), header->height(), new_height);
+      _source->add_sink(ImageSink::ptr(re_h));
+      _workgang->add_worker(Worker::ptr(re_h));
+
+      Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
+      re_h->add_sink(ImageSink::ptr(re_w));
+      _workgang->add_worker(Worker::ptr(re_w));
+
+      re_w->add_sink(_sink);
+    }
+  }
+
+
 
 } // namespace PhotoFinish

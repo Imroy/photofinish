@@ -21,7 +21,7 @@
 
 #include <math.h>
 #include "Function1D.hh"
-#include "Destination_items.hh"
+#include "Image.hh"
 #include "Exception.hh"
 
 #define sqr(x) ((x) * (x))
@@ -36,7 +36,7 @@ namespace PhotoFinish {
 
   public:
     //! Constructor
-    Lanczos(D_resize::ptr dr);
+    Lanczos(double radius = -1.0);
 
     inline double range(void) const { return _radius; }
 
@@ -83,6 +83,9 @@ namespace PhotoFinish {
     void _scale_row(ImageRow::ptr row);
 
   public:
+    //! Constructor
+    Rescaler_width(Function1D::ptr func, double from_start, double from_size, unsigned int from_max, double to_size);
+
     virtual void receive_image_header(ImageHeader::ptr header);
 
   }; // class Rescaler_width
@@ -110,6 +113,36 @@ namespace PhotoFinish {
     virtual void receive_image_row(ImageRow::ptr row);
 
   }; // class Rescaler_height
+
+
+
+  class FixedFactorRescaler : public ImageModifier {
+  protected:
+    ImageSink::ptr _sink;
+    double _factor;
+
+  public:
+    // Constructor
+    FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor);
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+  }; // class FixedFactorRescaler
+
+
+
+  class FixedSizeRescaler : public ImageModifier {
+  protected:
+    ImageSink::ptr _sink;
+    double _width, _height;
+    bool _upscale, _inside;
+
+  public:
+    FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale = false, bool inside = true);
+
+    virtual void receive_image_header(ImageHeader::ptr header);
+
+  }; // class FixedSizeRescaler
 
 } // namespace PhotoFinish
 
