@@ -21,7 +21,6 @@
 #include <omp.h>
 #include "Frame.hh"
 #include "Destination_items.hh"
-#include "Kernel1Dvar.hh"
 
 namespace PhotoFinish {
 
@@ -37,23 +36,9 @@ namespace PhotoFinish {
     _crop_w(w), _crop_h(h)
   {}
 
-  Image::ptr Frame::crop_resize(Image::ptr img, const D_resize& dr, bool can_free) {
-    if (_width * img->height() < img->width() * _height) {
-      Kernel1Dvar::ptr scale_width = Kernel1Dvar::create(dr, _crop_x, _crop_w, img->width(), _width);
-      Image::ptr temp = scale_width->convolve_h(img, can_free);
-      Kernel1Dvar::ptr scale_height = Kernel1Dvar::create(dr, _crop_y, _crop_h, img->height(), _height);
-      return scale_height->convolve_v(temp, true);
-    }
-
-    Kernel1Dvar::ptr scale_height = Kernel1Dvar::create(dr, _crop_y, _crop_h, img->height(), _height);
-    Image::ptr temp = scale_height->convolve_v(img, can_free);
-    Kernel1Dvar::ptr scale_width = Kernel1Dvar::create(dr, _crop_x, _crop_w, img->width(), _width);
-    return scale_width->convolve_h(temp, true);
-  }
-
-  const double Frame::waste(Image::ptr img) const {
-    return ((img->width() - _crop_w) * _crop_h)
-      + (img->width() * (img->height() - _crop_h));
+  const double Frame::waste(ImageHeader::ptr header) const {
+    return ((header->width() - _crop_w) * _crop_h)
+      + (header->width() * (header->height() - _crop_h));
   }
 
 }

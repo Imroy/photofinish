@@ -46,15 +46,6 @@ namespace PhotoFinish {
     */
     Frame(const D_target& target, double x, double y, double w, double h);
 
-    //! Crop and resize an image
-    /*!
-      \param img The source image
-      \param dr A D_resize object which will supply our parameters.
-      \param can_free Can each row of the image be freed after it is convolved?
-      \return A new cropped and resized image
-    */
-    ImageHeader::ptr crop_resize(ImageHeader::ptr img, const D_resize &dr, bool can_free = false);
-
     //! The left-most border of the crop window
     inline const double crop_x(void) const { return _crop_x; }
     //! The top-most border of the crop window
@@ -65,7 +56,7 @@ namespace PhotoFinish {
     inline const double crop_h(void) const { return _crop_h; }
 
     //! How much of the original image is wasted by this crop frame
-    const double waste(ImageHeader::ptr img) const;
+    const double waste(ImageHeader::ptr header) const;
 
     //! Shared pointer for a Frame
     typedef std::shared_ptr<Frame> ptr;
