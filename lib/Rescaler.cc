@@ -20,8 +20,13 @@
 
 namespace PhotoFinish {
 
-  Lanczos::Lanczos(double radius) :
-    _radius(radius < 0 ? 3.0 : radius),
+  Lanczos::Lanczos() :
+    _radius(3.0),
+    _r_radius(1.0 / _radius)
+  {}
+
+  Lanczos::Lanczos(const D_resize& dr) :
+    _radius(dr.support().defined() ? dr.support().get() : 3.0),
     _r_radius(1.0 / _radius)
   {}
 
@@ -273,7 +278,7 @@ namespace PhotoFinish {
   void FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
     double new_width = header->width() * _factor;
     double new_height = header->height() * _factor;
-    Function1D::ptr lanczos(new Lanczos(3));
+    Function1D::ptr lanczos(new Lanczos());
 
     if (new_width * header->height() < header->width() * new_height) {
       Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);
@@ -327,7 +332,7 @@ namespace PhotoFinish {
 
     double new_width = header->width() * factor;
     double new_height = header->height() * factor;
-    Function1D::ptr lanczos(new Lanczos(3));
+    Function1D::ptr lanczos(new Lanczos());
 
     if (new_width * header->height() < header->width() * new_height) {
       Rescaler_width *re_w = new Rescaler_width(lanczos, 0.0, header->width(), header->width(), new_width);

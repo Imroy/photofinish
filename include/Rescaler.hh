@@ -21,6 +21,7 @@
 
 #include <math.h>
 #include "Function1D.hh"
+#include "Destination.hh"
 #include "Image.hh"
 #include "Exception.hh"
 
@@ -35,8 +36,14 @@ namespace PhotoFinish {
     double _r_radius;	//! Reciprocal of the radius
 
   public:
+    //! Empty constructor
+    /*!
+      Sets default value of radius = 3.0
+    */
+    Lanczos();
+
     //! Constructor
-    Lanczos(double radius = -1.0);
+    Lanczos(const D_resize& dr);
 
     inline double range(void) const { return _radius; }
 
