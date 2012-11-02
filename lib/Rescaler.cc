@@ -272,12 +272,12 @@ namespace PhotoFinish {
 
 
 
-  BaseRescaler::BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang) :
+  mod_BaseRescaler::mod_BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang) :
     ImageModifier(source, workgang),
     _sink(sink)
   {}
 
-  void BaseRescaler::_add_rescalers(ImageHeader::ptr header, Function1D::ptr func, double crop_x, double crop_y, double crop_w, double crop_h, double new_width, double new_height) {
+  void mod_BaseRescaler::_add_rescalers(ImageHeader::ptr header, Function1D::ptr func, double crop_x, double crop_y, double crop_w, double crop_h, double new_width, double new_height) {
     if (new_width * header->height() < header->width() * new_height) {
       Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
       _source->add_sink(ImageSink::ptr(re_w));
@@ -303,12 +303,12 @@ namespace PhotoFinish {
 
 
 
-  FixedFactorRescaler::FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) :
-    BaseRescaler(source, sink, workgang),
+  mod_FixedFactorRescaler::mod_FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) :
+    mod_BaseRescaler(source, sink, workgang),
     _factor(factor)
   {}
 
-  void FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
+  void mod_FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
     double new_width = header->width() * _factor;
     double new_height = header->height() * _factor;
     Function1D::ptr lanczos(new Lanczos());
@@ -317,8 +317,8 @@ namespace PhotoFinish {
 
 
 
-  FixedSizeRescaler::FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) :
-    BaseRescaler(source, sink, workgang),
+  mod_FixedSizeRescaler::mod_FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) :
+    mod_BaseRescaler(source, sink, workgang),
     _width(width), _height(height),
     _upscale(upscale), _inside(inside)
   {}
@@ -326,7 +326,7 @@ namespace PhotoFinish {
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-  void FixedSizeRescaler::receive_image_header(ImageHeader::ptr header) {
+  void mod_FixedSizeRescaler::receive_image_header(ImageHeader::ptr header) {
     double wf = _width / header->width();
     double hf = _height / header->height();
 
@@ -350,12 +350,12 @@ namespace PhotoFinish {
 
 
 
-  DestinationRescaler::DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest) :
-    BaseRescaler(source, sink, workgang),
+  mod_DestinationRescaler::mod_DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest) :
+    mod_BaseRescaler(source, sink, workgang),
     _dest(dest)
   {}
 
-  void DestinationRescaler::receive_image_header(ImageHeader::ptr header) {
+  void mod_DestinationRescaler::receive_image_header(ImageHeader::ptr header) {
     if (_dest->targets().size() == 0)
       throw NoTargets(_dest->name());
 

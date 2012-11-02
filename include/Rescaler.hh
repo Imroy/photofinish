@@ -123,58 +123,77 @@ namespace PhotoFinish {
 
 
 
-  class BaseRescaler : public ImageModifier {
+  //! Abstract base class for ImageModifier that rescales images
+  class mod_BaseRescaler : public ImageModifier {
   protected:
     ImageSink::ptr _sink;
 
     void _add_rescalers(ImageHeader::ptr header, Function1D::ptr func, double crop_x, double crop_y, double crop_w, double crop_h, double new_width, double new_height);
 
   public:
-    BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang);
+    //! Constructor
+    /*!
+      \param source The Image source to attach to
+      \param sink The Image sink that rescaled images will be sent to
+      \param workgang The Workgang that the rescalers will be added to.
+     */
+    mod_BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang);
 
     virtual void receive_image_header(ImageHeader::ptr header) = 0;
-  }; // class BaseRescaler
+  }; // class mod_BaseRescaler
 
 
 
-  class FixedFactorRescaler : public BaseRescaler {
+  //! Image modifier that scales images by a fixed factor
+  class mod_FixedFactorRescaler : public mod_BaseRescaler {
   protected:
     double _factor;
 
   public:
-    // Constructor
-    FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor);
+    //! Constructor
+    /*!
+      \param factor The fixed factor that the image will be scaled by.
+     */
+    mod_FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor);
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-  }; // class FixedFactorRescaler
+  }; // class mod_FixedFactorRescaler
 
 
 
-  class FixedSizeRescaler : public BaseRescaler {
+  //! Image modifier that scales to a fixed size
+  class mod_FixedSizeRescaler : public mod_BaseRescaler {
   protected:
     double _width, _height;
     bool _upscale, _inside;
 
   public:
-    FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale = false, bool inside = true);
+    //! Constructor
+    /*!
+      \param width,height The size that the image will be rescaled to
+      \param upscale Do we allow the image to be made bigger?
+      \param inside Should we scale the image to fit totally inside the provided width×height?
+     */
+    mod_FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale = false, bool inside = true);
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-  }; // class FixedSizeRescaler
+  }; // class mod_FixedSizeRescaler
 
 
 
-  class DestinationRescaler : public BaseRescaler {
+  //! Image modifier that scales to fit one of the targets of a Destination
+  class mod_DestinationRescaler : public mod_BaseRescaler {
   protected:
     Destination::ptr _dest;
 
   public:
-    DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest);
+    mod_DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest);
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-  }; // class DestinationRescaler
+  }; // class mod_DestinationRescaler
 
 } // namespace PhotoFinish
 
