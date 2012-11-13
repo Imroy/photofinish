@@ -34,7 +34,8 @@
 #include "ImageFile.hh"
 #include "Destination.hh"
 #include "Tags.hh"
-#include "Kernel2D.hh"
+#include "Rescaler.hh"
+#include "Sharpen.hh"
 #include "Exception.hh"
 
 namespace fs = boost::filesystem;
@@ -43,20 +44,17 @@ namespace po = boost::program_options;
 
 using namespace PhotoFinish;
 
-void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
+void make_preview(ImageSource::ptr source, WorkGang::ptr workgang, Destination::ptr orig_dest, Tags::ptr filetags, ImageFilepath preview_file) {
   Destination::ptr resized_dest = orig_dest->dupe();
 
   resized_dest->set_depth(8);
   resized_dest->set_jpeg(D_JPEG(60, 1, 1, true));
   resized_dest->clear_profile();
 
-  Frame::ptr frame(new Frame(orig_image->width() * 0.25, orig_image->height() * 0.25,
-			     0, 0,
-			     orig_image->width(), orig_image->height()));
-
-  Image::ptr resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
-  preview_file->write(resized_image, resized_dest, can_free);
-  filetags->embed(preview_file);
+  ImageWriter::ptr preview_writer = ImageWriter::open(preview_file, resized_dest);
+  preview_writer->add_end_handler([=] { filetags->embed(preview_file); });
+  workgang->add_worker(preview_writer);
+  add_FixedFactorRescaler(source, preview_writer, workgang, 0.25);
 }
 
 void preview_dir(fs::path dir, std::string preview_format, Tags::ptr tags, std::vector<std::string> only_formats = {}, std::vector<std::string> not_formats = {}) {
@@ -68,10 +66,11 @@ void preview_dir(fs::path dir, std::string preview_format, Tags::ptr tags, std::
   for (std::vector<fs::directory_entry>::iterator di = dir_list.begin(); di != dir_list.end(); di++) {
     std::cerr << "preview_dir: " << *di << std::endl;
     try {
-      ImageFile::ptr infile = ImageFile::create(di->path());
+      WorkGang::ptr workgang(new WorkGang);
+      ImageFilepath infile(di->path());
       if (only_formats.size() > 0) {
 	bool valid = false;
-	std::string format = infile->format();
+	std::string format = infile.format();
 	std::cerr << "format = \"" << format << "\"" << std::endl;
 	for (std::vector<std::string>::iterator fi = only_formats.begin(); fi != only_formats.end(); fi++) {
 	  std::cerr << "only_format = \"" << *fi << "\"" << std::endl;
@@ -85,7 +84,7 @@ void preview_dir(fs::path dir, std::string preview_format, Tags::ptr tags, std::
 	  continue;
       } else if (not_formats.size() > 0) {
 	bool valid = true;
-	std::string format = infile->format();
+	std::string format = infile.format();
 	std::cerr << "format = \"" << format << "\"" << std::endl;
 	for (std::vector<std::string>::iterator fi = not_formats.begin(); fi != not_formats.end(); fi++) {
 	  std::cerr << "not_format = \"" << *fi << "\"" << std::endl;
@@ -99,18 +98,20 @@ void preview_dir(fs::path dir, std::string preview_format, Tags::ptr tags, std::
 	  continue;
       }
 
-      ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
+      ImageFilepath preview_file(di->path().filename(), preview_format);
 
-      if (exists(preview_file->filepath())
-	  && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
+      if (exists(preview_file.filepath())
+	  && (last_write_time(preview_file.filepath()) > last_write_time(infile.filepath())))
 	continue;
 
       Destination::ptr orig_dest(new Destination);
-      Image::ptr orig_image = infile->read(orig_dest);
+      ImageReader::ptr reader = ImageReader::open(infile);
+      workgang->add_worker(reader);
       Tags::ptr filetags = tags->dupe();
       filetags->extract(infile);
 
-      make_preview(orig_image, orig_dest, filetags, preview_file, true);
+      make_preview(reader, workgang, orig_dest, filetags, preview_file);
+      workgang->work_until_finished();
     } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
     }
@@ -196,35 +197,42 @@ int main(int argc, char* argv[]) {
 	continue;
 
       try {
-	ImageFile::ptr infile = ImageFile::create(di->path());
+	WorkGang::ptr workgang(new WorkGang);
+	ImageFilepath infile(di->path());
+	ImageReader::ptr reader = ImageReader::open(infile);
+	workgang->add_worker(reader);
 
 	Destination::ptr orig_dest(new Destination);
-	Image::ptr orig_image = infile->read(orig_dest);
 	Tags::ptr filetags = defaulttags->dupe();
 	filetags->extract(infile);
 
 	try {
-	  ImageFile::ptr converted_file = ImageFile::create(convert_dir / di->path().filename(), convert_format);
-	  if (do_conversion && (!exists(converted_file->filepath()) || (last_write_time(converted_file->filepath()) < last_write_time(infile->filepath())))) {
+	  ImageFilepath converted_file(convert_dir / di->path().filename(), convert_format);
+	  if (do_conversion && (!exists(converted_file.filepath()) || (last_write_time(converted_file.filepath()) < last_write_time(infile.filepath())))) {
 	    if (!fs::exists(convert_dir)) {
 	      std::cerr << "Creating directory " << convert_dir << "." << std::endl;
 	      fs::create_directory(convert_dir);
 	    }
-
-	    converted_file->write(orig_image, orig_dest, !do_preview);
-	    filetags->embed(converted_file);
+	    reader->add_header_handler([=] (ImageHeader::ptr header) {
+					 ImageWriter::ptr converted_writer = ImageWriter::open(converted_file, orig_dest);
+					 converted_writer->add_end_handler([=] { filetags->embed(converted_file); });
+					 workgang->add_worker(converted_writer);
+					 reader->add_sink(converted_writer);
+				       });
 	  }
 	} catch (std::exception& ex) {
 	  std::cerr << ex.what() << std::endl;
 	}
 
 	try {
-	  ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
-	  if (do_preview && (!exists(preview_file->filepath()) || (last_write_time(preview_file->filepath()) < last_write_time(infile->filepath()))))
-	    make_preview(orig_image, orig_dest, filetags, preview_file, true);
+	  ImageFilepath preview_file(di->path().filename(), preview_format);
+	  if (do_preview && (!exists(preview_file.filepath()) || (last_write_time(preview_file.filepath()) < last_write_time(infile.filepath()))))
+	    make_preview(reader, workgang, orig_dest, filetags, preview_file);
 	} catch (std::exception& ex) {
 	  std::cerr << ex.what() << std::endl;
 	}
+
+	workgang->work_until_finished();
 
 	if (do_conversion) {
 	  std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << std::endl;
