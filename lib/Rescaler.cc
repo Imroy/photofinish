@@ -257,9 +257,12 @@ namespace PhotoFinish {
 	double weight = _weights[ny][j];
 	P *in = (P*)row->data();
 	P *out = (P*)_rows[ny]->data();
-	for (unsigned int x = 0; x < _sink_header->width(); x++, in += T_EXTRA(cmsType), out += T_EXTRA(cmsType))
+	for (unsigned int x = 0; x < _sink_header->width(); x++, in += T_EXTRA(cmsType), out += T_EXTRA(cmsType)) {
+	  _rows[ny]->lock();
 	  for (unsigned char c = 0; c < T_CHANNELS(cmsType); c++, in++, out++)
 	    *out += (*in) * weight;
+	  _rows[ny]->unlock();
+	}
 	_row_counts[ny]++;
 	if (_row_counts[ny] == _size[ny]) {
 	  _row_counts[ny] = 0;
@@ -301,10 +304,10 @@ namespace PhotoFinish {
 
   void add_FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) {
     source->add_header_handler([=] (ImageHeader::ptr header) {
-				 double new_width = header->width() * factor;
-				 double new_height = header->height() * factor;
-				 Function1D::ptr lanczos(new Lanczos());
-				 _add_rescalers(source, sink, workgang, header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+				 _add_rescalers(source, sink, workgang,
+						header, Function1D::ptr(new Lanczos()),
+						0.0, 0.0, header->width(), header->height(),
+						header->width() * factor, header->height() * factor);
 			       });
   }
 
@@ -327,10 +330,10 @@ namespace PhotoFinish {
 				 else
 				   factor = max(wf, hf);
 
-				 double new_width = header->width() * factor;
-				 double new_height = header->height() * factor;
-				 Function1D::ptr lanczos(new Lanczos());
-				 _add_rescalers(source, sink, workgang, header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+				 _add_rescalers(source, sink, workgang,
+						header, Function1D::ptr(new Lanczos()),
+						0.0, 0.0, header->width(), header->height(),
+						header->width() * factor, header->height() * factor);
 			       });
   }
 
@@ -386,10 +389,9 @@ namespace PhotoFinish {
 
 				 std::cerr << "Least waste was from frame \"" << best_frame->name() << "\" = " << best_waste << "." << std::endl;
 
-				 Function1D::ptr lanczos(new Lanczos());
-				 _add_rescalers(source, sink, workgang, header, lanczos,
-						best_frame->crop_x(), best_frame->crop_y(),
-						best_frame->crop_w(), best_frame->crop_h(),
+				 _add_rescalers(source, sink, workgang,
+						header, Function1D::ptr(new Lanczos()),
+						best_frame->crop_x(), best_frame->crop_y(), best_frame->crop_w(), best_frame->crop_h(),
 						best_frame->width().get(), best_frame->height().get());
 			       });
   }

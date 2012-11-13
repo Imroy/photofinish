@@ -20,7 +20,6 @@
 #define __FUNCTION1D_HH__
 
 #include <memory>
-#include "Destination.hh"
 
 namespace PhotoFinish {
 
