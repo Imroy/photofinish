@@ -38,7 +38,7 @@ namespace PhotoFinish {
 
     inline bool work_finished(void) const { return _work_finished; }
 
-    //! Perform a single unit of work e.g process a row or pixels
+    //! Perform a single unit of work e.g process a row of pixels
     virtual void do_work(void) = 0;
 
     typedef std::shared_ptr<Worker> ptr;
