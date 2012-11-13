@@ -26,7 +26,7 @@ endif
 ifeq ($(HAZ_JPEG), 1)
 COMMON_FLAGS += -DHAZ_JPEG
 LIBS += -ljpeg
-LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JPEGfile*.cc))
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JPEG*.cc))
 endif
 ifeq ($(HAZ_TIFF), 1)
 COMMON_FLAGS += -DHAZ_TIFF
@@ -37,7 +37,7 @@ endif
 ifeq ($(HAZ_JP2), 1)
 COMMON_FLAGS += -DHAZ_JP2
 PKGS += libopenjpeg1
-LIB_OBJS += lib/formats/JP2reader.o lib/formats/JP2writer.o
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JP2*.cc))
 endif
 
 COMMON_FLAGS += `pkg-config --cflags $(PKGS)`
