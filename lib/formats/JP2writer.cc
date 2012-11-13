@@ -82,6 +82,8 @@ namespace PhotoFinish {
   }
 
   void JP2writer::receive_image_header(ImageHeader::ptr header) {
+    ImageWriter::receive_image_header(header);
+
     OPJ_COLOR_SPACE colour_space = CLRSPC_SRGB;
     switch (T_COLORSPACE(header->cmsType())) {
     case PT_GRAY:
@@ -196,6 +198,7 @@ namespace PhotoFinish {
   }
 
   void JP2writer::receive_image_end(void) {
+    ImageWriter::receive_image_end();
   }
 
 }

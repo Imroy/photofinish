@@ -170,6 +170,7 @@ namespace PhotoFinish {
   }
 
   void PNGwriter::receive_image_end(void) {
+    ImageWriter::receive_image_end();
   }
 
 }

@@ -233,10 +233,9 @@ namespace PhotoFinish {
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-    JPEGwriter(std::ostream* os, Destination::ptr dest);
-    friend class ImageWriter;
-
   public:
+    JPEGwriter(std::ostream* os, Destination::ptr dest);
+
     inline const std::string format(void) const { return "jpeg"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
@@ -354,6 +353,8 @@ namespace PhotoFinish {
     inline const std::string format(void) const { return "sol"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
+
+    virtual void receive_image_end(void);
 
     virtual void do_work(void);
   };

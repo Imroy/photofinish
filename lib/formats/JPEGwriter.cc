@@ -56,6 +56,8 @@ namespace PhotoFinish {
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
   void JPEGwriter::receive_image_header(ImageHeader::ptr header) {
+    ImageWriter::receive_image_header(header);
+
     _cinfo->image_width = header->width();
     _cinfo->image_height = header->height();
 
@@ -150,6 +152,7 @@ namespace PhotoFinish {
   }
 
   void JPEGwriter::receive_image_end(void) {
+    ImageWriter::receive_image_end();
   }
 
   void JPEGwriter::mark_sGrey(cmsUInt32Number intent) const {

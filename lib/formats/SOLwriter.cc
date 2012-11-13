@@ -84,4 +84,8 @@ namespace PhotoFinish {
     }
   }
 
+  void SOLwriter::receive_image_end(void) {
+    ImageWriter::receive_image_end();
+  }
+
 }

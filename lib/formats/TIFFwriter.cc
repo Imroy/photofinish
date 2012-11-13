@@ -40,8 +40,9 @@ namespace PhotoFinish {
   }
 
   void TIFFwriter::receive_image_header(ImageHeader::ptr header) {
-    int rc;
+    ImageWriter::receive_image_header(header);
 
+    int rc;
     TIFFcheck(SetField(_tiff, TIFFTAG_SUBFILETYPE, 0));
     TIFFcheck(SetField(_tiff, TIFFTAG_IMAGEWIDTH, header->width()));
     TIFFcheck(SetField(_tiff, TIFFTAG_IMAGELENGTH, header->height()));
@@ -163,6 +164,7 @@ namespace PhotoFinish {
   }
 
   void TIFFwriter::receive_image_end(void) {
+    ImageWriter::receive_image_end();
   }
 
 }
