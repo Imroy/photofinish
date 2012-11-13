@@ -103,6 +103,8 @@ namespace PhotoFinish {
   }
 
   void ImageSink::receive_image_end(void) {
+    for (std::list<end_handler>::iterator ehi = _end_handlers.begin(); ehi != _end_handlers.end(); ehi++)
+      (*ehi)();
   }
 
   void ImageSink::do_work(void) {
@@ -119,6 +121,9 @@ namespace PhotoFinish {
   }
 
   void ImageSource::_send_image_header(ImageHeader::ptr header) {
+    for (std::list<header_handler>::iterator hhi = _header_handlers.begin(); hhi != _header_handlers.end(); hhi++)
+      (*hhi)(header);
+
     for (ImageSink::list::iterator ri = _src_sinks.begin(); ri != _src_sinks.end(); ri++)
       (*ri)->receive_image_header(header);
   }
@@ -144,15 +149,6 @@ namespace PhotoFinish {
 
   void ImageSource::add_sinks(ImageSink::list::iterator begin, ImageSink::list::iterator end) {
     std::copy(begin, end, _src_sinks.end());
-  }
-
-
-
-  ImageModifier::ImageModifier(ImageSource::ptr source, WorkGang::ptr workgang) :
-    _source(source),
-    _workgang(workgang)
-  {
-    _source->add_sink(ImageSink::ptr(this));
   }
 
 }

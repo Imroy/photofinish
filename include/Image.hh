@@ -21,6 +21,7 @@
 
 #include <list>
 #include <memory>
+#include <functional>
 #include <lcms2.h>
 #include <omp.h>
 #include "Definable.hh"
@@ -142,11 +143,16 @@ namespace PhotoFinish {
 
   //! Semi-abstract base "role" class for any classes who will receive image data
   class ImageSink : public Worker {
+  public:
+    typedef std::shared_ptr<ImageSink> ptr;
+    typedef std::function<void (void)> end_handler;
+
   protected:
     ImageHeader::ptr _sink_header;
     typedef std::list<ImageRow::ptr> _sink_rowqueue_type;
     _sink_rowqueue_type _sink_rowqueue;
     omp_lock_t *_sink_queue_lock;
+    std::list<end_handler> _end_handlers;
 
     //! Lock the queue for exclusive use
     inline void _lock_sink_queue(void) { omp_set_lock(_sink_queue_lock); }
@@ -164,6 +170,9 @@ namespace PhotoFinish {
     //! Destructor
     virtual ~ImageSink();
 
+    //! Add a handler that will be called when the image end has been received
+    inline void add_end_handler(end_handler eh) { _end_handlers.push_back(eh); }
+
     //! Receive an image header object
     virtual void receive_image_header(ImageHeader::ptr header);
 
@@ -176,7 +185,6 @@ namespace PhotoFinish {
     //! Pop a row off of the queue and hand it to _work_on_row()
     virtual void do_work(void);
 
-    typedef std::shared_ptr<ImageSink> ptr;
     typedef std::list<ptr> list;
   }; // class ImageSink
 
@@ -184,7 +192,11 @@ namespace PhotoFinish {
 
   //! Abstract base "role" class for any classes who will produce image data
   class ImageSource {
+  public:
+    typedef std::function<void (ImageHeader::ptr)> header_handler;
+
   protected:
+    std::list<header_handler> _header_handlers;
     ImageSink::list _src_sinks;
 
     //! Send an image header to all sinks registered with this source
@@ -198,6 +210,9 @@ namespace PhotoFinish {
 
   public:
     ImageSource();
+
+    //! Add a handler that will be called when the image header is available
+    inline void add_header_handler(header_handler hh) { _header_handlers.push_back(hh); }
 
     //! Add a sink to the list
     void add_sink(ImageSink::ptr s);
@@ -213,25 +228,6 @@ namespace PhotoFinish {
 
 
 
-  //! Abstract base "role" class for any classes that will spawn new image sinks once the header information is received
-  class ImageModifier : public ImageSink {
-  protected:
-    ImageSource::ptr _source;
-    WorkGang::ptr _workgang;
-
-  public:
-    //! Constructor
-    /*!
-      \param source The image source we will attach to as a sink, and to which we will add new sinks
-      \param workgang The WorkGang for any workers we make
-     */
-    ImageModifier(ImageSource::ptr source, WorkGang::ptr workgang);
-
-    //! Receive an image header object
-    virtual void receive_image_header(ImageHeader::ptr header) = 0;
-
-    typedef std::shared_ptr<ImageModifier> ptr;
-  }; // class ImageModifier
 }
 
 #endif // __IMAGE_HH__

@@ -272,146 +272,126 @@ namespace PhotoFinish {
 
 
 
-  mod_BaseRescaler::mod_BaseRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang) :
-    ImageModifier(source, workgang),
-    _sink(sink)
-  {}
-
-  void mod_BaseRescaler::_add_rescalers(ImageHeader::ptr header, Function1D::ptr func, double crop_x, double crop_y, double crop_w, double crop_h, double new_width, double new_height) {
+  void _add_rescalers(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang,
+		      ImageHeader::ptr header, Function1D::ptr func,
+		      double crop_x, double crop_y, double crop_w, double crop_h,
+		      double new_width, double new_height) {
     if (new_width * header->height() < header->width() * new_height) {
       Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
-      _source->add_sink(ImageSink::ptr(re_w));
-      _workgang->add_worker(Worker::ptr(re_w));
+      source->add_sink(ImageSink::ptr(re_w));
+      workgang->add_worker(Worker::ptr(re_w));
 
       Rescaler_height *re_h = new Rescaler_height(func, crop_y, crop_h, header->height(), new_height);
       re_w->add_sink(ImageSink::ptr(re_h));
-      _workgang->add_worker(Worker::ptr(re_h));
+      workgang->add_worker(Worker::ptr(re_h));
 
-      re_h->add_sink(_sink);
+      re_h->add_sink(sink);
     } else {
       Rescaler_height *re_h = new Rescaler_height(func, crop_y, crop_h, header->height(), new_height);
-      _source->add_sink(ImageSink::ptr(re_h));
-      _workgang->add_worker(Worker::ptr(re_h));
+      source->add_sink(ImageSink::ptr(re_h));
+      workgang->add_worker(Worker::ptr(re_h));
 
       Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
       re_h->add_sink(ImageSink::ptr(re_w));
-      _workgang->add_worker(Worker::ptr(re_w));
+      workgang->add_worker(Worker::ptr(re_w));
 
-      re_w->add_sink(_sink);
+      re_w->add_sink(sink);
     }
   }
 
-
-
-  mod_FixedFactorRescaler::mod_FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) :
-    mod_BaseRescaler(source, sink, workgang),
-    _factor(factor)
-  {}
-
-  void mod_FixedFactorRescaler::receive_image_header(ImageHeader::ptr header) {
-    double new_width = header->width() * _factor;
-    double new_height = header->height() * _factor;
-    Function1D::ptr lanczos(new Lanczos());
-    this->_add_rescalers(header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+  void add_FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) {
+    source->add_header_handler([=] (ImageHeader::ptr header) {
+				 double new_width = header->width() * factor;
+				 double new_height = header->height() * factor;
+				 Function1D::ptr lanczos(new Lanczos());
+				 _add_rescalers(source, sink, workgang, header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+			       });
   }
-
-
-
-  mod_FixedSizeRescaler::mod_FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) :
-    mod_BaseRescaler(source, sink, workgang),
-    _width(width), _height(height),
-    _upscale(upscale), _inside(inside)
-  {}
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-  void mod_FixedSizeRescaler::receive_image_header(ImageHeader::ptr header) {
-    double wf = _width / header->width();
-    double hf = _height / header->height();
+  void add_FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) {
+    source->add_header_handler([=] (ImageHeader::ptr header) {
+				 double wf = width / header->width();
+				 double hf = height / header->height();
 
-    if ((!_upscale) && (wf >= 1.0) && (hf >= 1.0)) {
-      _source->add_sink(_sink);
-      return;
-    }
+				 if ((!upscale) && (wf >= 1.0) && (hf >= 1.0)) {
+				   source->add_sink(sink);
+				   return;
+				 }
 
-    double factor;
-    if (_inside)
-      factor = min(wf, hf);
-    else
-      factor = max(wf, hf);
+				 double factor;
+				 if (inside)
+				   factor = min(wf, hf);
+				 else
+				   factor = max(wf, hf);
 
-    double new_width = header->width() * factor;
-    double new_height = header->height() * factor;
-    Function1D::ptr lanczos(new Lanczos());
-    this->_add_rescalers(header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+				 double new_width = header->width() * factor;
+				 double new_height = header->height() * factor;
+				 Function1D::ptr lanczos(new Lanczos());
+				 _add_rescalers(source, sink, workgang, header, lanczos, 0.0, 0.0, header->width(), header->height(), new_width, new_height);
+			       });
   }
 
+  void add_DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest) {
+    source->add_header_handler([=] (ImageHeader::ptr header) {
+				 if (dest->targets().size() == 0)
+				   throw NoTargets(dest->name());
 
+				 std::cerr << "Finding best target from \"" << dest->name().get() << "\" to fit image " << header->width() << "×" << header->height() << "..." << std::endl;
+				 CropSolver solver(dest->variables());
+				 Frame::ptr best_frame;
+				 double best_waste = 0;
+				 for (std::map<std::string, D_target::ptr>::const_iterator ti = dest->targets().begin(); ti != dest->targets().end(); ti++) {
+				   D_target::ptr target = ti->second;
+				   std::cerr << "\tTarget \"" << target->name() << "\" (" << target->width() << "×" << target->height() << "):" << std::endl;
 
+				   if ((target->width() > header->width()) && (target->height() > header->height())) {
+				     std::cerr << "\tSkipping because the target is larger than the original image in both dimensions." << std::endl;
+				     continue;
+				   }
 
-  mod_DestinationRescaler::mod_DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest) :
-    mod_BaseRescaler(source, sink, workgang),
-    _dest(dest)
-  {}
+				   if (target->width() * target->height() > header->width() * header->height()) {
+				     std::cerr << "\tSkipping because the target has more pixels than the original image." << std::endl;
+				     continue;
+				   }
 
-  void mod_DestinationRescaler::receive_image_header(ImageHeader::ptr header) {
-    if (_dest->targets().size() == 0)
-      throw NoTargets(_dest->name());
+				   Frame::ptr frame = solver.solve(header, target);
 
-    std::cerr << "Finding best target from \"" << _dest->name().get() << "\" to fit image " << header->width() << "×" << header->height() << "..." << std::endl;
-    CropSolver solver(_dest->variables());
-    Frame::ptr best_frame;
-    double best_waste = 0;
-    for (std::map<std::string, D_target::ptr>::const_iterator ti = _dest->targets().begin(); ti != _dest->targets().end(); ti++) {
-      D_target::ptr target = ti->second;
-      std::cerr << "\tTarget \"" << target->name() << "\" (" << target->width() << "×" << target->height() << "):" << std::endl;
+				   if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
+				     std::cerr << "\tSkipping because the target is larger than the cropped image in both dimensions." << std::endl;
+				     continue;
+				   }
 
-      if ((target->width() > header->width()) && (target->height() > header->height())) {
-	std::cerr << "\tSkipping because the target is larger than the original image in both dimensions." << std::endl;
-	continue;
-      }
+				   if (target->width() * target->height() > frame->crop_w() * frame->crop_h()) {
+				     std::cerr << "\tSkipping because the target has more pixels than the cropped image." << std::endl;
+				     continue;
+				   }
 
-      if (target->width() * target->height() > header->width() * header->height()) {
-	std::cerr << "\tSkipping because the target has more pixels than the original image." << std::endl;
-	continue;
-      }
+				   double waste = frame->waste(header);
 
-      Frame::ptr frame = solver.solve(header, target);
+				   std::cerr << "\tWaste from ("
+					     << std::setprecision(2) << std::fixed << frame->crop_x() << ", " << frame->crop_y() << ") + ("
+					     << frame->crop_w() << "×" << frame->crop_h() << ") = "
+					     << waste << "." << std::endl;
+				   if ((!best_frame) || (waste < best_waste)) {
+				     best_frame.swap(frame);
+				     best_waste = waste;
+				   }
+				 }
 
-      if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
-	std::cerr << "\tSkipping because the target is larger than the cropped image in both dimensions." << std::endl;
-	continue;
-      }
+				 if (!best_frame)
+				   throw NoResults("Destination", "best_frame");
 
-      if (target->width() * target->height() > frame->crop_w() * frame->crop_h()) {
-	std::cerr << "\tSkipping because the target has more pixels than the cropped image." << std::endl;
-	continue;
-      }
+				 std::cerr << "Least waste was from frame \"" << best_frame->name() << "\" = " << best_waste << "." << std::endl;
 
-      double waste = frame->waste(header);
-
-      std::cerr << "\tWaste from ("
-		<< std::setprecision(2) << std::fixed << frame->crop_x() << ", " << frame->crop_y() << ") + ("
-		<< frame->crop_w() << "×" << frame->crop_h() << ") = "
-		<< waste << "." << std::endl;
-      if ((!best_frame) || (waste < best_waste)) {
-	best_frame.swap(frame);
-	best_waste = waste;
-      }
-    }
-
-    if (!best_frame)
-      throw NoResults("Destination", "best_frame");
-
-    std::cerr << "Least waste was from frame \"" << best_frame->name() << "\" = " << best_waste << "." << std::endl;
-
-    Function1D::ptr lanczos(new Lanczos());
-    this->_add_rescalers(header, lanczos,
-			 best_frame->crop_x(), best_frame->crop_y(),
-			 best_frame->crop_w(), best_frame->crop_h(),
-			 best_frame->width().get(), best_frame->height().get());
-
+				 Function1D::ptr lanczos(new Lanczos());
+				 _add_rescalers(source, sink, workgang, header, lanczos,
+						best_frame->crop_x(), best_frame->crop_y(),
+						best_frame->crop_w(), best_frame->crop_h(),
+						best_frame->width().get(), best_frame->height().get());
+			       });
   }
 
 } // namespace PhotoFinish
