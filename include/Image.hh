@@ -30,7 +30,50 @@
 
 namespace PhotoFinish {
 
-  class ImageRow;
+
+  //! Image row data
+  class ImageRow {
+  protected:
+    unsigned int _y;
+    void *_data;
+    omp_lock_t *_lock;
+
+  public:
+    //! Constructor
+    /*!
+      \param y Y coordinate of the row
+     */
+    ImageRow(unsigned int y);
+
+    //! Constructor
+    /*!
+      \param y Y coordinate of the row
+      \param d Data pointer for row pixels
+     */
+    ImageRow(unsigned int y, void* d);
+
+    //! Destructor
+    ~ImageRow();
+
+    //! Y coordinate of row
+    inline unsigned int y(void) const { return _y; }
+
+    //! Set the row pixel data pointer
+    inline void set_data(void* d) { _data = d; }
+
+    //! Get the row pixel data pointer
+    inline void* data(void) const { return _data; }
+
+    //! Lock this row for exclusive use
+    inline void lock(void) { omp_set_lock(_lock); }
+
+    //! Release lock for this row
+    inline void unlock(void) { omp_unset_lock(_lock); }
+
+    typedef std::shared_ptr<ImageRow> ptr;
+  }; // class ImageRow
+
+
 
   //! Image header information
   class ImageHeader {
@@ -90,54 +133,10 @@ namespace PhotoFinish {
     //! Set the resolution given the length of the longest side (in inches)
     inline void set_resolution_from_size(double size) { _xres = _yres = (_width > _height ? _width : _height) / size; }
 
-    ImageRow* new_row(unsigned int y);
+    ImageRow::ptr new_row(unsigned int y);
 
     typedef std::shared_ptr<ImageHeader> ptr;
   }; // class ImageHeader
-
-
-
-  //! Image row data
-  class ImageRow {
-  protected:
-    unsigned int _y;
-    void *_data;
-    omp_lock_t *_lock;
-
-  public:
-    //! Constructor
-    /*!
-      \param y Y coordinate of the row
-     */
-    ImageRow(unsigned int y);
-
-    //! Constructor
-    /*!
-      \param y Y coordinate of the row
-      \param d Data pointer for row pixels
-     */
-    ImageRow(unsigned int y, void* d);
-
-    //! Destructor
-    ~ImageRow();
-
-    //! Y coordinate of row
-    inline unsigned int y(void) const { return _y; }
-
-    //! Set the row pixel data pointer
-    inline void set_data(void* d) { _data = d; }
-
-    //! Get the row pixel data pointer
-    inline void* data(void) const { return _data; }
-
-    //! Lock this row for exclusive use
-    inline void lock(void) { omp_set_lock(_lock); }
-
-    //! Release lock for this row
-    inline void unlock(void) { omp_unset_lock(_lock); }
-
-    typedef std::shared_ptr<ImageRow> ptr;
-  }; // class ImageRow
 
 
 

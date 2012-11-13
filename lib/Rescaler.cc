@@ -159,7 +159,7 @@ namespace PhotoFinish {
   void Rescaler_width::_scale_row(ImageRow::ptr row) {
     cmsUInt32Number cmsType = _sink_header->cmsType();
     unsigned int cpp = T_CHANNELS(cmsType) + T_EXTRA(cmsType);
-    ImageRow::ptr new_row(_rescaled_header->new_row(row->y()));
+    ImageRow::ptr new_row = _rescaled_header->new_row(row->y());
     P *out = (P*)new_row->data();
 
     for (unsigned int nx = 0; nx < _to_size_i; nx++, out+= cpp) {
@@ -252,7 +252,7 @@ namespace PhotoFinish {
 	unsigned int j = y - _start[ny];
 
 	if (!_rows[ny])
-	  _rows[ny] = ImageRow::ptr(_rescaled_header->new_row(ny));
+	  _rows[ny] = _rescaled_header->new_row(ny);
 
 	double weight = _weights[ny][j];
 	P *in = (P*)row->data();

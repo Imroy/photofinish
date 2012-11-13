@@ -57,13 +57,13 @@ namespace PhotoFinish {
   }
 
   void CMStransformer::_work_on_row(ImageRow::ptr row) {
-    ImageRow *outrow = _header->new_row(row->y());
+    ImageRow::ptr outrow = _header->new_row(row->y());
 
     row->lock();
     cmsDoTransform(_transform, row->data(), outrow->data(), _header->width());
     row->unlock();
 
-    this->_send_image_row(ImageRow::ptr(outrow));
+    this->_send_image_row(outrow);
   }
 
 } // namespace PhotoFinish

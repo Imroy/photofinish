@@ -145,7 +145,7 @@ namespace PhotoFinish {
       unsigned int ny = y + ky - _centrey;
 
       if (!_rows[ny])
-	_rows[ny] = ImageRow::ptr(_header->new_row(ny));
+	_rows[ny] = _header->new_row(ny);
 
       P *outp = (P*)_rows[ny]->data();
 
