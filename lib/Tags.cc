@@ -253,7 +253,7 @@ namespace PhotoFinish {
     std::cerr << "Finished loading \"" << filepath.native() << "\"" << std::endl;
   }
 
-  void Tags::extract(fs::path filepath) {
+  void Tags::extract(const fs::path& filepath) {
     Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
     assert(image.get() != 0);
 
@@ -310,7 +310,7 @@ namespace PhotoFinish {
     _EXIFtags["Exif.Image.ResolutionUnit"] = 2;	// Inches (yuck)
   }
 
-  void Tags::embed(fs::path filepath) const {
+  void Tags::embed(const fs::path& filepath) const {
     Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
     assert(image.get() != 0);
 

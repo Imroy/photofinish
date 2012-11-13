@@ -81,10 +81,10 @@ namespace PhotoFinish {
     void load(fs::path filepath);
 
     //! Extract EXIF/IPTC/XMP tags from an image file
-    void extract(fs::path filepath);
+    void extract(const fs::path& filepath);
 
     //! Extract EXIF/IPTC/XMP tags from an image file
-    void extract(ImageFilepath& imagefilepath) { this->extract(imagefilepath.filepath()); }
+    void extract(const ImageFilepath& imagefilepath) { this->extract(imagefilepath.filepath()); }
 
     //! Create a thumbnail from the supplied image
     void add_thumbnail_chain(ImageSource::ptr source, WorkGang::ptr workgang, const D_thumbnail& dt);
@@ -92,10 +92,10 @@ namespace PhotoFinish {
     void add_resolution(ImageHeader::ptr header);
 
     //! Embed EXIF/IPTC/XMP tags into an image file
-    void embed(fs::path filepath) const;
+    void embed(const fs::path& filepath) const;
 
     //! Embed EXIF/IPTC/XMP tags into an image file
-    inline void embed(ImageFilepath& imagefilepath) const { this->embed(imagefilepath.filepath()); }
+    inline void embed(const ImageFilepath& imagefilepath) const { this->embed(imagefilepath.filepath()); }
   };
 
 }
