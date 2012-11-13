@@ -26,6 +26,7 @@
 #include <math.h>
 #include "Image.hh"
 #include "ImageFile.hh"
+#include "Rescaler.hh"
 #include "Tags.hh"
 #include "Exception.hh"
 
@@ -269,51 +270,37 @@ namespace PhotoFinish {
       _XMPtags.add(*xi);
   }
 
-  void Tags::make_thumbnail(Image::ptr img, const D_thumbnail& dt) {
+  void Tags::add_thumbnail_chain(ImageSource::ptr source, WorkGang::ptr workgang, const D_thumbnail& dt) {
 #ifdef HAZ_JPEG
-    double width, height;
-
-    if (dt.maxwidth() * img->height() < dt.maxheight() * img->width()) {
-      width = dt.maxwidth();
-      height = dt.maxwidth() * img->height() / img->width();
-    } else {
-      width = dt.maxheight() * img->width() / img->height();
-      height = dt.maxheight();
-    }
-
-    std::cerr << "Making EXIF thumbnail..." << std::endl;
-
-    Frame frame(width, height, 0, 0, img->width(), img->height());
-    Image::ptr thumbimage = frame.crop_resize(img, D_resize::lanczos(3.0));
-
+    std::ostringstream *oss = new std::ostringstream(std::ios_base::out);
     Destination::ptr dest(new Destination);
     dest->set_jpeg(D_JPEG(50, 1, 1, false));
+    ImageWriter::ptr jpegthumb(new JPEGwriter(oss, dest));
 
-    JPEGfile thumbfile("");
-    std::ostringstream oss;
-    thumbfile.write(oss, thumbimage, dest);
+    add_FixedSizeRescaler(source, jpegthumb, workgang, dt.maxwidth(), dt.maxheight());
 
-    Exiv2::ExifThumb EXIFthumb(_EXIFtags);
-    EXIFthumb.setJpegThumbnail((unsigned char*)oss.str().data(), oss.str().length());
-
-    std::cerr << "Done." << std::endl;
+    jpegthumb->add_end_handler([=] {
+				 Exiv2::ExifThumb EXIFthumb(_EXIFtags);
+				 std::string s = oss->str();
+				 EXIFthumb.setJpegThumbnail((unsigned char*)s.data(), s.length());
+			       });
 #endif
   }
 
-  void Tags::add_resolution(Image::ptr img) {
+  void Tags::add_resolution(ImageHeader::ptr header) {
     Exiv2::URationalValue v;
-    if (img->xres().defined()) {
-      v = Exiv2::URationalValue(closest_URational(img->xres()));
-      std::cerr << "\tSetting X resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->xres() << ") ppi." << std::endl;
+    if (header->xres().defined()) {
+      v = Exiv2::URationalValue(closest_URational(header->xres()));
+      std::cerr << "\tSetting X resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << header->xres() << ") ppi." << std::endl;
       try {
 	_EXIFtags["Exif.Image.XResolution"] = v;
       } catch (Exiv2::Error& e) {
 	std::cerr << "** EXIF key \"Exif.Image.XResolution\" not accepted **" << std::endl;
       }
     }
-    if (img->yres().defined()) {
-      v = Exiv2::URationalValue(closest_URational(img->yres()));
-      std::cerr << "\tSetting Y resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->yres() << ") ppi." << std::endl;
+    if (header->yres().defined()) {
+      v = Exiv2::URationalValue(closest_URational(header->yres()));
+      std::cerr << "\tSetting Y resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << header->yres() << ") ppi." << std::endl;
       try {
 	_EXIFtags["Exif.Image.YResolution"] = v;
       } catch (Exiv2::Error& e) {
