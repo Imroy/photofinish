@@ -21,6 +21,7 @@
 namespace PhotoFinish {
 
   CMStransformer::CMStransformer(cmsHPROFILE dest_profile, cmsUInt32Number dest_cmsType, cmsUInt32Number intent) :
+    ImageFilter(),
     _profile(dest_profile),
     _cmsType(dest_cmsType),
     _intent(intent),
@@ -46,9 +47,8 @@ namespace PhotoFinish {
 				    _intent,
 				    0);
 
-    _header = ImageHeader::ptr(new ImageHeader(*header));
+    _header = ImageHeader::ptr(new ImageHeader(header->width(), header->height(), _cmsType));
     _header->set_profile(_profile);
-    _header->set_cmsType(_cmsType);
     this->_send_image_header(_header);
   }
 

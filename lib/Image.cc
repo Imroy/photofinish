@@ -42,29 +42,23 @@ namespace PhotoFinish {
   }
 
   ImageRow::~ImageRow() {
+    omp_set_lock(_lock);
     if (_data != NULL) {
       free(_data);
       _data = NULL;
     }
+    omp_unset_lock(_lock);
     omp_destroy_lock(_lock);
     free(_lock);
   }
 
 
 
-  ImageHeader::ImageHeader() :
-    _width(-1),
-    _height(-1),
-    _profile(NULL),
-    _cmsType(0),
-    _row_size(0)
-  {}
-
-  ImageHeader::ImageHeader(unsigned int w, unsigned int h) :
+  ImageHeader::ImageHeader(unsigned int w, unsigned int h, cmsUInt32Number t) :
     _width(w),
     _height(h),
     _profile(NULL),
-    _cmsType(0),
+    _cmsType(t),
     _row_size(0)
   {
     unsigned char bytes = T_BYTES(_cmsType);
@@ -82,14 +76,13 @@ namespace PhotoFinish {
 
 
   ImageSink::ImageSink() :
-    _sink_queue_lock((omp_lock_t*)malloc(sizeof(omp_lock_t)))
+    Worker()
   {
-    omp_init_lock(_sink_queue_lock);
+    omp_init_lock(&_sink_queue_lock);
   }
 
   ImageSink::~ImageSink() {
-    omp_destroy_lock(_sink_queue_lock);
-    free(_sink_queue_lock);
+    omp_destroy_lock(&_sink_queue_lock);
   }
 
   void ImageSink::receive_image_header(ImageHeader::ptr header) {
@@ -103,39 +96,40 @@ namespace PhotoFinish {
   }
 
   void ImageSink::receive_image_end(void) {
-    for (std::list<end_handler>::iterator ehi = _end_handlers.begin(); ehi != _end_handlers.end(); ehi++)
-      (*ehi)();
-  }
-
-  void ImageSink::do_work(void) {
-    this->_lock_sink_queue();
-    ImageRow::ptr row = _sink_rowqueue.front();
-    _sink_rowqueue.pop_front();
-    this->_unlock_sink_queue();
-    this->_work_on_row(row);
   }
 
 
 
   ImageSource::ImageSource() {
+    std::cerr << "ImageSource: Have " << _header_hooks.size() << " header handler(s)..." << std::endl;
   }
 
   void ImageSource::_send_image_header(ImageHeader::ptr header) {
-    for (std::list<header_handler>::iterator hhi = _header_handlers.begin(); hhi != _header_handlers.end(); hhi++)
+    std::cerr << "ImageSource: Sending image header to " << _header_hooks.size() << " header handler(s)..." << std::endl;
+    for (std::list<header_hook>::iterator hhi = _header_hooks.begin(); hhi != _header_hooks.end(); hhi++)
       (*hhi)(header);
 
+    std::cerr << "ImageSource: Sending image header to " << _src_sinks.size() << " sink(s)..." << std::endl;
     for (ImageSink::list::iterator ri = _src_sinks.begin(); ri != _src_sinks.end(); ri++)
       (*ri)->receive_image_header(header);
   }
 
   void ImageSource::_send_image_row(ImageRow::ptr row) {
+    //    std::cerr << "ImageSource: Sending image row to " << _src_sinks.size() << " sink(s)..." << std::endl;
     for (ImageSink::list::iterator ri = _src_sinks.begin(); ri != _src_sinks.end(); ri++)
       (*ri)->receive_image_row(row);
   }
 
   void ImageSource::_send_image_end(void) {
+    //    std::cerr << "ImageSource: Sending image end to " << _src_sinks.size() << " sink(s)..." << std::endl;
     for (ImageSink::list::iterator ri = _src_sinks.begin(); ri != _src_sinks.end(); ri++)
       (*ri)->receive_image_end();
+  }
+
+  void ImageSource::add_header_hook(const header_hook& hh) {
+    std::cerr << "ImageSource: Have " << _header_hooks.size() << " header handler(s)..." << std::endl;
+    _header_hooks.push_back(hh);
+    std::cerr << "ImageSource: Have " << _header_hooks.size() << " header handler(s)..." << std::endl;
   }
 
   void ImageSource::add_sink(ImageSink::ptr s) {
@@ -149,6 +143,26 @@ namespace PhotoFinish {
 
   void ImageSource::add_sinks(ImageSink::list::iterator begin, ImageSink::list::iterator end) {
     std::copy(begin, end, _src_sinks.end());
+  }
+
+
+
+  ImageFilter::ImageFilter() :
+    ImageSink(),
+    ImageSource()
+  {}
+
+  ImageFilter::~ImageFilter() {
+  }
+
+  void ImageFilter::do_work(void) {
+    this->_lock_sink_queue();
+    if (_sink_rowqueue.size() > 0) {
+      ImageRow::ptr row = _sink_rowqueue.front();
+      this->_work_on_row(row);
+      _sink_rowqueue.pop_front();
+    }
+    this->_unlock_sink_queue();
   }
 
 }

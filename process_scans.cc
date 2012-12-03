@@ -44,7 +44,7 @@ namespace po = boost::program_options;
 
 using namespace PhotoFinish;
 
-void make_preview(ImageSource::ptr source, WorkGang::ptr workgang, Destination::ptr orig_dest, Tags::ptr filetags, ImageFilepath preview_file) {
+void add_previewer(ImageSource::ptr source, WorkGang::ptr workgang, Destination::ptr orig_dest, Tags::ptr filetags, ImageFilepath preview_file) {
   Destination::ptr resized_dest = orig_dest->dupe();
 
   resized_dest->set_depth(8);
@@ -52,7 +52,11 @@ void make_preview(ImageSource::ptr source, WorkGang::ptr workgang, Destination::
   resized_dest->clear_profile();
 
   ImageWriter::ptr preview_writer = ImageWriter::open(preview_file, resized_dest);
-  preview_writer->add_end_handler([=] { filetags->embed(preview_file); });
+  /*
+  preview_writer->add_finished_hook([=] {
+					 filetags->embed(preview_file);
+				       });
+  */
   workgang->add_worker(preview_writer);
   add_FixedFactorRescaler(source, preview_writer, workgang, 0.25);
 }
@@ -110,7 +114,7 @@ void preview_dir(fs::path dir, std::string preview_format, Tags::ptr tags, std::
       Tags::ptr filetags = tags->dupe();
       filetags->extract(infile);
 
-      make_preview(reader, workgang, orig_dest, filetags, preview_file);
+      add_previewer(reader, workgang, orig_dest, filetags, preview_file);
       workgang->work_until_finished();
     } catch (std::exception& ex) {
       std::cerr << ex.what() << std::endl;
@@ -213,9 +217,14 @@ int main(int argc, char* argv[]) {
 	      std::cerr << "Creating directory " << convert_dir << "." << std::endl;
 	      fs::create_directory(convert_dir);
 	    }
-	    reader->add_header_handler([=] (ImageHeader::ptr header) {
+	    reader->add_header_hook([=] (ImageHeader::ptr header) {
+					 std::cerr << "Adding image writer as sink for direct conversion..." << std::endl;
 					 ImageWriter::ptr converted_writer = ImageWriter::open(converted_file, orig_dest);
-					 converted_writer->add_end_handler([=] { filetags->embed(converted_file); });
+					 /*
+					 converted_writer->add_finished_hook([=] {
+										  filetags->embed(converted_file);
+										});
+					 */
 					 workgang->add_worker(converted_writer);
 					 reader->add_sink(converted_writer);
 				       });
@@ -226,8 +235,13 @@ int main(int argc, char* argv[]) {
 
 	try {
 	  ImageFilepath preview_file(di->path().filename(), preview_format);
+	  preview_file.fix_filepath();
+	  std::cerr << "preview_file = " << preview_file << std::endl;
+	  std::cerr << "do_preview = " << (do_preview ? "true" : "false") << std::endl;
+	  if (exists(preview_file.filepath()))
+	    std::cerr << "preview_file @ " << (int)last_write_time(preview_file.filepath()) << ", infile @ " << (int)last_write_time(infile.filepath()) << std::endl;
 	  if (do_preview && (!exists(preview_file.filepath()) || (last_write_time(preview_file.filepath()) < last_write_time(infile.filepath()))))
-	    make_preview(reader, workgang, orig_dest, filetags, preview_file);
+	    add_previewer(reader, workgang, orig_dest, filetags, preview_file);
 	} catch (std::exception& ex) {
 	  std::cerr << ex.what() << std::endl;
 	}

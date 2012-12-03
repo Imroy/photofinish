@@ -54,7 +54,7 @@ namespace PhotoFinish {
 
 
   //! Creates and stores coefficients for convolving an image
-  class Sharpen : public ImageSink, public ImageSource {
+  class Sharpen : public ImageFilter {
   protected:
     short unsigned int _width, _height, _centrex, _centrey;
     SAMPLE **_values;

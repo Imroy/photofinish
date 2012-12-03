@@ -24,7 +24,7 @@
 
 namespace PhotoFinish {
 
-  class CMStransformer : public ImageSink, public ImageSource {
+  class CMStransformer : public ImageFilter {
   private:
     cmsHPROFILE _profile;
     cmsUInt32Number _cmsType;

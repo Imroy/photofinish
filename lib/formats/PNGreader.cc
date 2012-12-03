@@ -114,8 +114,6 @@ namespace PhotoFinish {
     int bit_depth, colour_type;
     png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
 
-    ImageHeader::ptr header(new ImageHeader(width, height));
-
     cmsUInt32Number cmsType;
     switch (colour_type) {
     case PNG_COLOR_TYPE_GRAY:
@@ -130,7 +128,7 @@ namespace PhotoFinish {
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
-    header->set_cmsType(cmsType);
+    ImageHeader::ptr header(new ImageHeader(width, height, cmsType));
 
     {
       unsigned int xres, yres;
@@ -174,6 +172,7 @@ namespace PhotoFinish {
   void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
     PNGreader *self = (PNGreader*)png_get_progressive_ptr(png);
     ImageRow::ptr row(new ImageRow(row_num, row_data));
+    std::cerr << "PNGreader: Sending row " << row_num << "..." << std::endl;
     self->_send_image_row(row);
   }
 

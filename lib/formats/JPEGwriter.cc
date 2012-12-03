@@ -37,8 +37,8 @@ namespace PhotoFinish {
   void jpeg_ostream_dest(j_compress_ptr cinfo, std::ostream* os);
   void jpeg_ostream_dest_free(j_compress_ptr cinfo);
 
-  JPEGwriter::JPEGwriter(std::ostream* os, Destination::ptr dest) :
-    ImageWriter(os, dest),
+  JPEGwriter::JPEGwriter(std::ostream* os, Destination::ptr dest, bool close_on_end) :
+    ImageWriter(os, dest, close_on_end),
     _cinfo(NULL)
   {
     _cinfo = (jpeg_compress_struct*)malloc(sizeof(jpeg_compress_struct));
@@ -127,32 +127,17 @@ namespace PhotoFinish {
     this->get_and_embed_profile(header->profile(), header->cmsType(), intent);
   }
 
-  void JPEGwriter::do_work(void) {
-    this->_lock_sink_queue();
-    ImageRow::ptr row;
-    for (_sink_rowqueue_type::iterator rqi = _sink_rowqueue.begin(); rqi != _sink_rowqueue.end(); rqi++)
-      if ((*rqi)->y() == _cinfo->next_scanline) {
-	row = *rqi;
-	_sink_rowqueue.erase(rqi);
-	break;
-      }
-    this->_unlock_sink_queue();
+  void JPEGwriter::_write_row(ImageRow::ptr row) {
+    JSAMPROW jpeg_row[1];
+    jpeg_row[0] = (JSAMPROW)row->data();
+    jpeg_write_scanlines(_cinfo, jpeg_row, 1);
 
-    if (row) {
-      JSAMPROW jpeg_row[1];
-      jpeg_row[0] = (JSAMPROW)row->data();
-      jpeg_write_scanlines(_cinfo, jpeg_row, 1);
-      if (_cinfo->next_scanline == _sink_header->height()) {
-	jpeg_finish_compress(_cinfo);
-	jpeg_ostream_dest_free(_cinfo);
-	jpeg_destroy_compress(_cinfo);
-	this->_set_work_finished();
-      }
-    }
   }
 
-  void JPEGwriter::receive_image_end(void) {
-    ImageWriter::receive_image_end();
+  void JPEGwriter::_finish_writing(void) {
+    jpeg_finish_compress(_cinfo);
+    jpeg_ostream_dest_free(_cinfo);
+    jpeg_destroy_compress(_cinfo);
   }
 
   void JPEGwriter::mark_sGrey(cmsUInt32Number intent) const {

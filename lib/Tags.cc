@@ -279,11 +279,11 @@ namespace PhotoFinish {
 
     add_FixedSizeRescaler(source, jpegthumb, workgang, dt.maxwidth(), dt.maxheight());
 
-    jpegthumb->add_end_handler([=] {
-				 Exiv2::ExifThumb EXIFthumb(_EXIFtags);
-				 std::string s = oss->str();
-				 EXIFthumb.setJpegThumbnail((unsigned char*)s.data(), s.length());
-			       });
+    jpegthumb->add_finished_hook([=] {
+				      Exiv2::ExifThumb EXIFthumb(_EXIFtags);
+				      std::string s = oss->str();
+				      EXIFthumb.setJpegThumbnail((unsigned char*)s.data(), s.length());
+				    });
 #endif
   }
 

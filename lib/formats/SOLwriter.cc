@@ -23,9 +23,8 @@
 namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
-  SOLwriter::SOLwriter(std::ostream* os, Destination::ptr dest) :
-    ImageWriter(os, dest),
-    _next_y(0)
+  SOLwriter::SOLwriter(std::ostream* os, Destination::ptr dest, bool close_on_end) :
+    ImageWriter(os, dest, close_on_end)
   {}
 
   unsigned char solheader[12] = { 0x53, 0x4f, 0x4c, 0x3a, 0x00, 0x00, 0x00, 0x00,
@@ -58,34 +57,18 @@ namespace PhotoFinish {
       throw CMSError("Not 1 byte per pixel");
   }
 
-  void SOLwriter::do_work(void) {
-    this->_lock_sink_queue();
-    ImageRow::ptr row;
-    for (_sink_rowqueue_type::iterator rqi = _sink_rowqueue.begin(); rqi != _sink_rowqueue.end(); rqi++)
-      if ((*rqi)->y() == _next_y) {
-	row = *rqi;
-	_sink_rowqueue.erase(rqi);
-	break;
-      }
-    this->_unlock_sink_queue();
-
-    if (row) {
-      unsigned char *inp = (unsigned char*)row->data();
-      for (unsigned int x = 0; x < _sink_header->width(); x++) {
-	unsigned char r = *inp++;
-	unsigned char g = *inp++;
-	unsigned char b = *inp++;
-	_os->put(b | ((g & 0x07) << 5));
-	_os->put((g >> 3) | (r << 3));
-      }
-      _next_y++;
-      if (_next_y == _sink_header->height())
-	this->_set_work_finished();
+  void SOLwriter::_write_row(ImageRow::ptr row) {
+    unsigned char *inp = (unsigned char*)row->data();
+    for (unsigned int x = 0; x < _sink_header->width(); x++) {
+      unsigned char r = *inp++;
+      unsigned char g = *inp++;
+      unsigned char b = *inp++;
+      _os->put(b | ((g & 0x07) << 5));
+      _os->put((g >> 3) | (r << 3));
     }
   }
 
-  void SOLwriter::receive_image_end(void) {
-    ImageWriter::receive_image_end();
+  void SOLwriter::_finish_writing(void) {
   }
 
 }

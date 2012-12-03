@@ -71,7 +71,8 @@ namespace PhotoFinish {
     inline void unlock(void) { omp_unset_lock(_lock); }
 
     typedef std::shared_ptr<ImageRow> ptr;
-  }; // class ImageRow
+    typedef std::list<ptr> list;
+ }; // class ImageRow
 
 
 
@@ -85,38 +86,33 @@ namespace PhotoFinish {
     size_t _row_size;
 
   public:
-    //! Empty constructor
-    ImageHeader();
-
     //! Constructor
     /*!
       \param w,h Width and height of the image
+      \param t LCMS2 pixel type
     */
-    ImageHeader(unsigned int w, unsigned int h);
+    ImageHeader(unsigned int w, unsigned int h, cmsUInt32Number t);
 
     //! The width of this image
-    inline const unsigned int width(void) const { return _width; }
+    inline unsigned int width(void) const { return _width; }
 
     //! The height of this image
-    inline const unsigned int height(void) const { return _height; }
+    inline unsigned int height(void) const { return _height; }
 
     //! Set the ICC profile
     inline void set_profile(cmsHPROFILE p) { _profile = p; }
 
     //! Get the ICC profile
-    inline cmsHPROFILE profile(void) const { return _profile; }
-
-    //! Set the CMS type
-    inline void set_cmsType(cmsUInt32Number t) { _cmsType = t; }
+    inline const cmsHPROFILE profile(void) const { return _profile; }
 
     //! Get the CMS type
     inline cmsUInt32Number cmsType(void) const { return _cmsType; }
 
     //! The X resolution of this image (PPI)
-    inline const definable<double> xres(void) const { return _xres; }
+    inline definable<double> xres(void) const { return _xres; }
 
     //! The Y resolution of this image (PPI)
-    inline const definable<double> yres(void) const { return _yres; }
+    inline definable<double> yres(void) const { return _yres; }
 
     //! Set both the X and Y resolution (PPI)
     inline void set_resolution(double r) { _xres = _yres = r; }
@@ -133,6 +129,11 @@ namespace PhotoFinish {
     //! Set the resolution given the length of the longest side (in inches)
     inline void set_resolution_from_size(double size) { _xres = _yres = (_width > _height ? _width : _height) / size; }
 
+    //! Create a new image row
+    /*!
+      \param y The Y value of the new row
+      \return New image row
+    */
     ImageRow::ptr new_row(unsigned int y);
 
     typedef std::shared_ptr<ImageHeader> ptr;
@@ -142,25 +143,16 @@ namespace PhotoFinish {
 
   //! Semi-abstract base "role" class for any classes who will receive image data
   class ImageSink : public Worker {
-  public:
-    typedef std::shared_ptr<ImageSink> ptr;
-    typedef std::function<void (void)> end_handler;
-
   protected:
     ImageHeader::ptr _sink_header;
-    typedef std::list<ImageRow::ptr> _sink_rowqueue_type;
-    _sink_rowqueue_type _sink_rowqueue;
-    omp_lock_t *_sink_queue_lock;
-    std::list<end_handler> _end_handlers;
+    ImageRow::list _sink_rowqueue;
+    omp_lock_t _sink_queue_lock;
 
     //! Lock the queue for exclusive use
-    inline void _lock_sink_queue(void) { omp_set_lock(_sink_queue_lock); }
+    inline void _lock_sink_queue(void) { omp_set_lock(&_sink_queue_lock); }
 
     //! Release lock for the queue
-    inline void _unlock_sink_queue(void) { omp_unset_lock(_sink_queue_lock); }
-
-    //! Do something with a row
-    virtual void _work_on_row(ImageRow::ptr row) = 0;
+    inline void _unlock_sink_queue(void) { omp_unset_lock(&_sink_queue_lock); }
 
   public:
     //! Empty constructor
@@ -168,9 +160,6 @@ namespace PhotoFinish {
 
     //! Destructor
     virtual ~ImageSink();
-
-    //! Add a handler that will be called when the image end has been received
-    inline void add_end_handler(end_handler eh) { _end_handlers.push_back(eh); }
 
     //! Receive an image header object
     virtual void receive_image_header(ImageHeader::ptr header);
@@ -181,9 +170,7 @@ namespace PhotoFinish {
     //! Receive a notification that the image has ended (no data)
     virtual void receive_image_end(void);
 
-    //! Pop a row off of the queue and hand it to _work_on_row()
-    virtual void do_work(void);
-
+    typedef std::shared_ptr<ImageSink> ptr;
     typedef std::list<ptr> list;
   }; // class ImageSink
 
@@ -192,10 +179,10 @@ namespace PhotoFinish {
   //! Abstract base "role" class for any classes who will produce image data
   class ImageSource {
   public:
-    typedef std::function<void (ImageHeader::ptr)> header_handler;
+    typedef std::function<void (ImageHeader::ptr)> header_hook;
 
   protected:
-    std::list<header_handler> _header_handlers;
+    std::list<header_hook> _header_hooks;
     ImageSink::list _src_sinks;
 
     //! Send an image header to all sinks registered with this source
@@ -211,7 +198,7 @@ namespace PhotoFinish {
     ImageSource();
 
     //! Add a handler that will be called when the image header is available
-    inline void add_header_handler(header_handler hh) { _header_handlers.push_back(hh); }
+    void add_header_hook(const header_hook& hh);
 
     //! Add a sink to the list
     void add_sink(ImageSink::ptr s);
@@ -227,6 +214,24 @@ namespace PhotoFinish {
 
 
 
+  //! Abstract base "role" class for any classes that both take image data and produce new image data
+  class ImageFilter : public ImageSink, public ImageSource {
+  protected:
+    //! Do something with a row
+    virtual void _work_on_row(ImageRow::ptr row) = 0;
+
+  public:
+    //! Empty constructor
+    ImageFilter();
+
+    //! Destructor
+    virtual ~ImageFilter();
+
+    //! Pop a row off of the queue and hand it to _work_on_row()
+    virtual void do_work(void);
+
+    typedef std::shared_ptr<ImageFilter> ptr;
+  }; // class ImageFilter
 }
 
 #endif // __IMAGE_HH__

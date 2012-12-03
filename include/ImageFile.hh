@@ -50,7 +50,7 @@ namespace PhotoFinish {
   //! Class for holding filename and the image format
   class ImageFilepath {
   protected:
-    const fs::path _filepath;
+    fs::path _filepath;
     std::string _format;
 
   public:
@@ -59,20 +59,29 @@ namespace PhotoFinish {
       \param filepath The path of the image file
       \param format Format of the image file
     */
-    ImageFilepath(const fs::path filepath, const std::string format);
+    ImageFilepath(const fs::path& filepath, const std::string format);
 
     //! Constructor
     /*!
       Guess the format from the file extension.
       \param filepath The path of the image file
     */
-    ImageFilepath(const fs::path filepath) throw(UnknownFileType);
+    ImageFilepath(const fs::path& filepath) throw(UnknownFileType);
 
     //! File path of this image file
     inline virtual fs::path filepath(void) const { return _filepath; }
 
+    fs::path fixed_filepath(void) const throw(UnknownFileType);
+
+    inline void fix_filepath(void) throw(UnknownFileType) { _filepath = fixed_filepath(); }
+
     //! Format of this image file
     inline virtual std::string format(void) const { return _format; }
+
+    inline friend std::ostream& operator << (std::ostream& out, const ImageFilepath& fp) {
+      out << fp._filepath << "(" << fp._format << ")";
+      return out;
+    }
   }; // ImageFilepath
 
 
@@ -104,7 +113,7 @@ namespace PhotoFinish {
     /*! Use the extension of the file path to decide what class to use
       \param filepath File path
     */
-    static ImageReader::ptr open(const ImageFilepath ifp) throw(UnknownFileType);
+    static ImageReader::ptr open(const ImageFilepath& ifp) throw(UnknownFileType);
 
     virtual const std::string format(void) const = 0;
 
@@ -119,15 +128,18 @@ namespace PhotoFinish {
   protected:
     std::ostream *_os;
     Destination::ptr _dest;
+    bool _close_on_end;
+    unsigned int _next_y;
 
-    ImageWriter(std::ostream* os, Destination::ptr dest);
+    ImageWriter(std::ostream* os, Destination::ptr dest, bool close_on_end = false);
 
     virtual void mark_sGrey(cmsUInt32Number intent) const = 0;
     virtual void mark_sRGB(cmsUInt32Number intent) const = 0;
     virtual void embed_icc(std::string name, unsigned char *data, unsigned int len) const = 0;
     void get_and_embed_profile(cmsHPROFILE profile, cmsUInt32Number cmsType, cmsUInt32Number intent);
 
-    inline virtual void _work_on_row(ImageRow::ptr row) {}
+    virtual void _write_row(ImageRow::ptr row) = 0;
+    virtual void _finish_writing(void) = 0;
 
   public:
     typedef std::shared_ptr<ImageWriter> ptr;
@@ -136,14 +148,14 @@ namespace PhotoFinish {
     /*! Use the extension of the file path to decide what class to use
       \param filepath File path
     */
-    static ImageWriter::ptr open(const ImageFilepath ifp, Destination::ptr dest) throw(UnknownFileType);
+    static ImageWriter::ptr open(const ImageFilepath& ifp, Destination::ptr dest) throw(UnknownFileType);
 
     virtual const std::string format(void) const = 0;
 
     virtual void receive_image_header(ImageHeader::ptr header);
     virtual void receive_image_row(ImageRow::ptr row);
     virtual void receive_image_end(void);
-    virtual void do_work(void) = 0;
+    virtual void do_work(void);
   }; // class ImageWriter
 
 
@@ -164,14 +176,12 @@ namespace PhotoFinish {
     png_infop _info;
     unsigned char *_buffer;
 
-    PNGreader(std::istream* is);
-    friend class ImageReader;
-
     friend void png_info_cb(png_structp png, png_infop info);
     friend void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass);
     friend void png_end_cb(png_structp png, png_infop info);
 
   public:
+    PNGreader(std::istream* is);
     ~PNGreader();
 
     inline const std::string format(void) const { return "png"; }
@@ -184,28 +194,25 @@ namespace PhotoFinish {
   private:
     png_structp _png;
     png_infop _info;
-    unsigned int _next_y;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-    PNGwriter(std::ostream* os, Destination::ptr dest);
-    friend class ImageWriter;
-
     friend void png_write_ostream_cb(png_structp png, png_bytep buffer, png_size_t length);
     friend void png_flush_ostream_cb(png_structp png);
 
+    virtual void _write_row(ImageRow::ptr row);
+    virtual void _finish_writing(void);
+
   public:
+    PNGwriter(std::ostream* os, Destination::ptr dest, bool close_on_end = false);
     ~PNGwriter();
 
     inline const std::string format(void) const { return "png"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-    virtual void do_work(void);
-
-    virtual void receive_image_end(void);
   };
 #endif
 
@@ -215,10 +222,10 @@ namespace PhotoFinish {
   private:
     jpeg_decompress_struct *_dinfo;
 
-    JPEGreader(std::istream* is);
-    friend class ImageReader;
 
   public:
+    JPEGreader(std::istream* is);
+
     inline const std::string format(void) const { return "jpeg"; }
 
     void do_work(void);
@@ -233,16 +240,16 @@ namespace PhotoFinish {
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
+    virtual void _write_row(ImageRow::ptr row);
+    virtual void _finish_writing(void);
+
   public:
-    JPEGwriter(std::ostream* os, Destination::ptr dest);
+    JPEGwriter(std::ostream* os, Destination::ptr dest, bool close_on_end = false);
 
     inline const std::string format(void) const { return "jpeg"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-    virtual void do_work(void);
-
-    virtual void receive_image_end(void);
   };
 #endif
 
@@ -253,10 +260,9 @@ namespace PhotoFinish {
     TIFF *_tiff;
     unsigned int _height, _next_y;
 
-    TIFFreader(std::istream* is);
-    friend class ImageReader;
-
   public:
+    TIFFreader(std::istream* is);
+
     inline const std::string format(void) const { return "tiff"; }
 
     void do_work(void);
@@ -266,23 +272,21 @@ namespace PhotoFinish {
   class TIFFwriter : public ImageWriter {
   private:
     TIFF *_tiff;
-    unsigned int _next_y;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-    TIFFwriter(std::ostream* os, Destination::ptr dest);
-    friend class ImageWriter;
+    virtual void _write_row(ImageRow::ptr row);
+    virtual void _finish_writing(void);
 
   public:
+    TIFFwriter(std::ostream* os, Destination::ptr dest, bool close_on_end = false);
+
     inline const std::string format(void) const { return "tiff"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-    virtual void do_work(void);
-
-    virtual void receive_image_end(void);
   };
 #endif
 
@@ -296,10 +300,9 @@ namespace PhotoFinish {
     opj_image_t *_jp2_image;
     unsigned int _width, _height, _next_y;
 
-    JP2reader(std::istream* is);
-    friend class ImageReader;
-
   public:
+    JP2reader(std::istream* is);
+
     inline const std::string format(void) const { return "jp2"; }
 
     void do_work(void);
@@ -310,23 +313,22 @@ namespace PhotoFinish {
   private:
     opj_cparameters_t _parameters;
     opj_image_t *_jp2_image;
-    unsigned int _width, _height, _next_y;
+    unsigned int _width, _height;
 
     void mark_sGrey(cmsUInt32Number intent) const;
     void mark_sRGB(cmsUInt32Number intent) const;
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
-    JP2writer(std::ostream* os, Destination::ptr dest);
-    friend class ImageWriter;
+    virtual void _write_row(ImageRow::ptr row);
+    virtual void _finish_writing(void);
 
   public:
+    JP2writer(std::ostream* os, Destination::ptr dest, bool close_on_end = false);
+
     inline const std::string format(void) const { return "jp2"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-    virtual void do_work(void);
-
-    virtual void receive_image_end(void);
   };
 #endif
 
@@ -340,23 +342,20 @@ namespace PhotoFinish {
    */
   class SOLwriter : public ImageWriter {
   private:
-    unsigned int _next_y;
-
     void mark_sGrey(cmsUInt32Number intent) const {}
     void mark_sRGB(cmsUInt32Number intent) const {}
     void embed_icc(std::string name, unsigned char *data, unsigned int len) const {}
 
-    SOLwriter(std::ostream* os, Destination::ptr dest);
-    friend class ImageWriter;
+    virtual void _write_row(ImageRow::ptr row);
+    virtual void _finish_writing(void);
 
   public:
+    SOLwriter(std::ostream* os, Destination::ptr dest, bool close_on_end = false);
+
     inline const std::string format(void) const { return "sol"; }
 
     virtual void receive_image_header(ImageHeader::ptr header);
 
-    virtual void receive_image_end(void);
-
-    virtual void do_work(void);
   };
 
 }

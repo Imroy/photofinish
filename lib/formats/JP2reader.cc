@@ -104,7 +104,6 @@ namespace PhotoFinish {
 
 	_width = _jp2_image->x1 - _jp2_image->x0;
 	_height = _jp2_image->y1 - _jp2_image->y0;
-	ImageHeader::ptr header(new ImageHeader(_width, _height));
 
 	int depth = _jp2_image->comps[0].prec;
 	cmsUInt32Number cmsType = CHANNELS_SH(_jp2_image->numcomps) | BYTES_SH(depth >> 3);
@@ -125,6 +124,8 @@ namespace PhotoFinish {
 	  std::cerr << "** Unknown colour space " << _jp2_image->color_space << " **" << std::endl;
 	  throw LibraryError("OpenJPEG", "color_space");
 	}
+
+	ImageHeader::ptr header(new ImageHeader(_width, _height, cmsType));
 
 	cmsHPROFILE profile;
 	if (_jp2_image->icc_profile_buf != NULL) {

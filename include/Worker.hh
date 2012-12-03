@@ -27,10 +27,14 @@ namespace PhotoFinish {
 
   //! Abstract base "role" class for any classes that do "work"
   class Worker {
+  public:
+    typedef std::function<void (void)> finished_hook;
+
   protected:
     bool _work_finished;
+    std::list<finished_hook> _finished_hooks;
 
-    inline void _set_work_finished(void) { _work_finished = true; }
+    void _set_work_finished(void);
 
   public:
     //! Empty constructor
@@ -40,6 +44,9 @@ namespace PhotoFinish {
 
     //! Perform a single unit of work e.g process a row of pixels
     virtual void do_work(void) = 0;
+
+    //! Add a handler that will be called when the work is finished
+    inline void add_finished_hook(finished_hook fh) { _finished_hooks.push_back(fh); }
 
     typedef std::shared_ptr<Worker> ptr;
     typedef std::list<ptr> list;

@@ -36,12 +36,15 @@ namespace PhotoFinish {
 
 
   Rescaler::Rescaler(Function1D::ptr func, double from_start, double from_size, unsigned int from_max, double to_size) :
+    ImageFilter(),
+    _func(func),
     _size(NULL), _start(NULL),
     _weights(NULL),
     _scale(0),
     _to_size(to_size),
     _to_size_i(ceil(to_size))
   {
+    std::cerr << "Rescaler: Have " << _header_hooks.size() << " header handler(s)..." << std::endl;
     _size = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
     _start = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
     _weights = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
@@ -108,19 +111,21 @@ namespace PhotoFinish {
 
   Rescaler_width::Rescaler_width(Function1D::ptr func, double from_start, double from_size, unsigned int from_max, double to_size) :
     Rescaler(func, from_start, from_size, from_max, to_size)
-  {}
+  {
+    std::cerr << "Rescaler_width: Have " << _header_hooks.size() << " header handler(s)..." << std::endl;
+  }
 
   void Rescaler_width::receive_image_header(ImageHeader::ptr header) {
-    _rescaled_header = ImageHeader::ptr(new ImageHeader(_to_size_i, header->height()));
+    _rescaled_header = ImageHeader::ptr(new ImageHeader(_to_size_i, header->height(), header->cmsType()));
 
     if (header->profile() != NULL)
       _rescaled_header->set_profile(header->profile());
-    _rescaled_header->set_cmsType(header->cmsType());
     if (header->xres().defined())
       _rescaled_header->set_xres(header->xres());
     if (header->yres().defined())
       _rescaled_header->set_yres(header->yres());
 
+    std::cerr << "Rescaler_width: Sending image header to " << _header_hooks.size() << " header handler(s)..." << std::endl;
     this->_send_image_header(_rescaled_header);
   }
 
@@ -179,6 +184,8 @@ namespace PhotoFinish {
     Rescaler(func, from_start, from_size, from_max, to_size),
     _row_counts((unsigned int*)malloc(_to_size_i * sizeof(unsigned int)))
   {
+    std::cerr << "Rescaler_height: " << (void*)this << std::endl;
+    std::cerr << "Rescaler_height: Have " << _header_hooks.size() << " header handler(s)..." << std::endl;
     _rows = new ImageRow::ptr[_to_size_i];
     for (unsigned int y = 0; y < _to_size_i; y++)
       _row_counts[y] = 0;
@@ -193,16 +200,17 @@ namespace PhotoFinish {
   }
 
   void Rescaler_height::receive_image_header(ImageHeader::ptr header) {
-    _rescaled_header = ImageHeader::ptr(new ImageHeader(header->width(), _to_size_i));
+    _rescaled_header = ImageHeader::ptr(new ImageHeader(header->width(), _to_size_i, header->cmsType()));
 
     if (header->profile() != NULL)
       _rescaled_header->set_profile(header->profile());
-    _rescaled_header->set_cmsType(header->cmsType());
     if (header->xres().defined())
       _rescaled_header->set_xres(header->xres());
     if (header->yres().defined())
       _rescaled_header->set_yres(header->yres());
 
+    std::cerr << "Rescaler_height: " << (void*)this << std::endl;
+    std::cerr << "Rescaler_height: Sending image header to " << _header_hooks.size() << " header handler(s)..." << std::endl;
     this->_send_image_header(_rescaled_header);
   }
 
@@ -280,32 +288,34 @@ namespace PhotoFinish {
 		      double crop_x, double crop_y, double crop_w, double crop_h,
 		      double new_width, double new_height) {
     if (new_width * header->height() < header->width() * new_height) {
-      Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
-      source->add_sink(ImageSink::ptr(re_w));
-      workgang->add_worker(Worker::ptr(re_w));
+      ImageFilter::ptr re_w(new Rescaler_width(func, crop_x, crop_w, header->width(), new_width));
+      source->add_sink(re_w);
+      workgang->add_worker(re_w);
 
-      Rescaler_height *re_h = new Rescaler_height(func, crop_y, crop_h, header->height(), new_height);
-      re_w->add_sink(ImageSink::ptr(re_h));
-      workgang->add_worker(Worker::ptr(re_h));
+      ImageFilter::ptr re_h(new Rescaler_height(func, crop_y, crop_h, header->height(), new_height));
+      re_w->add_sink(re_h);
+      workgang->add_worker(re_h);
 
       re_h->add_sink(sink);
     } else {
-      Rescaler_height *re_h = new Rescaler_height(func, crop_y, crop_h, header->height(), new_height);
-      source->add_sink(ImageSink::ptr(re_h));
-      workgang->add_worker(Worker::ptr(re_h));
+      ImageFilter::ptr re_h(new Rescaler_height(func, crop_y, crop_h, header->height(), new_height));
+      source->add_sink(re_h);
+      workgang->add_worker(re_h);
 
-      Rescaler_width *re_w = new Rescaler_width(func, crop_x, crop_w, header->width(), new_width);
-      re_h->add_sink(ImageSink::ptr(re_w));
-      workgang->add_worker(Worker::ptr(re_w));
+      ImageFilter::ptr re_w(new Rescaler_width(func, crop_x, crop_w, header->width(), new_width));
+      re_h->add_sink(re_w);
+      workgang->add_worker(re_w);
 
       re_w->add_sink(sink);
     }
   }
 
   void add_FixedFactorRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double factor) {
-    source->add_header_handler([=] (ImageHeader::ptr header) {
+    source->add_header_hook([=] (ImageHeader::ptr header) {
+				 Function1D::ptr lanczos(new Lanczos());
+				 std::cerr << "Adding fixed factor rescaler..." << std::endl;
 				 _add_rescalers(source, sink, workgang,
-						header, Function1D::ptr(new Lanczos()),
+						header, lanczos,
 						0.0, 0.0, header->width(), header->height(),
 						header->width() * factor, header->height() * factor);
 			       });
@@ -315,7 +325,7 @@ namespace PhotoFinish {
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
   void add_FixedSizeRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, double width, double height, bool upscale, bool inside) {
-    source->add_header_handler([=] (ImageHeader::ptr header) {
+    source->add_header_hook([=] (ImageHeader::ptr header) {
 				 double wf = width / header->width();
 				 double hf = height / header->height();
 
@@ -330,15 +340,17 @@ namespace PhotoFinish {
 				 else
 				   factor = max(wf, hf);
 
+				 Function1D::ptr lanczos(new Lanczos());
+				 std::cerr << "Adding fixed size rescaler..." << std::endl;
 				 _add_rescalers(source, sink, workgang,
-						header, Function1D::ptr(new Lanczos()),
+						header, lanczos,
 						0.0, 0.0, header->width(), header->height(),
 						header->width() * factor, header->height() * factor);
 			       });
   }
 
   void add_DestinationRescaler(ImageSource::ptr source, ImageSink::ptr sink, WorkGang::ptr workgang, Destination::ptr dest) {
-    source->add_header_handler([=] (ImageHeader::ptr header) {
+    source->add_header_hook([=] (ImageHeader::ptr header) {
 				 if (dest->targets().size() == 0)
 				   throw NoTargets(dest->name());
 
@@ -389,8 +401,9 @@ namespace PhotoFinish {
 
 				 std::cerr << "Least waste was from frame \"" << best_frame->name() << "\" = " << best_waste << "." << std::endl;
 
+				 Function1D::ptr lanczos(new Lanczos());
 				 _add_rescalers(source, sink, workgang,
-						header, Function1D::ptr(new Lanczos()),
+						header, lanczos,
 						best_frame->crop_x(), best_frame->crop_y(), best_frame->crop_w(), best_frame->crop_h(),
 						best_frame->width().get(), best_frame->height().get());
 			       });

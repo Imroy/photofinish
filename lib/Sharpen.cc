@@ -39,6 +39,7 @@ namespace PhotoFinish {
 
 
   Sharpen::Sharpen(Function2D::ptr func) :
+    ImageFilter(),
     _width(1 + (2 * ceil(func->range()))), _height(_width),
     _centrex(ceil(func->range())), _centrey(_centrex),
     _values(NULL)
@@ -90,11 +91,10 @@ namespace PhotoFinish {
       _rows[y] = NULL;
     }
 
-    _header = ImageHeader::ptr(new ImageHeader(header->width(), header->height()));
+    _header = ImageHeader::ptr(new ImageHeader(header->width(), header->height(), header->cmsType()));
 
     if (header->profile() != NULL)
       _header->set_profile(header->profile());
-    _header->set_cmsType(header->cmsType());
     if (header->xres().defined())
       _header->set_xres(header->xres());
     if (header->yres().defined())

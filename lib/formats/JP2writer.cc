@@ -24,8 +24,8 @@
 
 namespace PhotoFinish {
 
-  JP2writer::JP2writer(std::ostream* os, Destination::ptr dest) :
-    ImageWriter(os, dest),
+  JP2writer::JP2writer(std::ostream* os, Destination::ptr dest, bool close_on_end) :
+    ImageWriter(os, dest, close_on_end),
     _jp2_image(NULL)
   {
     opj_set_default_encoder_parameters(&_parameters);
@@ -148,57 +148,40 @@ namespace PhotoFinish {
   void warning_callback(const char* msg, void* client_data);
   void info_callback(const char* msg, void* client_data);
 
-  void JP2writer::do_work(void) {
-    this->_lock_sink_queue();
-    ImageRow::ptr row;
-    for (_sink_rowqueue_type::iterator rqi = _sink_rowqueue.begin(); rqi != _sink_rowqueue.end(); rqi++)
-      if ((*rqi)->y() == _next_y) {
-	row = *rqi;
-	_sink_rowqueue.erase(rqi);
-	break;
-      }
-    this->_unlock_sink_queue();
-
-    if (row) {
-      if (_jp2_image->comps[0].bpp == 8)
-	packed_to_planar<unsigned char>(_width, _jp2_image->numcomps, (unsigned char*)row->data(), _jp2_image, _next_y);
-      else
-	packed_to_planar<unsigned short>(_width, _jp2_image->numcomps, (unsigned short*)row->data(), _jp2_image, _next_y);
-      _next_y++;
-      if (_next_y == _sink_header->height()) {
-	_jp2_image->x0 = _parameters.image_offset_x0;
-	_jp2_image->y0 = _parameters.image_offset_y0;
-	_jp2_image->x1 = _jp2_image->x0 + (_width - 1) * _parameters.subsampling_dx + 1;
-	_jp2_image->y1 = _jp2_image->y0 + (_height - 1) * _parameters.subsampling_dy + 1;
-
-	_parameters.tcp_mct = _jp2_image->numcomps > 1 ? 1 : 0;
-
-	opj_event_mgr_t event_mgr;
-	memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
-	event_mgr.error_handler = error_callback;
-	event_mgr.warning_handler = warning_callback;
-	event_mgr.info_handler = info_callback;
-
-	opj_cinfo_t* cinfo = opj_create_compress(CODEC_JP2);
-	opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, (void*)this);
-	opj_setup_encoder(cinfo, &_parameters, _jp2_image);
-	opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
-	opj_encode(cinfo, cio, _jp2_image, NULL);
-
-	int size = cio_tell(cio);
-	std::cerr << "\tWriting " << size << " bytes..." << std::endl;
-	_os->write((char*)cio->buffer, size);
-	opj_cio_close(cio);
-	opj_destroy_compress(cinfo);
-	opj_image_destroy(_jp2_image);
-	_jp2_image = NULL;
-	this->_set_work_finished();
-      }
-    }
+  void JP2writer::_write_row(ImageRow::ptr row) {
+    if (_jp2_image->comps[0].bpp == 8)
+      packed_to_planar<unsigned char>(_width, _jp2_image->numcomps, (unsigned char*)row->data(), _jp2_image, _next_y);
+    else
+      packed_to_planar<unsigned short>(_width, _jp2_image->numcomps, (unsigned short*)row->data(), _jp2_image, _next_y);
   }
 
-  void JP2writer::receive_image_end(void) {
-    ImageWriter::receive_image_end();
+  void JP2writer::_finish_writing(void) {
+    _jp2_image->x0 = _parameters.image_offset_x0;
+    _jp2_image->y0 = _parameters.image_offset_y0;
+    _jp2_image->x1 = _jp2_image->x0 + (_width - 1) * _parameters.subsampling_dx + 1;
+    _jp2_image->y1 = _jp2_image->y0 + (_height - 1) * _parameters.subsampling_dy + 1;
+
+    _parameters.tcp_mct = _jp2_image->numcomps > 1 ? 1 : 0;
+
+    opj_event_mgr_t event_mgr;
+    memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
+    event_mgr.error_handler = error_callback;
+    event_mgr.warning_handler = warning_callback;
+    event_mgr.info_handler = info_callback;
+
+    opj_cinfo_t* cinfo = opj_create_compress(CODEC_JP2);
+    opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, (void*)this);
+    opj_setup_encoder(cinfo, &_parameters, _jp2_image);
+    opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
+    opj_encode(cinfo, cio, _jp2_image, NULL);
+
+    int size = cio_tell(cio);
+    std::cerr << "\tWriting " << size << " bytes..." << std::endl;
+    _os->write((char*)cio->buffer, size);
+    opj_cio_close(cio);
+    opj_destroy_compress(cinfo);
+    opj_image_destroy(_jp2_image);
+    _jp2_image = NULL;
   }
 
 }

@@ -50,8 +50,7 @@ namespace PhotoFinish {
 	uint32 width, height;
 	TIFFcheck(GetField(_tiff, TIFFTAG_IMAGEWIDTH, &width));
 	TIFFcheck(GetField(_tiff, TIFFTAG_IMAGELENGTH, &height));
-	ImageHeader::ptr header(new ImageHeader(width, height));
-	std::cerr << "Image is " << width << " x " << height << std::endl;
+	std::cerr << "Image is " << width << " × " << height << std::endl;
 	_height = height;
 
 	uint16 bit_depth, channels, photometric;
@@ -102,7 +101,7 @@ namespace PhotoFinish {
 	  std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
 	  exit(1);
 	}
-	header->set_cmsType(cmsType);
+	ImageHeader::ptr header(new ImageHeader(width, height, cmsType));
 
 	{
 	  float xres, yres;
@@ -145,6 +144,7 @@ namespace PhotoFinish {
 	TIFFcheck(ReadScanline(_tiff, buffer, _next_y));
 	ImageRow::ptr row(new ImageRow(_next_y, buffer));
 	_next_y++;
+	std::cerr << "TIFFreader: Sending row " << row->y() << "..." << std::endl;
 	this->_send_image_row(row);
       }
       if (_next_y == _height)

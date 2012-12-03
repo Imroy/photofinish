@@ -27,7 +27,8 @@
 #include "ImageFile.hh"
 #include "Destination.hh"
 #include "Tags.hh"
-#include "Kernel2D.hh"
+#include "Rescaler.hh"
+#include "Sharpen.hh"
 #include "Exception.hh"
 
 namespace fs = boost::filesystem;
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]) {
 
   for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
     try {
-      ImageFile::ptr infile = ImageFile::create(*fi);
+      ImageFilepath infile(*fi);
       Tags::ptr tags = defaulttags->dupe();
       {
 	fs::path tagpath = fi->parent_path() / ("." + fi->stem().native() + ".tags");
@@ -72,7 +73,9 @@ int main(int argc, char* argv[]) {
       }
 
       try {
-	Image::ptr orig_image = infile->read();
+	WorkGang::ptr workgang(new WorkGang);
+	ImageReader::ptr reader = ImageReader::open(infile);
+	workgang->add_worker(reader);
 
 	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
 	  bool last_dest = (di + 1 == arg_destinations.end());
@@ -118,7 +121,7 @@ int main(int argc, char* argv[]) {
 	    std::string format = "jpeg";
 	    if (destination->format().defined())
 	      format = destination->format();
-	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / fi->stem(), format);
+	    ImageFilepath outfile(destination->dir() / fi->stem(), format);
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
 	    tags->embed(outfile);
 	  } catch (DestinationError& ex) {

@@ -65,8 +65,6 @@ namespace PhotoFinish {
       jpeg_read_header(_dinfo, TRUE);
 
       {
-	ImageHeader::ptr header(new ImageHeader(_dinfo->output_width, _dinfo->output_height));
-
 	cmsUInt32Number cmsType = CHANNELS_SH(_dinfo->num_components) | BYTES_SH(1);
 	switch (_dinfo->jpeg_color_space) {
 	case JCS_GRAYSCALE:
@@ -91,7 +89,7 @@ namespace PhotoFinish {
 	  std::cerr << "** unsupported JPEG colour space " << _dinfo->jpeg_color_space << " **" << std::endl;
 	  exit(1);
 	}
-	header->set_cmsType(cmsType);
+	ImageHeader::ptr header(new ImageHeader(_dinfo->output_width, _dinfo->output_height, cmsType));
 
 	if (_dinfo->saw_JFIF_marker) {
 	  switch (_dinfo->density_unit) {

@@ -25,6 +25,12 @@ namespace PhotoFinish {
     _work_finished(false)
   {}
 
+  void Worker::_set_work_finished(void) {
+    _work_finished = true;
+    for (std::list<finished_hook>::iterator fhi = _finished_hooks.begin(); fhi != _finished_hooks.end(); fhi++)
+      (*fhi)();
+  }
+
 
 
   WorkGang::WorkGang() :

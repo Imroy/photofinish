@@ -26,12 +26,12 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  ImageFilepath::ImageFilepath(const fs::path filepath, const std::string format) :
+  ImageFilepath::ImageFilepath(const fs::path& filepath, const std::string format) :
     _filepath(filepath),
     _format(format)
   {}
 
-  ImageFilepath::ImageFilepath(const fs::path filepath) throw(UnknownFileType) :
+  ImageFilepath::ImageFilepath(const fs::path& filepath) throw(UnknownFileType) :
     _filepath(filepath)
   {
     std::string ext = filepath.extension().generic_string().substr(1);
@@ -68,6 +68,36 @@ namespace PhotoFinish {
       throw UnknownFileType(filepath.generic_string());
   }
 
+  fs::path ImageFilepath::fixed_filepath(void) const throw(UnknownFileType) {
+    fs::path fp(_filepath);
+#ifdef HAZ_PNG
+    if (boost::iequals(_format, "png"))
+      return fp.replace_extension(".png");
+#endif
+
+#ifdef HAZ_JPEG
+    if (boost::iequals(_format, "jpeg")
+	|| boost::iequals(_format, "jpg"))
+      return fp.replace_extension(".jpeg");
+#endif
+
+#ifdef HAZ_TIFF
+    if (boost::iequals(_format, "tiff")
+	|| boost::iequals(_format, "tif"))
+      return fp.replace_extension(".tiff");
+#endif
+
+#ifdef HAZ_JP2
+    if (boost::iequals(_format, "jp2"))
+      return fp.replace_extension(".jp2");
+#endif
+
+    if (boost::iequals(_format, "sol"))
+      return fp.replace_extension(".bin");
+
+    throw UnknownFileType(_format);
+  }
+
 
 
   ImageReader::ImageReader(std::istream* is) :
@@ -83,7 +113,7 @@ namespace PhotoFinish {
     free(_reader_lock);
   }
 
-  ImageReader::ptr ImageReader::open(const ImageFilepath ifp) throw(UnknownFileType) {
+  ImageReader::ptr ImageReader::open(const ImageFilepath& ifp) throw(UnknownFileType) {
 #ifdef HAZ_PNG
     if (boost::iequals(ifp.format(), "png"))
       return ImageReader::ptr(new PNGreader(new fs::ifstream(ifp.filepath())));
@@ -109,37 +139,39 @@ namespace PhotoFinish {
 
 
 
-  ImageWriter::ImageWriter(std::ostream* os, Destination::ptr dest) :
+  ImageWriter::ImageWriter(std::ostream* os, Destination::ptr dest, bool close_on_end) :
     ImageSink(),
     _os(os),
-    _dest(dest)
+    _dest(dest),
+    _close_on_end(close_on_end),
+    _next_y(0)
   {}
 
-  ImageWriter::ptr ImageWriter::open(const ImageFilepath ifp, Destination::ptr dest) throw(UnknownFileType) {
+  ImageWriter::ptr ImageWriter::open(const ImageFilepath& ifp, Destination::ptr dest) throw(UnknownFileType) {
 #ifdef HAZ_PNG
     if (boost::iequals(ifp.format(), "png"))
-      return ImageWriter::ptr(new PNGwriter(new fs::ofstream(ifp.filepath().replace_extension(".png")), dest));
+      return ImageWriter::ptr(new PNGwriter(new fs::ofstream(ifp.fixed_filepath()), dest, true));
 #endif
 
 #ifdef HAZ_JPEG
     if (boost::iequals(ifp.format(), "jpeg")
 	|| boost::iequals(ifp.format(), "jpg"))
-      return ImageWriter::ptr(new JPEGwriter(new fs::ofstream(ifp.filepath().replace_extension(".jpeg")), dest));
+      return ImageWriter::ptr(new JPEGwriter(new fs::ofstream(ifp.fixed_filepath()), dest, true));
 #endif
 
 #ifdef HAZ_TIFF
     if (boost::iequals(ifp.format(), "tiff")
 	|| boost::iequals(ifp.format(), "tif"))
-      return ImageWriter::ptr(new TIFFwriter(new fs::ofstream(ifp.filepath().replace_extension(".tiff")), dest));
+      return ImageWriter::ptr(new TIFFwriter(new fs::ofstream(ifp.fixed_filepath()), dest, true));
 #endif
 
 #ifdef HAZ_JP2
     if (boost::iequals(ifp.format(), "jp2"))
-      return ImageWriter::ptr(new JP2writer(new fs::ofstream(ifp.filepath().replace_extension(".jp2")), dest));
+      return ImageWriter::ptr(new JP2writer(new fs::ofstream(ifp.fixed_filepath()), dest, true));
 #endif
 
     if (boost::iequals(ifp.format(), "sol"))
-      return ImageWriter::ptr(new SOLwriter(new fs::ofstream(ifp.filepath().replace_extension(".bin")), dest));
+      return ImageWriter::ptr(new SOLwriter(new fs::ofstream(ifp.fixed_filepath()), dest, true));
 
     throw UnknownFileType(ifp.format());
   }
@@ -154,6 +186,34 @@ namespace PhotoFinish {
 
   void ImageWriter::receive_image_end(void) {
     ImageSink::receive_image_end();
+  }
+
+  void ImageWriter::do_work() {
+    this->_lock_sink_queue();
+    ImageRow::ptr row;
+    for (ImageRow::list::iterator rqi = _sink_rowqueue.begin(); rqi != _sink_rowqueue.end(); rqi++)
+      if ((*rqi)->y() == _next_y) {
+	row = *rqi;
+	std::cerr << "ImageWriter: Writing row " << row->y() << "..." << std::endl;
+	this->_write_row(row);
+	_next_y++;
+
+	if (_next_y == _sink_header->height()) {
+	  std::cerr << "ImageWriter: Wrote all rows." << std::endl;
+	  this->_set_work_finished();
+	  this->_finish_writing();
+	  if (_close_on_end)
+	    try {
+	      dynamic_cast<std::ofstream*>(_os)->close();
+	      std::cerr << "ImageWriter: Closed image file." << std::endl;
+	    } catch (std::bad_cast& e) {
+	    }
+	}
+
+	rqi = _sink_rowqueue.erase(rqi);
+      }
+
+    this->_unlock_sink_queue();
   }
 
 

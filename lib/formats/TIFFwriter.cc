@@ -29,10 +29,9 @@ namespace PhotoFinish {
 
 #define TIFFcheck(x) if ((rc = TIFF##x) != 1) throw LibraryError("libtiff", "TIFF" #x " returned " + rc)
 
-  TIFFwriter::TIFFwriter(std::ostream* os, Destination::ptr dest) :
-    ImageWriter(os, dest),
-    _tiff(NULL),
-    _next_y(0)
+  TIFFwriter::TIFFwriter(std::ostream* os, Destination::ptr dest, bool close_on_end) :
+    ImageWriter(os, dest, close_on_end),
+    _tiff(NULL)
   {
     _tiff = TIFFStreamOpen("", os);
     if (_tiff == NULL)
@@ -141,30 +140,13 @@ namespace PhotoFinish {
     TIFFcheck(SetField(_tiff, TIFFTAG_ICCPROFILE, len, data));
   }
 
-  void TIFFwriter::do_work(void) {
-    this->_lock_sink_queue();
-    ImageRow::ptr row;
-    for (_sink_rowqueue_type::iterator rqi = _sink_rowqueue.begin(); rqi != _sink_rowqueue.end(); rqi++)
-      if ((*rqi)->y() == _next_y) {
-	row = *rqi;
-	_sink_rowqueue.erase(rqi);
-	break;
-      }
-    this->_unlock_sink_queue();
-
-    if (row) {
-      TIFFWriteScanline(_tiff, row->data(), _next_y, 0);
-      _next_y++;
-      if (_next_y == _sink_header->height()) {
-	TIFFClose(_tiff);
-	_tiff = NULL;
-	this->_set_work_finished();
-      }
-    }
+  void TIFFwriter::_write_row(ImageRow::ptr row) {
+    TIFFWriteScanline(_tiff, row->data(), _next_y, 0);
   }
 
-  void TIFFwriter::receive_image_end(void) {
-    ImageWriter::receive_image_end();
+  void TIFFwriter::_finish_writing(void) {
+    TIFFClose(_tiff);
+    _tiff = NULL;
   }
 
 }

@@ -45,9 +45,9 @@ namespace PhotoFinish {
     //! Constructor
     Lanczos(const D_resize& dr);
 
-    inline double range(void) const { return _radius; }
+    inline virtual double range(void) const { return _radius; }
 
-    inline double eval(double x) const {
+    inline virtual double eval(double x) const {
       if (fabs(x) < 1e-6)
 	return 1.0;
       double pix = M_PI * x;
@@ -58,7 +58,7 @@ namespace PhotoFinish {
 
 
   //! Abstract base class for that creates and stores coefficients for cropping and resizing an image
-  class Rescaler : public ImageSink, public ImageSource {
+  class Rescaler : public ImageFilter {
   protected:
     Function1D::ptr _func;
     unsigned int *_size, *_start;
