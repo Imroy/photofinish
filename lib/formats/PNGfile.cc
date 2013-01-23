@@ -318,11 +318,10 @@ namespace PhotoFinish {
       }
     }
 
-    png_bytepp png_rows = (png_bytepp)malloc(img->height() * sizeof(png_bytep));
-    for (unsigned int y = 0; y < img->height(); y++)
-      png_rows[y] = (png_bytep)malloc(img->width() * png_channels * (depth >> 3));
+    if (depth > 8)
+      png_set_swap(_png);
 
-    png_set_rows(_png, _info, png_rows);
+    png_write_info(_png, _info);
 
     cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
     cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
@@ -332,12 +331,8 @@ namespace PhotoFinish {
     cmsCloseProfile(profile);
 
     transform_queue queue(dest, img, cmsTempType, transform);
-    if (depth == 8)
-      for (unsigned int y = 0; y < img->height(); y++)
-	queue.add(y);
-    else
-      for (unsigned int y = 0; y < img->height(); y++)
-	queue.add(y, png_rows[y]);
+    for (unsigned int y = 0; y < img->height(); y++)
+      queue.add(y);
 
 #pragma omp parallel shared(queue)
     {
@@ -346,6 +341,9 @@ namespace PhotoFinish {
 	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
 
 	Ditherer ditherer(img->width(), png_channels);
+	png_bytep dithered_row = NULL;
+	if (depth == 8)
+	  dithered_row = (png_bytep)malloc(img->width() * png_channels);
 
 	for (unsigned int y = 0; y < img->height(); y++) {
 	  // Process rows until the one we need becomes available, or the queue is empty
@@ -365,13 +363,19 @@ namespace PhotoFinish {
 	    img->free_row(y);
 
 	  if (depth == 8) {
-	    ditherer.dither(row, png_rows[y], y == img->height() - 1);
-	    queue.free_row(y);
-	  }
+	    ditherer.dither(row, dithered_row, y == img->height() - 1);
+	    png_write_row(_png, dithered_row);
+	  } else
+	    png_write_row(_png, (png_const_bytep)row);
+
+	  queue.free_row(y);
+
 	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
 		    << queue.num_rows() << " left)  ";
 	}
 	std::cerr << std::endl;
+	if (depth == 8)
+	  free(dithered_row);
       } else {	// Other thread(s) transform the image data
 	while (!queue.empty())
 	  queue.writer_process_row();
@@ -379,12 +383,7 @@ namespace PhotoFinish {
     }
     cmsDeleteTransform(transform);
 
-    std::cerr << "\tWriting PNG image data..." << std::endl;
-    png_write_png(_png, _info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);
-
-    for (unsigned int y = 0; y < img->height(); y++)
-      free(png_rows[y]);
-    free(png_rows);
+    png_write_end(_png, _info);
 
     png_destroy_write_struct(&_png, &_info);
     ofs.close();
