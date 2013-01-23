@@ -61,7 +61,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 
 int main(int argc, char* argv[]) {
   // Variables that are to be loaded from the config file and command line
-  bool do_conversion, do_preview;
+  bool do_conversion, do_preview, do_move_originals;
   fs::path convert_dir, works_dir;
   std::string convert_format, preview_format;
   typedef std::vector<fs::path> pathlist;
@@ -75,6 +75,7 @@ int main(int argc, char* argv[]) {
       ("help,h", "produce help message")
       ("convert,C", po::bool_switch(&do_conversion), "Convert files")
       ("preview,P", po::bool_switch(&do_preview), "Scale the image to a preview")
+      ("move-originals,M", po::bool_switch(&do_move_originals), "Move originals (done automatically when converting)")
       ;
 
     po::options_description config_options("Configuration");
@@ -168,7 +169,11 @@ int main(int argc, char* argv[]) {
 	  std::cerr << ex.what() << std::endl;
 	}
 
-	if (do_conversion) {
+	if (do_conversion || do_move_originals) {
+	  if (!fs::exists(convert_dir)) {
+	    std::cerr << "Creating directory " << convert_dir << "." << std::endl;
+	    fs::create_directory(convert_dir);
+	  }
 	  std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << std::endl;
 	  rename(di->path().c_str(), (convert_dir / di->path().filename()).c_str());
 	}
