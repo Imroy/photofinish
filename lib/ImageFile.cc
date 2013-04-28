@@ -34,22 +34,22 @@ namespace PhotoFinish {
     std::string ext = filepath.extension().generic_string().substr(1);
 #ifdef HAZ_PNG
     if (boost::iequals(ext, "png"))
-      return ImageFile::ptr(new PNGfile(filepath));
+      return std::make_shared<PNGfile>(filepath);
 #endif
 
 #ifdef HAZ_JPEG
     if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg"))
-      return ImageFile::ptr(new JPEGfile(filepath));
+      return std::make_shared<JPEGfile>(filepath);
 #endif
 
 #ifdef HAZ_TIFF
     if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif"))
-      return ImageFile::ptr(new TIFFfile(filepath));
+      return std::make_shared<TIFFfile>(filepath);
 #endif
 
 #ifdef HAZ_JP2
     if (boost::iequals(ext, "jp2"))
-      return ImageFile::ptr(new JP2file(filepath));
+      return std::make_shared<JP2file>(filepath);
 #endif
 
     throw UnknownFileType(filepath.generic_string());
@@ -58,28 +58,28 @@ namespace PhotoFinish {
   ImageFile::ptr ImageFile::create(fs::path filepath, const std::string format) throw(UnknownFileType) {
 #ifdef HAZ_PNG
     if (boost::iequals(format, "png"))
-      return ImageFile::ptr(new PNGfile(filepath.replace_extension(".png")));
+      return std::make_shared<PNGfile>(filepath.replace_extension(".png"));
 #endif
 
 #ifdef HAZ_JPEG
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
-      return ImageFile::ptr(new JPEGfile(filepath.replace_extension(".jpeg")));
+      return std::make_shared<JPEGfile>(filepath.replace_extension(".jpeg"));
 #endif
 
 #ifdef HAZ_TIFF
     if (boost::iequals(format, "tiff")
 	|| boost::iequals(format, "tif"))
-      return ImageFile::ptr(new TIFFfile(filepath.replace_extension(".tiff")));
+      return std::make_shared<TIFFfile>(filepath.replace_extension(".tiff"));
 #endif
 
 #ifdef HAZ_JP2
     if (boost::iequals(format, "jp2"))
-      return ImageFile::ptr(new JP2file(filepath.replace_extension(".jp2")));
+      return std::make_shared<JP2file>(filepath.replace_extension(".jp2"));
 #endif
 
     if (boost::iequals(format, "sol"))
-      return ImageFile::ptr(new SOLfile(filepath.replace_extension(".bin")));
+      return std::make_shared<SOLfile>(filepath.replace_extension(".bin"));
 
     throw UnknownFileType(format);
   }
@@ -178,7 +178,7 @@ namespace PhotoFinish {
   }
 
   Image::ptr ImageFile::read(void) {
-    Destination::ptr temp(new Destination);
+    auto temp = std::make_shared<Destination>();
     return this->read(temp);
   }
 

@@ -55,7 +55,7 @@ namespace PhotoFinish {
     TIFFcheck(GetField(_tiff, TIFFTAG_IMAGEWIDTH, &width));
     TIFFcheck(GetField(_tiff, TIFFTAG_IMAGELENGTH, &height));
     std::cerr << "\tImage is " << width << "×" << height << std::endl;
-    Image::ptr img(new Image(width, height));
+    auto img = std::make_shared<Image>(width, height);
 
     uint16 bit_depth, channels, photometric;
     TIFFcheck(GetField(_tiff, TIFFTAG_BITSPERSAMPLE, &bit_depth));

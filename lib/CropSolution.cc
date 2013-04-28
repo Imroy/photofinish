@@ -34,12 +34,12 @@ namespace PhotoFinish {
     \param rulers The list of rulers to add to
    */
   void add_rulers(multihash& vars, std::string key, rulerlist& rulers) {
-    multihash::iterator vi;
-    if ((vi = vars.find(key)) != vars.end())
-      for (stringlist::iterator si = vi->second.begin(); si != vi->second.end(); si++) {
-	int at = si->find_first_of('@', 0);
-	double fx = boost::lexical_cast<double>(si->substr(0, at));
-	double tx = boost::lexical_cast<double>(si->substr(at + 1, si->length() - at - 1));
+    auto vi = vars.find(key);
+    if (vi != vars.end())
+      for (auto si : vi->second) {
+	int at = si.find_first_of('@', 0);
+	double fx = boost::lexical_cast<double>(si.substr(0, at));
+	double tx = boost::lexical_cast<double>(si.substr(at + 1, si.length() - at - 1));
 	rulers.push_back(std::make_pair(fx, tx));
       }
   }
@@ -52,10 +52,10 @@ namespace PhotoFinish {
   //! Add rulers to the either side of an image if there aren't enough
   void add_ruler_pins(rulerlist& rulers, unsigned int max) {
     bool has_first = false, has_last = false;
-    for (rulerlist::iterator ti = rulers.begin(); ti != rulers.end(); ti++) {
-      if (ti->first < 0.5)
+    for (auto ti : rulers) {
+      if (ti.first < 0.5)
 	has_first = true;
-      else if (ti->first > 0.5)
+      else if (ti.first > 0.5)
 	has_last = true;
     }
 
@@ -117,22 +117,29 @@ namespace PhotoFinish {
 	      continue;
 
 	    double distance = 0;
-	    rulerlist::iterator ti;
-	    for (ti = h_rulers.begin(); (ti != h_rulers.end()) && ((!best_frame) || (distance < best_distance)); ti++)
-	      distance += sqr(ti->second - (x + (ti->first * width)));
+	    if ((!best_frame) || (distance < best_distance))
+	      for (auto ti : h_rulers) {
+		distance += sqr(ti.second - (x + (ti.first * width)));
+		if ((best_frame) && (distance > best_distance))
+		  break;
+	      }
 
 	    if ((best_frame) && (distance > best_distance))
 	      continue;
 
-	    for (ti = v_rulers.begin(); (ti != v_rulers.end()) && ((!best_frame) || (distance < best_distance)); ti++)
-	      distance += sqr(ti->second - (y + (ti->first * height)));
+	    if ((!best_frame) || (distance < best_distance))
+	      for (auto ti : v_rulers) {
+		distance += sqr(ti.second - (y + (ti.first * height)));
+		if ((best_frame) && (distance > best_distance))
+		  break;
+	      }
 
 	    if (best_frame && (distance > best_distance))
 	      continue;
 
 	    omp_set_lock(&best_lock);
 	    if ((!best_frame) || (distance < best_distance)) {
-	      Frame::ptr new_best_frame(new Frame(*target, x, y, width, height));
+	      auto new_best_frame = std::make_shared<Frame>(*target, x, y, width, height);
 	      best_frame.swap(new_best_frame);
 	      best_distance = distance;
 	      new_best = true;

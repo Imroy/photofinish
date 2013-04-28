@@ -54,7 +54,7 @@ namespace PhotoFinish {
     png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
     std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
-    Image::ptr img(new Image(width, height));
+    auto img = std::make_shared<Image>(width, height);
     queue->destination()->set_depth(bit_depth);
 
     cmsUInt32Number cmsType;

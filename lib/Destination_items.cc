@@ -112,27 +112,32 @@ namespace PhotoFinish {
   {}
 
   void D_JPEG::add_variables(multihash& vars) {
-    multihash::iterator vi;
-    if (!_quality.defined() && ((vi = vars.find("qual")) != vars.end())) {
-      _quality = boost::lexical_cast<int>(vi->second[0]);
-      vars.erase(vi);
-      set_defined();
+    if (!_quality.defined()) {
+      auto vi = vars.find("qual");
+      if (vi != vars.end()) {
+	_quality = boost::lexical_cast<int>(vi->second[0]);
+	vars.erase(vi);
+	set_defined();
+      }
     }
-    if (!_sample.defined() && ((vi = vars.find("sample")) != vars.end())) {
-      std::string sample = vi->second[0];
-      size_t x = sample.find_first_of("x×");
-      if (x != std::string::npos) {
-	try {
-	  int h = boost::lexical_cast<int>(sample.substr(0, x));
-	  int v = boost::lexical_cast<int>(sample.substr(x + 1, sample.length() - x - 1));
-	  _sample = std::pair<int, int>(h, v);
-	  vars.erase(vi);
-	  set_defined();
-	} catch (boost::bad_lexical_cast &ex) {
-	  std::cerr << ex.what();
-	}
-      } else
-	std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second[0] << "\"." << std::endl;
+    if (!_sample.defined()) {
+      auto vi = vars.find("sample");
+      if (vi != vars.end()) {
+	std::string sample = vi->second[0];
+	size_t x = sample.find_first_of("x×");
+	if (x != std::string::npos) {
+	  try {
+	    int h = boost::lexical_cast<int>(sample.substr(0, x));
+	    int v = boost::lexical_cast<int>(sample.substr(x + 1, sample.length() - x - 1));
+	    _sample = std::pair<int, int>(h, v);
+	    vars.erase(vi);
+	    set_defined();
+	  } catch (boost::bad_lexical_cast &ex) {
+	    std::cerr << ex.what();
+	  }
+	} else
+	  std::cerr << "D_JPEG: Failed to parse sample \"" << vi->second[0] << "\"." << std::endl;
+      }
     }
   }
 
@@ -177,21 +182,29 @@ namespace PhotoFinish {
   {}
 
   void D_TIFF::add_variables(multihash& vars) {
-    multihash::iterator vi;
-    if (!_artist.defined() && ((vi = vars.find("artist")) != vars.end())) {
-      _artist = vi->second[0];
-      vars.erase(vi);
-      set_defined();
+    if (!_artist.defined()) {
+      auto vi = vars.find("artist");
+      if (vi != vars.end()) {
+	_artist = vi->second[0];
+	vars.erase(vi);
+	set_defined();
+      }
     }
-    if (!_copyright.defined() && ((vi = vars.find("copyright")) != vars.end())) {
-      _copyright = vi->second[0];
-      vars.erase(vi);
-      set_defined();
+    if (!_copyright.defined()) {
+      auto vi = vars.find("copyright");
+      if (vi != vars.end()) {
+	_copyright = vi->second[0];
+	vars.erase(vi);
+	set_defined();
+      }
     }
-    if (!_compression.defined() && ((vi = vars.find("compression")) != vars.end())) {
-      _compression = vi->second[0];
-      vars.erase(vi);
-      set_defined();
+    if (!_compression.defined()) {
+      auto vi = vars.find("compression");
+      if (vi != vars.end()) {
+	_compression = vi->second[0];
+	vars.erase(vi);
+	set_defined();
+      }
     }
   }
 
@@ -217,55 +230,66 @@ namespace PhotoFinish {
   {}
 
   void D_JP2::add_variables(multihash& vars) {
-    multihash::iterator vi;
-    if (!_numresolutions.defined() && ((vi = vars.find("numresolutions")) != vars.end())) {
-      _numresolutions = boost::lexical_cast<int>(vi->second[0]);
-      vars.erase(vi);
-      set_defined();
-    }
-
-    if (!_prog_order.defined() && ((vi = vars.find("prog_order")) != vars.end())) {
-      _prog_order = vi->second[0];
-      vars.erase(vi);
-      set_defined();
-    }
-
-    if ((_rates.size() == 0) && ((vi = vars.find("rate")) != vars.end())) {
-      std::string rate = vi->second[0];
-      size_t sep = rate.find_first_of(",/");
-      while (sep != std::string::npos) {
-	try {
-	  _rates.push_back(boost::lexical_cast<float>(rate.substr(0, sep)));
-	  vars.erase(vi);
-	  set_defined();
-	  rate = rate.substr(sep + 1, rate.length() - sep -1);
-	} catch (boost::bad_lexical_cast &ex) {
-	  std::cerr << ex.what();
-	  break;
-	}
-	sep = rate.find_first_of(",/");
-      }
-      try {
-	_rates.push_back(boost::lexical_cast<float>(rate));
-      } catch (boost::bad_lexical_cast &ex) {
+    if (!_numresolutions.defined()) {
+      auto vi = vars.find("numresolutions");
+      if (vi != vars.end()) {
+	_numresolutions = boost::lexical_cast<int>(vi->second[0]);
+	vars.erase(vi);
+	set_defined();
       }
     }
 
-    if (!_tile_size.defined() && ((vi = vars.find("tile")) != vars.end())) {
-      std::string tile_size = vi->second[0];
-      size_t sep = tile_size.find_first_of("x×/,");
-      if (sep != std::string::npos) {
-	try {
-	  int h = boost::lexical_cast<int>(tile_size.substr(0, sep));
-	  int v = boost::lexical_cast<int>(tile_size.substr(sep + 1, tile_size.length() - sep - 1));
-	  _tile_size = std::pair<int, int>(h, v);
-	  vars.erase(vi);
-	  set_defined();
-	} catch (boost::bad_lexical_cast &ex) {
-	  std::cerr << ex.what();
+    if (!_prog_order.defined()) {
+      auto vi = vars.find("prog_order");
+      if (vi != vars.end()) {
+	_prog_order = vi->second[0];
+	vars.erase(vi);
+	set_defined();
+      }
+    }
+
+    if (_rates.size() == 0) {
+      auto vi = vars.find("rate");
+      if (vi != vars.end()) {
+	std::string rate = vi->second[0];
+	size_t sep = rate.find_first_of(",/");
+	while (sep != std::string::npos) {
+	  try {
+	    _rates.push_back(boost::lexical_cast<float>(rate.substr(0, sep)));
+	    vars.erase(vi);
+	    set_defined();
+	    rate = rate.substr(sep + 1, rate.length() - sep -1);
+	  } catch (boost::bad_lexical_cast &ex) {
+	    std::cerr << ex.what();
+	    break;
+	  }
+	  sep = rate.find_first_of(",/");
 	}
-      } else
-	std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
+	try {
+	  _rates.push_back(boost::lexical_cast<float>(rate));
+	} catch (boost::bad_lexical_cast &ex) {
+	}
+      }
+    }
+
+    if (!_tile_size.defined()) {
+      auto vi = vars.find("tile");
+      if (vi != vars.end()) {
+	std::string tile_size = vi->second[0];
+	size_t sep = tile_size.find_first_of("x×/,");
+	if (sep != std::string::npos) {
+	  try {
+	    int h = boost::lexical_cast<int>(tile_size.substr(0, sep));
+	    int v = boost::lexical_cast<int>(tile_size.substr(sep + 1, tile_size.length() - sep - 1));
+	    _tile_size = std::pair<int, int>(h, v);
+	    vars.erase(vi);
+	    set_defined();
+	  } catch (boost::bad_lexical_cast &ex) {
+	    std::cerr << ex.what();
+	  }
+	} else
+	  std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
+      }
     }
   }
 

@@ -47,7 +47,7 @@ namespace PhotoFinish {
   }
 
   Tags::ptr Tags::dupe(void) const {
-    return Tags::ptr(new Tags(*this));
+    return std::make_shared<Tags>(*this);
   }
 
   void populate_EXIF_subst(hash& table);
@@ -117,8 +117,8 @@ namespace PhotoFinish {
   }
 
   bool Tags::try_load(fs::path filepath) {
-    for (std::list<fs::path>::iterator pi = _searchpaths.begin(); pi != _searchpaths.end(); pi++) {
-      fs::path fullpath = *pi / filepath;
+    for (auto pi : _searchpaths) {
+      fs::path fullpath = pi / filepath;
       if (fs::exists(fullpath)) {
 	load(fullpath);
 	return true;
@@ -167,8 +167,8 @@ namespace PhotoFinish {
 	std::string key = line.substr(start, eq - start);
 	std::string value = line.substr(eq + 1, end - eq);
 	std::cerr << "\tVariable \"" << key << "\" = \"" << value << "\"" << std::endl;
-	multihash::iterator vi;
-	if ((vi = _variables.find(key)) != _variables.end())
+	auto vi = _variables.find(key);
+	if (vi != _variables.end())
 	  vi->second.push_back(value);
 	else {
 	  stringlist list;
@@ -191,8 +191,8 @@ namespace PhotoFinish {
 
 	if (line.substr(start, 3) == "XMP") {
 	  std::string key_string = line.substr(start, eq - start);
-	  hash::iterator si;
-	  if (((si = XMP_subst.find(key_string)) != XMP_subst.end()) && (si->second.length() > 0))
+	  auto si = XMP_subst.find(key_string);
+	  if ((si != XMP_subst.end()) && (si->second.length() > 0))
 	    key_string = si->second;
 
 	  try {
@@ -206,8 +206,8 @@ namespace PhotoFinish {
 	  }
 	} else 	if (line.substr(start, 4) == "IPTC") {
 	  std::string key_string = line.substr(start, eq - start);
-	  hash::iterator si;
-	  if (((si = IPTC_subst.find(key_string)) != IPTC_subst.end()) && (si->second.length() > 0))
+	  auto si = IPTC_subst.find(key_string);
+	  if ((si != IPTC_subst.end()) && (si->second.length() > 0))
 	    key_string = si->second;
 
 	  try {
@@ -221,8 +221,8 @@ namespace PhotoFinish {
 	  }
 	} else {
 	  std::string key_string = line.substr(start, eq - start);
-	  hash::iterator si;
-	  if (((si = EXIF_subst.find(key_string)) != EXIF_subst.end()) && (si->second.length() > 0))
+	  auto si = EXIF_subst.find(key_string);
+	  if ((si != EXIF_subst.end()) && (si->second.length() > 0))
 	    key_string = si->second;
 
 	  try {
@@ -256,17 +256,14 @@ namespace PhotoFinish {
     Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
     assert(image.get() != 0);
 
-    Exiv2::ExifData &exifData = image->exifData();
-    for (Exiv2::ExifData::const_iterator ei = exifData.begin(); ei != exifData.end(); ei++)
-      _EXIFtags.add(*ei);
+    for (auto ei : image->exifData())
+      _EXIFtags.add(ei);
 
-    Exiv2::IptcData &iptcData = image->iptcData();
-    for (Exiv2::IptcData::const_iterator ii = iptcData.begin(); ii != iptcData.end(); ii++)
-      _IPTCtags.add(*ii);
+    for (auto ii : image->iptcData())
+      _IPTCtags.add(ii);
 
-    Exiv2::XmpData &xmpData = image->xmpData();
-    for (Exiv2::XmpData::const_iterator xi = xmpData.begin(); xi != xmpData.end(); xi++)
-      _XMPtags.add(*xi);
+    for (auto xi : image->xmpData())
+      _XMPtags.add(xi);
   }
 
   void Tags::make_thumbnail(Image::ptr img, const D_thumbnail& dt) {
@@ -284,9 +281,9 @@ namespace PhotoFinish {
     std::cerr << "Making EXIF thumbnail..." << std::endl;
 
     Frame frame(width, height, 0, 0, img->width(), img->height());
-    Image::ptr thumbimage = frame.crop_resize(img, D_resize::lanczos(3.0));
+    auto thumbimage = frame.crop_resize(img, D_resize::lanczos(3.0));
 
-    Destination::ptr dest(new Destination);
+    auto dest = std::make_shared<Destination>();
     dest->set_jpeg(D_JPEG(50, 1, 1, false));
 
     JPEGfile thumbfile("");

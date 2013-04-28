@@ -125,7 +125,7 @@ namespace PhotoFinish {
 	  std::cerr << "** Component " << (int)c << " has a different sgnd to the first! **" << std::endl;
       }
 
-    Image::ptr img(new Image(_jp2_image->x1 - _jp2_image->x0, _jp2_image->y1 - _jp2_image->y0));
+    auto img = std::make_shared<Image>(_jp2_image->x1 - _jp2_image->x0, _jp2_image->y1 - _jp2_image->y0);
 
     int depth = _jp2_image->comps[0].prec;
     cmsUInt32Number cmsType = CHANNELS_SH(_jp2_image->numcomps) | BYTES_SH(depth >> 3);

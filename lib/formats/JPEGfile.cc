@@ -74,7 +74,7 @@ namespace PhotoFinish {
 
     jpeg_start_decompress(_dinfo);
 
-    Image::ptr img(new Image(_dinfo->output_width, _dinfo->output_height));
+    auto img = std::make_shared<Image>(_dinfo->output_width, _dinfo->output_height);
     dest->set_depth(8);
 
     if (_dinfo->saw_JFIF_marker) {

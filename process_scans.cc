@@ -44,17 +44,17 @@ namespace po = boost::program_options;
 using namespace PhotoFinish;
 
 void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
-  Destination::ptr resized_dest = orig_dest->dupe();
+  auto resized_dest = orig_dest->dupe();
 
   resized_dest->set_depth(8);
   resized_dest->set_jpeg(D_JPEG(60, 1, 1, true));
   resized_dest->clear_profile();
 
-  Frame::ptr frame(new Frame(orig_image->width() * 0.25, orig_image->height() * 0.25,
-			     0, 0,
-			     orig_image->width(), orig_image->height()));
+  auto frame = std::make_shared<Frame>(orig_image->width() * 0.25, orig_image->height() * 0.25,
+				       0, 0,
+				       orig_image->width(), orig_image->height());
 
-  Image::ptr resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
+  auto resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
   preview_file->write(resized_image, resized_dest, can_free);
   filetags->embed(preview_file);
 }
@@ -114,10 +114,10 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  Tags::ptr defaulttags(new Tags);
+  auto defaulttags = std::make_shared<Tags>();
   // Add paths for tag file searching
-  for (pathlist::iterator i = include_paths.begin(); i != include_paths.end(); i++)
-    defaulttags->add_searchpath(*i);
+  for (auto i : include_paths)
+    defaulttags->add_searchpath(i);
 
   // Load "default" in the search path list
   defaulttags->try_load("default");
@@ -128,26 +128,26 @@ int main(int argc, char* argv[]) {
   if (do_conversion || do_preview) {
     // std::sort won't work on fs::directory_iterator, so we have to put the entries in a vector and sort that
     std::vector<fs::directory_entry> dir_list;
-    for (fs::directory_iterator di(fs::current_path()); di != fs::directory_iterator(); di++)
+    for (auto di = fs::directory_iterator(fs::current_path()); di != fs::directory_iterator(); di++)
       dir_list.push_back(*di);
     sort(dir_list.begin(), dir_list.end());
 
     // Iterate over all of the TIFF files in the current directory
-    for (std::vector<fs::directory_entry>::iterator di = dir_list.begin(); di != dir_list.end(); di++) {
-      if (!boost::iequals(di->path().extension().generic_string(), ".tif")
-	  && !boost::iequals(di->path().extension().generic_string(), ".tiff"))
+    for (auto di : dir_list) {
+      if (!boost::iequals(di.path().extension().generic_string(), ".tif")
+	  && !boost::iequals(di.path().extension().generic_string(), ".tiff"))
 	continue;
 
       try {
-	ImageFile::ptr infile = ImageFile::create(di->path());
+	auto infile = ImageFile::create(di.path());
 
-	Destination::ptr orig_dest(new Destination);
-	Image::ptr orig_image = infile->read(orig_dest);
-	Tags::ptr filetags = defaulttags->dupe();
+	auto orig_dest = std::make_shared<Destination>();
+	auto orig_image = infile->read(orig_dest);
+	auto filetags = defaulttags->dupe();
 	filetags->extract(infile);
 
 	try {
-	  ImageFile::ptr converted_file = ImageFile::create(convert_dir / di->path().filename(), convert_format);
+	  auto converted_file = ImageFile::create(convert_dir / di.path().filename(), convert_format);
 	  if (do_conversion && (!exists(converted_file->filepath()) || (last_write_time(converted_file->filepath()) < last_write_time(infile->filepath())))) {
 	    if (!fs::exists(convert_dir)) {
 	      std::cerr << "Creating directory " << convert_dir << "." << std::endl;
@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	try {
-	  ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
+	  auto preview_file = ImageFile::create(di.path().filename(), preview_format);
 	  if (do_preview && (!exists(preview_file->filepath()) || (last_write_time(preview_file->filepath()) < last_write_time(infile->filepath()))))
 	    make_preview(orig_image, orig_dest, filetags, preview_file, true);
 	} catch (std::exception& ex) {
@@ -174,8 +174,8 @@ int main(int argc, char* argv[]) {
 	    std::cerr << "Creating directory " << convert_dir << "." << std::endl;
 	    fs::create_directory(convert_dir);
 	  }
-	  std::cerr << "Moving " << di->path() << " to " << convert_dir / di->path().filename().native() << std::endl;
-	  rename(di->path().c_str(), (convert_dir / di->path().filename()).c_str());
+	  std::cerr << "Moving " << di.path() << " to " << convert_dir / di.path().filename().native() << std::endl;
+	  rename(di.path().c_str(), (convert_dir / di.path().filename()).c_str());
 	}
       } catch (std::exception& ex) {
 	std::cerr << ex.what() << std::endl;
@@ -189,23 +189,23 @@ int main(int argc, char* argv[]) {
       create_directory(works_dir);
     }
     std::vector<fs::directory_entry> dir_list;
-    for (fs::directory_iterator di(works_dir); di != fs::directory_iterator(); di++)
+    for (auto di = fs::directory_iterator(works_dir); di != fs::directory_iterator(); di++)
       dir_list.push_back(*di);
     sort(dir_list.begin(), dir_list.end());
 
-    for (std::vector<fs::directory_entry>::iterator di = dir_list.begin(); di != dir_list.end(); di++) {
-      std::cerr << *di << std::endl;
+    for (auto di : dir_list) {
+      std::cerr << di << std::endl;
       try {
-	ImageFile::ptr infile = ImageFile::create(di->path());
-	ImageFile::ptr preview_file = ImageFile::create(di->path().filename(), preview_format);
+	auto infile = ImageFile::create(di.path());
+	auto preview_file = ImageFile::create(di.path().filename(), preview_format);
 
 	if (exists(preview_file->filepath())
 	    && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
 	  continue;
 
-	Destination::ptr orig_dest(new Destination);
-	Image::ptr orig_image = infile->read(orig_dest);
-	Tags::ptr filetags = defaulttags->dupe();
+	auto orig_dest = std::make_shared<Destination>();
+	auto orig_image = infile->read(orig_dest);
+	auto filetags = defaulttags->dupe();
 	filetags->extract(infile);
 
 	make_preview(orig_image, orig_dest, filetags, preview_file, true);

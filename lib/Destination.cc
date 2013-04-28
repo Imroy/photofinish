@@ -19,6 +19,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <memory>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 #include <string.h>
@@ -49,8 +50,8 @@ namespace PhotoFinish {
     _thumbnail(other._thumbnail),
     _variables(other._variables)
   {
-    for (std::map<std::string, D_target::ptr>::const_iterator ti = other._targets.begin(); ti != other._targets.end(); ti++)
-      _targets.insert(std::pair<std::string, D_target::ptr>(ti->first, D_target::ptr(new D_target(*(ti->second)))));
+    for (auto ti : other._targets)
+      _targets.insert(std::pair<std::string, D_target::ptr>(ti.first, std::make_shared<D_target>(*(ti.second))));
   }
 
   Destination::~Destination() {
@@ -77,15 +78,15 @@ namespace PhotoFinish {
       _thumbnail = b._thumbnail;
       _variables = b._variables;
 
-      for (std::map<std::string, D_target::ptr>::const_iterator ti = b._targets.begin(); ti != b._targets.end(); ti++)
-	_targets.insert(std::pair<std::string, D_target::ptr>(ti->first, D_target::ptr(new D_target(*(ti->second)))));
+      for (auto ti : b._targets)
+	_targets.insert(std::pair<std::string, D_target::ptr>(ti.first, std::make_shared<D_target>(*(ti.second))));
     }
 
     return *this;
   }
 
   Destination::ptr Destination::add_variables(multihash& vars) {
-    Destination::ptr ret = Destination::ptr(new Destination(*this));
+    auto ret = std::make_shared<Destination>(*this);
 
     ImageFile::add_variables(ret, vars);
     ret->_variables = vars;
@@ -101,8 +102,8 @@ namespace PhotoFinish {
     CropSolver solver(_variables);
     Frame::ptr best_frame;
     double best_waste = 0;
-    for (std::map<std::string, D_target::ptr>::const_iterator ti = _targets.begin(); ti != _targets.end(); ti++) {
-      D_target::ptr target = ti->second;
+    for (auto ti : _targets) {
+      auto target = ti.second;
       std::cerr << "\tTarget \"" << target->name() << "\" (" << target->width() << "×" << target->height() << "):" << std::endl;
 
       if ((target->width() > img->width()) && (target->height() > img->height())) {
@@ -115,7 +116,7 @@ namespace PhotoFinish {
 	continue;
       }
 
-      Frame::ptr frame = solver.solve(img, target);
+      auto frame = solver.solve(img, target);
 
       if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
 	std::cerr << "\tSkipping because the target is larger than the cropped image in both dimensions." << std::endl;
@@ -206,7 +207,7 @@ namespace PhotoFinish {
       *n >> d._jp2;
 
     if (const YAML::Node *n = node.FindValue("profile")) {
-      d._profile = D_profile::ptr(new D_profile);
+      d._profile = std::make_shared<D_profile>();
       *n >> *(d._profile);
     }
 
@@ -214,10 +215,10 @@ namespace PhotoFinish {
       *n >> d._thumbnail;
 
     if (const YAML::Node *targets = node.FindValue("targets")) {
-      for(YAML::Iterator ti = targets->begin(); ti != targets->end(); ti++) {
+      for(auto ti = targets->begin(); ti != targets->end(); ti++) {
 	std::string name;
 	ti.first() >> name;
-	D_target::ptr target = D_target::ptr(new D_target(name));
+	auto target = std::make_shared<D_target>(name);
 	ti.second() >> *target;
 	d._targets[name] = target;
       }
@@ -230,8 +231,8 @@ namespace PhotoFinish {
   }
 
   Destinations::Destinations(const Destinations& other) {
-    for (const_iterator di = other._destinations.begin(); di != other._destinations.end(); di++)
-      _destinations.insert(std::pair<std::string, Destination::ptr>(di->first, Destination::ptr(new Destination(*(di->second)))));
+    for (auto di : other._destinations)
+      _destinations.insert(std::pair<std::string, Destination::ptr>(di.first, std::make_shared<Destination>(*(di.second))));
   }
 
   Destinations::~Destinations() {
@@ -239,8 +240,8 @@ namespace PhotoFinish {
 
   Destinations& Destinations::operator=(const Destinations& b) {
     if (this != &b) {
-      for (const_iterator di = b._destinations.begin(); di != b._destinations.end(); di++)
-	_destinations.insert(std::pair<std::string, Destination::ptr>(di->first, Destination::ptr(new Destination(*(di->second)))));
+      for (auto di : b._destinations)
+	_destinations.insert(std::pair<std::string, Destination::ptr>(di.first, std::make_shared<Destination>(*(di.second))));
     }
 
     return *this;
@@ -255,10 +256,10 @@ namespace PhotoFinish {
     YAML::Node doc;
 
     parser.GetNextDocument(doc);
-    for (YAML::Iterator it = doc.begin(); it != doc.end(); it++) {
+    for (auto it = doc.begin(); it != doc.end(); it++) {
       std::string destname;
       it.first() >> destname;
-      Destination::ptr destination = Destination::ptr(new Destination);
+      auto destination = std::make_shared<Destination>();
       it.second() >> *destination;
       _destinations[destname] = destination;
     }

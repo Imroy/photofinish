@@ -56,27 +56,28 @@ int main(int argc, char* argv[]) {
       std::cerr << "Argument \"" << argv[i] << " is neither a destination name, nor a filename." << std::endl;
   }
 
-  Tags::ptr defaulttags(new Tags);
+  auto defaulttags = std::make_shared<Tags>();
   defaulttags->add_searchpath(".tags");
   if (fs::exists(".tags/default"))
     defaulttags->load(".tags/default");
 
-  for (std::deque<fs::path>::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {
+  for (auto fi : arg_filenames) {
     try {
-      ImageFile::ptr infile = ImageFile::create(*fi);
-      Tags::ptr tags = defaulttags->dupe();
+      auto infile = ImageFile::create(fi);
+      auto tags = defaulttags->dupe();
       {
-	fs::path tagpath = fi->parent_path() / ("." + fi->stem().native() + ".tags");
+	fs::path tagpath = fi.parent_path() / ("." + fi.stem().native() + ".tags");
 	if (fs::exists(tagpath))
 	  tags->load(tagpath);
       }
 
       try {
-	Image::ptr orig_image = infile->read();
+	auto orig_image = infile->read();
 
-	for (std::deque<std::string>::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {
-	  bool last_dest = (di + 1 == arg_destinations.end());
-	  Destination::ptr destination = destinations[*di]->add_variables(tags->variables());
+	auto num_destinations = arg_destinations.size();
+	for (auto& di : arg_destinations) {
+	  bool last_dest = (num_destinations == 1);
+	  auto destination = destinations[di]->add_variables(tags->variables());
 	  try {
 	    definable<double> size = destination->size();
 
@@ -84,7 +85,7 @@ int main(int argc, char* argv[]) {
 	    if (destination->noresize().defined() && destination->noresize()) {
 	      sized_image = orig_image;
 	    } else {
-	      Frame::ptr frame = destination->best_frame(orig_image);
+	      auto frame = destination->best_frame(orig_image);
 	      sized_image = frame->crop_resize(orig_image, destination->resize(), last_dest);
 	      if (destination->forcergb().defined() && destination->forcergb())
 		sized_image->set_colour();
@@ -96,7 +97,7 @@ int main(int argc, char* argv[]) {
 
 	    Image::ptr sharp_image;
 	    if (destination->sharpen().defined()) {
-	      Kernel2D::ptr sharpen = Kernel2D::create(destination->sharpen());
+	      auto sharpen = Kernel2D::create(destination->sharpen());
 	      sharp_image = sharpen->convolve(sized_image, (sized_image != orig_image) || last_dest);
 	    } else {
 	      sharp_image = sized_image;
@@ -118,13 +119,15 @@ int main(int argc, char* argv[]) {
 	    std::string format = "jpeg";
 	    if (destination->format().defined())
 	      format = destination->format();
-	    ImageFile::ptr outfile = ImageFile::create(destination->dir() / fi->stem(), format);
+	    auto outfile = ImageFile::create(destination->dir() / fi.stem(), format);
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
 	    tags->embed(outfile);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;
 	  }
+
+	  num_destinations--;
 	}
       } catch (std::exception& ex) {
 	std::cout << ex.what() << std::endl;

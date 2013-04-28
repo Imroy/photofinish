@@ -84,7 +84,7 @@ namespace PhotoFinish {
     typedef std::shared_ptr<Destination> ptr;
 
     //! Duplicate
-    inline ptr dupe(void) { return Destination::ptr(new Destination(*this)); }
+    inline ptr dupe(void) { return std::make_shared<Destination>(*this); }
 
     //! Duplicate the current object and incorporate variables
     ptr add_variables(multihash& vars);
@@ -125,8 +125,8 @@ namespace PhotoFinish {
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 
     inline const D_profile::ptr profile(void) const { return _profile; }
-    inline void set_profile(std::string name, fs::path filepath) { _profile = D_profile::ptr(new D_profile(name, filepath)); }
-    inline void set_profile(std::string name, void *data, unsigned int data_size) { _profile = D_profile::ptr(new D_profile(name, data, data_size)); }
+    inline void set_profile(std::string name, fs::path filepath) { _profile = std::make_shared<D_profile>(name, filepath); }
+    inline void set_profile(std::string name, void *data, unsigned int data_size) { _profile = std::make_shared<D_profile>(name, data, data_size); }
     inline void clear_profile(void) { _profile = NULL; }
 
     inline definable<bool> forcergb(void) const { return _forcergb; }
@@ -150,13 +150,13 @@ namespace PhotoFinish {
 
     Destinations& operator=(const Destinations& b);
 
-    void Load(fs::path filepath);
-
     //! Iterator for stepping through destinations
     typedef std::map<std::string, Destination::ptr>::iterator iterator;
 
     //! Constant iterator for stepping through destinations
     typedef std::map<std::string, Destination::ptr>::const_iterator const_iterator;
+
+    void Load(fs::path filepath);
 
     inline std::map<std::string, Destination::ptr>::size_type count(const std::string& key) const { return _destinations.count(key); }
 
@@ -165,6 +165,12 @@ namespace PhotoFinish {
 
     inline iterator end(void) { return _destinations.end(); }
     inline const_iterator end(void) const { return _destinations.end(); }
+
+    inline friend iterator begin(Destinations& d) { return d._destinations.begin(); }
+    //    inline friend const_iterator begin(const Destinations& d) const { return d._destinations.begin(); }
+
+    inline friend iterator end(Destinations& d) { return d._destinations.end(); }
+    //    inline friend const_iterator end(const Destinations& d) const { return d._destinations.end(); }
 
     inline Destination::ptr operator[] (const std::string& key) { return _destinations[key]; }
   };

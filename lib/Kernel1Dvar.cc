@@ -89,13 +89,13 @@ namespace PhotoFinish {
   Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) throw(DestinationError) {
     Kernel1Dvar::ptr ret;
     if (!dr.filter().defined()) {
-      ret = Kernel1Dvar::ptr(new Lanczos(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size));
+      ret = std::make_shared<Lanczos>(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size);
       return ret;
     }
 
     std::string filter = dr.filter();
     if (boost::iequals(filter.substr(0, min(filter.length(), 7)), "lanczos")) {
-      ret = Kernel1Dvar::ptr(new Lanczos(dr, from_start, from_size, from_max, to_size));
+      ret = std::make_shared<Lanczos>(dr, from_start, from_size, from_max, to_size);
       return ret;
     }
 
@@ -123,7 +123,7 @@ namespace PhotoFinish {
 
   //! Convolve an image horizontally
   Image::ptr Kernel1Dvar::convolve_h(Image::ptr img, bool can_free) {
-    Image::ptr ni(new Image(_to_size_i, img->height()));
+    auto ni = std::make_shared<Image>(_to_size_i, img->height());
 
     ni->set_greyscale(img->is_greyscale());
     if (img->xres().defined())
@@ -168,7 +168,7 @@ namespace PhotoFinish {
 
   //! Convolve an image vertically
   Image::ptr Kernel1Dvar::convolve_v(Image::ptr img, bool can_free) {
-   Image::ptr ni(new Image(img->width(), _to_size_i));
+    auto ni = std::make_shared<Image>(img->width(), _to_size_i);
 
     ni->set_greyscale(img->is_greyscale());
     if (img->xres().defined())

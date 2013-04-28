@@ -52,7 +52,7 @@ namespace PhotoFinish {
   }
 
   Kernel2D::ptr Kernel2D::create(const D_sharpen& ds) throw(DestinationError) {
-    return Kernel2D::ptr(new GaussianSharpen(ds));
+    return std::make_shared<GaussianSharpen>(ds);
   }
 
   Kernel2D::~Kernel2D() {
@@ -76,7 +76,7 @@ namespace PhotoFinish {
 		  << " kernel using " << num_threads << " threads..." << std::endl;
       }
     }
-    Image::ptr out = Image::ptr(new Image(img->width(), img->height()));
+    auto out = std::make_shared<Image>(img->width(), img->height());
 
     out->set_greyscale(img->is_greyscale());
     if (img->xres().defined())
