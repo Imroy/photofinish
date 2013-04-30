@@ -111,9 +111,8 @@ $(document).ready(function(){initNavTree('_j_p2file_8cc.html','');});
 <div class="textblock"><code>#include &lt;boost/algorithm/string.hpp&gt;</code><br/>
 <code>#include &lt;openjpeg.h&gt;</code><br/>
 <code>#include &lt;lcms2.h&gt;</code><br/>
+<code>#include &lt;omp.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="_image_file_8hh_source.html">ImageFile.hh</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="_transform_queue_8hh_source.html">TransformQueue.hh</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="_ditherer_8hh_source.html">Ditherer.hh</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="_exception_8hh_source.html">Exception.hh</a>&quot;</code><br/>
 </div>
 <p><a href="_j_p2file_8cc_source.html">Go to the source code of this file.</a></p>
@@ -130,12 +129,12 @@ Functions</h2></td></tr>
 <tr class="memdesc:a5ade5f8f065cbecf79f0d76fed6c1e97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warning callback for OpenJPEG - print the message to STDERR.  <a href="#a5ade5f8f065cbecf79f0d76fed6c1e97"></a><br/></td></tr>
 <tr class="memitem:a15b915c1ad42e83a12e30b6b1fd36785"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#a15b915c1ad42e83a12e30b6b1fd36785">PhotoFinish::info_callback</a> (const char *msg, void *client_data)</td></tr>
 <tr class="memdesc:a15b915c1ad42e83a12e30b6b1fd36785"><td class="mdescLeft">&#160;</td><td class="mdescRight">Info callback for OpenJPEG - print the indented message to STDERR.  <a href="#a15b915c1ad42e83a12e30b6b1fd36785"></a><br/></td></tr>
-<tr class="memitem:aa225a919f81589e07b1ced82828327c3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aa225a919f81589e07b1ced82828327c3"><td class="memTemplItemLeft" align="right" valign="top">void *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#aa225a919f81589e07b1ced82828327c3">PhotoFinish::planar_to_packed</a> (unsigned int width, unsigned char channels, opj_image_t *image, unsigned int &amp;index)</td></tr>
-<tr class="memdesc:aa225a919f81589e07b1ced82828327c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a row of image data from OpenJPEG's planar components into a packed pixel array.  <a href="#aa225a919f81589e07b1ced82828327c3"></a><br/></td></tr>
-<tr class="memitem:af11b6e6a11f11e683e001eebc3a02454"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:af11b6e6a11f11e683e001eebc3a02454"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#af11b6e6a11f11e683e001eebc3a02454">PhotoFinish::packed_to_planar</a> (unsigned int width, unsigned char channels, T *row, opj_image_t *image, unsigned int &amp;index)</td></tr>
-<tr class="memdesc:af11b6e6a11f11e683e001eebc3a02454"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read from a row of packed pixel data into OpenJPEG's planar components.  <a href="#af11b6e6a11f11e683e001eebc3a02454"></a><br/></td></tr>
+<tr class="memitem:a10db9072258646ff5fac41ce9bd1ee52"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a10db9072258646ff5fac41ce9bd1ee52"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#a10db9072258646ff5fac41ce9bd1ee52">PhotoFinish::read_planar</a> (unsigned int width, unsigned char channels, opj_image_t *image, T *row, unsigned int y)</td></tr>
+<tr class="memdesc:a10db9072258646ff5fac41ce9bd1ee52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a row of image data from OpenJPEG's planar integer components into an LCMS2-compatible single array.  <a href="#a10db9072258646ff5fac41ce9bd1ee52"></a><br/></td></tr>
+<tr class="memitem:a8ac95b8e0f1442d867620a2af03b193a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a8ac95b8e0f1442d867620a2af03b193a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#a8ac95b8e0f1442d867620a2af03b193a">PhotoFinish::write_planar</a> (unsigned int width, unsigned char channels, T *row, opj_image_t *image, unsigned int y)</td></tr>
+<tr class="memdesc:a8ac95b8e0f1442d867620a2af03b193a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a row of planar pixel data into OpenJPEG's planar components.  <a href="#a8ac95b8e0f1442d867620a2af03b193a"></a><br/></td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -143,7 +142,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_c8154bdb66c7e112c0db112ca9ebaec7.html">formats</a></li><li class="navelem"><a class="el" href="_j_p2file_8cc.html">JP2file.cc</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:03 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:43 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

@@ -159,7 +159,7 @@ $(document).ready(function(){initNavTree('_kernel2_d_8cc_source.html','');});
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;  }</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;</div>
 <div class="line"><a name="l00054"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1b28832e16ba150a49138caef3f4f918">   54</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a7a209c34b3c8edb54835f1bab1244970" title="Shared pointer for a Kernel2D.">Kernel2D::ptr</a> <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1b28832e16ba150a49138caef3f4f918" title="Named constructor.">Kernel2D::create</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__sharpen.html" title="Sharpen parameters for destination.">D_sharpen</a>&amp; ds) <span class="keywordflow">throw</span>(<a class="code" href="class_photo_finish_1_1_destination_error.html" title="Destination exception.">DestinationError</a>) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a7a209c34b3c8edb54835f1bab1244970" title="Shared pointer for a Kernel2D.">Kernel2D::ptr</a>(<span class="keyword">new</span> <a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html" title="GaussianSharpen kernel.">GaussianSharpen</a>(ds));</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">return</span> std::make_shared&lt;GaussianSharpen&gt;(ds);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  }</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
 <div class="line"><a name="l00058"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1ca692f0ba0f7d4ceb7870cbc00e4ec1">   58</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1ca692f0ba0f7d4ceb7870cbc00e4ec1" title="Destructor.">Kernel2D::~Kernel2D</a>() {</div>
@@ -171,119 +171,148 @@ $(document).ready(function(){initNavTree('_kernel2_d_8cc_source.html','');});
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    }</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;  }</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_kernel2_d.html#a3ebc380c0b20cb9e1f0abbc53d35f451">   67</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a3ebc380c0b20cb9e1f0abbc53d35f451" title="Convolve and image with this kernel and produce a new image.">Kernel2D::convolve</a>(<a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> img, <span class="keywordtype">bool</span> can_free) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">int</span> num_threads;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#pragma omp parallel</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"></span>    {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#pragma omp master</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"></span>      {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        num_threads = omp_get_num_threads();</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;Convolving &quot;</span> &lt;&lt; img-&gt;width() &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; img-&gt;height()</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                  &lt;&lt; <span class="stringliteral">&quot; image with &quot;</span> &lt;&lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a> &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                  &lt;&lt; <span class="stringliteral">&quot; kernel using &quot;</span> &lt;&lt; num_threads &lt;&lt; <span class="stringliteral">&quot; threads...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_kernel2_d.html#a291c21d9731d9fde2ef035631f5e7c64">   68</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a291c21d9731d9fde2ef035631f5e7c64">Kernel2D::do_convolve</a>(<a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> src, <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> dest, <span class="keywordtype">bool</span> can_free) {</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    cmsUInt32Number type = src-&gt;type();</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> pixel_size = T_CHANNELS(type) + T_EXTRA(type);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">int</span> *row_needs;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordflow">if</span> (can_free) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keywordtype">int</span> num_threads = omp_get_num_threads();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      row_needs = (<span class="keywordtype">int</span>*)malloc(src-&gt;height() * <span class="keyword">sizeof</span>(int));</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; src-&gt;height(); y++)</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        row_needs[y] = num_threads;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    }</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> out = <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a7a209c34b3c8edb54835f1bab1244970" title="Shared pointer for a Kernel2D.">Image::ptr</a>(<span class="keyword">new</span> <a class="code" href="class_photo_finish_1_1_image.html" title="A floating-point, L*a*b* image class.">Image</a>(img-&gt;width(), img-&gt;height()));</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    out-&gt;set_greyscale(img-&gt;is_greyscale());</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span> (img-&gt;xres().defined())</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      out-&gt;set_xres(img-&gt;xres());</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span> (img-&gt;yres().defined())</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      out-&gt;set_yres(img-&gt;yres());</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordtype">int</span> *row_needs;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    <span class="keywordflow">if</span> (can_free) {</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      row_needs = (<span class="keywordtype">int</span>*)malloc(img-&gt;height() * <span class="keyword">sizeof</span>(int));</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++)</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        row_needs[y] = num_threads;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> next_freed = 0;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    omp_lock_t freed_lock;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    omp_init_lock(&amp;freed_lock);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">#pragma omp parallel for schedule(dynamic, 1)</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++) {</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      <a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> *outp = out-&gt;row(y);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;      <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ky_start = y &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> ? <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> - y : 0;</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ky_end = y &gt; img-&gt;height() - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a> + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> ? img-&gt;height() + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> - y : <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a>;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x = 0; x &lt; img-&gt;width(); x++, outp += 3) {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> kx_start = x &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> ? <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> - x : 0;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> kx_end = x &gt; img-&gt;width() - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a> + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> ? img-&gt;width() + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> - x : <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a>;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordtype">double</span> weight = 0;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        outp[0] = outp[1] = outp[2] = 0;</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ky = ky_start; ky &lt; ky_end; ky++) {</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;          <span class="keyword">const</span> <a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> *kp = &amp;<a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1f35c7cb6cdff97915a381ee264f34c1" title="The values array at a certain point.">at</a>(kx_start, ky);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;          <a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> *inp = img-&gt;at(x + kx_start - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a>, y + ky - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> kx = kx_start; kx &lt; kx_end; kx++, kp++, inp += 3) {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            weight += *kp;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            outp[0] += inp[0] * *kp;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            outp[1] += inp[1] * *kp;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            outp[2] += inp[2] * *kp;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;          }</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        }</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">if</span> (fabs(weight) &gt; 1e-5) {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;          weight = 1.0 / weight;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;          outp[0] *= weight;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;          outp[1] *= weight;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;          outp[2] *= weight;</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      }</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keywordflow">if</span> (can_free &amp;&amp; (y &gt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>)) {</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        omp_set_lock(&amp;freed_lock);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        row_needs[y + ky_start - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>]--;</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordflow">for</span> (;row_needs[next_freed] == 0; next_freed++)</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;          img-&gt;free_row(next_freed);</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        omp_unset_lock(&amp;freed_lock);</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      <span class="keywordflow">if</span> (omp_get_thread_num() == 0)</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tConvolved &quot;</span> &lt;&lt; y + 1 &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows.&quot;</span>;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">if</span> (can_free) {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      free(row_needs);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      <span class="keywordflow">for</span> (; next_freed &lt; img-&gt;height(); next_freed++)</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        img-&gt;free_row(next_freed);</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\rConvolved &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows.        &quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordflow">return</span> out;</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;  }</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> next_freed = 0;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    omp_lock_t freed_lock;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    omp_init_lock(&amp;freed_lock);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#pragma omp parallel for schedule(dynamic, 1)</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; src-&gt;height(); y++) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      T *outp = (T*)dest-&gt;row(y);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ky_start = y &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> ? <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> - y : 0;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ky_end = y &gt; src-&gt;height() - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a> + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> ? src-&gt;height() + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a> - y : <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x = 0; x &lt; src-&gt;width(); x++, outp += pixel_size) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> kx_start = x &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> ? <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> - x : 0;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> kx_end = x &gt; src-&gt;width() - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a> + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> ? src-&gt;width() + <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a> - x : <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        <span class="keywordtype">double</span> weight = 0;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c = 0; c &lt; T_CHANNELS(type); c++)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;          outp[c] = 0;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> ky = ky_start; ky &lt; ky_end; ky++) {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;          <span class="keyword">const</span> <a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> *kp = &amp;<a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1f35c7cb6cdff97915a381ee264f34c1" title="The values array at a certain point.">at</a>(kx_start, ky);</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;          T *inp = (T*)src-&gt;at(x + kx_start - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a>, y + ky - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> kx = kx_start; kx &lt; kx_end; kx++, kp++, inp += T_EXTRA(type)) {</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            weight += *kp;</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c = 0; c &lt; T_CHANNELS(type); c++, inp++)</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;              outp[c] += (*inp) * (*kp);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;          }</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        }</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <span class="keywordflow">if</span> (fabs(weight) &gt; 1e-5) {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;          weight = 1.0 / weight;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;          <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c = 0; c &lt; T_CHANNELS(type); c++)</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            outp[c] *= weight;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      <span class="keywordflow">if</span> (can_free &amp;&amp; (y &gt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>)) {</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        omp_set_lock(&amp;freed_lock);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        row_needs[y + ky_start - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>]--;</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keywordflow">for</span> (;row_needs[next_freed] == 0; next_freed++)</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;          src-&gt;free_row(next_freed);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        omp_unset_lock(&amp;freed_lock);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keywordflow">if</span> (omp_get_thread_num() == 0)</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tConvolved &quot;</span> &lt;&lt; y + 1 &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; src-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows&quot;</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tConvolved &quot;</span> &lt;&lt; src-&gt;height() &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; src-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">if</span> (can_free) {</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      free(row_needs);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keywordflow">for</span> (; next_freed &lt; src-&gt;height(); next_freed++)</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        src-&gt;free_row(next_freed);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  }</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_kernel2_d.html#a3ebc380c0b20cb9e1f0abbc53d35f451">  130</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a3ebc380c0b20cb9e1f0abbc53d35f451" title="Convolve and image with this kernel and produce a new image.">Kernel2D::convolve</a>(<a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> img, <span class="keywordtype">bool</span> can_free) {</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#pragma omp parallel</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="preprocessor"></span>    {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="preprocessor">#pragma omp master</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;<span class="preprocessor"></span>      {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;Convolving &quot;</span> &lt;&lt; img-&gt;width() &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; img-&gt;height()</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                  &lt;&lt; <span class="stringliteral">&quot; image with &quot;</span> &lt;&lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a> &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a></div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                  &lt;&lt; <span class="stringliteral">&quot; kernel using &quot;</span> &lt;&lt; omp_get_num_threads() &lt;&lt; <span class="stringliteral">&quot; threads...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    }</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="keyword">auto</span> out = std::make_shared&lt;Image&gt;(img-&gt;width(), img-&gt;height(), img-&gt;type());</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">if</span> (img-&gt;xres().defined())</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;      out-&gt;set_xres(img-&gt;xres());</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    <span class="keywordflow">if</span> (img-&gt;yres().defined())</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;      out-&gt;set_yres(img-&gt;yres());</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
-<div class="line"><a name="l00148"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#aee3963e9acb80f4243a7eb048a56d03a">  148</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#aee3963e9acb80f4243a7eb048a56d03a" title="Empty constructor.">GaussianSharpen::GaussianSharpen</a>()</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  {}</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;</div>
-<div class="line"><a name="l00151"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#a71b8726201f26eb9b290f1edb37c4c5d">  151</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#aee3963e9acb80f4243a7eb048a56d03a" title="Empty constructor.">GaussianSharpen::GaussianSharpen</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__sharpen.html" title="Sharpen parameters for destination.">D_sharpen</a>&amp; ds) :</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <a class="code" href="class_photo_finish_1_1_kernel2_d.html" title="Creates and stores coefficients for convolving an image.">Kernel2D</a>(1 + (2 * ceil(ds.radius())), ceil(ds.radius())),</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    _radius(ds.radius()),</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    _sigma(ds.sigma()),</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    _safe_sigma_sqr(_sigma.defined() &amp;&amp; (fabs(_sigma) &gt; 1e-5) ? <a class="code" href="_kernel2_d_8cc.html#adee8c6d2fc20a1194cf64c481e7b6353">sqr</a>(_sigma) : 1e-5 )</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;  {</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordflow">if</span> (!_radius.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765" title="Is this object defined?">defined</a>())</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_uninitialised.html" title="Uninitialised attribute exception.">Uninitialised</a>(<span class="stringliteral">&quot;GaussianSharpen&quot;</span>, <span class="stringliteral">&quot;sharpen.radius&quot;</span>);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keywordflow">if</span> (!_sigma.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765" title="Is this object defined?">defined</a>())</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_uninitialised.html" title="Uninitialised attribute exception.">Uninitialised</a>(<span class="stringliteral">&quot;GaussianSharpen&quot;</span>, <span class="stringliteral">&quot;sharpen.sigma&quot;</span>);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    <span class="keywordflow">switch</span> (<a class="code" href="_image_8hh.html#a6f553159efdccbb6204ccc3e36b27779">T_BYTES_REAL</a>(img-&gt;type())) {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordflow">case</span> 1:</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;      do_convolve&lt;unsigned char&gt;(img, out, can_free);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="keywordflow">case</span> 2:</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;      do_convolve&lt;short unsigned int&gt;(img, out, can_free);</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">case</span> 4:</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordflow">if</span> (T_FLOAT(img-&gt;type()))</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        do_convolve&lt;float&gt;(img, out, can_free);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;        do_convolve&lt;unsigned int&gt;(img, out, can_free);</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;      <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> total = 0;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">#pragma omp parallel for schedule(dynamic, 1) shared(total)</span></div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a>; y++)</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x = 0; x &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a>; x++)</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        total += <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1f35c7cb6cdff97915a381ee264f34c1" title="The values array at a certain point.">at</a>(x, y) = -exp((<a class="code" href="_kernel2_d_8cc.html#adee8c6d2fc20a1194cf64c481e7b6353">sqr</a>((<span class="keywordtype">int</span>)x - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a>) + <a class="code" href="_kernel2_d_8cc.html#adee8c6d2fc20a1194cf64c481e7b6353">sqr</a>((<span class="keywordtype">int</span>)y - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>)) / (-2.0 * _safe_sigma_sqr));</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;    <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1f35c7cb6cdff97915a381ee264f34c1" title="The values array at a certain point.">at</a>(<a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a>, <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>) = -2.0 * total;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  }</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">case</span> 8:</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;      <span class="keywordflow">if</span> (T_FLOAT(img-&gt;type()))</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        do_convolve&lt;double&gt;(img, out, can_free);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        do_convolve&lt;unsigned long&gt;(img, out, can_free);</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    }</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;}</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    <span class="keywordflow">return</span> out;</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;  }</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;</div>
+<div class="line"><a name="l00177"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#aee3963e9acb80f4243a7eb048a56d03a">  177</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#aee3963e9acb80f4243a7eb048a56d03a" title="Empty constructor.">GaussianSharpen::GaussianSharpen</a>()</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;  {}</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;</div>
+<div class="line"><a name="l00180"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#a71b8726201f26eb9b290f1edb37c4c5d">  180</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_gaussian_sharpen.html#aee3963e9acb80f4243a7eb048a56d03a" title="Empty constructor.">GaussianSharpen::GaussianSharpen</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__sharpen.html" title="Sharpen parameters for destination.">D_sharpen</a>&amp; ds) :</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <a class="code" href="class_photo_finish_1_1_kernel2_d.html" title="Creates and stores coefficients for convolving an image.">Kernel2D</a>(1 + (2 * ceil(ds.radius())), ceil(ds.radius())),</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    _radius(ds.radius()),</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    _sigma(ds.sigma()),</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    _safe_sigma_sqr(_sigma.defined() &amp;&amp; (fabs(_sigma) &gt; 1e-5) ? <a class="code" href="_kernel2_d_8cc.html#adee8c6d2fc20a1194cf64c481e7b6353">sqr</a>(_sigma) : 1e-5 )</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;  {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">if</span> (!_radius.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765" title="Is this object defined?">defined</a>())</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_uninitialised.html" title="Uninitialised attribute exception.">Uninitialised</a>(<span class="stringliteral">&quot;GaussianSharpen&quot;</span>, <span class="stringliteral">&quot;sharpen.radius&quot;</span>);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">if</span> (!_sigma.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765" title="Is this object defined?">defined</a>())</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;      <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_uninitialised.html" title="Uninitialised attribute exception.">Uninitialised</a>(<span class="stringliteral">&quot;GaussianSharpen&quot;</span>, <span class="stringliteral">&quot;sharpen.sigma&quot;</span>);</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    <a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> total = 0;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="preprocessor">#pragma omp parallel for schedule(dynamic, 1) shared(total)</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#aa0b063aa148d574a833e6f4404c3b920">_height</a>; y++)</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x = 0; x &lt; <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1e47b71f4a0f09cc0cd9378d43aaba06">_width</a>; x++)</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        total += <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1f35c7cb6cdff97915a381ee264f34c1" title="The values array at a certain point.">at</a>(x, y) = -exp((<a class="code" href="_kernel2_d_8cc.html#adee8c6d2fc20a1194cf64c481e7b6353">sqr</a>((<span class="keywordtype">int</span>)x - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a>) + <a class="code" href="_kernel2_d_8cc.html#adee8c6d2fc20a1194cf64c481e7b6353">sqr</a>((<span class="keywordtype">int</span>)y - <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>)) / (-2.0 * _safe_sigma_sqr));</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1f35c7cb6cdff97915a381ee264f34c1" title="The values array at a certain point.">at</a>(<a class="code" href="class_photo_finish_1_1_kernel2_d.html#a184056430bd255f5ce75c67571304459">_centrex</a>, <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a4db11cdb4c2651d3f1b60c339fe908f6">_centrey</a>) = -2.0 * total;</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;  }</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="_kernel2_d_8cc.html">Kernel2D.cc</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:02 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:43 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

@@ -12,5 +12,6 @@ var _exception_8hh =
     [ "FileContentError", "class_photo_finish_1_1_file_content_error.html", "class_photo_finish_1_1_file_content_error" ],
     [ "DestinationError", "class_photo_finish_1_1_destination_error.html", "class_photo_finish_1_1_destination_error" ],
     [ "LibraryError", "class_photo_finish_1_1_library_error.html", "class_photo_finish_1_1_library_error" ],
+    [ "cmsTypeError", "class_photo_finish_1_1cms_type_error.html", "class_photo_finish_1_1cms_type_error" ],
     [ "lcms2_error_adaptor", "_exception_8hh.html#a4edeb3213c7dd0a8bf93499914dbf65f", null ]
 ];

@@ -6,6 +6,7 @@ var NAVTREE =
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
@@ -35,8 +36,8 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_crop_solution_8cc.html",
-"class_photo_finish_1_1_destination.html#aa49fdb6a14357035eaefa7d37134a173",
-"functions_0x74.html"
+"class_photo_finish_1_1_destination.html#a60a881142957d61239424089674f3c54",
+"functions_0x69.html"
 ];
 
 var navTreeSubIndices = new Array();

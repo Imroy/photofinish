@@ -12,5 +12,7 @@ var class_photo_finish_1_1_destinations =
     [ "end", "class_photo_finish_1_1_destinations.html#a648d1656165baf0c5d2dea00bd16e754", null ],
     [ "Load", "class_photo_finish_1_1_destinations.html#a00b26ae3f504ad19f80b07486a2fc641", null ],
     [ "operator=", "class_photo_finish_1_1_destinations.html#afc45abc75ba8e433c74b2be3e3d969e1", null ],
-    [ "operator[]", "class_photo_finish_1_1_destinations.html#a93a9459dc194cc6511acc9c0ef948248", null ]
+    [ "operator[]", "class_photo_finish_1_1_destinations.html#a93a9459dc194cc6511acc9c0ef948248", null ],
+    [ "begin", "class_photo_finish_1_1_destinations.html#ade7fb31c8d1fba6dee62f77783fe6236", null ],
+    [ "end", "class_photo_finish_1_1_destinations.html#aa5c17bba7272204d0d3ae7a116feaec2", null ]
 ];

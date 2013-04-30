@@ -134,69 +134,69 @@ $(document).ready(function(){initNavTree('_p_n_gfile_8cc_source.html','');});
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_image_file_8hh.html">ImageFile.hh</a>&quot;</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_image_8hh.html">Image.hh</a>&quot;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_transform_queue_8hh.html">TransformQueue.hh</a>&quot;</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="_ditherer_8hh.html">Ditherer.hh</a>&quot;</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">namespace </span>fs = boost::filesystem;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>fs = boost::filesystem;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">namespace </span>PhotoFinish {</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">namespace </span>PhotoFinish {</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  PNGfile::PNGfile(<span class="keyword">const</span> fs::path filepath) :</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    ImageFile(filepath)</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  {}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#abbdfd629905a885c93d81cd53d3caca2">   42</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#abbdfd629905a885c93d81cd53d3caca2" title="Called by libPNG when the iHDR chunk has been read with the main &quot;header&quot; information.">png_info_cb</a>(png_structp png, png_infop info) {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    png_set_gamma(png, 1.0, 1.0);</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    png_set_alpha_mode(png, PNG_ALPHA_PNG, 1.0);</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    png_set_packing(png);</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    png_set_swap(png);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    png_read_update_info(png, info);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="class_photo_finish_1_1transform__queue.html" title="Class holding information for the image writers.">transform_queue</a> *queue = (<a class="code" href="class_photo_finish_1_1transform__queue.html" title="Class holding information for the image writers.">transform_queue</a>*)png_get_progressive_ptr(png);</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> width, height;</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">int</span> bit_depth, colour_type;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    png_get_IHDR(png, info, &amp;width, &amp;height, &amp;bit_depth, &amp;colour_type, NULL, NULL, NULL);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\t&quot;</span> &lt;&lt; width &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; height &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; bit_depth &lt;&lt; <span class="stringliteral">&quot; bpp, type &quot;</span> &lt;&lt; colour_type &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> img(<span class="keyword">new</span> <a class="code" href="class_photo_finish_1_1_image.html" title="A floating-point, L*a*b* image class.">Image</a>(width, height));</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a9c9c7d6265dd3ec997bb025e84cec6fb" title="Get the image.">destination</a>()-&gt;set_depth(bit_depth);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    cmsUInt32Number cmsType;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordflow">switch</span> (colour_type) {</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">case</span> PNG_COLOR_TYPE_GRAY:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth &gt;&gt; 3);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      img-&gt;set_greyscale();</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">case</span> PNG_COLOR_TYPE_RGB:</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth &gt;&gt; 3);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;** unsupported PNG colour type &quot;</span> &lt;&lt; colour_type &lt;&lt; <span class="stringliteral">&quot; **&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      exit(1);</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#ab501fd6525773775bcf1a491d63eeaf6" title="Set the image.">set_image</a>(img, T_CHANNELS(cmsType));</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> xres, yres;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keywordtype">int</span> unit_type;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      <span class="keywordflow">if</span> (png_get_pHYs(png, info, &amp;xres, &amp;yres, &amp;unit_type)) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keywordflow">switch</span> (unit_type) {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">case</span> PNG_RESOLUTION_METER:</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;          img-&gt;set_resolution(xres * 0.0254, yres * 0.0254);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;          <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">case</span> PNG_RESOLUTION_UNKNOWN:</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;          <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;** unknown unit type &quot;</span> &lt;&lt; unit_type &lt;&lt; <span class="stringliteral">&quot; **&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">if</span> (img-&gt;xres().defined() &amp;&amp; img-&gt;yres().defined())</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;\tImage has resolution of &quot;</span> &lt;&lt; img-&gt;xres() &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; img-&gt;yres() &lt;&lt; <span class="stringliteral">&quot; PPI.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      }</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    cmsHPROFILE profile = NULL;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  PNGfile::PNGfile(<span class="keyword">const</span> fs::path filepath) :</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    ImageFile(filepath),</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    _png(NULL), _info(NULL)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  {}</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html">   40</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html">pngfile_cb_pack</a> {</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a0b2ceb958d8a254b7a5093f6463d434c">   41</a></span>&#160;    <a class="code" href="class_photo_finish_1_1_destination.html#a0d282a905cd81c3f0e6d7233c9bc7774" title="Shared pointer for a Destination.">Destination::ptr</a> <a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a0b2ceb958d8a254b7a5093f6463d434c">destination</a>;</div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a5b322b4c776ad905fe74ac15834f5084">   42</a></span>&#160;    <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> <a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a5b322b4c776ad905fe74ac15834f5084">image</a>;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;  };</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#abbdfd629905a885c93d81cd53d3caca2">   46</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#abbdfd629905a885c93d81cd53d3caca2" title="Called by libPNG when the iHDR chunk has been read with the main &quot;header&quot; information.">png_info_cb</a>(png_structp png, png_infop info) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    png_set_gamma(png, 1.0, 1.0);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    png_set_alpha_mode(png, PNG_ALPHA_PNG, 1.0);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    png_set_packing(png);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    png_set_swap(png);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    png_read_update_info(png, info);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html">pngfile_cb_pack</a> *pack = (<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html">pngfile_cb_pack</a>*)png_get_progressive_ptr(png);</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> width, height;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">int</span> bit_depth, colour_type;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    png_get_IHDR(png, info, &amp;width, &amp;height, &amp;bit_depth, &amp;colour_type, NULL, NULL, NULL);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\t&quot;</span> &lt;&lt; width &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; height &lt;&lt; <span class="stringliteral">&quot;, &quot;</span> &lt;&lt; bit_depth &lt;&lt; <span class="stringliteral">&quot; bpp, type &quot;</span> &lt;&lt; colour_type &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a0b2ceb958d8a254b7a5093f6463d434c">destination</a>-&gt;set_depth(bit_depth);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    cmsUInt32Number type = BYTES_SH(bit_depth &gt;&gt; 3);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordflow">switch</span> (colour_type) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">case</span> PNG_COLOR_TYPE_GRAY:</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      type |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">case</span> PNG_COLOR_TYPE_RGB:</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      type |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;** unsupported PNG colour type &quot;</span> &lt;&lt; colour_type &lt;&lt; <span class="stringliteral">&quot; **&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      exit(1);</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">auto</span> img = std::make_shared&lt;Image&gt;(width, height, type);</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a5b322b4c776ad905fe74ac15834f5084">image</a> = img;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> xres, yres;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keywordtype">int</span> unit_type;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="keywordflow">if</span> (png_get_pHYs(png, info, &amp;xres, &amp;yres, &amp;unit_type)) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordflow">switch</span> (unit_type) {</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keywordflow">case</span> PNG_RESOLUTION_METER:</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;          img-&gt;set_resolution(xres * 0.0254, yres * 0.0254);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;          <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keywordflow">case</span> PNG_RESOLUTION_UNKNOWN:</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;          <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;** unknown unit type &quot;</span> &lt;&lt; unit_type &lt;&lt; <span class="stringliteral">&quot; **&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">if</span> (img-&gt;xres().defined() &amp;&amp; img-&gt;yres().defined())</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;\tImage has resolution of &quot;</span> &lt;&lt; img-&gt;xres() &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; img-&gt;yres() &lt;&lt; <span class="stringliteral">&quot; PPI.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">if</span> (png_get_valid(png, info, PNG_INFO_iCCP)) {</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;\tImage has iCCP chunk.&quot;</span> &lt;&lt; std::endl;</div>
@@ -206,304 +206,256 @@ $(document).ready(function(){initNavTree('_p_n_gfile_8cc_source.html','');});
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> profile_len;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;      <span class="keywordflow">if</span> (png_get_iCCP(png, info, &amp;profile_name, &amp;compression_type, &amp;profile_data, &amp;profile_len) == PNG_INFO_iCCP) {</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tLoading ICC profile \&quot;&quot;</span> &lt;&lt; profile_name &lt;&lt; <span class="stringliteral">&quot;\&quot; from file...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        profile = cmsOpenProfileFromMem(profile_data, profile_len);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        cmsOpenProfileFromMem(profile_data, profile_len);</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordtype">void</span> *data_copy = malloc(profile_len);</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        memcpy(data_copy, profile_data, profile_len);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a9c9c7d6265dd3ec997bb025e84cec6fb" title="Get the image.">destination</a>()-&gt;set_profile(profile_name, data_copy, profile_len);</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      }</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">if</span> (profile == NULL)</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      profile = ImageFile::default_profile(cmsType);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a0b2ceb958d8a254b7a5093f6463d434c">destination</a>-&gt;set_profile(profile_name, data_copy, profile_len);</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        img-&gt;set_profile(pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a0b2ceb958d8a254b7a5093f6463d434c">destination</a>-&gt;get_profile(type));</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;      }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  }</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                                                 lab, <a class="code" href="_image_file_8hh.html#a6850a77c3bb678e4869349b455d685b4">IMAGE_TYPE</a>,</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                                                 INTENT_PERCEPTUAL, 0);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    cmsCloseProfile(lab);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    cmsCloseProfile(profile);</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#ab2d533093ab451692c2f40131f8bb6ac" title="Set the CMS transform.">set_transform</a>(transform);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  }</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
-<div class="line"><a name="l00122"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a406711757cc8db01c66461573c1154f0">  122</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a406711757cc8db01c66461573c1154f0" title="Called by libPNG when a row of image data has been read.">png_row_cb</a>(png_structp png, png_bytep row_data, png_uint_32 row_num, <span class="keywordtype">int</span> pass) {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="code" href="class_photo_finish_1_1transform__queue.html" title="Class holding information for the image writers.">transform_queue</a> *queue = (<a class="code" href="class_photo_finish_1_1transform__queue.html" title="Class holding information for the image writers.">transform_queue</a>*)png_get_progressive_ptr(png);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tRead &quot;</span> &lt;&lt; (row_num + 1) &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#ac21ae0034e41e5333cb377bb1890ed64" title="Get the image.">image</a>()-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows (&quot;</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;              &lt;&lt; queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a0f757ce58b224bd2134043c1f42cc618" title="The number of rows in the queue.">num_rows</a>() &lt;&lt; <span class="stringliteral">&quot; in queue for colour transformation)   &quot;</span>;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#aa4286da94f1dbab0a5e69b6ab1b03eff" title="Add a new row to the queue, copying the data.">add_copy</a>(row_num, row_data);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;  }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
-<div class="line"><a name="l00130"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a3ccb46c945cf009874ba8dbc24d15ac6">  130</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a3ccb46c945cf009874ba8dbc24d15ac6" title="Called by libPNG when the image data has finished.">png_end_cb</a>(png_structp png, png_infop info) {</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="comment">//    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);</span></div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  }</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;</div>
-<div class="line"><a name="l00135"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a8469c87e16b73e5b91d9e22c3bc1baa5">  135</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a8469c87e16b73e5b91d9e22c3bc1baa5" title="Loop, processing rows from the workqueue until it&#39;s empty and reading is finished.">png_run_workqueue</a>(<a class="code" href="class_photo_finish_1_1transform__queue.html" title="Class holding information for the image writers.">transform_queue</a> *queue) {</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">while</span> (!(queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a234db82419c3e6d72a8cfb5f7c8ccfca" title="Is the queue empty?">empty</a>() &amp;&amp; queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a1135835e35a9a02943c20fdac1eaa29d" title="Is the reading process finished?">finished</a>())) {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      <span class="keywordflow">while</span> (queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a234db82419c3e6d72a8cfb5f7c8ccfca" title="Is the queue empty?">empty</a>() &amp;&amp; !queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a1135835e35a9a02943c20fdac1eaa29d" title="Is the reading process finished?">finished</a>())</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        usleep(100);</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;      queue-&gt;<a class="code" href="class_photo_finish_1_1transform__queue.html#a8c3a13e6d6ed232ff2280e0685c0c5bb" title="Pull a row off of the workqueue and transform it using LCMS for a reader.">reader_process_row</a>();</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    }</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;  }</div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a406711757cc8db01c66461573c1154f0">  113</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a406711757cc8db01c66461573c1154f0" title="Called by libPNG when a row of image data has been read.">png_row_cb</a>(png_structp png, png_bytep row_data, png_uint_32 row_num, <span class="keywordtype">int</span> pass) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html">pngfile_cb_pack</a> *pack = (<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html">pngfile_cb_pack</a>*)png_get_progressive_ptr(png);</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    memcpy(pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a5b322b4c776ad905fe74ac15834f5084">image</a>-&gt;row(row_num), row_data, pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a5b322b4c776ad905fe74ac15834f5084">image</a>-&gt;row_size());</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tRead &quot;</span> &lt;&lt; (row_num + 1) &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; pack-&gt;<a class="code" href="struct_photo_finish_1_1pngfile__cb__pack.html#a5b322b4c776ad905fe74ac15834f5084">image</a>-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows&quot;</span>;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  }</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;</div>
+<div class="line"><a name="l00120"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a3ccb46c945cf009874ba8dbc24d15ac6">  120</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a3ccb46c945cf009874ba8dbc24d15ac6" title="Called by libPNG when the image data has finished.">png_end_cb</a>(png_structp png, png_infop info) {</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="comment">//    pngfile_cb_pack *pack = (pngfile_cb_pack*)png_get_progressive_ptr(png);</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;  }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;  Image::ptr PNGfile::read(Destination::ptr dest) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">if</span> (_is_open)</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;      <span class="keywordflow">throw</span> FileOpenError(<span class="stringliteral">&quot;already open&quot;</span>);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    _is_open = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Opening file &quot;</span> &lt;&lt; _filepath &lt;&lt; <span class="stringliteral">&quot;...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    fs::ifstream ifs(_filepath, std::ios_base::in);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">if</span> (ifs.fail())</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      <span class="keywordflow">throw</span> FileOpenError(_filepath.native());</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    {</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> <a class="code" href="namespace_photo_finish.html#ac96a97b2dc0860744b9f767795c3a418">header</a>[8];</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      ifs.read((<span class="keywordtype">char</span>*)header, 8);</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      <span class="keywordflow">if</span> (png_sig_cmp(header, 0, 8))</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <span class="keywordflow">throw</span> FileContentError(_filepath.string(), <span class="stringliteral">&quot;is not a PNG file&quot;</span>);</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      ifs.seekg(0, std::ios_base::beg);</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    }</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;  Image::ptr PNGfile::read(Destination::ptr dest)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Opening file &quot;</span> &lt;&lt; _filepath &lt;&lt; <span class="stringliteral">&quot;...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    fs::ifstream fb(_filepath, std::ios_base::in);</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">if</span> (fb.fail())</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <span class="keywordflow">throw</span> FileOpenError(_filepath.native());</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> header[8];</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;      fb.read((<span class="keywordtype">char</span>*)header, 8);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      <span class="keywordflow">if</span> (png_sig_cmp(header, 0, 8))</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">throw</span> FileContentError(_filepath.string(), <span class="stringliteral">&quot;is not a PNG file&quot;</span>);</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      fb.seekg(0, std::ios_base::beg);</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    }</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING,</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;                                             NULL, NULL, NULL);</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">if</span> (!png)</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG read structure&quot;</span>);</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    png_infop info = png_create_info_struct(png);</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">if</span> (!info) {</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;      png_destroy_read_struct(&amp;png, (png_infopp)NULL, (png_infopp)NULL);</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG info structure&quot;</span>);</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordflow">if</span> (setjmp(png_jmpbuf(png))) {</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      png_destroy_read_struct(&amp;png, &amp;info, NULL);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      fb.close();</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Something went wrong reading the PNG&quot;</span>);</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    }</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    _png = png_create_read_struct(PNG_LIBPNG_VER_STRING,</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;                                             NULL, NULL, NULL);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    <span class="keywordflow">if</span> (!_png)</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG read structure&quot;</span>);</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    _info = png_create_info_struct(_png);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordflow">if</span> (!_info) {</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      png_destroy_read_struct(&amp;_png, (png_infopp)NULL, (png_infopp)NULL);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG info structure&quot;</span>);</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    }</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="keywordflow">if</span> (setjmp(png_jmpbuf(_png))) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      png_destroy_read_struct(&amp;_png, &amp;_info, NULL);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;      ifs.close();</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Something went wrong reading the PNG&quot;</span>);</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    pngfile_cb_pack pack;</div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    pack.destination = dest;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\tReading PNG image...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    png_set_progressive_read_fn(_png, (<span class="keywordtype">void</span> *)&amp;pack, <a class="code" href="namespace_photo_finish.html#abbdfd629905a885c93d81cd53d3caca2" title="Called by libPNG when the iHDR chunk has been read with the main &quot;header&quot; information.">png_info_cb</a>, <a class="code" href="namespace_photo_finish.html#a406711757cc8db01c66461573c1154f0" title="Called by libPNG when a row of image data has been read.">png_row_cb</a>, <a class="code" href="namespace_photo_finish.html#a3ccb46c945cf009874ba8dbc24d15ac6" title="Called by libPNG when the image data has finished.">png_end_cb</a>);</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    png_byte buffer[1048576];</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    <span class="keywordtype">size_t</span> length;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordflow">do</span> {</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;      ifs.read((<span class="keywordtype">char</span>*)buffer, 1048576);</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      length = ifs.gcount();</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;      png_process_data(_png, _info, buffer, length);</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    } <span class="keywordflow">while</span> (length &gt; 0);</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tRead &quot;</span> &lt;&lt; pack.image-&gt;height() &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; pack.image-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows&quot;</span>;</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    transform_queue queue(dest);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;<span class="preprocessor">#pragma omp parallel shared(queue)</span></div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;<span class="preprocessor"></span>    {</div>
-<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;      <span class="keywordtype">int</span> th_id = omp_get_thread_num();</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;      <span class="keywordflow">if</span> (th_id == 0) {         <span class="comment">// Master thread</span></div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tReading PNG image and transforming into L*a*b* using &quot;</span> &lt;&lt; omp_get_num_threads() &lt;&lt; <span class="stringliteral">&quot; threads...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        png_set_progressive_read_fn(png, (<span class="keywordtype">void</span> *)&amp;queue, <a class="code" href="namespace_photo_finish.html#abbdfd629905a885c93d81cd53d3caca2" title="Called by libPNG when the iHDR chunk has been read with the main &quot;header&quot; information.">png_info_cb</a>, <a class="code" href="namespace_photo_finish.html#a406711757cc8db01c66461573c1154f0" title="Called by libPNG when a row of image data has been read.">png_row_cb</a>, <a class="code" href="namespace_photo_finish.html#a3ccb46c945cf009874ba8dbc24d15ac6" title="Called by libPNG when the image data has finished.">png_end_cb</a>);</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        png_byte buffer[1048576];</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;        <span class="keywordtype">size_t</span> length;</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keywordflow">do</span> {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;          fb.read((<span class="keywordtype">char</span>*)buffer, 1048576);</div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;          length = fb.gcount();</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;          png_process_data(png, info, buffer, length);</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;          <span class="keywordflow">while</span> (queue.num_rows() &gt; 100)</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;            queue.reader_process_row();</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        } <span class="keywordflow">while</span> (length &gt; 0);</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        std::cerr &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        queue.set_finished();</div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        <a class="code" href="namespace_photo_finish.html#a8469c87e16b73e5b91d9e22c3bc1baa5" title="Loop, processing rows from the workqueue until it&#39;s empty and reading is finished.">png_run_workqueue</a>(&amp;queue);      <span class="comment">// Help finish off the transforming of image data</span></div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <a class="code" href="namespace_photo_finish.html#a8469c87e16b73e5b91d9e22c3bc1baa5" title="Loop, processing rows from the workqueue until it&#39;s empty and reading is finished.">png_run_workqueue</a>(&amp;queue);      <span class="comment">// Worker threads just run the workqueue</span></div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;      }</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    }</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    queue.free_transform();</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    png_destroy_read_struct(&amp;png, &amp;info, NULL);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;    fb.close();</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Done.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    <span class="keywordflow">return</span> queue.image();</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  }</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;</div>
-<div class="line"><a name="l00208"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a13f6602af999f016ea86b08858d9c704">  208</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a13f6602af999f016ea86b08858d9c704" title="libPNG callback for writing to an ostream">png_write_ostream_cb</a>(png_structp png, png_bytep buffer, png_size_t length) {</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    std::ostream *os = (std::ostream*)png_get_io_ptr(png);</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    os-&gt;write((<span class="keywordtype">char</span>*)buffer, length);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  }</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;</div>
-<div class="line"><a name="l00214"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a0e24cee262cabfb1746e8e41a488e059">  214</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a0e24cee262cabfb1746e8e41a488e059" title="libPNG callback for flushing an ostream">png_flush_ostream_cb</a>(png_structp png) {</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    std::ostream *os = (std::ostream*)png_get_io_ptr(png);</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    os-&gt;flush();</div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;  }</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;  <span class="keywordtype">void</span> PNGfile::write(Image::ptr img, Destination::ptr dest, <span class="keywordtype">bool</span> can_free)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Opening file &quot;</span> &lt;&lt; _filepath &lt;&lt; <span class="stringliteral">&quot;...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    fs::ofstream fb;</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    fb.open(_filepath, std::ios_base::out);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;                                              NULL, NULL, NULL);</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    <span class="keywordflow">if</span> (!png)</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG write structure&quot;</span>);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    png_infop info = png_create_info_struct(png);</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keywordflow">if</span> (!info) {</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;      png_destroy_write_struct(&amp;png, (png_infopp)NULL);</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG info structure&quot;</span>);</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    }</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordflow">if</span> (setjmp(png_jmpbuf(png))) {</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      png_destroy_write_struct(&amp;png, &amp;info);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;      fb.close();</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Something went wrong writing the PNG&quot;</span>);</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    }</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    png_set_write_fn(png, &amp;fb, <a class="code" href="namespace_photo_finish.html#a13f6602af999f016ea86b08858d9c704" title="libPNG callback for writing to an ostream">png_write_ostream_cb</a>, <a class="code" href="namespace_photo_finish.html#a0e24cee262cabfb1746e8e41a488e059" title="libPNG callback for flushing an ostream">png_flush_ostream_cb</a>);</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    png_destroy_read_struct(&amp;_png, &amp;_info, NULL);</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    ifs.close();</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    _is_open = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Done.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keywordflow">return</span> pack.image;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  }</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  cmsUInt32Number PNGfile::preferred_type(cmsUInt32Number type) {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    type &amp;= <a class="code" href="_image_8hh.html#ac91cd061dbea1a6f3ffd8522a28c09e1">FLOAT_MASK</a>;</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    <span class="keywordflow">if</span> (T_COLORSPACE(type) != PT_GRAY) {</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;      type &amp;= <a class="code" href="_image_8hh.html#a0c308a7242fc03bb1c27d3f372f27105">COLORSPACE_MASK</a>;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;      type |= COLORSPACE_SH(PT_RGB);</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;      type &amp;= <a class="code" href="_image_8hh.html#aa10353b5910b92df7722d1c9c09224b3">CHANNELS_MASK</a>;</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;      type |= CHANNELS_SH(3);</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    }</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;    type &amp;= <a class="code" href="_image_8hh.html#a2641e8785104d466e76014005cc0110f">PLANAR_MASK</a>;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;    type &amp;= <a class="code" href="_image_8hh.html#ad8b41b1870342dccbc89827b494403f7">EXTRA_MASK</a>;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    type &amp;= <a class="code" href="_image_8hh.html#aae7f35437c97ebcc8ae00d3dd6aaf304">BYTES_MASK</a>;</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordflow">if</span> ((T_BYTES(type) == 0) || (T_BYTES(type) &gt; 2))</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;      type |= BYTES_SH(2);</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      type |= BYTES_SH(1);</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    <span class="keywordflow">return</span> type;</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  }</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;</div>
+<div class="line"><a name="l00206"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a13f6602af999f016ea86b08858d9c704">  206</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a13f6602af999f016ea86b08858d9c704" title="libPNG callback for writing to an ostream">png_write_ostream_cb</a>(png_structp png, png_bytep buffer, png_size_t length) {</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    std::ostream *os = (std::ostream*)png_get_io_ptr(png);</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    os-&gt;write((<span class="keywordtype">char</span>*)buffer, length);</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;  }</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;</div>
+<div class="line"><a name="l00212"></a><span class="lineno"><a class="code" href="namespace_photo_finish.html#a0e24cee262cabfb1746e8e41a488e059">  212</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="namespace_photo_finish.html#a0e24cee262cabfb1746e8e41a488e059" title="libPNG callback for flushing an ostream">png_flush_ostream_cb</a>(png_structp png) {</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    std::ostream *os = (std::ostream*)png_get_io_ptr(png);</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    os-&gt;flush();</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;  }</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;  <span class="keywordtype">void</span> PNGfile::write(Image::ptr img, Destination::ptr dest, <span class="keywordtype">bool</span> can_free) {</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordflow">if</span> (_is_open)</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;      <span class="keywordflow">throw</span> FileOpenError(<span class="stringliteral">&quot;already open&quot;</span>);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    _is_open = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Opening file &quot;</span> &lt;&lt; _filepath &lt;&lt; <span class="stringliteral">&quot;...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    fs::ofstream ofs;</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    ofs.open(_filepath, std::ios_base::out);</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    _png = png_create_write_struct(PNG_LIBPNG_VER_STRING,</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;                                              NULL, NULL, NULL);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    <span class="keywordflow">if</span> (!_png)</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG write structure&quot;</span>);</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    _info = png_create_info_struct(_png);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordflow">if</span> (!_info) {</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      png_destroy_write_struct(&amp;_png, (png_infopp)NULL);</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Could not create PNG info structure&quot;</span>);</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    }</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;    <span class="keywordflow">if</span> (setjmp(png_jmpbuf(_png))) {</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      png_destroy_write_struct(&amp;_png, &amp;_info);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      ofs.close();</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;      <span class="keywordflow">throw</span> LibraryError(<span class="stringliteral">&quot;libpng&quot;</span>, <span class="stringliteral">&quot;Something went wrong writing the PNG&quot;</span>);</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    }</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    <span class="keywordtype">int</span> png_colour_type, png_channels;</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    cmsUInt32Number cmsTempType;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordflow">if</span> (img-&gt;is_colour()) {</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;      png_colour_type = PNG_COLOR_TYPE_RGB;</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;      png_channels = 3;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;      cmsTempType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;      png_colour_type = PNG_COLOR_TYPE_GRAY;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;      png_channels = 1;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;      cmsTempType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2);</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    }</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordtype">int</span> depth = 8;      <span class="comment">// Default value</span></div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordflow">if</span> (dest-&gt;depth().defined())</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      depth = dest-&gt;depth();</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\tWriting header for &quot;</span> &lt;&lt; img-&gt;width() &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; img-&gt;height()</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;              &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; depth &lt;&lt; <span class="stringliteral">&quot;-bit &quot;</span> &lt;&lt; (png_channels == 1 ? <span class="stringliteral">&quot;greyscale&quot;</span> : <span class="stringliteral">&quot;RGB&quot;</span>)</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;              &lt;&lt; <span class="stringliteral">&quot; PNG image...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    png_set_IHDR(png, info,</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                 img-&gt;width(), img-&gt;height(), depth, png_colour_type,</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    png_set_filter(png, 0, PNG_ALL_FILTERS);</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    png_set_compression_level(png, Z_BEST_COMPRESSION);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    <span class="keywordflow">if</span> (img-&gt;xres().defined() &amp;&amp; img-&gt;yres().defined()) {</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> xres = round(img-&gt;xres() / 0.0254);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> yres = round(img-&gt;yres() / 0.0254);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      png_set_pHYs(png, info, xres, yres, PNG_RESOLUTION_METER);</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    }</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    png_set_write_fn(_png, &amp;ofs, <a class="code" href="namespace_photo_finish.html#a13f6602af999f016ea86b08858d9c704" title="libPNG callback for writing to an ostream">png_write_ostream_cb</a>, <a class="code" href="namespace_photo_finish.html#a0e24cee262cabfb1746e8e41a488e059" title="libPNG callback for flushing an ostream">png_flush_ostream_cb</a>);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keywordtype">int</span> png_colour_type, png_channels;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    cmsUInt32Number type = img-&gt;type();</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keywordflow">switch</span> (T_COLORSPACE(type)) {</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    <span class="keywordflow">case</span> PT_RGB:</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;      png_colour_type = PNG_COLOR_TYPE_RGB;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <span class="keywordflow">case</span> PT_GRAY:</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;      png_colour_type = PNG_COLOR_TYPE_GRAY;</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;      <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keywordflow">default</span>:</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;      <span class="keywordflow">throw</span> cmsTypeError(<span class="stringliteral">&quot;Not RGB or greyscale&quot;</span>, type);</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    }</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    png_channels = T_CHANNELS(type);</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">int</span> depth = T_BYTES(type);</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keywordflow">if</span> (depth &gt; 2)</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      <span class="keywordflow">throw</span> cmsTypeError(<span class="stringliteral">&quot;Not 8 or 16-bit&quot;</span>, type);</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\tWriting header for &quot;</span> &lt;&lt; img-&gt;width() &lt;&lt; <span class="stringliteral">&quot;×&quot;</span> &lt;&lt; img-&gt;height()</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;              &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; (depth &lt;&lt; 3) &lt;&lt; <span class="stringliteral">&quot;-bit &quot;</span> &lt;&lt; (png_channels == 1 ? <span class="stringliteral">&quot;greyscale&quot;</span> : <span class="stringliteral">&quot;RGB&quot;</span>)</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;              &lt;&lt; <span class="stringliteral">&quot; PNG image...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    png_set_IHDR(_png, _info,</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                 img-&gt;width(), img-&gt;height(), depth &lt;&lt; 3, png_colour_type,</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    png_set_filter(_png, 0, PNG_ALL_FILTERS);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    png_set_compression_level(_png, Z_BEST_COMPRESSION);</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    cmsUInt32Number intent = INTENT_PERCEPTUAL; <span class="comment">// Default value</span></div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    <span class="keywordflow">if</span> (dest-&gt;intent().defined())</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;      intent = dest-&gt;intent();</div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    cmsHPROFILE profile = NULL;</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;    <span class="keywordflow">if</span> (dest-&gt;profile()) {</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;      profile = dest-&gt;profile()-&gt;profile();</div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      <span class="keywordflow">if</span> (dest-&gt;profile()-&gt;has_data()) {</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tEmbedding profile \&quot;&quot;</span> &lt;&lt; dest-&gt;profile()-&gt;name().get() &lt;&lt; <span class="stringliteral">&quot;\&quot; from data (&quot;</span> &lt;&lt; dest-&gt;profile()-&gt;data_size() &lt;&lt; <span class="stringliteral">&quot; bytes).&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        png_set_iCCP(png, info, dest-&gt;profile()-&gt;name()-&gt;c_str(), 0, (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>*)dest-&gt;profile()-&gt;data(), dest-&gt;profile()-&gt;data_size());</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;      }</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;      <span class="keywordflow">if</span> ((profile == NULL) &amp;&amp; (img-&gt;is_greyscale())) {</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tUsing default greyscale profile.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        cmsToneCurve *gamma = cmsBuildGamma(NULL, 2.2);</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;        cmsFreeToneCurve(gamma);</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      }</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;      <span class="keywordflow">if</span> (profile != NULL) {</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        cmsUInt32Number len;</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        cmsSaveProfileToMem(profile, NULL, &amp;len);</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">if</span> (len &gt; 0) {</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;          png_bytep profile_data = (png_bytep)malloc(len);</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;          <span class="keywordflow">if</span> (cmsSaveProfileToMem(profile, profile_data, &amp;len)) {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            std::string profile_name = <span class="stringliteral">&quot;icc&quot;</span>;   <span class="comment">// Default value</span></div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            <span class="keywordflow">if</span> (dest-&gt;profile() &amp;&amp; dest-&gt;profile()-&gt;name().defined())</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;              profile_name = dest-&gt;profile()-&gt;name();</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;            std::cerr &lt;&lt; <span class="stringliteral">&quot;\tEmbedding profile \&quot;&quot;</span> &lt;&lt; profile_name &lt;&lt; <span class="stringliteral">&quot;\&quot; (&quot;</span> &lt;&lt; len &lt;&lt; <span class="stringliteral">&quot; bytes).&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            png_set_iCCP(png, info, profile_name.c_str(), 0, profile_data, len);</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;          }</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        }</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tUsing default sRGB profile.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        profile = cmsCreate_sRGBProfile();</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        png_set_sRGB_gAMA_and_cHRM(png, info, intent);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;      time_t t = time(NULL);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;      <span class="keywordflow">if</span> (t &gt; 0) {</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        png_time ptime;</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        png_convert_from_time_t(&amp;ptime, t);</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tAdding time chunk.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        png_set_tIME(png, info, &amp;ptime);</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;      }</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    }</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    <span class="keywordflow">if</span> (img-&gt;xres().defined() &amp;&amp; img-&gt;yres().defined()) {</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> xres = round(img-&gt;xres() / 0.0254);</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> yres = round(img-&gt;yres() / 0.0254);</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;      png_set_pHYs(_png, _info, xres, yres, PNG_RESOLUTION_METER);</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    }</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;    {</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;      cmsUInt32Number intent = INTENT_PERCEPTUAL;        <span class="comment">// Default value</span></div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;      <span class="keywordflow">if</span> (dest-&gt;intent().defined())</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        intent = dest-&gt;intent();</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;      <span class="keywordtype">char</span> *profile_name = NULL;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> profile_name_len;</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;      <span class="keywordflow">if</span> ((profile_name_len = cmsGetProfileInfoASCII(img-&gt;profile(), cmsInfoDescription, <span class="stringliteral">&quot;en&quot;</span>, cmsNoCountry, NULL, 0)) &gt; 0) {</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;        profile_name = (<span class="keywordtype">char</span>*)malloc(profile_name_len);</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;        cmsGetProfileInfoASCII(img-&gt;profile(), cmsInfoDescription, <span class="stringliteral">&quot;en&quot;</span>, cmsNoCountry, profile_name, profile_name_len);</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        <span class="keywordflow">if</span> (strncmp(profile_name, <span class="stringliteral">&quot;sGrey built-in&quot;</span>, 14) == 0)</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;          png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> (strncmp(profile_name, <span class="stringliteral">&quot;sRGB built-in&quot;</span>, 13) == 0)</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;          png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      }</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> *profile_data = NULL;</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> profile_len = 0;</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      cmsSaveProfileToMem(img-&gt;profile(), NULL, &amp;profile_len);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;      <span class="keywordflow">if</span> (profile_len &gt; 0) {</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        profile_data = (<span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>*)malloc(profile_len);</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        cmsSaveProfileToMem(img-&gt;profile(), profile_data, &amp;profile_len);</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tEmbedding profile \&quot;&quot;</span> &lt;&lt; profile_name &lt;&lt; <span class="stringliteral">&quot;\&quot; (&quot;</span> &lt;&lt; profile_len &lt;&lt; <span class="stringliteral">&quot; bytes).&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        png_set_iCCP(_png, _info, profile_name, 0, profile_data, profile_len);</div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      }</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      <span class="keywordflow">if</span> (profile_name)</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        free(profile_name);</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;    }</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    {</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;      time_t t = time(NULL);</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      <span class="keywordflow">if</span> (t &gt; 0) {</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        png_time ptime;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        png_convert_from_time_t(&amp;ptime, t);</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tAdding time chunk.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        png_set_tIME(_png, _info, &amp;ptime);</div>
+<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;      }</div>
+<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;    }</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    png_write_info(_png, _info);</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    png_bytepp png_rows = (png_bytepp)malloc(img-&gt;height() * <span class="keyword">sizeof</span>(png_bytep));</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++)</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;      png_rows[y] = (png_bytep)malloc(img-&gt;width() * png_channels * (depth &gt;&gt; 3));</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    png_set_rows(png, info, png_rows);</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordflow">if</span> (T_FLAVOR(type))</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      png_set_invert_mono(_png);</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordflow">if</span> (depth &gt; 1)</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;      png_set_swap(_png);</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    cmsHTRANSFORM transform = cmsCreateTransform(lab, <a class="code" href="_image_file_8hh.html#a6850a77c3bb678e4869349b455d685b4">IMAGE_TYPE</a>,</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;                                                 profile, cmsTempType,</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;                                                 intent, 0);</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    cmsCloseProfile(lab);</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    cmsCloseProfile(profile);</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\tWriting image...&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++) {</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;      png_write_row(_png, (png_const_bytep)img-&gt;row(y));</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;      <span class="keywordflow">if</span> (can_free)</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;        img-&gt;free_row(y);</div>
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    transform_queue queue(dest, img, png_channels, transform);</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <span class="keywordflow">if</span> (depth == 8)</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++)</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        queue.add(y);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;      <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++)</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;        queue.add(y, png_rows[y]);</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;</div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;<span class="preprocessor">#pragma omp parallel shared(queue)</span></div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;<span class="preprocessor"></span>    {</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;      <span class="keywordtype">int</span> th_id = omp_get_thread_num();</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;      <span class="keywordflow">if</span> (th_id == 0) {         <span class="comment">// Master thread</span></div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;\tTransforming image data from L*a*b* using &quot;</span> &lt;&lt; omp_get_num_threads() &lt;&lt; <span class="stringliteral">&quot; threads.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        Ditherer ditherer(img-&gt;width(), png_channels);</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++) {</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;          <span class="comment">// Process rows until the one we need becomes available, or the queue is empty</span></div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;          {</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;            <span class="keywordtype">short</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> *row = queue.row(y);</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;            <span class="keywordflow">while</span> (!queue.empty() &amp;&amp; (row == NULL)) {</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;              queue.writer_process_row();</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;              row = queue.row(y);</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;            }</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;            <span class="comment">// If it&#39;s still not available, something has gone wrong</span></div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;            <span class="keywordflow">if</span> (row == NULL) {</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;              std::cerr &lt;&lt; <span class="stringliteral">&quot;** Oh crap (y=&quot;</span> &lt;&lt; y &lt;&lt; <span class="stringliteral">&quot;, num_rows=&quot;</span> &lt;&lt; queue.num_rows() &lt;&lt; <span class="stringliteral">&quot; **&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;              exit(2);</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;            }</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;            <span class="keywordflow">if</span> (can_free)</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;              img-&gt;free_row(y);</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;            <span class="keywordflow">if</span> (depth == 8) {</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;              ditherer.dither(row, png_rows[y], y == img-&gt;height() - 1);</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;              queue.free_row(y);</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;            }</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;          }</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tTransformed &quot;</span> &lt;&lt; y + 1 &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows (&quot;</span></div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;                    &lt;&lt; queue.num_rows() &lt;&lt; <span class="stringliteral">&quot; left)  &quot;</span>;</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        }</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;        std::cerr &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;      } <span class="keywordflow">else</span> {  <span class="comment">// Other thread(s) transform the image data</span></div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keywordflow">while</span> (!queue.empty())</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;          queue.writer_process_row();</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;      }</div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    }</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    cmsDeleteTransform(transform);</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\tWriting PNG image data...&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    png_write_png(png, info, PNG_TRANSFORM_SWAP_ENDIAN, NULL);</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> y = 0; y &lt; img-&gt;height(); y++)</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;      free(png_rows[y]);</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;    free(png_rows);</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    png_destroy_write_struct(&amp;png, &amp;info);</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    fb.close();</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Done.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;  }</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;}</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tWritten &quot;</span> &lt;&lt; y + 1 &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows&quot;</span>;</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    }</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;\r\tWritten &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; of &quot;</span> &lt;&lt; img-&gt;height() &lt;&lt; <span class="stringliteral">&quot; rows.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    png_write_end(_png, _info);</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    png_destroy_write_struct(&amp;_png, &amp;_info);</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    ofs.close();</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;    _is_open = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Done.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;  }</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_c8154bdb66c7e112c0db112ca9ebaec7.html">formats</a></li><li class="navelem"><a class="el" href="_p_n_gfile_8cc.html">PNGfile.cc</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:03 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:43 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

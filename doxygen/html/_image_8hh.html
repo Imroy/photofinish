@@ -103,12 +103,14 @@ $(document).ready(function(){initNavTree('_image_8hh.html','');});
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle">
 <div class="title">Image.hh File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;memory&gt;</code><br/>
+<code>#include &lt;lcms2.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="_definable_8hh_source.html">Definable.hh</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="sample_8h_source.html">sample.h</a>&quot;</code><br/>
 </div>
@@ -117,19 +119,207 @@ $(document).ready(function(){initNavTree('_image_8hh.html','');});
 <tr class="heading"><td colspan="2"><h2><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html">PhotoFinish::Image</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A floating-point, L*a*b* image class.  <a href="class_photo_finish_1_1_image.html#details">More...</a><br/></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">An image class.  <a href="class_photo_finish_1_1_image.html#details">More...</a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespace_photo_finish"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html">PhotoFinish</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a6f553159efdccbb6204ccc3e36b27779"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#a6f553159efdccbb6204ccc3e36b27779">T_BYTES_REAL</a>(t)&#160;&#160;&#160;(T_BYTES(t) == 0 ? 8 : T_BYTES(t))</td></tr>
+<tr class="memitem:ac91cd061dbea1a6f3ffd8522a28c09e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#ac91cd061dbea1a6f3ffd8522a28c09e1">FLOAT_MASK</a>&#160;&#160;&#160;(0xffffffff ^ FLOAT_SH(1))</td></tr>
+<tr class="memitem:ac154439a6e96511641067fcbf59f2c7d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#ac154439a6e96511641067fcbf59f2c7d">OPTIMIZED_MASK</a>&#160;&#160;&#160;(0xffffffff ^ OPTIMIZED_SH(1))</td></tr>
+<tr class="memitem:a0c308a7242fc03bb1c27d3f372f27105"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#a0c308a7242fc03bb1c27d3f372f27105">COLORSPACE_MASK</a>&#160;&#160;&#160;(0xffffffff ^ COLORSPACE_SH(31))</td></tr>
+<tr class="memitem:ac4768cff92cad5b49dafb50c42ca410b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#ac4768cff92cad5b49dafb50c42ca410b">SWAPFIRST_MASK</a>&#160;&#160;&#160;(0xffffffff ^ SWAPFIRST_SH(1))</td></tr>
+<tr class="memitem:aadddcc18a1f1f563d39fc9c251ab5247"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#aadddcc18a1f1f563d39fc9c251ab5247">FLAVOR_MASK</a>&#160;&#160;&#160;(0xffffffff ^ FLAVOR_SH(1))</td></tr>
+<tr class="memitem:a2641e8785104d466e76014005cc0110f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#a2641e8785104d466e76014005cc0110f">PLANAR_MASK</a>&#160;&#160;&#160;(0xffffffff ^ PLANAR_SH(1))</td></tr>
+<tr class="memitem:a37eb282a508c69a8172e7dbb5af20db2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#a37eb282a508c69a8172e7dbb5af20db2">ENDIAN16_MASK</a>&#160;&#160;&#160;(0xffffffff ^ ENDIAN_SH(1))</td></tr>
+<tr class="memitem:a120dd1897a3521c4da6b0574c1d86a65"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#a120dd1897a3521c4da6b0574c1d86a65">DOSWAP_MASK</a>&#160;&#160;&#160;(0xffffffff ^ DOSWAP_SH(1))</td></tr>
+<tr class="memitem:ad8b41b1870342dccbc89827b494403f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#ad8b41b1870342dccbc89827b494403f7">EXTRA_MASK</a>&#160;&#160;&#160;(0xffffffff ^ EXTRA_SH(7))</td></tr>
+<tr class="memitem:aa10353b5910b92df7722d1c9c09224b3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#aa10353b5910b92df7722d1c9c09224b3">CHANNELS_MASK</a>&#160;&#160;&#160;(0xffffffff ^ CHANNELS_SH(15))</td></tr>
+<tr class="memitem:aae7f35437c97ebcc8ae00d3dd6aaf304"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_image_8hh.html#aae7f35437c97ebcc8ae00d3dd6aaf304">BYTES_MASK</a>&#160;&#160;&#160;(0xffffffff ^ BYTES_SH(7))</td></tr>
 </table>
+<h2>Macro Definition Documentation</h2>
+<a class="anchor" id="aae7f35437c97ebcc8ae00d3dd6aaf304"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BYTES_MASK&#160;&#160;&#160;(0xffffffff ^ BYTES_SH(7))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00041">41</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa10353b5910b92df7722d1c9c09224b3"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CHANNELS_MASK&#160;&#160;&#160;(0xffffffff ^ CHANNELS_SH(15))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00040">40</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0c308a7242fc03bb1c27d3f372f27105"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define COLORSPACE_MASK&#160;&#160;&#160;(0xffffffff ^ COLORSPACE_SH(31))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00033">33</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a120dd1897a3521c4da6b0574c1d86a65"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DOSWAP_MASK&#160;&#160;&#160;(0xffffffff ^ DOSWAP_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00038">38</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a37eb282a508c69a8172e7dbb5af20db2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ENDIAN16_MASK&#160;&#160;&#160;(0xffffffff ^ ENDIAN_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00037">37</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad8b41b1870342dccbc89827b494403f7"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define EXTRA_MASK&#160;&#160;&#160;(0xffffffff ^ EXTRA_SH(7))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00039">39</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aadddcc18a1f1f563d39fc9c251ab5247"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FLAVOR_MASK&#160;&#160;&#160;(0xffffffff ^ FLAVOR_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00035">35</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac91cd061dbea1a6f3ffd8522a28c09e1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define FLOAT_MASK&#160;&#160;&#160;(0xffffffff ^ FLOAT_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00031">31</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac154439a6e96511641067fcbf59f2c7d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define OPTIMIZED_MASK&#160;&#160;&#160;(0xffffffff ^ OPTIMIZED_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00032">32</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2641e8785104d466e76014005cc0110f"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PLANAR_MASK&#160;&#160;&#160;(0xffffffff ^ PLANAR_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00036">36</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac4768cff92cad5b49dafb50c42ca410b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SWAPFIRST_MASK&#160;&#160;&#160;(0xffffffff ^ SWAPFIRST_SH(1))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00034">34</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6f553159efdccbb6204ccc3e36b27779"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define T_BYTES_REAL</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">t</td><td>)</td>
+          <td>&#160;&#160;&#160;(T_BYTES(t) == 0 ? 8 : T_BYTES(t))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00028">28</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="_image_8hh.html">Image.hh</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:03 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:43 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

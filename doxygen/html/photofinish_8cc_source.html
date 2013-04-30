@@ -141,7 +141,7 @@ $(document).ready(function(){initNavTree('photofinish_8cc_source.html','');});
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">using namespace </span>PhotoFinish;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="photofinish_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">   37</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="jp2test_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="code" href="photofinish_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">   37</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="photofinish_8cc.html#a0ddf1224851353fc92bfbff6f499fa97">main</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span>* argv[]) {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keywordflow">if</span> (argc == 1) {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    std::cerr &lt;&lt; argv[0] &lt;&lt; <span class="stringliteral">&quot;&lt;input file&gt; [&lt;input file&gt;...] &lt;destination&gt; [&lt;destination&gt;...]&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    exit(1);</div>
@@ -163,95 +163,105 @@ $(document).ready(function(){initNavTree('photofinish_8cc_source.html','');});
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;Argument \&quot;&quot;</span> &lt;&lt; argv[i] &lt;&lt; <span class="stringliteral">&quot; is neither a destination name, nor a filename.&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <a class="code" href="class_photo_finish_1_1_tags.html#a3f9b01990d51bb4f4e5086182a8ddcf9" title="Shared pointer for a Tags object.">Tags::ptr</a> defaulttags(<span class="keyword">new</span> <a class="code" href="class_photo_finish_1_1_tags.html" title="Reads and holds tag information.">Tags</a>);</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">auto</span> defaulttags = std::make_shared&lt;Tags&gt;();</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  defaulttags-&gt;add_searchpath(<span class="stringliteral">&quot;.tags&quot;</span>);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keywordflow">if</span> (fs::exists(<span class="stringliteral">&quot;.tags/default&quot;</span>))</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    defaulttags-&gt;load(<span class="stringliteral">&quot;.tags/default&quot;</span>);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordflow">for</span> (std::deque&lt;fs::path&gt;::iterator fi = arg_filenames.begin(); fi != arg_filenames.end(); fi++) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="keywordflow">for</span> (<span class="keyword">auto</span> fi : arg_filenames) {</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a> infile = <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(*fi);</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <a class="code" href="class_photo_finish_1_1_tags.html#a3f9b01990d51bb4f4e5086182a8ddcf9" title="Shared pointer for a Tags object.">Tags::ptr</a> tags = defaulttags-&gt;dupe();</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keyword">auto</span> infile = <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(fi);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keyword">auto</span> tags = defaulttags-&gt;dupe();</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      {</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        fs::path tagpath = fi-&gt;parent_path() / (<span class="stringliteral">&quot;.&quot;</span> + fi-&gt;stem().native() + <span class="stringliteral">&quot;.tags&quot;</span>);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        fs::path tagpath = fi.parent_path() / (<span class="stringliteral">&quot;.&quot;</span> + fi.stem().native() + <span class="stringliteral">&quot;.tags&quot;</span>);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">if</span> (fs::exists(tagpath))</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;          tags-&gt;load(tagpath);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> orig_image = infile-&gt;read();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">for</span> (std::deque&lt;std::string&gt;::iterator di = arg_destinations.begin(); di != arg_destinations.end(); di++) {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;          <span class="keywordtype">bool</span> last_dest = (di + 1 == arg_destinations.end());</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;          <a class="code" href="class_photo_finish_1_1_destination.html#a0d282a905cd81c3f0e6d7233c9bc7774" title="Shared pointer for a Destination.">Destination::ptr</a> destination = destinations[*di]-&gt;add_variables(tags-&gt;variables());</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;          <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;            <a class="code" href="class_photo_finish_1_1definable.html">definable&lt;double&gt;</a> size = destination-&gt;size();</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;            <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> sized_image;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;noresize().defined() &amp;&amp; destination-&gt;noresize()) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;              sized_image = orig_image;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;              <a class="code" href="class_photo_finish_1_1_frame.html#aaf5eaa56b8096024c0d45ad9e7f5e6c1" title="Shared pointer for a Frame.">Frame::ptr</a> frame = destination-&gt;best_frame(orig_image);</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;              sized_image = frame-&gt;crop_resize(orig_image, destination-&gt;resize(), last_dest);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;              <span class="keywordflow">if</span> (destination-&gt;forcergb().defined() &amp;&amp; destination-&gt;forcergb())</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                sized_image-&gt;set_colour();</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;              <span class="keywordflow">if</span> (destination-&gt;forcegrey().defined() &amp;&amp; destination-&gt;forcegrey())</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                sized_image-&gt;set_greyscale();</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;              <span class="keywordflow">if</span> (frame-&gt;size().defined())</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                size = frame-&gt;size();</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> sharp_image;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;sharpen().defined()) {</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;              <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a7a209c34b3c8edb54835f1bab1244970" title="Shared pointer for a Kernel2D.">Kernel2D::ptr</a> sharpen = <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1b28832e16ba150a49138caef3f4f918" title="Named constructor.">Kernel2D::create</a>(destination-&gt;sharpen());</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;              sharp_image = sharpen-&gt;convolve(sized_image, (sized_image != orig_image) || last_dest);</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;              sharp_image = sized_image;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            }</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            sized_image.reset();        <span class="comment">// Unallocate resized image</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            <span class="keywordflow">if</span> (size.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765" title="Is this object defined?">defined</a>()) {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;              sharp_image-&gt;set_resolution_from_size(size);</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;              tags-&gt;add_resolution(sharp_image);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            }</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;thumbnail().defined() &amp;&amp; destination-&gt;thumbnail().generate().defined() &amp;&amp; destination-&gt;thumbnail().generate())</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;              tags-&gt;make_thumbnail(sharp_image, destination-&gt;thumbnail());</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keywordflow">if</span> (!exists(destination-&gt;dir())) {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;              std::cerr &lt;&lt; <span class="stringliteral">&quot;Creating directory &quot;</span> &lt;&lt; destination-&gt;dir() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;              create_directory(destination-&gt;dir());</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;            }</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;            std::string format = <span class="stringliteral">&quot;jpeg&quot;</span>;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;format().defined())</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;              format = destination-&gt;format();</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a> outfile = <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(destination-&gt;dir() / fi-&gt;stem(), format);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            outfile-&gt;write(sharp_image, destination, (sharp_image != orig_image) || last_dest);</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;            tags-&gt;embed(outfile);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;          } <span class="keywordflow">catch</span> (<a class="code" href="class_photo_finish_1_1_destination_error.html" title="Destination exception.">DestinationError</a>&amp; ex) {</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            std::cout &lt;&lt; ex.<a class="code" href="class_photo_finish_1_1_destination_error.html#af933b8a52d7ead5fe2012dbdd30a0bf4">what</a>() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;          }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        }</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;        std::cout &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      }</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      std::cout &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">auto</span> orig_image = infile-&gt;read();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        orig_image-&gt;transform_colour_inplace(cmsCreateLab4Profile(NULL),</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                                             FLOAT_SH(1)</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                                             | COLORSPACE_SH(PT_Lab)</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                                             | CHANNELS_SH(3)</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                                             | BYTES_SH(<span class="keyword">sizeof</span>(<a class="code" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a>) &amp; 0x07));</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <span class="keyword">auto</span> num_destinations = arg_destinations.size();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; di : arg_destinations) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;          <span class="keywordtype">bool</span> last_dest = (num_destinations == 1);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;          <span class="keyword">auto</span> destination = destinations[di]-&gt;add_variables(tags-&gt;variables());</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;          <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;            <a class="code" href="class_photo_finish_1_1definable.html">definable&lt;double&gt;</a> size = destination-&gt;size();</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> sized_image;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;noresize().defined() &amp;&amp; destination-&gt;noresize()) {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;              sized_image = orig_image;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;              <span class="keyword">auto</span> frame = destination-&gt;best_frame(orig_image);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;              sized_image = frame-&gt;crop_resize(orig_image, destination-&gt;resize(), last_dest);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;              <span class="keywordflow">if</span> (frame-&gt;size().defined())</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                size = frame-&gt;size();</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> sharp_image;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;sharpen().defined()) {</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;              <span class="keyword">auto</span> sharpen = <a class="code" href="class_photo_finish_1_1_kernel2_d.html#a1b28832e16ba150a49138caef3f4f918" title="Named constructor.">Kernel2D::create</a>(destination-&gt;sharpen());</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;              sharp_image = sharpen-&gt;convolve(sized_image, (sized_image != orig_image) || last_dest);</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;              sharp_image = sized_image;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;            sized_image.reset();        <span class="comment">// Unallocate resized image</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            <span class="keywordflow">if</span> (size.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765" title="Is this object defined?">defined</a>()) {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;              sharp_image-&gt;set_resolution_from_size(size);</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;              tags-&gt;add_resolution(sharp_image);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            }</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;thumbnail().defined() &amp;&amp; destination-&gt;thumbnail().generate().defined() &amp;&amp; destination-&gt;thumbnail().generate())</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;              tags-&gt;make_thumbnail(sharp_image, destination-&gt;thumbnail());</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;            <span class="keywordflow">if</span> (!exists(destination-&gt;dir())) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;              std::cerr &lt;&lt; <span class="stringliteral">&quot;Creating directory &quot;</span> &lt;&lt; destination-&gt;dir() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;              create_directory(destination-&gt;dir());</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;            }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            std::string format = <span class="stringliteral">&quot;jpeg&quot;</span>;</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            <span class="keywordflow">if</span> (destination-&gt;format().defined())</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;              format = destination-&gt;format();</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;            <span class="keyword">auto</span> outfile = <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(destination-&gt;dir() / fi.stem(), format);</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;            cmsUInt32Number dest_type = outfile-&gt;preferred_type(destination-&gt;modify_type(sharp_image-&gt;type()));</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            cmsHPROFILE dest_profile = destination-&gt;get_profile(dest_type);</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;            sharp_image-&gt;transform_colour_inplace(dest_profile, dest_type);</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;            outfile-&gt;write(sharp_image, destination, (sharp_image != orig_image) || last_dest);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;            tags-&gt;embed(outfile);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;          } <span class="keywordflow">catch</span> (<a class="code" href="class_photo_finish_1_1_destination_error.html" title="Destination exception.">DestinationError</a>&amp; ex) {</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            std::cout &lt;&lt; ex.<a class="code" href="class_photo_finish_1_1_destination_error.html#af933b8a52d7ead5fe2012dbdd30a0bf4">what</a>() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;          }</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;  }</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;  <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;          num_destinations--;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        }</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;      } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        std::cout &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      }</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;      std::cout &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    }</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;  }</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="photofinish_8cc.html">photofinish.cc</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:03 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:43 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

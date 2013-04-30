@@ -162,6 +162,8 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a43c7b680295addf6ec51d57be59af461"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private constructor for derived classes.  <a href="#a43c7b680295addf6ec51d57be59af461"></a><br/></td></tr>
 <tr class="memitem:abaf8fb7dc013f446340bd920f18a9a0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_kernel2_d.html#abaf8fb7dc013f446340bd920f18a9a0d">Kernel2D</a> (short unsigned int size, short unsigned int centre)</td></tr>
 <tr class="memdesc:abaf8fb7dc013f446340bd920f18a9a0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Private constructor for square filters.  <a href="#abaf8fb7dc013f446340bd920f18a9a0d"></a><br/></td></tr>
+<tr class="memitem:a291c21d9731d9fde2ef035631f5e7c64"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a291c21d9731d9fde2ef035631f5e7c64"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_kernel2_d.html#a291c21d9731d9fde2ef035631f5e7c64">do_convolve</a> (<a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> src, <a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> dest, bool can_free=false)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -188,7 +190,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Shared pointer for a <a class="el" href="class_photo_finish_1_1_kernel2_d.html" title="Creates and stores coefficients for convolving an image.">Kernel2D</a>. </p>
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00046">46</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00049">49</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -354,7 +356,7 @@ Protected Attributes</h2></td></tr>
 
 <p>The values array at a certain point. </p>
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00069">69</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00072">72</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -380,7 +382,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00062">62</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00065">65</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -406,7 +408,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00063">63</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00066">66</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -444,7 +446,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>New image </dd></dl>
 
-<p>Definition at line <a class="el" href="_kernel2_d_8cc_source.html#l00067">67</a> of file <a class="el" href="_kernel2_d_8cc_source.html">Kernel2D.cc</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8cc_source.html#l00130">130</a> of file <a class="el" href="_kernel2_d_8cc_source.html">Kernel2D.cc</a>.</p>
 
 </div>
 </div>
@@ -483,6 +485,50 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a291c21d9731d9fde2ef035631f5e7c64"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PhotoFinish::Kernel2D::do_convolve </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a>&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>can_free</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_kernel2_d_8cc_source.html#l00068">68</a> of file <a class="el" href="_kernel2_d_8cc_source.html">Kernel2D.cc</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a2eb79ed1d3f9b2a3f22822728668a360"></a>
 <div class="memitem">
 <div class="memproto">
@@ -505,7 +551,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00061">61</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00064">64</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -533,7 +579,7 @@ Protected Attributes</h2></td></tr>
 
 <p>The values array at a certain row. </p>
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00066">66</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00069">69</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -559,7 +605,7 @@ Protected Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00060">60</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel2_d_8hh_source.html#l00063">63</a> of file <a class="el" href="_kernel2_d_8hh_source.html">Kernel2D.hh</a>.</p>
 
 </div>
 </div>
@@ -684,7 +730,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_photo_finish.html">PhotoFinish</a></li><li class="navelem"><a class="el" href="class_photo_finish_1_1_kernel2_d.html">Kernel2D</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:07 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:48 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

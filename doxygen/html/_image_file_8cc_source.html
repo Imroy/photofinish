@@ -133,110 +133,91 @@ $(document).ready(function(){initNavTree('_image_file_8cc_source.html','');});
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>PhotoFinish {</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
 <div class="line"><a name="l00028"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#ac8cf8b0b46065b75ad07c89cf1e5fa3b">   28</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image_file.html#ac8cf8b0b46065b75ad07c89cf1e5fa3b" title="Constructor.">ImageFile::ImageFile</a>(<span class="keyword">const</span> fs::path filepath) :</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    _filepath(filepath)</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  {}</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd">   32</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a> <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(<span class="keyword">const</span> fs::path filepath) <span class="keywordflow">throw</span>(<a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>) {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::string ext = filepath.extension().generic_string().substr(1);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#ifdef HAZ_PNG</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;png&quot;</span>))</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> PNGfile(filepath));</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">#ifdef HAZ_JPEG</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;jpeg&quot;</span>) || boost::iequals(ext, <span class="stringliteral">&quot;jpg&quot;</span>))</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> JPEGfile(filepath));</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">#ifdef HAZ_TIFF</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;tiff&quot;</span>) || boost::iequals(ext, <span class="stringliteral">&quot;tif&quot;</span>))</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> TIFFfile(filepath));</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">#ifdef HAZ_JP2</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;jp2&quot;</span>))</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> JP2file(filepath));</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>(filepath.generic_string());</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;</div>
-<div class="line"><a name="l00057"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#aa5367d0f3d2d48ec220911724002f79a">   57</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a> <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(fs::path filepath, <span class="keyword">const</span> std::string format) <span class="keywordflow">throw</span>(<a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>) {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#ifdef HAZ_PNG</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;png&quot;</span>))</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> PNGfile(filepath.replace_extension(<span class="stringliteral">&quot;.png&quot;</span>)));</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#ifdef HAZ_JPEG</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jpeg&quot;</span>)</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;jpg&quot;</span>))</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> JPEGfile(filepath.replace_extension(<span class="stringliteral">&quot;.jpeg&quot;</span>)));</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#ifdef HAZ_TIFF</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;tiff&quot;</span>)</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;tif&quot;</span>))</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> TIFFfile(filepath.replace_extension(<span class="stringliteral">&quot;.tiff&quot;</span>)));</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#ifdef HAZ_JP2</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jp2&quot;</span>))</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a>(<span class="keyword">new</span> JP2file(filepath.replace_extension(<span class="stringliteral">&quot;.jp2&quot;</span>)));</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>(format);</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;</div>
-<div class="line"><a name="l00083"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#a60568c30dc3246d4e6d9c54c364bf161">   83</a></span>&#160;  cmsHPROFILE <a class="code" href="class_photo_finish_1_1_image_file.html#a60568c30dc3246d4e6d9c54c364bf161" title="Create either an sRGB or greyscale profile depending on image type.">ImageFile::default_profile</a>(cmsUInt32Number cmsType) {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    cmsHPROFILE profile = NULL;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    cmsToneCurve *gamma;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">switch</span> (T_COLORSPACE(cmsType)) {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">case</span> PT_RGB:</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;\tUsing default sRGB profile.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      profile = cmsCreate_sRGBProfile();</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">case</span> PT_GRAY:</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;\tUsing default greyscale profile.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;      gamma = cmsBuildGamma(NULL, 2.2);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      profile = cmsCreateGrayProfile(cmsD50_xyY(), gamma);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      cmsFreeToneCurve(gamma);</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;      <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;** Cannot assign a default profile for colour space &quot;</span> &lt;&lt; T_COLORSPACE(cmsType) &lt;&lt; <span class="stringliteral">&quot; **&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    }</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> profile;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    _filepath(filepath),</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    _is_open(false)</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  {}</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd">   33</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a> <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(<span class="keyword">const</span> fs::path filepath) <span class="keywordflow">throw</span>(<a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>) {</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    std::string ext = filepath.extension().generic_string().substr(1);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">#ifdef HAZ_PNG</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;png&quot;</span>))</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;PNGfile&gt;(filepath);</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#ifdef HAZ_JPEG</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;jpeg&quot;</span>) || boost::iequals(ext, <span class="stringliteral">&quot;jpg&quot;</span>))</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;JPEGfile&gt;(filepath);</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">#ifdef HAZ_TIFF</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;tiff&quot;</span>) || boost::iequals(ext, <span class="stringliteral">&quot;tif&quot;</span>))</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;TIFFfile&gt;(filepath);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">#ifdef HAZ_JP2</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(ext, <span class="stringliteral">&quot;jp2&quot;</span>))</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;JP2file&gt;(filepath);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>(filepath.generic_string());</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
+<div class="line"><a name="l00058"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#aa5367d0f3d2d48ec220911724002f79a">   58</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image_file.html#a3f3d9e9914c41774872fcc0dcc132ddf" title="Shared pointer for an ImageFile.">ImageFile::ptr</a> <a class="code" href="class_photo_finish_1_1_image_file.html#ac439293c54091f47ab7770a4418864bd" title="Named constructor.">ImageFile::create</a>(fs::path filepath, <span class="keyword">const</span> std::string format) <span class="keywordflow">throw</span>(<a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>) {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#ifdef HAZ_PNG</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;png&quot;</span>))</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;PNGfile&gt;(filepath.replace_extension(<span class="stringliteral">&quot;.png&quot;</span>));</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#ifdef HAZ_JPEG</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jpeg&quot;</span>)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;jpg&quot;</span>))</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;JPEGfile&gt;(filepath.replace_extension(<span class="stringliteral">&quot;.jpeg&quot;</span>));</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#ifdef HAZ_TIFF</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;tiff&quot;</span>)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;tif&quot;</span>))</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;TIFFfile&gt;(filepath.replace_extension(<span class="stringliteral">&quot;.tiff&quot;</span>));</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#ifdef HAZ_JP2</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor"></span>    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jp2&quot;</span>))</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;JP2file&gt;(filepath.replace_extension(<span class="stringliteral">&quot;.jp2&quot;</span>));</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;sol&quot;</span>))</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;SOLfile&gt;(filepath.replace_extension(<span class="stringliteral">&quot;.bin&quot;</span>));</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_unknown_file_type.html" title="Unknown file type exception.">UnknownFileType</a>(format);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  }</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e">   87</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">ImageFile::add_variables</a>(<a class="code" href="class_photo_finish_1_1_destination.html#a0d282a905cd81c3f0e6d7233c9bc7774" title="Shared pointer for a Destination.">Destination::ptr</a> dest, <a class="code" href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18" title="A hash of string lists.">multihash</a>&amp; vars) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    std::string format = dest-&gt;format().get();</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jpeg&quot;</span>)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;jpg&quot;</span>))</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;      <span class="keyword">const_cast&lt;</span><a class="code" href="class_photo_finish_1_1_d___j_p_e_g.html" title="JPEG parameters for destination.">D_JPEG</a>&amp;<span class="keyword">&gt;</span>(dest-&gt;jpeg()).<a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">add_variables</a>(vars);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;tiff&quot;</span>)</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;tif&quot;</span>))</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;      const_cast&lt;D_TIFF&amp;&gt;(dest-&gt;tiff()).<a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">add_variables</a>(vars);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jp2&quot;</span>))</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;      const_cast&lt;D_JP2&amp;&gt;(dest-&gt;jp2()).<a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">add_variables</a>(vars);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;  }</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00101"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#a1891e723adf6974e49bfc4561239cf69">  101</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> <a class="code" href="class_photo_finish_1_1_image_file.html#a1891e723adf6974e49bfc4561239cf69" title="Read the file into an image.">ImageFile::read</a>(<span class="keywordtype">void</span>) {</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keyword">auto</span> temp = std::make_shared&lt;Destination&gt;();</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> this-&gt;<a class="code" href="class_photo_finish_1_1_image_file.html#a1891e723adf6974e49bfc4561239cf69" title="Read the file into an image.">read</a>(temp);</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  }</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;</div>
-<div class="line"><a name="l00106"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e">  106</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">ImageFile::add_variables</a>(<a class="code" href="class_photo_finish_1_1_destination.html#a0d282a905cd81c3f0e6d7233c9bc7774" title="Shared pointer for a Destination.">Destination::ptr</a> dest, <a class="code" href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18" title="A hash of string lists.">multihash</a>&amp; vars) {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    std::string format = dest-&gt;format().get();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jpeg&quot;</span>)</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;jpg&quot;</span>))</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      <span class="keyword">const_cast&lt;</span><a class="code" href="class_photo_finish_1_1_d___j_p_e_g.html" title="JPEG parameters for destination.">D_JPEG</a>&amp;<span class="keyword">&gt;</span>(dest-&gt;jpeg()).<a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">add_variables</a>(vars);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;tiff&quot;</span>)</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        || boost::iequals(format, <span class="stringliteral">&quot;tif&quot;</span>))</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      const_cast&lt;D_TIFF&amp;&gt;(dest-&gt;tiff()).<a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">add_variables</a>(vars);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">if</span> (boost::iequals(format, <span class="stringliteral">&quot;jp2&quot;</span>))</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      const_cast&lt;D_JP2&amp;&gt;(dest-&gt;jp2()).<a class="code" href="class_photo_finish_1_1_image_file.html#a52957e0bb5d70af11d68f5f54479131e" title="Add variables to one of the configuration objects based on destination format.">add_variables</a>(vars);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;</div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="code" href="class_photo_finish_1_1_image_file.html#aa5d452025290c1404afa26fb984144b7">  120</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a" title="Shared pointer for an Image.">Image::ptr</a> <a class="code" href="class_photo_finish_1_1_image_file.html#aa5d452025290c1404afa26fb984144b7" title="Read the file into an image.">ImageFile::read</a>(<span class="keywordtype">void</span>)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="code" href="class_photo_finish_1_1_destination.html#a0d282a905cd81c3f0e6d7233c9bc7774" title="Shared pointer for a Destination.">Destination::ptr</a> temp(<span class="keyword">new</span> <a class="code" href="class_photo_finish_1_1_destination.html" title="Represents a destination, read from destinations.yml.">Destination</a>);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> this-&gt;<a class="code" href="class_photo_finish_1_1_image_file.html#aa5d452025290c1404afa26fb984144b7" title="Read the file into an image.">read</a>(temp);</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  }</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="_image_file_8cc.html">ImageFile.cc</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:02 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:43 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

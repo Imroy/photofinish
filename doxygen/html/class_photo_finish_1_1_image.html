@@ -106,13 +106,14 @@ $(document).ready(function(){initNavTree('class_photo_finish_1_1_image.html','')
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="class_photo_finish_1_1_image-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">PhotoFinish::Image Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>A floating-point, L*a*b* image class.  
+<p>An image class.  
  <a href="class_photo_finish_1_1_image.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_image_8hh_source.html">Image.hh</a>&gt;</code></p>
@@ -120,28 +121,24 @@ $(document).ready(function(){initNavTree('class_photo_finish_1_1_image.html','')
 <tr class="heading"><td colspan="2"><h2><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:ab336203305ed3a1397d7245063353b5a"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; <a class="el" href="class_photo_finish_1_1_image.html">Image</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">ptr</a></td></tr>
-<tr class="memdesc:ab336203305ed3a1397d7245063353b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer for an <a class="el" href="class_photo_finish_1_1_image.html" title="A floating-point, L*a*b* image class.">Image</a>.  <a href="#ab336203305ed3a1397d7245063353b5a"></a><br/></td></tr>
+<tr class="memdesc:ab336203305ed3a1397d7245063353b5a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shared pointer for an <a class="el" href="class_photo_finish_1_1_image.html" title="An image class.">Image</a>.  <a href="#ab336203305ed3a1397d7245063353b5a"></a><br/></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aad3b4c61b1344c9601fbcb51430b8de7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#aad3b4c61b1344c9601fbcb51430b8de7">Image</a> ()</td></tr>
-<tr class="memdesc:aad3b4c61b1344c9601fbcb51430b8de7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty constructor.  <a href="#aad3b4c61b1344c9601fbcb51430b8de7"></a><br/></td></tr>
-<tr class="memitem:a88080025ffbdd882c83e9a9a7bbf9d72"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a88080025ffbdd882c83e9a9a7bbf9d72">Image</a> (unsigned int w, unsigned int h)</td></tr>
-<tr class="memdesc:a88080025ffbdd882c83e9a9a7bbf9d72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a88080025ffbdd882c83e9a9a7bbf9d72"></a><br/></td></tr>
+<tr class="memitem:aaee7805857301a094bd7b29f2c4b6db3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#aaee7805857301a094bd7b29f2c4b6db3">Image</a> (unsigned int w, unsigned int h, cmsUInt32Number t)</td></tr>
+<tr class="memdesc:aaee7805857301a094bd7b29f2c4b6db3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#aaee7805857301a094bd7b29f2c4b6db3"></a><br/></td></tr>
 <tr class="memitem:a6c300a891d479ece70ffa849b39397fd"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a6c300a891d479ece70ffa849b39397fd">~Image</a> ()</td></tr>
 <tr class="memdesc:a6c300a891d479ece70ffa849b39397fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="#a6c300a891d479ece70ffa849b39397fd"></a><br/></td></tr>
 <tr class="memitem:a52d1327007a42f796e4dba3fffb3093c"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a52d1327007a42f796e4dba3fffb3093c">width</a> (void) const </td></tr>
 <tr class="memdesc:a52d1327007a42f796e4dba3fffb3093c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The width of this image.  <a href="#a52d1327007a42f796e4dba3fffb3093c"></a><br/></td></tr>
 <tr class="memitem:af0da3a027e7c696776134640d430ba78"><td class="memItemLeft" align="right" valign="top">const unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#af0da3a027e7c696776134640d430ba78">height</a> (void) const </td></tr>
 <tr class="memdesc:af0da3a027e7c696776134640d430ba78"><td class="mdescLeft">&#160;</td><td class="mdescRight">The height of this image.  <a href="#af0da3a027e7c696776134640d430ba78"></a><br/></td></tr>
-<tr class="memitem:a8f8a12fab1707993ecb3315aa4550603"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a8f8a12fab1707993ecb3315aa4550603">is_greyscale</a> (void) const </td></tr>
-<tr class="memdesc:a8f8a12fab1707993ecb3315aa4550603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this image greyscale?  <a href="#a8f8a12fab1707993ecb3315aa4550603"></a><br/></td></tr>
-<tr class="memitem:a919188e495bd2efb953da2d548436b6f"><td class="memItemLeft" align="right" valign="top">const bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a919188e495bd2efb953da2d548436b6f">is_colour</a> (void) const </td></tr>
-<tr class="memdesc:a919188e495bd2efb953da2d548436b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is this image colour? i.e opposite of <a class="el" href="class_photo_finish_1_1_image.html#a8f8a12fab1707993ecb3315aa4550603" title="Is this image greyscale?">is_greyscale()</a>  <a href="#a919188e495bd2efb953da2d548436b6f"></a><br/></td></tr>
-<tr class="memitem:a7ae6b3b05529b8593bed40beecc1474b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a7ae6b3b05529b8593bed40beecc1474b">set_greyscale</a> (bool g=true)</td></tr>
-<tr class="memdesc:a7ae6b3b05529b8593bed40beecc1474b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set this image as greyscale.  <a href="#a7ae6b3b05529b8593bed40beecc1474b"></a><br/></td></tr>
-<tr class="memitem:a53b086c5ef5033de7bdab20c1e255717"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a53b086c5ef5033de7bdab20c1e255717">set_colour</a> (bool c=true)</td></tr>
-<tr class="memdesc:a53b086c5ef5033de7bdab20c1e255717"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set this image as colour i.e opposite of set_greyscale.  <a href="#a53b086c5ef5033de7bdab20c1e255717"></a><br/></td></tr>
+<tr class="memitem:a2d62f247bf76f796729aeef03874a19a"><td class="memItemLeft" align="right" valign="top">const cmsHPROFILE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a2d62f247bf76f796729aeef03874a19a">profile</a> (void) const </td></tr>
+<tr class="memdesc:a2d62f247bf76f796729aeef03874a19a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the ICC profile.  <a href="#a2d62f247bf76f796729aeef03874a19a"></a><br/></td></tr>
+<tr class="memitem:a8aa710f41f8af9810c4997c73a403343"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a8aa710f41f8af9810c4997c73a403343">set_profile</a> (cmsHPROFILE p)</td></tr>
+<tr class="memdesc:a8aa710f41f8af9810c4997c73a403343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the ICC profile.  <a href="#a8aa710f41f8af9810c4997c73a403343"></a><br/></td></tr>
+<tr class="memitem:a9983aa5dc74f1291b9f60ade46186e70"><td class="memItemLeft" align="right" valign="top">cmsUInt32Number&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a9983aa5dc74f1291b9f60ade46186e70">type</a> (void) const </td></tr>
+<tr class="memdesc:a9983aa5dc74f1291b9f60ade46186e70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the CMS type.  <a href="#a9983aa5dc74f1291b9f60ade46186e70"></a><br/></td></tr>
 <tr class="memitem:abb5d9771cec0bc7f88230589fe7ef0b0"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_photo_finish_1_1definable.html">definable</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#abb5d9771cec0bc7f88230589fe7ef0b0">xres</a> (void) const </td></tr>
 <tr class="memdesc:abb5d9771cec0bc7f88230589fe7ef0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The X resolution of this image (PPI)  <a href="#abb5d9771cec0bc7f88230589fe7ef0b0"></a><br/></td></tr>
 <tr class="memitem:a61ed2797e0c0f9d17a5aac15123f5e00"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="class_photo_finish_1_1definable.html">definable</a>&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a61ed2797e0c0f9d17a5aac15123f5e00">yres</a> (void) const </td></tr>
@@ -156,19 +153,30 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab0c3fd004f6fd3b39ea2e65d680911d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the X and Y resolutions (PPI)  <a href="#ab0c3fd004f6fd3b39ea2e65d680911d1"></a><br/></td></tr>
 <tr class="memitem:a4775db7132f11396138ea6a35301e896"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a4775db7132f11396138ea6a35301e896">set_resolution_from_size</a> (double size)</td></tr>
 <tr class="memdesc:a4775db7132f11396138ea6a35301e896"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the resolution given the length of the longest side (in inches)  <a href="#a4775db7132f11396138ea6a35301e896"></a><br/></td></tr>
-<tr class="memitem:a2a3ca3732f5be8261ea2f3721bd2122f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a2a3ca3732f5be8261ea2f3721bd2122f">row</a> (unsigned int y)</td></tr>
-<tr class="memdesc:a2a3ca3732f5be8261ea2f3721bd2122f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to pixel data at start of row.  <a href="#a2a3ca3732f5be8261ea2f3721bd2122f"></a><br/></td></tr>
-<tr class="memitem:a3fd0f570b53780cf8f0e30c8e72ed9e5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a3fd0f570b53780cf8f0e30c8e72ed9e5">at</a> (unsigned int x, unsigned int y)</td></tr>
-<tr class="memdesc:a3fd0f570b53780cf8f0e30c8e72ed9e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to pixel data at coordinates.  <a href="#a3fd0f570b53780cf8f0e30c8e72ed9e5"></a><br/></td></tr>
-<tr class="memitem:a3e052b8a74dd61dcc8b99b80d9032e11"><td class="memItemLeft" align="right" valign="top"><a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a3e052b8a74dd61dcc8b99b80d9032e11">at</a> (unsigned int x, unsigned int y, unsigned char c)</td></tr>
-<tr class="memdesc:a3e052b8a74dd61dcc8b99b80d9032e11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference to pixel data at coordinates and of a given channel.  <a href="#a3e052b8a74dd61dcc8b99b80d9032e11"></a><br/></td></tr>
+<tr class="memitem:a2e918e532143d297272a6248608a7c49"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a2e918e532143d297272a6248608a7c49">pixel_size</a> (void) const </td></tr>
+<tr class="memdesc:a2e918e532143d297272a6248608a7c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the size of a pixel in bytes.  <a href="#a2e918e532143d297272a6248608a7c49"></a><br/></td></tr>
+<tr class="memitem:a97b5841ab3f0ae6d9f6a545d7224e663"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a97b5841ab3f0ae6d9f6a545d7224e663">row_size</a> (void) const </td></tr>
+<tr class="memdesc:a97b5841ab3f0ae6d9f6a545d7224e663"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retun the size of a row in bytes.  <a href="#a97b5841ab3f0ae6d9f6a545d7224e663"></a><br/></td></tr>
+<tr class="memitem:a0222afcdaaa6a8737f054d776bcbb582"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a0222afcdaaa6a8737f054d776bcbb582">row</a> (unsigned int y)</td></tr>
+<tr class="memdesc:a0222afcdaaa6a8737f054d776bcbb582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to pixel data at start of row.  <a href="#a0222afcdaaa6a8737f054d776bcbb582"></a><br/></td></tr>
+<tr class="memitem:a1b3fbe130ff40fc3019b388447a5f918"><td class="memItemLeft" align="right" valign="top">unsigned char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a1b3fbe130ff40fc3019b388447a5f918">at</a> (unsigned int x, unsigned int y)</td></tr>
+<tr class="memdesc:a1b3fbe130ff40fc3019b388447a5f918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pointer to pixel data at coordinates.  <a href="#a1b3fbe130ff40fc3019b388447a5f918"></a><br/></td></tr>
 <tr class="memitem:a9dfe18a5ebeca8e9ddd66e71608d3ba6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a9dfe18a5ebeca8e9ddd66e71608d3ba6">free_row</a> (unsigned int y)</td></tr>
 <tr class="memdesc:a9dfe18a5ebeca8e9ddd66e71608d3ba6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the memory storing row 'y'.  <a href="#a9dfe18a5ebeca8e9ddd66e71608d3ba6"></a><br/></td></tr>
+<tr class="memitem:a27c6506cdfba6005968dea8b936f015b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">ptr</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a27c6506cdfba6005968dea8b936f015b">transform_colour</a> (cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent=INTENT_PERCEPTUAL, bool can_free=false)</td></tr>
+<tr class="memdesc:a27c6506cdfba6005968dea8b936f015b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform this image into a different colour space and/or ICC profile, making a new image.  <a href="#a27c6506cdfba6005968dea8b936f015b"></a><br/></td></tr>
+<tr class="memitem:a3b316a0ce4088b85f94d41408f278639"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a3b316a0ce4088b85f94d41408f278639">transform_colour_inplace</a> (cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent=INTENT_PERCEPTUAL)</td></tr>
+<tr class="memdesc:a3b316a0ce4088b85f94d41408f278639"><td class="mdescLeft">&#160;</td><td class="mdescRight">Transform this image in-place into a different colour space and/or ICC profile.  <a href="#a3b316a0ce4088b85f94d41408f278639"></a><br/></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a3f3d0b20c6c08f14b2a81ba1a5b2269a"><td class="memItemLeft" align="right" valign="top">static cmsHPROFILE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_image.html#a3f3d0b20c6c08f14b2a81ba1a5b2269a">default_profile</a> (cmsUInt32Number default_type)</td></tr>
+<tr class="memdesc:a3f3d0b20c6c08f14b2a81ba1a5b2269a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create either an sRGB or greyscale profile depending on image type.  <a href="#a3f3d0b20c6c08f14b2a81ba1a5b2269a"></a><br/></td></tr>
 </table>
 <a name="details" id="details"></a><h2>Detailed Description</h2>
-<div class="textblock"><p>A floating-point, L*a*b* image class. </p>
+<div class="textblock"><p>An image class. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00029">29</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00046">46</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 </div><h2>Member Typedef Documentation</h2>
 <a class="anchor" id="ab336203305ed3a1397d7245063353b5a"></a>
 <div class="memitem">
@@ -180,33 +188,14 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Shared pointer for an <a class="el" href="class_photo_finish_1_1_image.html" title="A floating-point, L*a*b* image class.">Image</a>. </p>
+<p>Shared pointer for an <a class="el" href="class_photo_finish_1_1_image.html" title="An image class.">Image</a>. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00043">43</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00062">62</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
 <h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="aad3b4c61b1344c9601fbcb51430b8de7"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">PhotoFinish::Image::Image </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Empty constructor. </p>
-
-<p>Definition at line <a class="el" href="_image_8cc_source.html#l00026">26</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a88080025ffbdd882c83e9a9a7bbf9d72"></a>
+<a class="anchor" id="aaee7805857301a094bd7b29f2c4b6db3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -220,7 +209,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>h</em>&#160;</td>
+          <td class="paramname"><em>h</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cmsUInt32Number&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -234,11 +229,12 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">w,h</td><td>Width and height of the image </td></tr>
+    <tr><td class="paramname">t</td><td>LCMS2 pixel type </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="_image_8cc_source.html#l00033">33</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
+<p>Definition at line <a class="el" href="_image_8cc_source.html#l00028">28</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
 
 </div>
 </div>
@@ -257,12 +253,12 @@ Public Member Functions</h2></td></tr>
 
 <p>Destructor. </p>
 
-<p>Definition at line <a class="el" href="_image_8cc_source.html#l00044">44</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
+<p>Definition at line <a class="el" href="_image_8cc_source.html#l00047">47</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
 
 </div>
 </div>
 <h2>Member Function Documentation</h2>
-<a class="anchor" id="a3fd0f570b53780cf8f0e30c8e72ed9e5"></a>
+<a class="anchor" id="a1b3fbe130ff40fc3019b388447a5f918"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -270,7 +266,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a>* PhotoFinish::Image::at </td>
+          <td class="memname">unsigned char* PhotoFinish::Image::at </td>
           <td>(</td>
           <td class="paramtype">unsigned int&#160;</td>
           <td class="paramname"><em>x</em>, </td>
@@ -296,11 +292,11 @@ Public Member Functions</h2></td></tr>
 
 <p>Pointer to pixel data at coordinates. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00103">103</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00123">123</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a3e052b8a74dd61dcc8b99b80d9032e11"></a>
+<a class="anchor" id="a3f3d0b20c6c08f14b2a81ba1a5b2269a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -308,39 +304,23 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a>&amp; PhotoFinish::Image::at </td>
+          <td class="memname">cmsHPROFILE PhotoFinish::Image::default_profile </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>x</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">cmsUInt32Number&#160;</td>
+          <td class="paramname"><em>default_type</em></td><td>)</td>
           <td></td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>y</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">unsigned char&#160;</td>
-          <td class="paramname"><em>c</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Reference to pixel data at coordinates and of a given channel. </p>
+<p>Create either an sRGB or greyscale profile depending on image type. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00109">109</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8cc_source.html#l00059">59</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
 
 </div>
 </div>
@@ -368,7 +348,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Free the memory storing row 'y'. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00115">115</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00129">129</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -396,11 +376,11 @@ Public Member Functions</h2></td></tr>
 
 <p>The height of this image. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00061">61</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00078">78</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a919188e495bd2efb953da2d548436b6f"></a>
+<a class="anchor" id="a2e918e532143d297272a6248608a7c49"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -408,7 +388,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const bool PhotoFinish::Image::is_colour </td>
+          <td class="memname">size_t PhotoFinish::Image::pixel_size </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -422,13 +402,13 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Is this image colour? i.e opposite of <a class="el" href="class_photo_finish_1_1_image.html#a8f8a12fab1707993ecb3315aa4550603" title="Is this image greyscale?">is_greyscale()</a> </p>
+<p>Return the size of a pixel in bytes. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00067">67</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00111">111</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a8f8a12fab1707993ecb3315aa4550603"></a>
+<a class="anchor" id="a2d62f247bf76f796729aeef03874a19a"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -436,7 +416,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const bool PhotoFinish::Image::is_greyscale </td>
+          <td class="memname">const cmsHPROFILE PhotoFinish::Image::profile </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -450,13 +430,13 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Is this image greyscale? </p>
+<p>Get the ICC profile. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00064">64</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00081">81</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a2a3ca3732f5be8261ea2f3721bd2122f"></a>
+<a class="anchor" id="a0222afcdaaa6a8737f054d776bcbb582"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -464,7 +444,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a>* PhotoFinish::Image::row </td>
+          <td class="memname">unsigned char* PhotoFinish::Image::row </td>
           <td>(</td>
           <td class="paramtype">unsigned int&#160;</td>
           <td class="paramname"><em>y</em></td><td>)</td>
@@ -480,11 +460,11 @@ Public Member Functions</h2></td></tr>
 
 <p>Pointer to pixel data at start of row. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00097">97</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00117">117</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a53b086c5ef5033de7bdab20c1e255717"></a>
+<a class="anchor" id="a97b5841ab3f0ae6d9f6a545d7224e663"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -492,10 +472,38 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void PhotoFinish::Image::set_colour </td>
+          <td class="memname">size_t PhotoFinish::Image::row_size </td>
           <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>c</em> = <code>true</code></td><td>)</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Retun the size of a row in bytes. </p>
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00114">114</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8aa710f41f8af9810c4997c73a403343"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PhotoFinish::Image::set_profile </td>
+          <td>(</td>
+          <td class="paramtype">cmsHPROFILE&#160;</td>
+          <td class="paramname"><em>p</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -506,37 +514,9 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Set this image as colour i.e opposite of set_greyscale. </p>
+<p>Set the ICC profile. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00073">73</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a7ae6b3b05529b8593bed40beecc1474b"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void PhotoFinish::Image::set_greyscale </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>g</em> = <code>true</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set this image as greyscale. </p>
-
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00070">70</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00084">84</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -564,7 +544,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Set both the X and Y resolution (PPI) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00082">82</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00096">96</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -602,7 +582,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Set the X and Y resolutions (PPI) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00091">91</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00105">105</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -630,7 +610,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Set the resolution given the length of the longest side (in inches) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00094">94</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00108">108</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -658,7 +638,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Set the X resolution (PPI) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00085">85</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00099">99</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -686,7 +666,131 @@ Public Member Functions</h2></td></tr>
 
 <p>Set the Y resolution (PPI) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00088">88</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00102">102</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a27c6506cdfba6005968dea8b936f015b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> PhotoFinish::Image::transform_colour </td>
+          <td>(</td>
+          <td class="paramtype">cmsHPROFILE&#160;</td>
+          <td class="paramname"><em>dest_profile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cmsUInt32Number&#160;</td>
+          <td class="paramname"><em>dest_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cmsUInt32Number&#160;</td>
+          <td class="paramname"><em>intent</em> = <code>INTENT_PERCEPTUAL</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>can_free</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform this image into a different colour space and/or ICC profile, making a new image. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dest_profile</td><td>The ICC profile of the destination </td></tr>
+    <tr><td class="paramname">dest_type</td><td>The LCMS2 pixel format </td></tr>
+    <tr><td class="paramname">intent</td><td>The ICC intent of the transform, defaults to perceptual </td></tr>
+    <tr><td class="paramname">can_free</td><td>Whether rows can be freed after transforming, defaults to false. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A new image </dd></dl>
+
+<p>Definition at line <a class="el" href="_image_8cc_source.html#l00107">107</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3b316a0ce4088b85f94d41408f278639"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PhotoFinish::Image::transform_colour_inplace </td>
+          <td>(</td>
+          <td class="paramtype">cmsHPROFILE&#160;</td>
+          <td class="paramname"><em>dest_profile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cmsUInt32Number&#160;</td>
+          <td class="paramname"><em>dest_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">cmsUInt32Number&#160;</td>
+          <td class="paramname"><em>intent</em> = <code>INTENT_PERCEPTUAL</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Transform this image in-place into a different colour space and/or ICC profile. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dest_profile</td><td>The ICC profile of the destination </td></tr>
+    <tr><td class="paramname">dest_type</td><td>The LCMS2 pixel format </td></tr>
+    <tr><td class="paramname">intent</td><td>The ICC intent of the transform, defaults to perceptual </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="_image_8cc_source.html#l00136">136</a> of file <a class="el" href="_image_8cc_source.html">Image.cc</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9983aa5dc74f1291b9f60ade46186e70"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cmsUInt32Number PhotoFinish::Image::type </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the CMS type. </p>
+
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00087">87</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -714,7 +818,7 @@ Public Member Functions</h2></td></tr>
 
 <p>The width of this image. </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00058">58</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00075">75</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -742,7 +846,7 @@ Public Member Functions</h2></td></tr>
 
 <p>The X resolution of this image (PPI) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00076">76</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00090">90</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -770,7 +874,7 @@ Public Member Functions</h2></td></tr>
 
 <p>The Y resolution of this image (PPI) </p>
 
-<p>Definition at line <a class="el" href="_image_8hh_source.html#l00079">79</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
+<p>Definition at line <a class="el" href="_image_8hh_source.html#l00093">93</a> of file <a class="el" href="_image_8hh_source.html">Image.hh</a>.</p>
 
 </div>
 </div>
@@ -784,7 +888,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_photo_finish.html">PhotoFinish</a></li><li class="navelem"><a class="el" href="class_photo_finish_1_1_image.html">Image</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:06 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:47 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

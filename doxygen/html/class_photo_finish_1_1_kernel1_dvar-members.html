@@ -121,6 +121,8 @@ $(document).ready(function(){initNavTree('class_photo_finish_1_1_kernel1_dvar.ht
   <tr class="even"><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#a054d97ccc9d64ca9f334a376fc2473f8">convolve_h</a>(Image::ptr img, bool can_free=false)</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"></td></tr>
   <tr><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#ad5b577268418278d8b3a62234c1de5a6">convolve_v</a>(Image::ptr img, bool can_free=false)</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#ab5dd67e18a601eb8aaa9b9bc1964da58">create</a>(const D_resize &amp;dr, double from_start, double from_size, unsigned int from_max, double to_size)</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"><span class="mlabel">static</span></td></tr>
+  <tr><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#a7a40f252ef1d824fa519885151745aaf">do_convolve_h</a>(Image::ptr src, Image::ptr dest, bool can_free=false)</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#aa17cdeb7723ab2c2b3b4e1d7c746330a">do_convolve_v</a>(Image::ptr src, Image::ptr dest, bool can_free=false)</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#a2d6115c261194c714d254e095a557ecc">eval</a>(double x) const =0</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"><span class="mlabel">protected</span><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#ae931da40a0626469cac882022b7c54da">Kernel1Dvar</a>(double to_size)</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"><span class="mlabel">protected</span></td></tr>
   <tr><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#a69e0ed72b582b8b0a524e4e034f17870">Kernel1Dvar</a>()</td><td class="entry"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">PhotoFinish::Kernel1Dvar</a></td><td class="entry"></td></tr>
@@ -135,7 +137,7 @@ $(document).ready(function(){initNavTree('class_photo_finish_1_1_kernel1_dvar.ht
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:07 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:48 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

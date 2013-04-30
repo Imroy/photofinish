@@ -169,6 +169,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a2d7bfe24194daebaf5ba37b561df73cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size of this filter.  <a href="#a2d7bfe24194daebaf5ba37b561df73cc"></a><br/></td></tr>
 <tr class="memitem:a2d6115c261194c714d254e095a557ecc"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="sample_8h.html#afc597c76b4f04a2da506a240d51d89a0">SAMPLE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#a2d6115c261194c714d254e095a557ecc">eval</a> (double x) const =0  throw (Uninitialised)</td></tr>
 <tr class="memdesc:a2d6115c261194c714d254e095a557ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluate the filter at a given point.  <a href="#a2d6115c261194c714d254e095a557ecc"></a><br/></td></tr>
+<tr class="memitem:a7a40f252ef1d824fa519885151745aaf"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a7a40f252ef1d824fa519885151745aaf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#a7a40f252ef1d824fa519885151745aaf">do_convolve_h</a> (<a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> src, <a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> dest, bool can_free=false)</td></tr>
+<tr class="memitem:aa17cdeb7723ab2c2b3b4e1d7c746330a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:aa17cdeb7723ab2c2b3b4e1d7c746330a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html#aa17cdeb7723ab2c2b3b4e1d7c746330a">do_convolve_v</a> (<a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> src, <a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> dest, bool can_free=false)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -196,7 +200,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Shared pointer for a <a class="el" href="class_photo_finish_1_1_kernel1_dvar.html" title="Creates and stores coefficients for cropping and resizing an image.">Kernel1Dvar</a>. </p>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00052">52</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00058">58</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
 
 </div>
 </div>
@@ -302,7 +306,7 @@ Protected Attributes</h2></td></tr>
 
 <p>The weights array at a certain point. </p>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00096">96</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00102">102</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
 
 </div>
 </div>
@@ -385,7 +389,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>New image </dd></dl>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00125">125</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00153">153</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
 
 </div>
 </div>
@@ -424,7 +428,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>New image </dd></dl>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00170">170</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00255">255</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
 
 </div>
 </div>
@@ -492,6 +496,94 @@ Protected Attributes</h2></td></tr>
 </dl>
 
 <p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00089">89</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7a40f252ef1d824fa519885151745aaf"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PhotoFinish::Kernel1Dvar::do_convolve_h </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a>&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>can_free</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00125">125</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa17cdeb7723ab2c2b3b4e1d7c746330a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PhotoFinish::Kernel1Dvar::do_convolve_v </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a>&#160;</td>
+          <td class="paramname"><em>src</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a>&#160;</td>
+          <td class="paramname"><em>dest</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>can_free</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="_kernel1_dvar_8cc_source.html#l00200">200</a> of file <a class="el" href="_kernel1_dvar_8cc_source.html">Kernel1Dvar.cc</a>.</p>
 
 </div>
 </div>
@@ -571,7 +663,7 @@ Protected Attributes</h2></td></tr>
 
 <p>The weights array at a certain row. </p>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00093">93</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00099">99</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
 
 </div>
 </div>
@@ -599,7 +691,7 @@ Protected Attributes</h2></td></tr>
 
 <p>The size of the weights. </p>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00087">87</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00093">93</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
 
 </div>
 </div>
@@ -627,7 +719,7 @@ Protected Attributes</h2></td></tr>
 
 <p>The starting point of the weights. </p>
 
-<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00090">90</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
+<p>Definition at line <a class="el" href="_kernel1_dvar_8hh_source.html#l00096">96</a> of file <a class="el" href="_kernel1_dvar_8hh_source.html">Kernel1Dvar.hh</a>.</p>
 
 </div>
 </div>
@@ -774,7 +866,7 @@ Protected Attributes</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespace_photo_finish.html">PhotoFinish</a></li><li class="navelem"><a class="el" href="class_photo_finish_1_1_kernel1_dvar.html">Kernel1Dvar</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:07 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:48 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

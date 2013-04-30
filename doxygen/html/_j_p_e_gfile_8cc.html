@@ -121,8 +121,6 @@ $(document).ready(function(){initNavTree('_j_p_e_gfile_8cc.html','');});
 <code>#include &lt;lcms2.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="_image_file_8hh_source.html">ImageFile.hh</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="_image_8hh_source.html">Image.hh</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="_transform_queue_8hh_source.html">TransformQueue.hh</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="_ditherer_8hh_source.html">Ditherer.hh</a>&quot;</code><br/>
 </div>
 <p><a href="_j_p_e_gfile_8cc_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -132,10 +130,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad89ac5e39e89e4106d57bbd63f097e94"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#ad89ac5e39e89e4106d57bbd63f097e94">PhotoFinish::jpeg_istream_src</a> (j_decompress_ptr cinfo, std::istream *is)</td></tr>
-<tr class="memdesc:ad89ac5e39e89e4106d57bbd63f097e94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up a "source manager" on the given JPEG decompression structure to read from an istream.  <a href="#ad89ac5e39e89e4106d57bbd63f097e94"></a><br/></td></tr>
-<tr class="memitem:a278392aef31377699da279d39e07e316"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#a278392aef31377699da279d39e07e316">PhotoFinish::jpeg_istream_src_free</a> (j_decompress_ptr cinfo)</td></tr>
-<tr class="memdesc:a278392aef31377699da279d39e07e316"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the data structures of the istream source manager.  <a href="#a278392aef31377699da279d39e07e316"></a><br/></td></tr>
+<tr class="memitem:a18ffc326d36fb31d16a6468b4bfc4715"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#a18ffc326d36fb31d16a6468b4bfc4715">PhotoFinish::jpeg_istream_src</a> (j_decompress_ptr dinfo, std::istream *is)</td></tr>
+<tr class="memdesc:a18ffc326d36fb31d16a6468b4bfc4715"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set up a "source manager" on the given JPEG decompression structure to read from an istream.  <a href="#a18ffc326d36fb31d16a6468b4bfc4715"></a><br/></td></tr>
+<tr class="memitem:aca76b52b734af33c592f35e545811952"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#aca76b52b734af33c592f35e545811952">PhotoFinish::jpeg_istream_src_free</a> (j_decompress_ptr dinfo)</td></tr>
+<tr class="memdesc:aca76b52b734af33c592f35e545811952"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free the data structures of the istream source manager.  <a href="#aca76b52b734af33c592f35e545811952"></a><br/></td></tr>
 <tr class="memitem:ac6daf86931b4e01befed3a229708bbf2"><td class="memItemLeft" align="right" valign="top">cmsHPROFILE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#ac6daf86931b4e01befed3a229708bbf2">PhotoFinish::jpeg_read_profile</a> (jpeg_decompress_struct *, Destination::ptr dest)</td></tr>
 <tr class="memdesc:ac6daf86931b4e01befed3a229708bbf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read an ICC profile from APP2 markers in a JPEG file.  <a href="#ac6daf86931b4e01befed3a229708bbf2"></a><br/></td></tr>
 <tr class="memitem:a8d7e2916997da593705b47a56cf33ea2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespace_photo_finish.html#a8d7e2916997da593705b47a56cf33ea2">PhotoFinish::jpeg_ostream_dest</a> (j_compress_ptr cinfo, std::ostream *os)</td></tr>
@@ -155,7 +153,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_c8154bdb66c7e112c0db112ca9ebaec7.html">formats</a></li><li class="navelem"><a class="el" href="_j_p_e_gfile_8cc.html">JPEGfile.cc</a></li>
-    <li class="footer">Generated on Fri Aug 17 2012 18:40:03 for Photo Finish by
+    <li class="footer">Generated on Wed May 1 2013 04:22:44 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.1.2 </li>
   </ul>

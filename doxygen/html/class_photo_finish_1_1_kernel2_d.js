@@ -10,6 +10,7 @@ var class_photo_finish_1_1_kernel2_d =
     [ "centrey", "class_photo_finish_1_1_kernel2_d.html#ac0eff139df909227731f40acb1960d73", null ],
     [ "convolve", "class_photo_finish_1_1_kernel2_d.html#a3ebc380c0b20cb9e1f0abbc53d35f451", null ],
     [ "create", "class_photo_finish_1_1_kernel2_d.html#a1b28832e16ba150a49138caef3f4f918", null ],
+    [ "do_convolve", "class_photo_finish_1_1_kernel2_d.html#a291c21d9731d9fde2ef035631f5e7c64", null ],
     [ "height", "class_photo_finish_1_1_kernel2_d.html#a2eb79ed1d3f9b2a3f22822728668a360", null ],
     [ "row", "class_photo_finish_1_1_kernel2_d.html#aa3df8d5deb3629e03c950eac7a8dd691", null ],
     [ "width", "class_photo_finish_1_1_kernel2_d.html#a03bc6d21a0ddc27cad2b1684d360056d", null ],

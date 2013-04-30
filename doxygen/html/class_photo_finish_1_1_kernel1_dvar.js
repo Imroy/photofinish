@@ -9,6 +9,8 @@ var class_photo_finish_1_1_kernel1_dvar =
     [ "convolve_h", "class_photo_finish_1_1_kernel1_dvar.html#a054d97ccc9d64ca9f334a376fc2473f8", null ],
     [ "convolve_v", "class_photo_finish_1_1_kernel1_dvar.html#ad5b577268418278d8b3a62234c1de5a6", null ],
     [ "create", "class_photo_finish_1_1_kernel1_dvar.html#ab5dd67e18a601eb8aaa9b9bc1964da58", null ],
+    [ "do_convolve_h", "class_photo_finish_1_1_kernel1_dvar.html#a7a40f252ef1d824fa519885151745aaf", null ],
+    [ "do_convolve_v", "class_photo_finish_1_1_kernel1_dvar.html#aa17cdeb7723ab2c2b3b4e1d7c746330a", null ],
     [ "eval", "class_photo_finish_1_1_kernel1_dvar.html#a2d6115c261194c714d254e095a557ecc", null ],
     [ "range", "class_photo_finish_1_1_kernel1_dvar.html#a2d7bfe24194daebaf5ba37b561df73cc", null ],
     [ "row", "class_photo_finish_1_1_kernel1_dvar.html#a043ff7158e33c58496bd1d9971a719f7", null ],

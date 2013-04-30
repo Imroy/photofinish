@@ -27,15 +27,17 @@ var namespace_photo_finish =
     [ "FileContentError", "class_photo_finish_1_1_file_content_error.html", "class_photo_finish_1_1_file_content_error" ],
     [ "DestinationError", "class_photo_finish_1_1_destination_error.html", "class_photo_finish_1_1_destination_error" ],
     [ "LibraryError", "class_photo_finish_1_1_library_error.html", "class_photo_finish_1_1_library_error" ],
+    [ "cmsTypeError", "class_photo_finish_1_1cms_type_error.html", "class_photo_finish_1_1cms_type_error" ],
     [ "Frame", "class_photo_finish_1_1_frame.html", "class_photo_finish_1_1_frame" ],
     [ "Image", "class_photo_finish_1_1_image.html", "class_photo_finish_1_1_image" ],
     [ "ImageFile", "class_photo_finish_1_1_image_file.html", "class_photo_finish_1_1_image_file" ],
+    [ "SOLfile", "class_photo_finish_1_1_s_o_lfile.html", "class_photo_finish_1_1_s_o_lfile" ],
     [ "Kernel1Dvar", "class_photo_finish_1_1_kernel1_dvar.html", "class_photo_finish_1_1_kernel1_dvar" ],
     [ "Lanczos", "class_photo_finish_1_1_lanczos.html", "class_photo_finish_1_1_lanczos" ],
     [ "Kernel2D", "class_photo_finish_1_1_kernel2_d.html", "class_photo_finish_1_1_kernel2_d" ],
     [ "GaussianSharpen", "class_photo_finish_1_1_gaussian_sharpen.html", "class_photo_finish_1_1_gaussian_sharpen" ],
     [ "Tags", "class_photo_finish_1_1_tags.html", "class_photo_finish_1_1_tags" ],
-    [ "transform_queue", "class_photo_finish_1_1transform__queue.html", "class_photo_finish_1_1transform__queue" ],
     [ "jpeg_source_state_t", "struct_photo_finish_1_1jpeg__source__state__t.html", "struct_photo_finish_1_1jpeg__source__state__t" ],
-    [ "jpeg_destination_state_t", "struct_photo_finish_1_1jpeg__destination__state__t.html", "struct_photo_finish_1_1jpeg__destination__state__t" ]
+    [ "jpeg_destination_state_t", "struct_photo_finish_1_1jpeg__destination__state__t.html", "struct_photo_finish_1_1jpeg__destination__state__t" ],
+    [ "pngfile_cb_pack", "struct_photo_finish_1_1pngfile__cb__pack.html", "struct_photo_finish_1_1pngfile__cb__pack" ]
 ];

@@ -23,13 +23,13 @@ var files =
       [ "Frame", "class_photo_finish_1_1_frame.html", "class_photo_finish_1_1_frame" ]
     ] ],
     [ "Image.cc", "_image_8cc.html", null ],
-    [ "Image.hh", "_image_8hh.html", [
-      [ "Image", "class_photo_finish_1_1_image.html", "class_photo_finish_1_1_image" ]
-    ] ],
+    [ "Image.hh", "_image_8hh.html", "_image_8hh" ],
     [ "ImageFile.cc", "_image_file_8cc.html", null ],
-    [ "ImageFile.hh", "_image_file_8hh.html", "_image_file_8hh" ],
+    [ "ImageFile.hh", "_image_file_8hh.html", [
+      [ "ImageFile", "class_photo_finish_1_1_image_file.html", "class_photo_finish_1_1_image_file" ],
+      [ "SOLfile", "class_photo_finish_1_1_s_o_lfile.html", "class_photo_finish_1_1_s_o_lfile" ]
+    ] ],
     [ "JP2file.cc", "_j_p2file_8cc.html", "_j_p2file_8cc" ],
-    [ "jp2test.cc", "jp2test_8cc.html", "jp2test_8cc" ],
     [ "JPEGfile.cc", "_j_p_e_gfile_8cc.html", "_j_p_e_gfile_8cc" ],
     [ "JPEGfile_iostream.cc", "_j_p_e_gfile__iostream_8cc.html", "_j_p_e_gfile__iostream_8cc" ],
     [ "JPEGfile_profiles.cc", "_j_p_e_gfile__profiles_8cc.html", "_j_p_e_gfile__profiles_8cc" ],
@@ -49,6 +49,7 @@ var files =
     [ "PNGfile.cc", "_p_n_gfile_8cc.html", "_p_n_gfile_8cc" ],
     [ "process_scans.cc", "process__scans_8cc.html", "process__scans_8cc" ],
     [ "sample.h", "sample_8h.html", "sample_8h" ],
+    [ "SOLfile.cc", "_s_o_lfile_8cc.html", "_s_o_lfile_8cc" ],
     [ "Tags.cc", "_tags_8cc.html", "_tags_8cc" ],
     [ "Tags.hh", "_tags_8hh.html", [
       [ "Tags", "class_photo_finish_1_1_tags.html", "class_photo_finish_1_1_tags" ]
@@ -56,9 +57,5 @@ var files =
     [ "Tags_EXIF_subst.cc", "_tags___e_x_i_f__subst_8cc.html", "_tags___e_x_i_f__subst_8cc" ],
     [ "Tags_IPTC_subst.cc", "_tags___i_p_t_c__subst_8cc.html", "_tags___i_p_t_c__subst_8cc" ],
     [ "Tags_XMP_subst.cc", "_tags___x_m_p__subst_8cc.html", "_tags___x_m_p__subst_8cc" ],
-    [ "TIFFfile.cc", "_t_i_f_ffile_8cc.html", "_t_i_f_ffile_8cc" ],
-    [ "TransformQueue.cc", "_transform_queue_8cc.html", null ],
-    [ "TransformQueue.hh", "_transform_queue_8hh.html", [
-      [ "transform_queue", "class_photo_finish_1_1transform__queue.html", "class_photo_finish_1_1transform__queue" ]
-    ] ]
+    [ "TIFFfile.cc", "_t_i_f_ffile_8cc.html", "_t_i_f_ffile_8cc" ]
 ];
