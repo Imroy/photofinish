@@ -64,81 +64,110 @@ namespace PhotoFinish {
     }
   }
 
-  Image::ptr Kernel2D::convolve(Image::ptr img, bool can_free) {
-    int num_threads;
-#pragma omp parallel
-    {
-#pragma omp master
-      {
-	num_threads = omp_get_num_threads();
-	std::cerr << "Convolving " << img->width() << "×" << img->height()
-		  << " image with " << _width << "×" << _height
-		  << " kernel using " << num_threads << " threads..." << std::endl;
-      }
-    }
-    auto out = std::make_shared<Image>(img->width(), img->height());
-
-    out->set_greyscale(img->is_greyscale());
-    if (img->xres().defined())
-      out->set_xres(img->xres());
-    if (img->yres().defined())
-      out->set_yres(img->yres());
+  template <typename T>
+  void Kernel2D::do_convolve(Image::ptr src, Image::ptr dest, bool can_free) {
+    cmsUInt32Number type = src->type();
+    unsigned int pixel_size = T_CHANNELS(type) + T_EXTRA(type);
 
     int *row_needs;
     if (can_free) {
-      row_needs = (int*)malloc(img->height() * sizeof(int));
-      for (unsigned int y = 0; y < img->height(); y++)
+      int num_threads = omp_get_num_threads();
+      row_needs = (int*)malloc(src->height() * sizeof(int));
+      for (unsigned int y = 0; y < src->height(); y++)
 	row_needs[y] = num_threads;
     }
     unsigned int next_freed = 0;
     omp_lock_t freed_lock;
     omp_init_lock(&freed_lock);
 #pragma omp parallel for schedule(dynamic, 1)
-    for (unsigned int y = 0; y < img->height(); y++) {
-      SAMPLE *outp = out->row(y);
+    for (unsigned int y = 0; y < src->height(); y++) {
+      T *outp = (T*)dest->row(y);
       short unsigned int ky_start = y < _centrey ? _centrey - y : 0;
-      short unsigned int ky_end = y > img->height() - _height + _centrey ? img->height() + _centrey - y : _height;
+      short unsigned int ky_end = y > src->height() - _height + _centrey ? src->height() + _centrey - y : _height;
 
-      for (unsigned int x = 0; x < img->width(); x++, outp += 3) {
+      for (unsigned int x = 0; x < src->width(); x++, outp += pixel_size) {
 	short unsigned int kx_start = x < _centrex ? _centrex - x : 0;
-	short unsigned int kx_end = x > img->width() - _width + _centrex ? img->width() + _centrex - x : _width;
+	short unsigned int kx_end = x > src->width() - _width + _centrex ? src->width() + _centrex - x : _width;
 
 	double weight = 0;
-	outp[0] = outp[1] = outp[2] = 0;
+	for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	  outp[c] = 0;
+
 	for (short unsigned int ky = ky_start; ky < ky_end; ky++) {
 	  const SAMPLE *kp = &at(kx_start, ky);
-	  SAMPLE *inp = img->at(x + kx_start - _centrex, y + ky - _centrey);
-	  for (short unsigned int kx = kx_start; kx < kx_end; kx++, kp++, inp += 3) {
+	  T *inp = (T*)src->at(x + kx_start - _centrex, y + ky - _centrey);
+	  for (short unsigned int kx = kx_start; kx < kx_end; kx++, kp++, inp += T_EXTRA(type)) {
 	    weight += *kp;
-	    outp[0] += inp[0] * *kp;
-	    outp[1] += inp[1] * *kp;
-	    outp[2] += inp[2] * *kp;
+	    for (unsigned char c = 0; c < T_CHANNELS(type); c++, inp++)
+	      outp[c] += (*inp) * (*kp);
 	  }
 	}
 	if (fabs(weight) > 1e-5) {
 	  weight = 1.0 / weight;
-	  outp[0] *= weight;
-	  outp[1] *= weight;
-	  outp[2] *= weight;
+	  for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	    outp[c] *= weight;
 	}
       }
       if (can_free && (y > _centrey)) {
 	omp_set_lock(&freed_lock);
 	row_needs[y + ky_start - _centrey]--;
 	for (;row_needs[next_freed] == 0; next_freed++)
-	  img->free_row(next_freed);
+	  src->free_row(next_freed);
 	omp_unset_lock(&freed_lock);
       }
 
       if (omp_get_thread_num() == 0)
-	std::cerr << "\r\tConvolved " << y + 1 << " of " << img->height() << " rows.";
+	std::cerr << "\r\tConvolved " << y + 1 << " of " << src->height() << " rows";
     }
+    std::cerr << "\r\tConvolved " << src->height() << " of " << src->height() << " rows." << std::endl;
     if (can_free) {
       free(row_needs);
-      for (; next_freed < img->height(); next_freed++)
-	img->free_row(next_freed);
+      for (; next_freed < src->height(); next_freed++)
+	src->free_row(next_freed);
     }
-    std::cerr << "\rConvolved " << img->height() << " of " << img->height() << " rows.        " << std::endl;
+  }
+
+  Image::ptr Kernel2D::convolve(Image::ptr img, bool can_free) {
+#pragma omp parallel
+    {
+#pragma omp master
+      {
+	std::cerr << "Convolving " << img->width() << "×" << img->height()
+		  << " image with " << _width << "×" << _height
+		  << " kernel using " << omp_get_num_threads() << " threads..." << std::endl;
+      }
+    }
+    auto out = std::make_shared<Image>(img->width(), img->height(), img->type());
+
+    if (img->xres().defined())
+      out->set_xres(img->xres());
+    if (img->yres().defined())
+      out->set_yres(img->yres());
+
+    switch (T_BYTES_REAL(img->type())) {
+    case 1:
+      do_convolve<unsigned char>(img, out, can_free);
+      break;
+
+    case 2:
+      do_convolve<short unsigned int>(img, out, can_free);
+      break;
+
+    case 4:
+      if (T_FLOAT(img->type()))
+	do_convolve<float>(img, out, can_free);
+      else
+	do_convolve<unsigned int>(img, out, can_free);
+      break;
+
+    case 8:
+      if (T_FLOAT(img->type()))
+	do_convolve<double>(img, out, can_free);
+      else
+	do_convolve<unsigned long>(img, out, can_free);
+      break;
+
+    }
 
     return out;
   }

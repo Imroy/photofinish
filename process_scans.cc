@@ -44,6 +44,12 @@ namespace po = boost::program_options;
 using namespace PhotoFinish;
 
 void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
+  orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL),
+				       FLOAT_SH(1)
+				       | COLORSPACE_SH(PT_Lab)
+				       | CHANNELS_SH(3)
+				       | BYTES_SH(sizeof(SAMPLE) & 0x07));
+
   auto resized_dest = orig_dest->dupe();
 
   resized_dest->set_depth(8);
@@ -55,6 +61,11 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 				       orig_image->width(), orig_image->height());
 
   auto resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
+
+  cmsUInt32Number dest_type = preview_file->preferred_type(resized_dest->modify_type(resized_image->type()));
+  cmsHPROFILE dest_profile = resized_dest->get_profile(dest_type);
+  resized_image->transform_colour_inplace(dest_profile, dest_type);
+
   preview_file->write(resized_image, resized_dest, can_free);
   filetags->embed(preview_file);
 }
@@ -113,6 +124,8 @@ int main(int argc, char* argv[]) {
       exit(1);
     }
   }
+
+  lcms2_error_adaptor();
 
   auto defaulttags = std::make_shared<Tags>();
   // Add paths for tag file searching

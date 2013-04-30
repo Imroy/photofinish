@@ -301,6 +301,25 @@ namespace PhotoFinish {
 
   //! Set up an error handler with LCMS2 that will throw a LibraryError exception
   void lcms2_error_adaptor(void);
+
+  class cmsTypeError : public ErrorMsg {
+  private:
+    const unsigned int _type;
+
+  public:
+    //! Constructor
+    /*!
+      \param m Message string.
+      \param t LCMS2 type.
+    */
+    cmsTypeError(const std::string& m, const unsigned int& t) :
+      ErrorMsg(m), _type(t)
+    {}
+
+    virtual const char* what() const throw() {
+      return ("Error with value of cmsType: " + _msg + ".").c_str();
+    }
+  };
 }
 
 #endif /* __EXCEPTION_HH__ */

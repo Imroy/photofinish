@@ -41,6 +41,9 @@ namespace PhotoFinish {
     //! Private constructor for square filters
     Kernel2D(short unsigned int size, short unsigned int centre);
 
+    template <typename T>
+    void do_convolve(Image::ptr src, Image::ptr dest, bool can_free = false);
+
   public:
     //! Shared pointer for a Kernel2D
     typedef std::shared_ptr<Kernel2D> ptr;

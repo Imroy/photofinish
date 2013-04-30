@@ -73,6 +73,11 @@ int main(int argc, char* argv[]) {
 
       try {
 	auto orig_image = infile->read();
+	orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL),
+					     FLOAT_SH(1)
+					     | COLORSPACE_SH(PT_Lab)
+					     | CHANNELS_SH(3)
+					     | BYTES_SH(sizeof(SAMPLE) & 0x07));
 
 	auto num_destinations = arg_destinations.size();
 	for (auto& di : arg_destinations) {
@@ -87,10 +92,6 @@ int main(int argc, char* argv[]) {
 	    } else {
 	      auto frame = destination->best_frame(orig_image);
 	      sized_image = frame->crop_resize(orig_image, destination->resize(), last_dest);
-	      if (destination->forcergb().defined() && destination->forcergb())
-		sized_image->set_colour();
-	      if (destination->forcegrey().defined() && destination->forcegrey())
-		sized_image->set_greyscale();
 	      if (frame->size().defined())
 		size = frame->size();
 	    }
@@ -116,10 +117,16 @@ int main(int argc, char* argv[]) {
 	      std::cerr << "Creating directory " << destination->dir() << "." << std::endl;
 	      create_directory(destination->dir());
 	    }
+
 	    std::string format = "jpeg";
 	    if (destination->format().defined())
 	      format = destination->format();
 	    auto outfile = ImageFile::create(destination->dir() / fi.stem(), format);
+
+	    cmsUInt32Number dest_type = outfile->preferred_type(destination->modify_type(sharp_image->type()));
+	    cmsHPROFILE dest_profile = destination->get_profile(dest_type);
+	    sharp_image->transform_colour_inplace(dest_profile, dest_type);
+
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
 	    tags->embed(outfile);
 	  } catch (DestinationError& ex) {

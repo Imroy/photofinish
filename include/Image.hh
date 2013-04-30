@@ -20,36 +20,53 @@
 #define __IMAGE_HH__
 
 #include <memory>
+#include <lcms2.h>
 #include "Definable.hh"
 #include "sample.h"
 
+// Why doesn't lcms2.h define something like this?
+#define T_BYTES_REAL(t) (T_BYTES(t) == 0 ? 8 : T_BYTES(t))
+
+// Some masks for manipulating LCMS "types"
+#define FLOAT_MASK	(0xffffffff ^ FLOAT_SH(1))
+#define OPTIMIZED_MASK	(0xffffffff ^ OPTIMIZED_SH(1))
+#define COLORSPACE_MASK	(0xffffffff ^ COLORSPACE_SH(31))
+#define SWAPFIRST_MASK	(0xffffffff ^ SWAPFIRST_SH(1))
+#define FLAVOR_MASK	(0xffffffff ^ FLAVOR_SH(1))
+#define PLANAR_MASK	(0xffffffff ^ PLANAR_SH(1))
+#define ENDIAN16_MASK	(0xffffffff ^ ENDIAN_SH(1))
+#define DOSWAP_MASK	(0xffffffff ^ DOSWAP_SH(1))
+#define EXTRA_MASK	(0xffffffff ^ EXTRA_SH(7))
+#define CHANNELS_MASK	(0xffffffff ^ CHANNELS_SH(15))
+#define BYTES_MASK	(0xffffffff ^ BYTES_SH(7))
+
 namespace PhotoFinish {
 
-  //! A floating-point, L*a*b* image class
+  //! An image class
   class Image {
   private:
     unsigned int _width, _height;
-    bool _greyscale;		// Used by readers and writers when converting colour spaces
-    SAMPLE **_rowdata;
+    cmsHPROFILE _profile;
+    cmsUInt32Number _type;
+    size_t _pixel_size, _row_size;
+    unsigned char **_rowdata;
     definable<double> _xres, _yres;		// PPI
 
     inline void _check_rowdata_alloc(unsigned int y) {
       if (_rowdata[y] == NULL)
-	_rowdata[y] = (SAMPLE*)malloc(_width * 3 * sizeof(SAMPLE));
+	_rowdata[y] = (unsigned char*)malloc(_row_size);
     }
 
   public:
     //! Shared pointer for an Image
     typedef std::shared_ptr<Image> ptr;
 
-    //! Empty constructor
-    Image();
-
     //! Constructor
     /*!
       \param w,h Width and height of the image
+      \param t LCMS2 pixel type
     */
-    Image(unsigned int w, unsigned int h);
+    Image(unsigned int w, unsigned int h, cmsUInt32Number t);
 
     //! Destructor
     ~Image();
@@ -60,17 +77,14 @@ namespace PhotoFinish {
     //! The height of this image
     inline const unsigned int height(void) const { return _height; }
 
-    //! Is this image greyscale?
-    inline const bool is_greyscale(void) const { return _greyscale; }
+    //! Get the ICC profile
+    inline const cmsHPROFILE profile(void) const { return _profile; }
 
-    //! Is this image colour? i.e opposite of is_greyscale()
-    inline const bool is_colour(void) const { return !_greyscale; }
+    //! Set the ICC profile
+    inline void set_profile(cmsHPROFILE p) { _profile = p; }
 
-    //! Set this image as greyscale
-    inline void set_greyscale(bool g = true) { _greyscale = g; }
-
-    //! Set this image as colour i.e opposite of set_greyscale
-    inline void set_colour(bool c = true) { _greyscale = !c; }
+    //! Get the CMS type
+    inline cmsUInt32Number type(void) const { return _type; }
 
     //! The X resolution of this image (PPI)
     inline const definable<double> xres(void) const { return _xres; }
@@ -93,22 +107,22 @@ namespace PhotoFinish {
     //! Set the resolution given the length of the longest side (in inches)
     inline void set_resolution_from_size(double size) { _xres = _yres = (_width > _height ? _width : _height) / size; }
 
+    //! Return the size of a pixel in bytes
+    inline size_t pixel_size(void) const { return _pixel_size; }
+
+    //! Retun the size of a row in bytes
+    inline size_t row_size(void) const { return _row_size; }
+
     //! Pointer to pixel data at start of row
-    inline SAMPLE* row(unsigned int y) {
+    inline unsigned char* row(unsigned int y) {
       _check_rowdata_alloc(y);
       return _rowdata[y];
     }
 
     //! Pointer to pixel data at coordinates
-    inline SAMPLE* at(unsigned int x, unsigned int y) {
+    inline unsigned char* at(unsigned int x, unsigned int y) {
       _check_rowdata_alloc(y);
-      return &(_rowdata[y][x * 3]);
-    }
-
-    //! Reference to pixel data at coordinates and of a given channel
-    inline SAMPLE& at(unsigned int x, unsigned int y, unsigned char c) {
-      _check_rowdata_alloc(y);
-      return _rowdata[y][c + (x * 3)];
+      return &(_rowdata[y][x * _pixel_size]);
     }
 
     //! Free the memory storing row 'y'
@@ -118,6 +132,27 @@ namespace PhotoFinish {
 	_rowdata[y] = NULL;
       }
     }
+
+    //! Create either an sRGB or greyscale profile depending on image type
+    static cmsHPROFILE default_profile(cmsUInt32Number default_type);
+
+    //! Transform this image into a different colour space and/or ICC profile, making a new image
+    /*!
+      \param dest_profile The ICC profile of the destination
+      \param dest_type The LCMS2 pixel format
+      \param intent The ICC intent of the transform, defaults to perceptual
+      \param can_free Whether rows can be freed after transforming, defaults to false.
+      \return A new image
+     */
+    ptr transform_colour(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent = INTENT_PERCEPTUAL, bool can_free = false);
+
+    //! Transform this image in-place into a different colour space and/or ICC profile
+    /*!
+      \param dest_profile The ICC profile of the destination
+      \param dest_type The LCMS2 pixel format
+      \param intent The ICC intent of the transform, defaults to perceptual
+     */
+    void transform_colour_inplace(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent = INTENT_PERCEPTUAL);
 
   };
 

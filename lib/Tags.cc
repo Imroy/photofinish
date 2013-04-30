@@ -285,8 +285,14 @@ namespace PhotoFinish {
 
     auto dest = std::make_shared<Destination>();
     dest->set_jpeg(D_JPEG(50, 1, 1, false));
+    dest->set_depth(8);
 
     JPEGfile thumbfile("");
+
+    cmsUInt32Number dest_type = thumbfile.preferred_type(dest->modify_type(img->type()));
+    cmsHPROFILE dest_profile = dest->get_profile(COLORSPACE_SH(PT_RGB));
+    thumbimage->transform_colour_inplace(dest_profile, dest_type);
+
     std::ostringstream oss;
     thumbfile.write(oss, thumbimage, dest);
 

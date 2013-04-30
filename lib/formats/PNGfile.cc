@@ -27,8 +27,6 @@
 #include <iostream>
 #include "ImageFile.hh"
 #include "Image.hh"
-#include "TransformQueue.hh"
-#include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
 
@@ -39,6 +37,11 @@ namespace PhotoFinish {
     _png(NULL), _info(NULL)
   {}
 
+  struct pngfile_cb_pack {
+    Destination::ptr destination;
+    Image::ptr image;
+  };
+
   //! Called by libPNG when the iHDR chunk has been read with the main "header" information
   void png_info_cb(png_structp png, png_infop info) {
     png_set_gamma(png, 1.0, 1.0);
@@ -47,30 +50,29 @@ namespace PhotoFinish {
     png_set_swap(png);
     png_read_update_info(png, info);
 
-    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
+    pngfile_cb_pack *pack = (pngfile_cb_pack*)png_get_progressive_ptr(png);
 
     unsigned int width, height;
     int bit_depth, colour_type;
     png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
     std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
-    auto img = std::make_shared<Image>(width, height);
-    queue->destination()->set_depth(bit_depth);
+    pack->destination->set_depth(bit_depth);
 
-    cmsUInt32Number cmsType;
+    cmsUInt32Number type = BYTES_SH(bit_depth >> 3);
     switch (colour_type) {
     case PNG_COLOR_TYPE_GRAY:
-      cmsType = COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(bit_depth >> 3);
-      img->set_greyscale();
+      type |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       break;
     case PNG_COLOR_TYPE_RGB:
-      cmsType = COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(bit_depth >> 3);
+      type |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       break;
     default:
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
-    queue->set_image(img, cmsType);
+    auto img = std::make_shared<Image>(width, height, type);
+    pack->image = img;
 
     {
       unsigned int xres, yres;
@@ -90,9 +92,6 @@ namespace PhotoFinish {
       }
     }
 
-    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHPROFILE profile = NULL;
-
     if (png_get_valid(png, info, PNG_INFO_iCCP)) {
       std::cerr << "\tImage has iCCP chunk." << std::endl;
       char *profile_name;
@@ -101,45 +100,27 @@ namespace PhotoFinish {
       unsigned int profile_len;
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
-	profile = cmsOpenProfileFromMem(profile_data, profile_len);
+	cmsOpenProfileFromMem(profile_data, profile_len);
 	void *data_copy = malloc(profile_len);
 	memcpy(data_copy, profile_data, profile_len);
-	queue->destination()->set_profile(profile_name, data_copy, profile_len);
+	pack->destination->set_profile(profile_name, data_copy, profile_len);
+	img->set_profile(pack->destination->get_profile(type));
       }
     }
-    if (profile == NULL)
-      profile = ImageFile::default_profile(cmsType);
-
-    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
-						 lab, IMAGE_TYPE,
-						 INTENT_PERCEPTUAL, 0);
-    cmsCloseProfile(lab);
-    cmsCloseProfile(profile);
-
-    queue->set_transform(transform);
   }
 
   //! Called by libPNG when a row of image data has been read
   void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
-    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
-    std::cerr << "\r\tRead " << (row_num + 1) << " of " << queue->image()->height() << " rows ("
-	      << queue->num_rows() << " in queue for colour transformation)   ";
-    queue->add_copy(row_num, row_data);
+    pngfile_cb_pack *pack = (pngfile_cb_pack*)png_get_progressive_ptr(png);
+    memcpy(pack->image->row(row_num), row_data, pack->image->row_size());
+    std::cerr << "\r\tRead " << (row_num + 1) << " of " << pack->image->height() << " rows";
   }
 
   //! Called by libPNG when the image data has finished
   void png_end_cb(png_structp png, png_infop info) {
-    //    transform_queue *queue = (transform_queue*)png_get_progressive_ptr(png);
+    //    pngfile_cb_pack *pack = (pngfile_cb_pack*)png_get_progressive_ptr(png);
   }
 
-  //! Loop, processing rows from the workqueue until it's empty and reading is finished
-  void png_run_workqueue(transform_queue *queue) {
-    while (!(queue->empty() && queue->finished())) {
-      while (queue->empty() && !queue->finished())
-	usleep(100);
-      queue->reader_process_row();
-    }
-  }
 
   Image::ptr PNGfile::read(Destination::ptr dest) {
     if (_is_open)
@@ -176,38 +157,49 @@ namespace PhotoFinish {
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
-    transform_queue queue(dest);
+    pngfile_cb_pack pack;
+    pack.destination = dest;
 
-#pragma omp parallel shared(queue)
-    {
-      int th_id = omp_get_thread_num();
-      if (th_id == 0) {		// Master thread
-	std::cerr << "\tReading PNG image and transforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
-	png_set_progressive_read_fn(_png, (void *)&queue, png_info_cb, png_row_cb, png_end_cb);
-	png_byte buffer[1048576];
-	size_t length;
-	do {
-	  ifs.read((char*)buffer, 1048576);
-	  length = ifs.gcount();
-	  png_process_data(_png, _info, buffer, length);
-	  while (queue.num_rows() > 100)
-	    queue.reader_process_row();
-	} while (length > 0);
-	std::cerr << std::endl;
-	queue.set_finished();
-	png_run_workqueue(&queue);	// Help finish off the transforming of image data
-      } else {
-	png_run_workqueue(&queue);	// Worker threads just run the workqueue
-      }
-    }
-    queue.free_transform();
+    std::cerr << "\tReading PNG image..." << std::endl;
+    png_set_progressive_read_fn(_png, (void *)&pack, png_info_cb, png_row_cb, png_end_cb);
+    png_byte buffer[1048576];
+    size_t length;
+    do {
+      ifs.read((char*)buffer, 1048576);
+      length = ifs.gcount();
+      png_process_data(_png, _info, buffer, length);
+    } while (length > 0);
+    std::cerr << "\r\tRead " << pack.image->height() << " of " << pack.image->height() << " rows";
 
     png_destroy_read_struct(&_png, &_info, NULL);
     ifs.close();
     _is_open = false;
 
     std::cerr << "Done." << std::endl;
-    return queue.image();
+    return pack.image;
+  }
+
+  cmsUInt32Number PNGfile::preferred_type(cmsUInt32Number type) {
+    type &= FLOAT_MASK;
+
+    if (T_COLORSPACE(type) != PT_GRAY) {
+      type &= COLORSPACE_MASK;
+      type |= COLORSPACE_SH(PT_RGB);
+      type &= CHANNELS_MASK;
+      type |= CHANNELS_SH(3);
+    }
+
+    type &= PLANAR_MASK;
+
+    type &= EXTRA_MASK;
+
+    type &= BYTES_MASK;
+    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2))
+      type |= BYTES_SH(2);
+    else
+      type |= BYTES_SH(1);
+
+    return type;
   }
 
   //! libPNG callback for writing to an ostream
@@ -220,28 +212,6 @@ namespace PhotoFinish {
   void png_flush_ostream_cb(png_structp png) {
     std::ostream *os = (std::ostream*)png_get_io_ptr(png);
     os->flush();
-  }
-
-  void PNGfile::mark_sGrey(cmsUInt32Number intent) const {
-    if (!_is_open)
-      throw FileOpenError("not open");
-
-    png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
-  }
-
-  void PNGfile::mark_sRGB(cmsUInt32Number intent) const {
-    if (!_is_open)
-      throw FileOpenError("not open");
-
-    png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
-  }
-
-  void PNGfile::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
-    if (!_is_open)
-      throw FileOpenError("not open");
-
-    std::cerr << "\tEmbedding profile \"" << name << "\" (" << len << " bytes)." << std::endl;
-    png_set_iCCP(_png, _info, name.c_str(), 0, data, len);
   }
 
   void PNGfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
@@ -273,25 +243,30 @@ namespace PhotoFinish {
     png_set_write_fn(_png, &ofs, png_write_ostream_cb, png_flush_ostream_cb);
 
     int png_colour_type, png_channels;
-    cmsUInt32Number cmsTempType = Ditherer::cmsBaseType;
-    if (img->is_colour()) {
-      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
+    cmsUInt32Number type = img->type();
+    switch (T_COLORSPACE(type)) {
+    case PT_RGB:
       png_colour_type = PNG_COLOR_TYPE_RGB;
-    } else {
-      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
-      png_colour_type = PNG_COLOR_TYPE_GRAY;
-    }
-    png_channels = T_CHANNELS(cmsTempType);
+      break;
 
-    int depth = 8;	// Default value
-    if (dest->depth().defined())
-      depth = dest->depth();
+    case PT_GRAY:
+      png_colour_type = PNG_COLOR_TYPE_GRAY;
+      break;
+
+    default:
+      throw cmsTypeError("Not RGB or greyscale", type);
+    }
+    png_channels = T_CHANNELS(type);
+
+    int depth = T_BYTES(type);
+    if (depth > 2)
+      throw cmsTypeError("Not 8 or 16-bit", type);
 
     std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
-	      << " " << depth << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
+	      << " " << (depth << 3) << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
 	      << " PNG image..." << std::endl;
     png_set_IHDR(_png, _info,
-		 img->width(), img->height(), depth, png_colour_type,
+		 img->width(), img->height(), depth << 3, png_colour_type,
 		 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_set_filter(_png, 0, PNG_ALL_FILTERS);
     png_set_compression_level(_png, Z_BEST_COMPRESSION);
@@ -302,11 +277,36 @@ namespace PhotoFinish {
       png_set_pHYs(_png, _info, xres, yres, PNG_RESOLUTION_METER);
     }
 
-    cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
-    if (dest->intent().defined())
-      intent = dest->intent();
+    {
+      cmsUInt32Number intent = INTENT_PERCEPTUAL;        // Default value
+      if (dest->intent().defined())
+	intent = dest->intent();
 
-    cmsHPROFILE profile = this->get_and_embed_profile(dest, cmsTempType, intent);
+      char *profile_name = NULL;
+      unsigned int profile_name_len;
+      if ((profile_name_len = cmsGetProfileInfoASCII(img->profile(), cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
+	profile_name = (char*)malloc(profile_name_len);
+	cmsGetProfileInfoASCII(img->profile(), cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+
+	if (strncmp(profile_name, "sGrey built-in", 14) == 0)
+	  png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
+	else if (strncmp(profile_name, "sRGB built-in", 13) == 0)
+	  png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
+      }
+
+      unsigned char *profile_data = NULL;
+      unsigned int profile_len = 0;
+      cmsSaveProfileToMem(img->profile(), NULL, &profile_len);
+      if (profile_len > 0) {
+	profile_data = (unsigned char*)malloc(profile_len);
+	cmsSaveProfileToMem(img->profile(), profile_data, &profile_len);
+
+	std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << profile_len << " bytes)." << std::endl;
+	png_set_iCCP(_png, _info, profile_name, 0, profile_data, profile_len);
+      }
+      if (profile_name)
+	free(profile_name);
+    }
 
     {
       time_t t = time(NULL);
@@ -318,70 +318,24 @@ namespace PhotoFinish {
       }
     }
 
-    if (depth > 8)
-      png_set_swap(_png);
-
     png_write_info(_png, _info);
 
-    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 profile, cmsTempType,
-						 intent, 0);
-    cmsCloseProfile(lab);
-    cmsCloseProfile(profile);
+    if (T_FLAVOR(type))
+      png_set_invert_mono(_png);
 
-    transform_queue queue(dest, img, cmsTempType, transform);
-    for (unsigned int y = 0; y < img->height(); y++)
-      queue.add(y);
+    if (depth > 1)
+      png_set_swap(_png);
 
-#pragma omp parallel shared(queue)
-    {
-      int th_id = omp_get_thread_num();
-      if (th_id == 0) {		// Master thread
-	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
+    std::cerr << "\tWriting image..." << std::endl;
+    for (unsigned int y = 0; y < img->height(); y++) {
+      png_write_row(_png, (png_const_bytep)img->row(y));
 
-	Ditherer ditherer(img->width(), png_channels);
-	png_bytep dithered_row = NULL;
-	if (depth == 8)
-	  dithered_row = (png_bytep)malloc(img->width() * png_channels);
+      if (can_free)
+	img->free_row(y);
 
-	for (unsigned int y = 0; y < img->height(); y++) {
-	  // Process rows until the one we need becomes available, or the queue is empty
-	  short unsigned *row = (short unsigned int*)queue.row(y);
-	  while (!queue.empty() && (row == NULL)) {
-	    queue.writer_process_row();
-	    row = (short unsigned int*)queue.row(y);
-	  }
-
-	  // If it's still not available, something has gone wrong
-	  if (row == NULL) {
-	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	    exit(2);
-	  }
-
-	  if (can_free)
-	    img->free_row(y);
-
-	  if (depth == 8) {
-	    ditherer.dither(row, dithered_row, y == img->height() - 1);
-	    png_write_row(_png, dithered_row);
-	  } else
-	    png_write_row(_png, (png_const_bytep)row);
-
-	  queue.free_row(y);
-
-	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
-		    << queue.num_rows() << " left)  ";
-	}
-	std::cerr << std::endl;
-	if (depth == 8)
-	  free(dithered_row);
-      } else {	// Other thread(s) transform the image data
-	while (!queue.empty())
-	  queue.writer_process_row();
-      }
+      std::cerr << "\r\tWritten " << y + 1 << " of " << img->height() << " rows";
     }
-    cmsDeleteTransform(transform);
+    std::cerr << "\r\tWritten " << img->height() << " of " << img->height() << " rows." << std::endl;
 
     png_write_end(_png, _info);
 

@@ -121,11 +121,38 @@ namespace PhotoFinish {
     }
   }
 
+  template <typename T>
+  void Kernel1Dvar::do_convolve_h(Image::ptr src, Image::ptr dest, bool can_free) {
+    cmsUInt32Number type = src->type();
+    unsigned int pixel_size = T_CHANNELS(type) + T_EXTRA(type);
+#pragma omp parallel for schedule(dynamic, 1)
+    for (unsigned int y = 0; y < src->height(); y++) {
+      T *out = (T*)dest->row(y);
+
+      for (unsigned int nx = 0; nx < dest->width(); nx++, out += pixel_size) {
+	unsigned int max = size(nx);
+
+	for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	  out[c] = 0;
+	const SAMPLE *weight = row(nx);
+	const T *in = (T*)src->at(start(nx), y);
+	for (unsigned int j = 0; j < max; j++, weight++, in += T_EXTRA(type)) {
+	  for (unsigned char c = 0; c < T_CHANNELS(type); c++, in++)
+	    out[c] += (*in) * (*weight);
+	}
+      }
+      if (can_free)
+	src->free_row(y);
+      if (omp_get_thread_num() == 0)
+	std::cerr << "\r\tConvolved " << y + 1 << " of " << src->height() << " rows";
+    }
+    std::cerr << "\r\tConvolved " << src->height() << " of " << src->height() << " rows." << std::endl;
+  }
+
   //! Convolve an image horizontally
   Image::ptr Kernel1Dvar::convolve_h(Image::ptr img, bool can_free) {
-    auto ni = std::make_shared<Image>(_to_size_i, img->height());
+    auto ni = std::make_shared<Image>(_to_size_i, img->height(), img->type());
 
-    ni->set_greyscale(img->is_greyscale());
     if (img->xres().defined())
       ni->set_xres(img->xres() / _scale);
     if (img->yres().defined())
@@ -140,103 +167,133 @@ namespace PhotoFinish {
 		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
-#pragma omp parallel for schedule(dynamic, 1)
-    for (unsigned int y = 0; y < img->height(); y++) {
-      SAMPLE *out = ni->row(y);
 
-      for (unsigned int nx = 0; nx < _to_size_i; nx++, out += 3) {
-	unsigned int max = size(nx);
+    switch (T_BYTES_REAL(img->type())) {
+    case 1:
+      do_convolve_h<unsigned char>(img, ni, can_free);
+      break;
 
-	out[0] = out[1] = out[2] = 0.0;
-	const SAMPLE *weight = this->row(nx);
-	const SAMPLE *in = img->at(this->start(nx), y);
-	for (unsigned int j = 0; j < max; j++, weight++, in += 3) {
-	  out[0] += in[0] * *weight;
-	  out[1] += in[1] * *weight;
-	  out[2] += in[2] * *weight;
-	}
-      }
-      if (can_free)
-	img->free_row(y);
-      if (omp_get_thread_num() == 0)
-	std::cerr << "\r\tConvolved " << y + 1 << " of " << img->height() << " rows.";
+    case 2:
+      do_convolve_h<short unsigned int>(img, ni, can_free);
+      break;
+
+    case 4:
+      if (T_FLOAT(img->type()))
+	do_convolve_h<float>(img, ni, can_free);
+      else
+	do_convolve_h<unsigned int>(img, ni, can_free);
+      break;
+
+    case 8:
+      if (T_FLOAT(img->type()))
+	do_convolve_h<double>(img, ni, can_free);
+      else
+	do_convolve_h<unsigned long>(img, ni, can_free);
+      break;
+
     }
-    std::cerr << "\rConvolved " << img->height() << " of " << img->height() << " rows.        " << std::endl;
 
     return ni;
   }
 
-  //! Convolve an image vertically
-  Image::ptr Kernel1Dvar::convolve_v(Image::ptr img, bool can_free) {
-    auto ni = std::make_shared<Image>(img->width(), _to_size_i);
+  template <typename T>
+  void Kernel1Dvar::do_convolve_v(Image::ptr src, Image::ptr dest, bool can_free) {
+    cmsUInt32Number type = src->type();
 
-    ni->set_greyscale(img->is_greyscale());
-    if (img->xres().defined())
-      ni->set_xres(img->xres());
-    if (img->yres().defined())
-      ni->set_yres(img->yres() / _scale);
-
-    int num_threads;
-#pragma omp parallel
-    {
-#pragma omp master
-      {
-	num_threads = omp_get_num_threads();
-	std::cerr << "Convolving image vertically " << img->height() << " => "
-		  << std::setprecision(2) << std::fixed << _to_size_i
-		  << " using " << num_threads << " threads..." << std::endl;
-      }
-    }
     int *row_needs;
     if (can_free) {
-      row_needs = (int*)malloc(img->height() * sizeof(int));
-      for (unsigned int y = 0; y < img->height(); y++)
+      row_needs = (int*)malloc(src->height() * sizeof(int));
+      int num_threads = omp_get_num_threads();
+      for (unsigned int y = 0; y < src->height(); y++)
 	row_needs[y] = num_threads;
     }
     unsigned int next_freed = 0;
     omp_lock_t freed_lock;
     omp_init_lock(&freed_lock);
 #pragma omp parallel for schedule(dynamic, 1)
-    for (unsigned int ny = 0; ny < _to_size_i; ny++) {
+    for (unsigned int ny = 0; ny < dest->height(); ny++) {
       unsigned int max = size(ny);
-      unsigned int ystart = this->start(ny);
+      unsigned int ystart = start(ny);
       unsigned int j = 0;
-      const SAMPLE *weight = &this->at(j, ny);
+      const SAMPLE *weight = &at(j, ny);
 
-      SAMPLE *in = img->row(ystart);
-      SAMPLE *out = ni->row(ny);
-      for (unsigned int x = 0; x < img->width(); x++, in += 3, out += 3) {
-	out[0] = in[0] * *weight;
-	out[1] = in[1] * *weight;
-	out[2] = in[2] * *weight;
+      T *in = (T*)src->row(ystart);
+      T *out = (T*)dest->row(ny);
+      for (unsigned int x = 0; x < src->width(); x++, in += T_EXTRA(type), out += T_EXTRA(type)) {
+	for (unsigned char c = 0; c < T_CHANNELS(type); c++, in++, out++)
+	  *out = (*in) * (*weight);
       }
 
       weight++;
       for (j = 1; j < max; j++, weight++) {
-	in = img->row(ystart + j);
-	out = ni->row(ny);
-	for (unsigned int x = 0; x < img->width(); x++, in += 3, out += 3) {
-	  out[0] += in[0] * *weight;
-	  out[1] += in[1] * *weight;
-	  out[2] += in[2] * *weight;
+	in = (T*)src->row(ystart + j);
+	out = (T*)dest->row(ny);
+	for (unsigned int x = 0; x < src->width(); x++, in += T_EXTRA(type), out += T_EXTRA(type)) {
+	  for (unsigned char c = 0; c < T_CHANNELS(type); c++, in++, out++)
+	    *out += (*in) * (*weight);
 	}
       }
-      if (can_free && (((ny < _to_size_i - 1) && (this->start(ny + 1) > ystart)) || (ny == _to_size_i - 1))) {
+      if (can_free && (((ny < _to_size_i - 1) && (start(ny + 1) > ystart)) || (ny == _to_size_i - 1))) {
 	omp_set_lock(&freed_lock);
 	row_needs[ystart]--;
 	for (;row_needs[next_freed] == 0; next_freed++)
-	  img->free_row(next_freed);
+	  src->free_row(next_freed);
 	omp_unset_lock(&freed_lock);
       }
       if (omp_get_thread_num() == 0)
-	std::cerr << "\r\tConvolved " << ny + 1 << " of " << _to_size_i << " rows.";
+	std::cerr << "\r\tConvolved " << ny + 1 << " of " << _to_size_i << " rows";
     }
+    std::cerr << "\r\tConvolved " << _to_size_i << " of " << _to_size_i << " rows." << std::endl;
     if (can_free) {
       free(row_needs);
-      for (; next_freed < img->height(); next_freed++)
-	img->free_row(next_freed);
+      for (; next_freed < src->height(); next_freed++)
+	src->free_row(next_freed);
     }
-    std::cerr << "\rConvolved " << _to_size_i << " of " << _to_size_i << " rows.        " << std::endl;
+  }
+
+  //! Convolve an image vertically
+  Image::ptr Kernel1Dvar::convolve_v(Image::ptr img, bool can_free) {
+    auto ni = std::make_shared<Image>(img->width(), _to_size_i, img->type());
+
+    if (img->xres().defined())
+      ni->set_xres(img->xres());
+    if (img->yres().defined())
+      ni->set_yres(img->yres() / _scale);
+
+#pragma omp parallel
+    {
+#pragma omp master
+      {
+	std::cerr << "Convolving image vertically " << img->height() << " => "
+		  << std::setprecision(2) << std::fixed << _to_size_i
+		  << " using " << omp_get_num_threads() << " threads..." << std::endl;
+      }
+    }
+
+    switch (T_BYTES_REAL(img->type())) {
+    case 1:
+      do_convolve_v<unsigned char>(img, ni, can_free);
+      break;
+
+    case 2:
+      do_convolve_v<short unsigned int>(img, ni, can_free);
+      break;
+
+    case 4:
+      if (T_FLOAT(img->type()))
+	do_convolve_v<float>(img, ni, can_free);
+      else
+	do_convolve_v<unsigned int>(img, ni, can_free);
+      break;
+
+    case 8:
+      if (T_FLOAT(img->type()))
+	do_convolve_v<double>(img, ni, can_free);
+      else
+	do_convolve_v<unsigned long>(img, ni, can_free);
+      break;
+
+    }
 
     return ni;
   }

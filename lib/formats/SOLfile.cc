@@ -19,7 +19,6 @@
 #include <lcms2.h>
 #include "ImageFile.hh"
 #include "Image.hh"
-#include "TransformQueue.hh"
 #include "Ditherer.hh"
 
 namespace fs = boost::filesystem;
@@ -31,6 +30,24 @@ namespace PhotoFinish {
 
   Image::ptr SOLfile::read(Destination::ptr dest) {
     throw Unimplemented("SOLfile", "read");
+  }
+
+  cmsUInt32Number SOLfile::preferred_type(cmsUInt32Number type) {
+    type &= FLOAT_MASK;
+
+    type &= COLORSPACE_MASK;
+    type |= COLORSPACE_SH(PT_RGB);
+    type &= CHANNELS_MASK;
+    type |= CHANNELS_SH(3);
+
+    type &= PLANAR_MASK;
+
+    type &= EXTRA_MASK;
+
+    type &= BYTES_MASK;
+    type |= BYTES_SH(2);
+
+    return type;
   }
 
   unsigned char header[12] = { 0x53, 0x4f, 0x4c, 0x3a, 0x00, 0x00, 0x00, 0x00,
@@ -59,70 +76,31 @@ namespace PhotoFinish {
       write_be(&height, 4, ofs);
     }
 
-    cmsUInt32Number cmsType = Ditherer::cmsBaseType | COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
-    cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
-    if (dest->intent().defined())
-      intent = dest->intent();
+    cmsUInt32Number type = img->type();
+    if (T_COLORSPACE(type) != PT_RGB)
+      throw cmsTypeError("Not RGB", type);
+    if (T_BYTES(type) != 2)
+      throw cmsTypeError("Not 16-bit", type);
 
-    cmsHPROFILE profile = this->default_profile(cmsType);
+    Ditherer ditherer(img->width(), 3, { 31, 63, 31 });
+    unsigned char *temprow = (unsigned char*)malloc(img->width() * 3);
 
-    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 profile, cmsType,
-						 intent, 0);
-    cmsCloseProfile(lab);
-    cmsCloseProfile(profile);
+    for (unsigned int y = 0; y < img->height(); y++) {
+      ditherer.dither((unsigned short *)img->row(y), temprow, y == img->height() - 1);
+      if (can_free)
+	img->free_row(y);
 
-    transform_queue queue(dest, img, cmsType, transform);
-    for (unsigned int y = 0; y < img->height(); y++)
-      queue.add(y);
-
-#pragma omp parallel shared(queue)
-    {
-      int th_id = omp_get_thread_num();
-      if (th_id == 0) {		// Master thread
-	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
-
-	Ditherer ditherer(img->width(), 3, { 31, 63, 31 });
-	unsigned char *temprow = (unsigned char*)malloc(img->width() * 3);
-
-	for (unsigned int y = 0; y < img->height(); y++) {
-	  // Process rows until the one we need becomes available, or the queue is empty
-	  short unsigned int *row = (short unsigned int*)queue.row(y);
-	  while (!queue.empty() && (row == NULL)) {
-	    queue.writer_process_row();
-	    row = (short unsigned int*)queue.row(y);
-	  }
-
-	  // If it's still not available, something has gone wrong
-	  if (row == NULL) {
-	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	    exit(2);
-	  }
-
-	  if (can_free)
-	    img->free_row(y);
-	  ditherer.dither(row, temprow, y == img->height() - 1);
-	  queue.free_row(y);
-
-	  unsigned char *inp = temprow;
-	  for (unsigned int x = 0; x < img->width(); x++) {
-	    unsigned char r = *inp++;
-	    unsigned char g = *inp++;
-	    unsigned char b = *inp++;
-	    ofs.put(b | ((g & 0x07) << 5));
-	    ofs.put((g >> 3) | (r << 3));
-	  }
-	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
-		    << queue.num_rows() << " left)  ";
-	}
-	std::cerr << std::endl;
-      } else {	// Other thread(s) transform the image data
-	while (!queue.empty())
-	  queue.writer_process_row();
+      unsigned char *inp = temprow;
+      for (unsigned int x = 0; x < img->width(); x++) {
+	unsigned char r = *inp++;
+	unsigned char g = *inp++;
+	unsigned char b = *inp++;
+	ofs.put(b | ((g & 0x07) << 5));
+	ofs.put((g >> 3) | (r << 3));
       }
+      std::cerr << "\r\tWrote " << y + 1 << " of " << img->height() << " rows";
     }
-    cmsDeleteTransform(transform);
+    std::cerr << "\r\tWrote " << img->height() << " of " << img->height() << " rows." << std::endl;
 
     ofs.close();
     _is_open = false;

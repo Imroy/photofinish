@@ -147,6 +147,56 @@ namespace PhotoFinish {
     return best_frame;
   }
 
+  cmsUInt32Number Destination::modify_type(cmsUInt32Number type) {
+    if (this->forcergb().defined() && this->forcergb()) {
+      std::cerr << "Forcing RGB..." << std::endl;
+      type &= COLORSPACE_MASK;
+      type |= COLORSPACE_SH(PT_RGB);
+      type &= CHANNELS_MASK;
+      type |= CHANNELS_SH(3);
+    }
+
+    if (this->forcegrey().defined() && this->forcegrey()) {
+      std::cerr << "Forcing greyscale..." << std::endl;
+      type &= COLORSPACE_MASK;
+      type |= COLORSPACE_SH(PT_GRAY);
+      type &= CHANNELS_MASK;
+      type |= CHANNELS_SH(1);
+    }
+
+    type &= BYTES_MASK;
+    if (this->depth().defined()) {
+      std::cerr << "Changing depth to " << (this->depth() >> 3) << " bytes..." << std::endl;
+      type |= BYTES_SH(this->depth() >> 3);
+    } else {
+      std::cerr << "Changing depth to 1 byte..." << std::endl;
+      type |= BYTES_SH(1);
+    }
+
+    return type;
+  }
+
+  cmsHPROFILE Destination::get_profile(cmsUInt32Number default_type) {
+    cmsHPROFILE profile = NULL;
+
+    if (this->profile()) {
+      profile = this->profile()->profile();
+
+      std::string profile_name = this->profile()->name();
+      cmsMLU *DescriptionMLU = cmsMLUalloc(NULL, 1);
+      if (DescriptionMLU != NULL) {
+	std::cerr << "Adding name \"" << profile_name << "\" to profile..." << std::endl;
+	if (cmsMLUsetASCII(DescriptionMLU,  "en", "AU", profile_name.c_str()))
+	  cmsWriteTag(profile, cmsSigProfileDescriptionTag,  DescriptionMLU);
+	cmsMLUfree(DescriptionMLU);
+      }
+    } else {
+      profile = Image::default_profile(default_type);
+    }
+
+    return profile;
+  }
+
   //! Read a Destination record from a YAML file
   void operator >> (const YAML::Node& node, Destination& d) {
     if (const YAML::Node *n = node.FindValue("name"))

@@ -124,6 +124,12 @@ namespace PhotoFinish {
 
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 
+    //! Modify an LCMS2 pixel format using some of the parameters in the destination
+    cmsUInt32Number modify_type(cmsUInt32Number orig_type = 0);
+
+    //! Return an LCMS2 profile object from the profile data
+    cmsHPROFILE get_profile(cmsUInt32Number default_type);
+
     inline const D_profile::ptr profile(void) const { return _profile; }
     inline void set_profile(std::string name, fs::path filepath) { _profile = std::make_shared<D_profile>(name, filepath); }
     inline void set_profile(std::string name, void *data, unsigned int data_size) { _profile = std::make_shared<D_profile>(name, data, data_size); }

@@ -19,16 +19,14 @@
 #include <boost/algorithm/string.hpp>
 #include <openjpeg.h>
 #include <lcms2.h>
+#include <omp.h>
 #include "ImageFile.hh"
-#include "TransformQueue.hh"
-#include "Ditherer.hh"
 #include "Exception.hh"
 
 namespace PhotoFinish {
 
   JP2file::JP2file(const fs::path filepath) :
-    ImageFile(filepath),
-    _jp2_image(NULL)
+    ImageFile(filepath)
   {}
 
   //! Error callback for OpenJPEG - throw a LibraryError exception
@@ -48,24 +46,28 @@ namespace PhotoFinish {
     std::cerr << "\tOpenJPEG:" << msg << std::endl;
   }
 
-  //! Read a row of image data from OpenJPEG's planar components into a packed pixel array
+  //! Read a row of image data from OpenJPEG's planar integer components into an LCMS2-compatible single array
   template <typename T>
-  inline void* planar_to_packed(unsigned int width, unsigned char channels, opj_image_t* image, unsigned int& index) {
-    T *row = (T*)malloc(width * channels * sizeof(T));
+  inline void read_planar(unsigned int width, unsigned char channels, opj_image_t* image, T* row, unsigned int y) {
     T *out = row;
-    for (unsigned int x = 0; x < width; x++, index++)
-      for (unsigned char c = 0; c < channels; c++)
-	*out++ = image->comps[c].data[index];
-    return (void*)row;
+    unsigned int index_start = y * width;
+    for (unsigned char c = 0; c < channels; c++) {
+      unsigned int index = index_start;
+      for (unsigned int x = 0; x < width; x++, out++, index++)
+	*out = image->comps[c].data[index];
+    }
   }
 
-  //! Read from a row of packed pixel data into OpenJPEG's planar components
+  //! Read a row of planar pixel data into OpenJPEG's planar components
   template <typename T>
-  inline void packed_to_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int& index) {
+  void write_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int y) {
     T *in = row;
-    for (unsigned int x = 0; x < width; x++, index++)
-      for (unsigned char c = 0; c < channels; c++)
-	image->comps[c].data[index] = *in++;
+    unsigned int index_start = y * width;
+    for (unsigned char c = 0; c < channels; c++) {
+      unsigned int index = index_start;
+      for (unsigned int x = 0; x < width; x++, index++, in++)
+	image->comps[c].data[index] = *in;
+    }
   }
 
   Image::ptr JP2file::read(Destination::ptr dest) {
@@ -95,155 +97,146 @@ namespace PhotoFinish {
     opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, (void*)this);
     opj_setup_decoder(dinfo, &parameters);
     opj_cio_t *cio = opj_cio_open((opj_common_ptr)dinfo, src, file_size);
-    _jp2_image = opj_decode(dinfo, cio);
-    if (_jp2_image == NULL)
+    opj_image_t *jp2_image = opj_decode(dinfo, cio);
+    if (jp2_image == NULL)
       throw LibraryError("OpenJPEG", "Could not decode file");
 
     opj_cio_close(cio);
     free(src);
 
     // Is this necessary?
-    if (_jp2_image->numcomps > 1)
-      for (unsigned char c = 1; c < _jp2_image->numcomps; c++) {
-	if (_jp2_image->comps[c].dx != _jp2_image->comps[0].dx)
+    if (jp2_image->numcomps > 1)
+      for (unsigned char c = 1; c < jp2_image->numcomps; c++) {
+	if (jp2_image->comps[c].dx != jp2_image->comps[0].dx)
 	  std::cerr << "** Component " << (int)c << " has a different dx to the first! **" << std::endl;
-	if (_jp2_image->comps[c].dy != _jp2_image->comps[0].dy)
+	if (jp2_image->comps[c].dy != jp2_image->comps[0].dy)
 	  std::cerr << "** Component " << (int)c << " has a different dy to the first! **" << std::endl;
-	if (_jp2_image->comps[c].w != _jp2_image->comps[0].w)
+	if (jp2_image->comps[c].w != jp2_image->comps[0].w)
 	  std::cerr << "** Component " << (int)c << " has a different w to the first! **" << std::endl;
-	if (_jp2_image->comps[c].h != _jp2_image->comps[0].h)
+	if (jp2_image->comps[c].h != jp2_image->comps[0].h)
 	  std::cerr << "** Component " << (int)c << " has a different h to the first! **" << std::endl;
-	if (_jp2_image->comps[c].x0 != _jp2_image->comps[0].x0)
+	if (jp2_image->comps[c].x0 != jp2_image->comps[0].x0)
 	  std::cerr << "** Component " << (int)c << " has a different x0 to the first! **" << std::endl;
-	if (_jp2_image->comps[c].y0 != _jp2_image->comps[0].y0)
+	if (jp2_image->comps[c].y0 != jp2_image->comps[0].y0)
 	  std::cerr << "** Component " << (int)c << " has a different y0 to the first! **" << std::endl;
-	if (_jp2_image->comps[c].prec != _jp2_image->comps[0].prec)
+	if (jp2_image->comps[c].prec != jp2_image->comps[0].prec)
 	  std::cerr << "** Component " << (int)c << " has a different prec to the first! **" << std::endl;
-	if (_jp2_image->comps[c].bpp != _jp2_image->comps[0].bpp)
+	if (jp2_image->comps[c].bpp != jp2_image->comps[0].bpp)
 	  std::cerr << "** Component " << (int)c << " has a different bpp to the first! **" << std::endl;
-	if (_jp2_image->comps[c].sgnd != _jp2_image->comps[0].sgnd)
+	if (jp2_image->comps[c].sgnd != jp2_image->comps[0].sgnd)
 	  std::cerr << "** Component " << (int)c << " has a different sgnd to the first! **" << std::endl;
       }
 
-    auto img = std::make_shared<Image>(_jp2_image->x1 - _jp2_image->x0, _jp2_image->y1 - _jp2_image->y0);
-
-    int depth = _jp2_image->comps[0].prec;
-    cmsUInt32Number cmsType = CHANNELS_SH(_jp2_image->numcomps) | BYTES_SH(depth >> 3);
-    switch (_jp2_image->color_space) {
+    int depth = jp2_image->comps[0].prec;
+    cmsUInt32Number type = PLANAR_SH(1) | CHANNELS_SH(jp2_image->numcomps) | BYTES_SH(depth >> 3);
+    switch (jp2_image->color_space) {
     case CLRSPC_SRGB:
-      cmsType |= COLORSPACE_SH(PT_RGB);
+      type |= COLORSPACE_SH(PT_RGB);
       break;
 
     case CLRSPC_GRAY:
-      img->set_greyscale();
-      cmsType |= COLORSPACE_SH(PT_GRAY);
+      type |= COLORSPACE_SH(PT_GRAY);
       break;
 
     case CLRSPC_SYCC:
-      cmsType |= COLORSPACE_SH(PT_YUV);
+      type |= COLORSPACE_SH(PT_YUV);
       break;
 
     default:
-      std::cerr << "** Unknown colour space " << _jp2_image->color_space << " **" << std::endl;
+      std::cerr << "** Unknown colour space " << jp2_image->color_space << " **" << std::endl;
       throw LibraryError("OpenJPEG", "color_space");
     }
     dest->set_depth(depth);
 
+    auto img = std::make_shared<Image>(jp2_image->x1 - jp2_image->x0, jp2_image->y1 - jp2_image->y0, type);
+
     cmsHPROFILE profile;
-    if (_jp2_image->icc_profile_buf != NULL) {
-      profile = cmsOpenProfileFromMem(_jp2_image->icc_profile_buf, _jp2_image->icc_profile_len);
-      void *data_copy = malloc(_jp2_image->icc_profile_len);
-      memcpy(data_copy, _jp2_image->icc_profile_buf, _jp2_image->icc_profile_len);
+    if (jp2_image->icc_profile_buf != NULL) {
+      profile = cmsOpenProfileFromMem(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
+      void *data_copy = malloc(jp2_image->icc_profile_len);
+      memcpy(data_copy, jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
       char *profile_name = NULL;
       unsigned int profile_name_len;
       if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
 	profile_name = (char*)malloc(profile_name_len);
 	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
-	dest->set_profile(profile_name, data_copy, _jp2_image->icc_profile_len);
+	dest->set_profile(profile_name, data_copy, jp2_image->icc_profile_len);
 	free(profile_name);
       } else
-	dest->set_profile("JP2 ICC profile", data_copy, _jp2_image->icc_profile_len);
-    } else
-      profile = ImageFile::default_profile(cmsType);
-
-    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHTRANSFORM transform = cmsCreateTransform(profile, cmsType,
-						 lab, IMAGE_TYPE,
-						 INTENT_PERCEPTUAL, 0);
-    cmsCloseProfile(lab);
-    cmsCloseProfile(profile);
-
-    transform_queue queue(dest, img, cmsType, transform);
-
-#pragma omp parallel shared(queue)
-    {
-      int th_id = omp_get_thread_num();
-      if (th_id == 0) {		// Master thread
-	std::cerr << "\tTransforming into L*a*b* using " << omp_get_num_threads() << " threads..." << std::endl;
-	unsigned int index = 0;
-	for (unsigned int y = 0; y < img->height(); y++) {
-	  void *buffer = NULL;
-	  if (depth == 8)
-	    buffer = planar_to_packed<unsigned char>(img->width(), T_CHANNELS(cmsType), _jp2_image, index);
-	  else
-	    buffer = planar_to_packed<unsigned short>(img->width(), T_CHANNELS(cmsType), _jp2_image, index);
-
-	  std::cerr << "\r\tRead " << (y + 1) << " of " << img->height() << " rows ("
-		    << queue.num_rows() << " in queue for colour transformation)   ";
-
-	  queue.add_copy(y, buffer);
-
-	  while (queue.num_rows() > 100) {
-	    queue.reader_process_row();
-	    std::cerr << "\r\tRead " << (y + 1) << " of " << img->height() << " rows ("
-		      << queue.num_rows() << " in queue for colour transformation)   ";
-	  }
-	}
-	queue.set_finished();
-	while (!queue.empty()) {
-	  queue.reader_process_row();
-	  std::cerr << "\r\tRead " << img->height() << " of " << img->height() << " rows ("
-		    << queue.num_rows() << " in queue for colour transformation)   ";
-	}
-	std::cerr << std::endl;
-      } else {
-	while (!(queue.empty() && queue.finished())) {
-	  while (queue.empty() && !queue.finished())
-	    usleep(100);
-	  queue.reader_process_row();
-	}
-      }
+	dest->set_profile("JP2 ICC profile", data_copy, jp2_image->icc_profile_len);
+      img->set_profile(profile);
     }
-    cmsDeleteTransform(transform);
+
+#pragma omp parallel for schedule(dynamic, 1)
+    for (unsigned int y = 0; y < img->height(); y++) {
+      for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	if (depth == 1)
+	  read_planar<unsigned char>(img->width(), T_CHANNELS(type), jp2_image, img->row(y), y);
+	else
+	  read_planar<short unsigned int>(img->width(), T_CHANNELS(type), jp2_image, (short unsigned int*)img->row(y), y);
+
+      if (omp_get_thread_num() == 0)
+	std::cerr << "\r\tCopied " << (y + 1) << " of " << img->height() << " rows";
+    }
+    std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows." << std::endl;
     _is_open = false;
 
     std::cerr << "Done." << std::endl;
     return img;
   }
 
-  void JP2file::mark_sGrey(cmsUInt32Number intent) const {
-    if (!_is_open)
-      throw FileOpenError("not open");
-  }
+  cmsUInt32Number JP2file::preferred_type(cmsUInt32Number type) {
+    type &= FLOAT_MASK;
 
-  void JP2file::mark_sRGB(cmsUInt32Number intent) const {
-    if (!_is_open)
-      throw FileOpenError("not open");
-  }
+    if (T_COLORSPACE(type) != PT_GRAY) {
+      type &= COLORSPACE_MASK;
+      type |= COLORSPACE_SH(PT_RGB);
+      type &= CHANNELS_MASK;
+      type |= CHANNELS_SH(3);
+    }
 
-  void JP2file::embed_icc(std::string name, unsigned char *data, unsigned int len) const {
-    if (!_is_open)
-      throw FileOpenError("not open");
+    type &= PLANAR_MASK;
+    type |= PLANAR_SH(1);
 
-    std::cerr << "\tEmbedding profile (" << len << " bytes)." << std::endl;
-    _jp2_image->icc_profile_buf = data;
-    _jp2_image->icc_profile_len = len;
+    type &= EXTRA_MASK;
+
+    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
+      type &= BYTES_MASK;
+      type |= BYTES_SH(2);
+    }
+
+    return type;
   }
 
   void JP2file::write(Image::ptr img, Destination::ptr dest, bool can_free) {
     if (_is_open)
       throw FileOpenError("already open");
     _is_open = true;
+
+    cmsUInt32Number type = img->type();
+    if (T_PLANAR(type) != 1)
+      throw cmsTypeError("Not Planar", type);
+
+    OPJ_COLOR_SPACE colour_space;
+    switch (T_COLORSPACE(type)) {
+    case PT_RGB:
+      colour_space = CLRSPC_SRGB;
+      break;
+
+    case PT_GRAY:
+      colour_space = CLRSPC_GRAY;
+      break;
+
+    case PT_YUV:
+      colour_space = CLRSPC_SYCC;
+      break;
+
+    default:
+      throw cmsTypeError("Unsupported colour space", type);
+      break;
+    }
+    unsigned char channels = T_CHANNELS(type);
+    int depth = T_BYTES(type);
 
     std::cerr << "Preparing for file " << _filepath << "..." << std::endl;
     opj_event_mgr_t event_mgr;
@@ -305,21 +298,6 @@ namespace PhotoFinish {
     parameters.cp_disto_alloc = 1;
     parameters.tile_size_on = 0;
 
-    OPJ_COLOR_SPACE colour_space;
-    cmsUInt32Number cmsTempType = Ditherer::cmsBaseType;
-    if (img->is_colour()) {
-      cmsTempType |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
-      colour_space = CLRSPC_SRGB;
-    } else {
-      cmsTempType |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
-      colour_space = CLRSPC_GRAY;
-    }
-    unsigned char channels = T_CHANNELS(cmsTempType);
-
-    int depth = 8;	// Default value
-    if (dest->depth().defined())
-      depth = dest->depth();
-
     opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(channels * sizeof(opj_image_cmptparm_t));
     memset(components, 0, channels * sizeof(opj_image_cmptparm_t));
     for (unsigned char i = 0; i < channels; i++) {
@@ -328,98 +306,61 @@ namespace PhotoFinish {
       components[i].w = img->width();
       components[i].h = img->height();
       components[i].x0 = components[i].y0 = 0;
-      components[i].prec = components[i].bpp = depth;
+      components[i].prec = components[i].bpp = depth << 3;
       components[i].sgnd = 0;
     }
-    _jp2_image = opj_image_create(channels, components, colour_space);
+    opj_image_t *jp2_image = opj_image_create(channels, components, colour_space);
 
-    if (_jp2_image == NULL)
+    if (jp2_image == NULL)
       return;
 
-    cmsUInt32Number intent = INTENT_PERCEPTUAL;	// Default value
-    if (dest->intent().defined())
-      intent = dest->intent();
+    {
+      unsigned char *profile_data = NULL;
+      unsigned int profile_len = 0;
+      cmsSaveProfileToMem(img->profile(), NULL, &profile_len);
+      if (profile_len > 0) {
+	profile_data = (unsigned char*)malloc(profile_len);
+	cmsSaveProfileToMem(img->profile(), profile_data, &profile_len);
 
-    cmsHPROFILE profile = this->get_and_embed_profile(dest, cmsTempType, intent);
-
-    cmsHPROFILE lab = cmsCreateLab4Profile(NULL);
-    cmsHTRANSFORM transform = cmsCreateTransform(lab, IMAGE_TYPE,
-						 profile, cmsTempType,
-						 intent, 0);
-    cmsCloseProfile(lab);
-    cmsCloseProfile(profile);
+	std::cerr << "\tEmbedding profile (" << profile_len << " bytes)." << std::endl;
+	jp2_image->icc_profile_buf = profile_data;
+	jp2_image->icc_profile_len = profile_len;
+      }
+    }
 
     unsigned char **rows = (unsigned char**)malloc(img->height() * sizeof(unsigned char*));
-    size_t channel_size = img->width() * (depth >> 3);
+    size_t channel_size = img->width() * depth;
     size_t row_size = channel_size * channels;
     for (unsigned int y = 0; y < img->height(); y++)
       rows[y] = (unsigned char*)malloc(row_size);
 
-    transform_queue queue(dest, img, cmsTempType, transform);
-    if (depth == 8)
-      for (unsigned int y = 0; y < img->height(); y++)
-	queue.add(y);
-    else
-      for (unsigned int y = 0; y < img->height(); y++)
-	queue.add(y, rows[y]);
+#pragma omp parallel for schedule(dynamic, 1)
+    for (unsigned int y = 0; y < img->height(); y++) {
+      if (depth == 1)
+	write_planar<unsigned char>(img->width(), channels, img->row(y), jp2_image, y);
+      else
+	write_planar<short unsigned int>(img->width(), channels, (short unsigned int*)img->row(y), jp2_image, y);
 
-#pragma omp parallel shared(queue)
-    {
-      int th_id = omp_get_thread_num();
-      if (th_id == 0) {		// Master thread
-	std::cerr << "\tTransforming image data from L*a*b* using " << omp_get_num_threads() << " threads." << std::endl;
+      if (can_free)
+	img->free_row(y);
 
-	Ditherer ditherer(img->width(), channels);
-
-	unsigned int index = 0;
-	for (unsigned int y = 0; y < img->height(); y++) {
-	  // Process rows until the one we need becomes available, or the queue is empty
-	  short unsigned int *row = (short unsigned int*)queue.row(y);
-	  while (!queue.empty() && (row == NULL)) {
-	    queue.writer_process_row();
-	    row = (short unsigned int*)queue.row(y);
-	  }
-
-	  // If it's still not available, something has gone wrong
-	  if (row == NULL) {
-	    std::cerr << "** Oh crap (y=" << y << ", num_rows=" << queue.num_rows() << " **" << std::endl;
-	    exit(2);
-	  }
-
-	  if (can_free)
-	    img->free_row(y);
-
-	  if (depth == 8) {
-	    ditherer.dither(row, rows[y], y == img->height() - 1);
-	    queue.free_row(y);
-
-	    packed_to_planar<unsigned char>(img->width(), channels, rows[y], _jp2_image, index);
-	  } else
-	    packed_to_planar<unsigned short>(img->width(), channels, row, _jp2_image, index);
-
-	  std::cerr << "\r\tTransformed " << y + 1 << " of " << img->height() << " rows ("
-		    << queue.num_rows() << " left)  ";
-	}
-	std::cerr << std::endl;
-      } else {	// Other thread(s) transform the image data
-	while (!queue.empty())
-	  queue.writer_process_row();
-      }
+      if (omp_get_thread_num() == 0)
+	std::cerr << "\r\tCopied " << y + 1 << " of " << img->height() << " rows";
     }
-    cmsDeleteTransform(transform);
+    std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows." << std::endl;
 
-    _jp2_image->x0 = parameters.image_offset_x0;
-    _jp2_image->y0 = parameters.image_offset_y0;
-    _jp2_image->x1 = _jp2_image->x0 + (img->width() - 1) * parameters.subsampling_dx + 1;
-    _jp2_image->y1 = _jp2_image->y0 + (img->height() - 1) * parameters.subsampling_dy + 1;
+    jp2_image->x0 = parameters.image_offset_x0;
+    jp2_image->y0 = parameters.image_offset_y0;
+    jp2_image->x1 = jp2_image->x0 + (img->width() - 1) * parameters.subsampling_dx + 1;
+    jp2_image->y1 = jp2_image->y0 + (img->height() - 1) * parameters.subsampling_dy + 1;
 
-    parameters.tcp_mct = _jp2_image->numcomps == 3 ? 1 : 0;
+    parameters.tcp_mct = jp2_image->numcomps == 3 ? 1 : 0;
 
     opj_cinfo_t* cinfo = opj_create_compress(CODEC_JP2);
     opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, (void*)this);
-    opj_setup_encoder(cinfo, &parameters, _jp2_image);
+    opj_setup_encoder(cinfo, &parameters, jp2_image);
     opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
-    opj_encode(cinfo, cio, _jp2_image, NULL);
+    opj_encode(cinfo, cio, jp2_image, NULL);
 
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
@@ -431,8 +372,7 @@ namespace PhotoFinish {
     ofs.close();
     opj_cio_close(cio);
     opj_destroy_compress(cinfo);
-    opj_image_destroy(_jp2_image);
-    _jp2_image = NULL;
+    opj_image_destroy(jp2_image);
     _is_open = false;
 
     std::cerr << "Done." << std::endl;

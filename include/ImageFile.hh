@@ -43,8 +43,6 @@
 #include "Exception.hh"
 #include "sample.h"
 
-#define IMAGE_TYPE (FLOAT_SH(1)|COLORSPACE_SH(PT_Lab)|CHANNELS_SH(3)|BYTES_SH(sizeof(SAMPLE) & 0x07))
-
 namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
@@ -54,11 +52,6 @@ namespace PhotoFinish {
   protected:
     const fs::path _filepath;
     bool _is_open;
-
-    virtual void mark_sGrey(cmsUInt32Number intent) const = 0;
-    virtual void mark_sRGB(cmsUInt32Number intent) const = 0;
-    virtual void embed_icc(std::string name, unsigned char *data, unsigned int len) const = 0;
-    cmsHPROFILE get_and_embed_profile(Destination::ptr dest, cmsUInt32Number cmsType, cmsUInt32Number intent);
 
   public:
     //! Shared pointer for an ImageFile
@@ -83,9 +76,6 @@ namespace PhotoFinish {
     */
     static ImageFile::ptr create(fs::path filepath, const std::string format) throw(UnknownFileType);
 
-    //! Create either an sRGB or greyscale profile depending on image type
-    static cmsHPROFILE default_profile(cmsUInt32Number cmsType);
-
     //! Add variables to one of the configuration objects based on destination format
     static void add_variables(Destination::ptr dest, multihash& vars);
 
@@ -105,6 +95,9 @@ namespace PhotoFinish {
     */
     virtual Image::ptr read(Destination::ptr dest) = 0;
 
+    //! Modify an LCMS2 pixel format into a "type" that the file format can write
+    virtual cmsUInt32Number preferred_type(cmsUInt32Number type = 0) = 0;
+
     //! Write an image to the file
     /*!
       \param img The Image object to write
@@ -121,14 +114,11 @@ namespace PhotoFinish {
     png_structp _png;
     png_infop _info;
 
-    void mark_sGrey(cmsUInt32Number intent) const;
-    void mark_sRGB(cmsUInt32Number intent) const;
-    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
-
   public:
     PNGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+    cmsUInt32Number preferred_type(cmsUInt32Number type);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -137,17 +127,12 @@ namespace PhotoFinish {
   //! JPEG file reader and writer
   class JPEGfile : public ImageFile {
   private:
-    jpeg_decompress_struct *_dinfo;
-    jpeg_compress_struct *_cinfo;
-
-    void mark_sGrey(cmsUInt32Number intent) const;
-    void mark_sRGB(cmsUInt32Number intent) const;
-    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     JPEGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+    cmsUInt32Number preferred_type(cmsUInt32Number type);
     //! Special version of write() that takes an open ostream object
     void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
@@ -158,16 +143,12 @@ namespace PhotoFinish {
   //! TIFF file reader and writer
   class TIFFfile : public ImageFile {
   private:
-    TIFF *_tiff;
-
-    void mark_sGrey(cmsUInt32Number intent) const;
-    void mark_sRGB(cmsUInt32Number intent) const;
-    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     TIFFfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+    cmsUInt32Number preferred_type(cmsUInt32Number type);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -176,16 +157,12 @@ namespace PhotoFinish {
   //! JPEG 2000 file reader and writer
   class JP2file : public ImageFile {
   private:
-    opj_image_t *_jp2_image;
-
-    void mark_sGrey(cmsUInt32Number intent) const;
-    void mark_sRGB(cmsUInt32Number intent) const;
-    void embed_icc(std::string name, unsigned char *data, unsigned int len) const;
 
   public:
     JP2file(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+    cmsUInt32Number preferred_type(cmsUInt32Number type);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -200,14 +177,12 @@ namespace PhotoFinish {
    */
   class SOLfile : public ImageFile {
   private:
-    void mark_sGrey(cmsUInt32Number intent) const {}
-    void mark_sRGB(cmsUInt32Number intent) const {}
-    void embed_icc(std::string name, unsigned char *data, unsigned int len) const {}
 
   public:
     SOLfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+    cmsUInt32Number preferred_type(cmsUInt32Number type);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 
