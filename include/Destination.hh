@@ -113,14 +113,17 @@ namespace PhotoFinish {
 
     inline definable<bool> noresize(void) const { return _noresize; }
 
-    inline const D_JPEG& jpeg(void) const { return _jpeg; }
+    inline D_JPEG& jpeg(void) { return _jpeg; }
     inline void set_jpeg(const D_JPEG& j) { _jpeg = j; }
 
-    inline const D_PNG& png(void) const { return _png; }
+    inline D_PNG& png(void) { return _png; }
+    inline void set_png(const D_PNG& p) { _png = p; }
 
-    inline const D_TIFF& tiff(void) const { return _tiff; }
+    inline D_TIFF& tiff(void) { return _tiff; }
+    inline void set_tiff(const D_TIFF& t) { _tiff = t; }
 
-    inline const D_JP2& jp2(void) const { return _jp2; }
+    inline D_JP2& jp2(void) { return _jp2; }
+    inline void set_jp2(const D_JP2& j) { _jp2 = j; }
 
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 

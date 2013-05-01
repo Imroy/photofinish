@@ -131,8 +131,13 @@ namespace PhotoFinish {
     void add_variables(multihash& vars);
 
     inline definable<int> quality(void) const { return _quality; }
+    inline void set_quality(int q) { _quality = q; set_defined(); }
+
     inline definable< std::pair<int, int> > sample(void) const { return _sample; }
+    inline void set_sample(int h, int v) { _sample = std::pair<int, int>(h, v); set_defined(); }
+
     inline definable<bool> progressive(void) const { return _progressive; }
+    inline void set_progressive(bool p = true) { _progressive = p; set_defined(); }
 
     friend void operator >> (const YAML::Node& node, D_JPEG& dj);
   };
@@ -157,12 +162,23 @@ namespace PhotoFinish {
     //! Empty constructor
     D_TIFF();
 
+    //! Constructor
+    /*!
+      \param c Compression string
+    */
+    D_TIFF(std::string c);
+
     //! Set values from a map of "variables"
     void add_variables(multihash& vars);
 
     inline definable<std::string> artist(void) const { return _artist; }
+    inline void set_artist(std::string a) { _artist = a; set_defined(); }
+
     inline definable<std::string> copyright(void) const { return _copyright; }
+    inline void set_copyright(std::string c) { _copyright = c; set_defined(); }
+
     inline definable<std::string> compression(void) const { return _compression; }
+    inline void set_compression(std::string c) { _compression = c; set_defined(); }
 
     friend void operator >> (const YAML::Node& node, D_TIFF& dt);
   };
@@ -183,10 +199,18 @@ namespace PhotoFinish {
     void add_variables(multihash& vars);
 
     inline definable<int> numresolutions(void) const { return _numresolutions; }
+    inline void set_numresolutions(int n) { _numresolutions = n; set_defined(); };
+
     inline definable<std::string> prog_order(void) const { return _prog_order; }
+    inline void set_prog_order(std::string po) { _prog_order = po; set_defined(); }
+
     inline int num_rates(void) const { return _rates.size(); }
     inline float rate(int n) const { return _rates[n]; }
+    inline void set_rate(int n, float r) { _rates[n] = r; set_defined(); }
+    inline void set_rates(std::vector<float> r) { _rates = r; set_defined(); }
+
     inline definable< std::pair<int, int> > tile_size(void) const { return _tile_size; }
+    inline void set_tile_size(int h, int v) { _tile_size = std::pair<int, int>(h, v); set_defined(); }
 
     friend void operator >> (const YAML::Node& node, D_JP2& dj);
   };

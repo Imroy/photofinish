@@ -181,6 +181,10 @@ namespace PhotoFinish {
   D_TIFF::D_TIFF()
   {}
 
+  D_TIFF::D_TIFF(std::string c)
+    : _compression(c)
+  {}
+
   void D_TIFF::add_variables(multihash& vars) {
     if (!_artist.defined()) {
       auto vi = vars.find("artist");
