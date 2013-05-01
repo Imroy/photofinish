@@ -167,7 +167,24 @@ int main(int argc, char* argv[]) {
 	      fs::create_directory(convert_dir);
 	    }
 
-	    converted_file->write(orig_image, orig_dest, !do_preview);
+	    auto converted_dest = orig_dest->dupe();
+
+	    // Set various format options to give best quality i.e lossless compression or the closest to it
+	    converted_dest->set_jpeg(D_JPEG(100, 1, 1, true));
+	    converted_dest->jp2().set_rates({ 100, 10, 1});
+	    converted_dest->jp2().set_tile_size(2048, 2048);
+	    converted_dest->jp2().set_numresolutions(7);
+	    converted_dest->tiff().set_compression("deflate");
+
+	    cmsUInt32Number orig_type = orig_image->type();
+	    cmsUInt32Number converted_type = converted_file->preferred_type(converted_dest->modify_type(orig_type));
+	    Image::ptr converted_image;
+	    if (orig_type == converted_type)
+	      converted_image = orig_image;
+	    else
+	      converted_image = orig_image->transform_colour(NULL, converted_type);
+
+	    converted_file->write(converted_image, converted_dest, !do_preview);
 	    filetags->embed(converted_file);
 	  }
 	} catch (std::exception& ex) {
