@@ -248,6 +248,9 @@ namespace PhotoFinish {
     opj_cparameters_t parameters;
     opj_set_default_encoder_parameters(&parameters);
 
+    parameters.tile_size_on = 0;
+    parameters.cp_disto_alloc = 1;
+
     if (dest->jp2().defined()) {
       D_JP2 d = dest->jp2();
       if (d.numresolutions().defined()) {
@@ -286,6 +289,7 @@ namespace PhotoFinish {
       }
       if (d.tile_size().defined()) {
 	std::cerr << "\tTile size of " << d.tile_size()->first << "×" << d.tile_size()->second << std::endl;
+	parameters.tile_size_on = 1;
 	parameters.cp_tdx = d.tile_size()->first;
 	parameters.cp_tdy = d.tile_size()->second;
       }
@@ -295,8 +299,6 @@ namespace PhotoFinish {
       parameters.tcp_rates[0] = 0;
       parameters.tcp_numlayers++;
     }
-    parameters.cp_disto_alloc = 1;
-    parameters.tile_size_on = 0;
 
     opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(channels * sizeof(opj_image_cmptparm_t));
     memset(components, 0, channels * sizeof(opj_image_cmptparm_t));
