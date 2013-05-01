@@ -138,9 +138,9 @@ namespace PhotoFinish {
 
     //! Transform this image into a different colour space and/or ICC profile, making a new image
     /*!
-      \param dest_profile The ICC profile of the destination
-      \param dest_type The LCMS2 pixel format
-      \param intent The ICC intent of the transform, defaults to perceptual
+      \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
+      \param dest_type The LCMS2 pixel format.
+      \param intent The ICC intent of the transform, defaults to perceptual.
       \param can_free Whether rows can be freed after transforming, defaults to false.
       \return A new image
      */
@@ -148,9 +148,9 @@ namespace PhotoFinish {
 
     //! Transform this image in-place into a different colour space and/or ICC profile
     /*!
-      \param dest_profile The ICC profile of the destination
-      \param dest_type The LCMS2 pixel format
-      \param intent The ICC intent of the transform, defaults to perceptual
+      \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
+      \param dest_type The LCMS2 pixel format.
+      \param intent The ICC intent of the transform, defaults to perceptual.
      */
     void transform_colour_inplace(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent = INTENT_PERCEPTUAL);
 

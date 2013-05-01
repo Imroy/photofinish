@@ -105,11 +105,19 @@ namespace PhotoFinish {
   }
 
   Image::ptr Image::transform_colour(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent, bool can_free) {
-    std::cerr << "Transforming colour..." << std::endl;
+#pragma omp parallel
+    {
+#pragma omp master
+      {
+	std::cerr << "Transforming colour using " << omp_get_num_threads() << " threads..." << std::endl;
+      }
+    }
 
     cmsHPROFILE profile = _profile;
     if (_profile == NULL)
       profile = default_profile(_type);
+    if (dest_profile == NULL)
+      dest_profile = profile;
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, _type,
 						 dest_profile, dest_type,
@@ -126,7 +134,10 @@ namespace PhotoFinish {
       cmsDoTransform(transform, _rowdata[y], dest->row(y), _width);
       if (can_free)
 	this->free_row(y);
+      if (omp_get_thread_num() == 0)
+	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
     }
+    std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
     cmsDeleteTransform(transform);
 
@@ -145,6 +156,8 @@ namespace PhotoFinish {
     cmsHPROFILE profile = _profile;
     if (_profile == NULL)
       profile = default_profile(_type);
+    if (dest_profile == NULL)
+      dest_profile = profile;
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, _type,
 						 dest_profile, dest_type,
