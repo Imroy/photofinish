@@ -22,7 +22,6 @@
 #include <string>
 #include <map>
 #include <exiv2/exiv2.hpp>
-#include <boost/lexical_cast.hpp>
 #include <math.h>
 #include "Image.hh"
 #include "ImageFile.hh"
@@ -53,68 +52,7 @@ namespace PhotoFinish {
   void populate_EXIF_subst(hash& table);
   void populate_IPTC_subst(hash& table);
   void populate_XMP_subst(hash& table);
-
-  //! Find a close unsigned rational fraction given a floating-point value
-  Exiv2::URational closest_URational(double value) {
-    double margin = fabs(value) * 1e-6;
-    unsigned int num = 0, den;
-    for (den = 1; den < INT_MAX; den++) {
-      double numf = value * den;
-      if ((numf < 0) || (numf > UINT_MAX))
-	break;
-
-      num = round(numf);
-      double error = fabs(num - numf);
-      if (error < margin * den)
-	break;
-    }
-    return Exiv2::URational(num, den);
-  }
-
-  //! Parse a string into an unsigned rational fraction
-  Exiv2::URational parse_URational(std::string s) {
-    size_t slash = s.find_first_of('/');
-    if (slash == std::string::npos)
-      return closest_URational(boost::lexical_cast<double>(s));
-
-    unsigned int num, den;
-    num = boost::lexical_cast<unsigned int>(s.substr(0, slash));
-    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1));
-
-    return Exiv2::URational(num, den);
-  }
-
-  //! Find a close rational fraction given a floating-point value
-  Exiv2::Rational closest_Rational(double value) {
-    double margin = fabs(value) * 1e-6;
-    signed int num = 0;
-    unsigned int den;
-    for (den = 1; den < INT_MAX; den++) {
-      double numf = value * den;
-      if ((numf < INT_MIN) || (numf > INT_MAX))
-	break;
-
-      num = round(numf);
-      double error = fabs(num - numf);
-      if (error < margin * den)
-	break;
-    }
-    return Exiv2::Rational(num, den);
-  }
-
-  //! Parse a string into a rational fraction
-  Exiv2::Rational parse_Rational(std::string s) {
-    size_t slash = s.find_first_of('/');
-    if (slash == std::string::npos)
-      return closest_Rational(boost::lexical_cast<double>(s));
-
-    signed int num;
-    unsigned int den;
-    num = boost::lexical_cast<signed int>(s.substr(0, slash));
-    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1));
-
-    return Exiv2::Rational(num, den);
-  }
+  Exiv2::Value::AutoPtr exif_read(std::string key, Exiv2::TypeId type, std::string value_string);
 
   bool Tags::try_load(fs::path filepath) {
     for (auto pi : _searchpaths) {
@@ -229,13 +167,7 @@ namespace PhotoFinish {
 	    Exiv2::ExifKey key(key_string);
 
 	    Exiv2::TypeId type = key.defaultTypeId();
-	    Exiv2::Value::AutoPtr value = Exiv2::Value::create(type);
-	    if (type == Exiv2::unsignedRational)
-	      value = Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
-	    else if (type == Exiv2::signedRational)
-	      value = Exiv2::Value::AutoPtr(new Exiv2::RationalValue(parse_Rational(value_string)));
-	    else
-	      value->read(value_string);
+	    Exiv2::Value::AutoPtr value = exif_read(key_string, type, value_string);
 
 	    std::cerr << "\tEXIF \"" << key << "\" (" << type << ") = \"" << *value << "\"" << std::endl;
 	    _EXIFtags.add(key, value.get());
@@ -302,6 +234,8 @@ namespace PhotoFinish {
     std::cerr << "Done." << std::endl;
 #endif
   }
+
+  Exiv2::URational closest_URational(double value);
 
   void Tags::add_resolution(Image::ptr img) {
     Exiv2::URationalValue v;
