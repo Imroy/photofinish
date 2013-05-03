@@ -114,15 +114,22 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE profile = _profile;
-    if (_profile == NULL)
+    bool own_profile = false;
+    if (_profile == NULL) {
       profile = default_profile(_type);
-    if (dest_profile == NULL)
-      dest_profile = profile;
+      own_profile = true;
+      if (dest_profile == NULL) {
+	dest_profile = profile;
+	own_profile = false;
+      }
+    } else
+      if (dest_profile == NULL)
+	dest_profile = default_profile(dest_type);
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, _type,
 						 dest_profile, dest_type,
 						 intent, 0);
-    if (_profile == NULL)
+    if (own_profile)
       cmsCloseProfile(profile);
 
     auto dest = std::make_shared<Image>(_width, _height, dest_type);
@@ -154,15 +161,22 @@ namespace PhotoFinish {
     }
 
     cmsHPROFILE profile = _profile;
-    if (_profile == NULL)
+    bool own_profile = false;
+    if (_profile == NULL) {
       profile = default_profile(_type);
-    if (dest_profile == NULL)
-      dest_profile = profile;
+      own_profile = true;
+      if (dest_profile == NULL) {
+	dest_profile = profile;
+	own_profile = false;
+      }
+    } else
+      if (dest_profile == NULL)
+	dest_profile = default_profile(dest_type);
 
     cmsHTRANSFORM transform = cmsCreateTransform(profile, _type,
 						 dest_profile, dest_type,
 						 intent, 0);
-    if (_profile == NULL)
+    if (own_profile)
       cmsCloseProfile(profile);
 
     unsigned char dest_bytes = T_BYTES(dest_type);
