@@ -34,6 +34,9 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  typedef std::vector<std::pair<std::string, std::string> > subst_table;
+#define StrPair(s, v) std::make_pair<std::string, std::string>(s, v)
+
   //! Reads and holds tag information
   class Tags {
   private:

@@ -18,26 +18,36 @@
 */
 #include <string>
 #include <map>
+#include <boost/algorithm/string.hpp>
 #include "Tags.hh"
 
 namespace PhotoFinish {
 
   //! Map from Image::Exiftool tag names to Exiv2's tag names
-  void populate_XMP_subst(hash& table) {
+  subst_table XMP_key_subst = {
+    StrPair("XMP:Copyright",				"Xmp.dc.Copyright"), // ?
+    StrPair("XMP:Creator",				"Xmp.dc.Creator"),
 
-    table["XMP:Copyright"]			= "";
-    table["XMP:Creator"]			= "";
+    StrPair("XMP:CreatorContactInfoCiAdrCity",		"Xmp.iptc.CiAdrCity"),
+    StrPair("XMP:CreatorContactInfoCiAdrCtry",		"Xmp.iptc.CiAdrCtry"),
+    StrPair("XMP:CreatorContactInfoCiAdrExtadr",	"Xmp.iptc.CiAdrExtadr"),
+    StrPair("XMP:CreatorContactInfoCiAdrPcode",		"Xmp.iptc.CiAdrPcode"),
 
-    table["XMP:CreatorContactInfoCiAdrCity"]	= "Xmp.iptc.CiAdrCity";
-    table["XMP:CreatorContactInfoCiAdrCtry"]	= "Xmp.iptc.CiAdrCtry";
-    table["XMP:CreatorContactInfoCiAdrExtadr"]	= "Xmp.iptc.CiAdrExtadr";
-    table["XMP:CreatorContactInfoCiAdrPcode"]	= "Xmp.iptc.CiAdrPcode";
+    StrPair("XMP-cc:License",				"Xmp.cc.License"), // Creative Commons not supported in Exiv2 yet?
 
-    table["XMP-cc:License"]			= "Xmp.cc.License"; // Creative Commons not supported in Exiv2 yet?
+    StrPair("XMP-microsoft:CameraSerialNumber",		"Xmp.MicrosoftPhoto.CameraSerialNumber"),
+    StrPair("XMP-microsoft:LensManufacturer",		"Xmp.MicrosoftPhoto.LensManufacturer"),
+    StrPair("XMP-microsoft:LensModel",			"Xmp.MicrosoftPhoto.LensModel"),
+  };
 
-    table["XMP-microsoft:CameraSerialNumber"]	= "Xmp.MicrosoftPhoto.CameraSerialNumber";
-    table["XMP-microsoft:LensManufacturer"]	= "Xmp.MicrosoftPhoto.LensManufacturer";
-    table["XMP-microsoft:LensModel"]		= "Xmp.MicrosoftPhoto.LensModel";
+  Exiv2::XmpKey xmp_key_read(std::string key_string) {
+    for (auto i : XMP_key_subst)
+      if (boost::iequals(key_string, i.first)) {
+	key_string = i.second;
+	break;
+      }
+
+    return Exiv2::XmpKey(key_string);
   }
 
 }

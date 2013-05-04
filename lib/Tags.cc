@@ -49,10 +49,10 @@ namespace PhotoFinish {
     return std::make_shared<Tags>(*this);
   }
 
-  void populate_EXIF_subst(hash& table);
-  void populate_IPTC_subst(hash& table);
-  void populate_XMP_subst(hash& table);
-  Exiv2::Value::AutoPtr exif_read(std::string key, Exiv2::TypeId type, std::string value_string);
+  Exiv2::ExifKey exif_key_read(std::string key_string);
+  Exiv2::Value::AutoPtr exif_value_read(Exiv2::ExifKey key, std::string value_string);
+  Exiv2::IptcKey iptc_key_read(std::string key_string);
+  Exiv2::XmpKey xmp_key_read(std::string key_string);
 
   bool Tags::try_load(fs::path filepath) {
     for (auto pi : _searchpaths) {
@@ -70,11 +70,6 @@ namespace PhotoFinish {
     std::ifstream fin(filepath.native());
     if (fin.fail())
       throw FileOpenError(filepath.native());
-
-    hash EXIF_subst, IPTC_subst, XMP_subst;
-    populate_EXIF_subst(EXIF_subst);
-    populate_IPTC_subst(IPTC_subst);
-    populate_XMP_subst(XMP_subst);
 
     while (!fin.eof()) {
       std::string line;
@@ -129,12 +124,9 @@ namespace PhotoFinish {
 
 	if (line.substr(start, 3) == "XMP") {
 	  std::string key_string = line.substr(start, eq - start);
-	  auto si = XMP_subst.find(key_string);
-	  if ((si != XMP_subst.end()) && (si->second.length() > 0))
-	    key_string = si->second;
 
 	  try {
-	    Exiv2::XmpKey key(key_string);
+	    Exiv2::XmpKey key = xmp_key_read(key_string);
 	    Exiv2::Value::AutoPtr value = Exiv2::Value::create(Exiv2::xmpText);
 	    value->read(value_string);
 	    std::cerr << "\tXMP \"" << key << "\" = \"" << *value << "\"" << std::endl;
@@ -144,12 +136,9 @@ namespace PhotoFinish {
 	  }
 	} else 	if (line.substr(start, 4) == "IPTC") {
 	  std::string key_string = line.substr(start, eq - start);
-	  auto si = IPTC_subst.find(key_string);
-	  if ((si != IPTC_subst.end()) && (si->second.length() > 0))
-	    key_string = si->second;
 
 	  try {
-	    Exiv2::IptcKey key(key_string);
+	    Exiv2::IptcKey key = iptc_key_read(key_string);
 	    Exiv2::Value::AutoPtr value = Exiv2::Value::create(Exiv2::asciiString);
 	    value->read(value_string);
 	    std::cerr << "\tIPTC \"" << key << "\" = \"" << *value << "\"" << std::endl;
@@ -159,17 +148,12 @@ namespace PhotoFinish {
 	  }
 	} else {
 	  std::string key_string = line.substr(start, eq - start);
-	  auto si = EXIF_subst.find(key_string);
-	  if ((si != EXIF_subst.end()) && (si->second.length() > 0))
-	    key_string = si->second;
 
 	  try {
-	    Exiv2::ExifKey key(key_string);
+	    Exiv2::ExifKey key = exif_key_read(key_string);
+	    Exiv2::Value::AutoPtr value = exif_value_read(key, value_string);
 
-	    Exiv2::TypeId type = key.defaultTypeId();
-	    Exiv2::Value::AutoPtr value = exif_read(key_string, type, value_string);
-
-	    std::cerr << "\tEXIF \"" << key << "\" (" << type << ") = \"" << *value << "\"" << std::endl;
+	    std::cerr << "\tEXIF \"" << key << "\" (" << key.defaultTypeId() << ") = \"" << *value << "\"" << std::endl;
 	    _EXIFtags.add(key, value.get());
 	  } catch (Exiv2::Error& e) {
 	    std::cerr << "** EXIF key \"" << key_string << "\" not accepted **" << std::endl;

@@ -25,270 +25,278 @@
 namespace PhotoFinish {
 
   //! Map from Image::Exiftool tag names to Exiv2's tag names
-  void populate_EXIF_subst(hash& table) {
+  subst_table EXIF_key_subst = {
+    StrPair("Aperture",			"Exif.Image.ApertureValue"),
+    StrPair("Artist",			"Exif.Image.Artist"),
+    StrPair("BWMode",			""),
+    StrPair("CameraID",			""),
+    StrPair("CameraSerialNumber",	"Exif.Image.CameraSerialNumber"),
+    StrPair("CameraType",		""),
+    StrPair("CircleOfConfusion",	""),
+    StrPair("ColorSpace",		"Exif.Photo.ColorSpace"),
+    StrPair("ComponentsConfiguration",	""),
+    StrPair("CompressedBitsPerPixel",	""),
+    StrPair("Compression",		""),
+    StrPair("Contrast",			""),
+    StrPair("Copyright",		"Exif.Image.Copyright"),
+    StrPair("CreateDate",		""),
+    StrPair("CustomRendered",		""),
+    StrPair("DataDump",			""),
+    StrPair("DigitalZoom",		""),
+    StrPair("ExifIFD:Lens",		""),	// ???
+    StrPair("ExifImageLength",		"Exif.Image.ImageLength"),
+    StrPair("ExifImageWidth",		"Exif.Image.ImageWidth"),
+    StrPair("ExifVersion",		"Exif.Photo.ExifVersion"),
+    StrPair("ExposureCompensation",	""),
+    StrPair("FileSource",		""),
+    StrPair("FlashpixVersion",		""),
+    StrPair("FocalPlaneDiagonal",	""),
+    StrPair("GainControl",		""),
+    StrPair("HyperfocalDistance",	""),
+    StrPair("ImageDescription",		""),
+    StrPair("ImageHeight",		""),
+    StrPair("ImageSize",		""),
+    StrPair("ImageWidth",		""),
+    StrPair("InteropIndex",		""),
+    StrPair("InteropVersion",		""),
+    StrPair("LensDistortionParams",	""),
+    StrPair("LightSource",		"Exif.Image.LightSource"),
+    StrPair("LightValue",		""),
+    StrPair("Macro",			""),
+    StrPair("Make",			"Exif.Image.Make"),
+    StrPair("MaxApertureValue",		"Exif.Image.MaxApertureValue"),
+    StrPair("Model",			"Exif.Image.Model"),
+    StrPair("ModifyDate",		""),
+    StrPair("OneTouchWB",		""),
+    StrPair("Orientation",		""),
+    StrPair("PreCaptureFrames",		""),
+    StrPair("Quality",			""),
+    StrPair("Resolution",		""),
+    StrPair("ResolutionUnit",		"Exif.Image.ResolutionUnit"),
+    StrPair("Saturation",		""),
+    StrPair("ScaleFactor35efl",		""),
+    StrPair("SceneCaptureType",		""),
+    StrPair("Sharpness",		""),
+    StrPair("ShutterSpeed",		"Exif.Image.ShutterSpeedValue"),
+    StrPair("Software",			"Exif.Image.Software"),
+    StrPair("SpecialMode",		""),
+    StrPair("TagsFromFile",		""),
+    StrPair("ThumbnailLength",		""),
+    StrPair("ThumbnailOffset",		""),
+    StrPair("UserComment",		"Exif.Photo.UserComment"),
+    StrPair("WhiteBalance",		""),
+    StrPair("XResolution",		"Exif.Image.XResolution"),
+    StrPair("YCbCrPositioning",		""),
+    StrPair("YResolution",		"Exif.Image.YResolution"),
 
-    table["Aperture"]			= "Exif.Image.ApertureValue";
-    table["Artist"]			= "Exif.Image.Artist";
-    table["BWMode"]			= "";
-    table["CameraID"]			= "";
-    table["CameraSerialNumber"]		= "Exif.Image.CameraSerialNumber";
-    table["CameraType"]			= "";
-    table["CircleOfConfusion"]		= "";
-    table["ColorSpace"]			= "Exif.Photo.ColorSpace";
-    table["ComponentsConfiguration"]	= "";
-    table["CompressedBitsPerPixel"]	= "";
-    table["Compression"]		= "";
-    table["Contrast"]			= "";
-    table["Copyright"]			= "Exif.Image.Copyright";
-    table["CreateDate"]			= "";
-    table["CustomRendered"]		= "";
-    table["DataDump"]			= "";
-    table["DigitalZoom"]		= "";
-    table["ExifIFD:Lens"]		= "";	// ???
-    table["ExifImageLength"]		= "Exif.Image.ImageLength";
-    table["ExifImageWidth"]		= "Exif.Image.ImageWidth";
-    table["ExifVersion"]		= "Exif.Photo.ExifVersion";
-    table["ExposureCompensation"]	= "";
-    table["FileSource"]			= "";
-    table["FlashpixVersion"]		= "";
-    table["FocalPlaneDiagonal"]		= "";
-    table["GainControl"]		= "";
-    table["HyperfocalDistance"]		= "";
-    table["ImageDescription"]		= "";
-    table["ImageHeight"]		= "";
-    table["ImageSize"]			= "";
-    table["ImageWidth"]			= "";
-    table["InteropIndex"]		= "";
-    table["InteropVersion"]		= "";
-    table["LensDistortionParams"]	= "";
-    table["LightSource"]		= "Exif.Image.LightSource";
-    table["LightValue"]			= "";
-    table["Macro"]			= "";
-    table["Make"]			= "Exif.Image.Make";
-    table["MaxApertureValue"]		= "Exif.Image.MaxApertureValue";
-    table["Model"]			= "Exif.Image.Model";
-    table["ModifyDate"]			= "";
-    table["OneTouchWB"]			= "";
-    table["Orientation"]		= "";
-    table["PreCaptureFrames"]		= "";
-    table["Quality"]			= "";
-    table["Resolution"]			= "";
-    table["ResolutionUnit"]		= "Exif.Image.ResolutionUnit";
-    table["Saturation"]			= "";
-    table["ScaleFactor35efl"]		= "";
-    table["SceneCaptureType"]		= "";
-    table["Sharpness"]			= "";
-    table["ShutterSpeed"]		= "Exif.Image.ShutterSpeedValue";
-    table["Software"]			= "Exif.Image.Software";
-    table["SpecialMode"]		= "";
-    table["TagsFromFile"]		= "";
-    table["ThumbnailLength"]		= "";
-    table["ThumbnailOffset"]		= "";
-    table["UserComment"]		= "Exif.Photo.UserComment";
-    table["WhiteBalance"]		= "";
-    table["XResolution"]		= "Exif.Image.XResolution";
-    table["YCbCrPositioning"]		= "";
-    table["YResolution"]		= "Exif.Image.YResolution";
+    StrPair("DateTimeOriginal",		"Exif.Photo.DateTimeOriginal"),
+    StrPair("DigitalZoomRatio",		"Exif.Photo.DigitalZoomRatio"),
+    StrPair("ExifIFD:Flash",		"Exif.Photo.Flash"),
+    StrPair("ExifIFD:ISO",		"Exif.Photo.ISOSpeedRatings"),
+    StrPair("ExifIFD:MeteringMode",	"Exif.Photo.MeteringMode"),
+    StrPair("ExposureIndex",		"Exif.Photo.ExposureIndex"),
+    StrPair("ExposureMode",		"Exif.Photo.ExposureMode"),
+    StrPair("ExposureProgram",		"Exif.Photo.ExposureProgram"),
+    StrPair("ExposureTime",		"Exif.Photo.ExposureTime"),
+    StrPair("Flash",			"Exif.Photo.Flash"),
+    StrPair("FNumber",			"Exif.Photo.FNumber"),
+    StrPair("FocalLength",		"Exif.Photo.FocalLength"),
+    StrPair("FocalLength35efl",		"Exif.Photo.FocalLengthIn35mmFilm"),
+    StrPair("FocalLengthIn35mmFormat",	"Exif.Photo.FocalLengthIn35mmFilm"),
+    StrPair("ISO",			"Exif.Photo.ISOSpeedRatings"),
+    StrPair("LensMake",			"Exif.Photo.LensMake"),
+    StrPair("LensModel",		"Exif.Photo.LensModel"),
+    StrPair("LensSerialNumber",		"Exif.Photo.LensSerialNumber"),
+    StrPair("MeteringMode",		"Exif.Photo.MeteringMode"),
+    StrPair("SceneType",		"Exif.Photo.SceneType"),
 
-    table["DateTimeOriginal"]		= "Exif.Photo.DateTimeOriginal";
-    table["DigitalZoomRatio"]		= "Exif.Photo.DigitalZoomRatio";
-    table["ExifIFD:Flash"]		= "Exif.Photo.Flash";
-    table["ExifIFD:ISO"]		= "Exif.Photo.ISOSpeedRatings";
-    table["ExifIFD:MeteringMode"]	= "Exif.Photo.MeteringMode";
-    table["ExposureIndex"]		= "Exif.Photo.ExposureIndex";
-    table["ExposureMode"]		= "Exif.Photo.ExposureMode";
-    table["ExposureProgram"]		= "Exif.Photo.ExposureProgram";
-    table["ExposureTime"]		= "Exif.Photo.ExposureTime";
-    table["Flash"]			= "Exif.Photo.Flash";
-    table["FNumber"]			= "Exif.Photo.FNumber";
-    table["FocalLength"]		= "Exif.Photo.FocalLength";
-    table["FocalLength35efl"]		= "Exif.Photo.FocalLengthIn35mmFilm";
-    table["FocalLengthIn35mmFormat"]	= "Exif.Photo.FocalLengthIn35mmFilm";
-    table["ISO"]			= "Exif.Photo.ISOSpeedRatings";
-    table["LensMake"]			= "Exif.Photo.LensMake";
-    table["LensModel"]			= "Exif.Photo.LensModel";
-    table["LensSerialNumber"]		= "Exif.Photo.LensSerialNumber";
-    table["MeteringMode"]		= "Exif.Photo.MeteringMode";
-    table["SceneType"]			= "Exif.Photo.SceneType";
+    StrPair("GPSAltitude",		"Exif.GPSInfo.GPSAltitude"),
+    StrPair("GPSAltitudeRef",		"Exif.GPSInfo.GPSAltitudeRef"),
+    StrPair("GPSDateStamp",		"Exif.GPSInfo.GPSDateStamp"),
+    StrPair("GPSDifferential",		"Exif.GPSInfo.GPSDifferential"),
+    StrPair("GPSDOP",			"Exif.GPSInfo.GPSDOP"),
+    StrPair("GPSLatitude",		"Exif.GPSInfo.GPSLatitude"),
+    StrPair("GPSLatitudeRef",		"Exif.GPSInfo.GPSLatitudeRef"),
+    StrPair("GPSLongitude",		"Exif.GPSInfo.GPSLongitude"),
+    StrPair("GPSLongitudeRef",		"Exif.GPSInfo.GPSLongitudeRef"),
+    StrPair("GPSMeasureMode",		"Exif.GPSInfo.GPSMeasureMode"),
+    StrPair("GPSTimeStamp",		"Exif.GPSInfo.GPSTimeStamp"),
+  };
 
-    table["GPSAltitude"]		= "Exif.GPSInfo.GPSAltitude";
-    table["GPSAltitudeRef"]		= "Exif.GPSInfo.GPSAltitudeRef";
-    table["GPSDateStamp"]		= "Exif.GPSInfo.GPSDateStamp";
-    table["GPSDifferential"]		= "Exif.GPSInfo.GPSDifferential";
-    table["GPSDOP"]			= "Exif.GPSInfo.GPSDOP";
-    table["GPSLatitude"]		= "Exif.GPSInfo.GPSLatitude";
-    table["GPSLatitudeRef"]		= "Exif.GPSInfo.GPSLatitudeRef";
-    table["GPSLongitude"]		= "Exif.GPSInfo.GPSLongitude";
-    table["GPSLongitudeRef"]		= "Exif.GPSInfo.GPSLongitudeRef";
-    table["GPSMeasureMode"]		= "Exif.GPSInfo.GPSMeasureMode";
-    table["GPSTimeStamp"]		= "Exif.GPSInfo.GPSTimeStamp";
+  Exiv2::ExifKey exif_key_read(std::string key_string) {
+    for (auto i : EXIF_key_subst)
+      if (boost::iequals(key_string, i.first)) {
+	key_string = i.second;
+	break;
+      }
+
+    return Exiv2::ExifKey(key_string);
   }
 
-#define Key(k, h) std::make_pair<std::string, hash>(k, h)
-#define HashPair(s, v) std::make_pair<std::string, std::string>(s, v)
+#define Key(k, h) std::make_pair<std::string, subst_table>(k, h)
 
-  std::map<std::string, hash> EXIF_value_subst = {
-    Key("Exif.GPSInfo.GPSAltitudeRef", hash({
-	    HashPair("Above sea level", "0"),
-	      HashPair("Below sea level", "1"),
+  std::map<std::string, subst_table> EXIF_value_subst = {
+    Key("Exif.GPSInfo.GPSAltitudeRef", subst_table({
+	    StrPair("Above sea level",		"0"),
+	      StrPair("Below sea level",	"1"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSDifferential", hash({
-	    HashPair("No Correction", "0"),
-	      HashPair("Differential Corrected", "1"),
+    Key("Exif.GPSInfo.GPSDifferential", subst_table({
+	    StrPair("No Correction",		"0"),
+	      StrPair("Differential Corrected",	"1"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSLatitudeRef", hash({
-	    HashPair("North", "78"),
-	      HashPair("South", "83"),
+    Key("Exif.GPSInfo.GPSLatitudeRef", subst_table({
+	    StrPair("North",	"78"),
+	      StrPair("South",	"83"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSLongitudeRef", hash({
-	    HashPair("East", "69"),
-	      HashPair("West", "87"),
+    Key("Exif.GPSInfo.GPSLongitudeRef", subst_table({
+	    StrPair("East",	"69"),
+	      StrPair("West",	"87"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSMeasureMode", hash({
-	    HashPair("2-Dimensional Measurement", "2"),
-	      HashPair("Two-Dimensional Measurement", "2"),
-	      HashPair("3-Dimensional Measurement", "3"),
-	      HashPair("Three-Dimensional Measurement", "3"),
+    Key("Exif.GPSInfo.GPSMeasureMode", subst_table({
+	    StrPair("2-Dimensional Measurement",	"2"),
+	      StrPair("Two-Dimensional Measurement",	"2"),
+	      StrPair("3-Dimensional Measurement",	"3"),
+	      StrPair("Three-Dimensional Measurement",	"3"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSSpeedRef", hash({
-	    HashPair("km/h", "75"),
-	      HashPair("mph", "77"),
-	      HashPair("knots", "78"),
+    Key("Exif.GPSInfo.GPSSpeedRef", subst_table({
+	    StrPair("km/h",	"75"),
+	      StrPair("mph",	"77"),
+	      StrPair("knots",	"78"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSDestDistanceRef", hash({
-	    HashPair("kilometres", "75"),
-	      HashPair("kilometers", "75"),
-	      HashPair("km", "75"),
-	      HashPair("miles", "77"),
-	      HashPair("mi", "77"),
-	      HashPair("nautical miles", "78"),
+    Key("Exif.GPSInfo.GPSDestDistanceRef", subst_table({
+	    StrPair("kilometres",		"75"),
+	      StrPair("kilometers",		"75"),
+	      StrPair("km",			"75"),
+	      StrPair("miles",			"77"),
+	      StrPair("mi",			"77"),
+	      StrPair("nautical miles",		"78"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSTrackRef", hash({
-	    HashPair("Magnetic north", "77"),
-	      HashPair("True north", "84"),
+    Key("Exif.GPSInfo.GPSTrackRef", subst_table({
+	    StrPair("Magnetic north",	"77"),
+	      StrPair("True north",	"84"),
 	      })),
 
-    Key("Exif.Photo.ExposureProgram", hash({
-	    HashPair("Not Defined", "0"),
-	      HashPair("Manual", "1"),
-	      HashPair("Program AE", "2"),
-	      HashPair("Auto", "2"),
-	      HashPair("Aperture-priority AE", "3"),
-	      HashPair("Aperture priority", "3"),
-	      HashPair("Shutter speed priority AE", "4"),
-	      HashPair("Shutter priority", "4"),
-	      HashPair("Creative (Slow speed)", "5"),
-	      HashPair("Creative program", "5"),
-	      HashPair("Action (High speed)", "6"),
-	      HashPair("Action program", "6"),
-	      HashPair("Portrait", "7"),
-	      HashPair("Portrait mode", "7"),
-	      HashPair("Landscape", "8"),
-	      HashPair("Landscape mode", "8"),
-	      HashPair("Bulb", "9"), // not standard EXIF, but is used by the Canon EOS 7D
+    Key("Exif.Photo.ExposureProgram", subst_table({
+	    StrPair("Not Defined",			"0"),
+	      StrPair("Manual",				"1"),
+	      StrPair("Program AE",			"2"),
+	      StrPair("Auto",				"2"),
+	      StrPair("Aperture-priority AE",		"3"),
+	      StrPair("Aperture priority",		"3"),
+	      StrPair("Shutter speed priority AE",	"4"),
+	      StrPair("Shutter priority",		"4"),
+	      StrPair("Creative (Slow speed)",		"5"),
+	      StrPair("Creative program",		"5"),
+	      StrPair("Action (High speed)",		"6"),
+	      StrPair("Action program",			"6"),
+	      StrPair("Portrait",			"7"),
+	      StrPair("Portrait mode",			"7"),
+	      StrPair("Landscape",			"8"),
+	      StrPair("Landscape mode",			"8"),
+	      StrPair("Bulb",				"9"), // not standard EXIF, but is used by the Canon EOS 7D
 	      })),
 
-    Key("Exif.Photo.Flash", hash({
-	    HashPair("No Flash", "0"),
-	      HashPair("Fired", "1"),
-	      HashPair("Fired, Return not detected", "5"),
-	      HashPair("Fired, Return light not detected", "5"),
-	      HashPair("Fired, Return detected", "7"),
-	      HashPair("Fired, Return light detected", "7"),
-	      HashPair("On, Did not fire", "8"),
-	      HashPair("Yes, Did not fire", "8"),
-	      HashPair("On, Fired", "9"),
-	      HashPair("Yes, compulsory", "9"),
-	      HashPair("On, Return not detected", "13"),
-	      HashPair("Yes, Return light not detected", "13"),
-	      HashPair("On, Return detected", "15"),
-	      HashPair("Yes, Return light detected", "15"),
-	      HashPair("Off, Did not fire", "16"),
-	      HashPair("No, compulsory", "16"),
-	      HashPair("Off, Did not fire, Return not detected", "20"),
-	      HashPair("No, did not fire, return light not detected", "20"),
-	      HashPair("Auto, Did not fire", "24"),
-	      HashPair("No, auto", "24"),
-	      HashPair("Auto, Fired", "25"),
-	      HashPair("Yes, auto", "25"),
-	      HashPair("Auto, Fired, Return not detected", "29"),
-	      HashPair("Auto, Fired, Return detected", "31"),
-	      HashPair("No flash function", "32"),
-	      HashPair("Off, No flash function", "48"),
-	      HashPair("Fired, Red-eye reduction", "65"),
-	      HashPair("Fired, Red-eye reduction, Return not detected", "69"),
-	      HashPair("Fired, Red-eye reduction, Return detected", "71"),
-	      HashPair("On, Red-eye reduction", "72"),
-	      HashPair("On, Red-eye reduction, Return not detected", "77"),
-	      HashPair("On, Red-eye reduction, Return detected", "79"),
-	      HashPair("Off, Red-eye reduction", "80"),
-	      HashPair("Auto, Did not fire, Red-eye reduction", "88"),
-	      HashPair("Auto, Fired, Red-eye reduction", "89"),
-	      HashPair("Auto, Fired, Red-eye reduction, Return not detected", "93"),
-	      HashPair("Auto, Fired, Red-eye reduction, Return detected", "95"),
+    Key("Exif.Photo.Flash", subst_table({
+	    StrPair("No Flash",							"0"),
+	      StrPair("Fired",							"1"),
+	      StrPair("Fired, Return not detected",				"5"),
+	      StrPair("Fired, Return light not detected",			"5"),
+	      StrPair("Fired, Return detected",					"7"),
+	      StrPair("Fired, Return light detected",				"7"),
+	      StrPair("On, Did not fire",					"8"),
+	      StrPair("Yes, Did not fire",					"8"),
+	      StrPair("On, Fired",						"9"),
+	      StrPair("Yes, compulsory",					"9"),
+	      StrPair("On, Return not detected",				"13"),
+	      StrPair("Yes, Return light not detected",				"13"),
+	      StrPair("On, Return detected",					"15"),
+	      StrPair("Yes, Return light detected",				"15"),
+	      StrPair("Off, Did not fire",					"16"),
+	      StrPair("No, compulsory",						"16"),
+	      StrPair("Off, Did not fire, Return not detected",			"20"),
+	      StrPair("No, did not fire, return light not detected",		"20"),
+	      StrPair("Auto, Did not fire",					"24"),
+	      StrPair("No, auto",						"24"),
+	      StrPair("Auto, Fired",						"25"),
+	      StrPair("Yes, auto",						"25"),
+	      StrPair("Auto, Fired, Return not detected",			"29"),
+	      StrPair("Auto, Fired, Return detected",				"31"),
+	      StrPair("No flash function",					"32"),
+	      StrPair("Off, No flash function",					"48"),
+	      StrPair("Fired, Red-eye reduction",				"65"),
+	      StrPair("Fired, Red-eye reduction, Return not detected",		"69"),
+	      StrPair("Fired, Red-eye reduction, Return detected",		"71"),
+	      StrPair("On, Red-eye reduction",					"72"),
+	      StrPair("On, Red-eye reduction, Return not detected",		"77"),
+	      StrPair("On, Red-eye reduction, Return detected",			"79"),
+	      StrPair("Off, Red-eye reduction",					"80"),
+	      StrPair("Auto, Did not fire, Red-eye reduction",			"88"),
+	      StrPair("Auto, Fired, Red-eye reduction",				"89"),
+	      StrPair("Auto, Fired, Red-eye reduction, Return not detected",	"93"),
+	      StrPair("Auto, Fired, Red-eye reduction, Return detected",	"95"),
 	      })),
 
-    Key("Exif.Image.LightSource", hash({
-	    HashPair("Unknown", "0"),
-	      Hashpair("Daylight", "1"),
-	      HashPair("Fluorescent", "2"),
-	      HashPair("Tungsten (Incandescent)", "3"),
-	      HashPair("Tungsten (incandescent light)", "3"),
-	      HashPair("Flash", "4"),
-	      HashPair("Fine Weather", "9"),
-	      HashPair("Cloudy", "10"),
-	      HashPair("Cloudy weather", "10"),
-	      HashPair("Shade", "11"),
-	      HashPair("Daylight Fluorescent", "12"),   // (D 5700 - 7100K)
-	      HashPair("Daylight fluorescent (D 5700 - 7100K)", "12"),
-	      HashPair("Day White Fluorescent", "13"),  // (N 4600 - 5500K)
-	      HashPair("Day white fluorescent (N 4600 - 5400K)", "13"),
-	      HashPair("Cool White Fluorescent", "14"), // (W 3800 - 4500K)
-	      HashPair("Cool white fluorescent (W 3900 - 4500K)", "14"),
-	      HashPair("White Fluorescent", "15"),      // (WW 3250 - 3800K)
-	      HashPair("White fluorescent (WW 3200 - 3700K)", "15"),
-	      HashPair("Warm White Fluorescent", "16"), // (L 2600 - 3250K)
-	      HashPair("Standard Light A", "17"),
-	      HashPair("Standard Light B", "18"),
-	      HashPair("Standard Light C", "19"),
-	      HashPair("D55", "20"),
-	      HashPair("D65", "21"),
-	      HashPair("D75", "22"),
-	      HashPair("D50", "23"),
-	      HashPair("ISO Studio Tungsten", "24"),
-	      HashPair("Other", "255"),
+    Key("Exif.Image.LightSource", subst_table({
+	    StrPair("Unknown",						"0"),
+	      StrPair("Daylight",					"1"),
+	      StrPair("Fluorescent",					"2"),
+	      StrPair("Tungsten (Incandescent)",			"3"),
+	      StrPair("Tungsten (incandescent light)",			"3"),
+	      StrPair("Flash",						"4"),
+	      StrPair("Fine Weather",					"9"),
+	      StrPair("Cloudy",						"10"),
+	      StrPair("Cloudy weather",					"10"),
+	      StrPair("Shade",						"11"),
+	      StrPair("Daylight Fluorescent",				"12"), // (D 5700 - 7100K)
+	      StrPair("Daylight fluorescent (D 5700 - 7100K)",		"12"),
+	      StrPair("Day White Fluorescent",				"13"), // (N 4600 - 5500K)
+	      StrPair("Day white fluorescent (N 4600 - 5400K)",		"13"),
+	      StrPair("Cool White Fluorescent",				"14"), // (W 3800 - 4500K)
+	      StrPair("Cool white fluorescent (W 3900 - 4500K)",	"14"),
+	      StrPair("White Fluorescent",				"15"), // (WW 3250 - 3800K)
+	      StrPair("White fluorescent (WW 3200 - 3700K)",		"15"),
+	      StrPair("Warm White Fluorescent",				"16"), // (L 2600 - 3250K)
+	      StrPair("Standard Light A",				"17"),
+	      StrPair("Standard Light B",				"18"),
+	      StrPair("Standard Light C",				"19"),
+	      StrPair("D55",						"20"),
+	      StrPair("D65",						"21"),
+	      StrPair("D75",						"22"),
+	      StrPair("D50",						"23"),
+	      StrPair("ISO Studio Tungsten",				"24"),
+	      StrPair("Other",						"255"),
 	      })),
 
-    Key("Exif.Photo.MeteringMode", hash({
-	    HashPair("Unknown", "0"),
-	      HashPair("Average", "1"),
-	      HashPair("Center weighted average", "2"),
-	      HashPair("Center-weighted average", "2"),
-	      HashPair("Spot", "3"),
-	      HashPair("Multi-spot", "4"),
-	      HashPair("Multi-segment", "5"),
-	      HashPair("Partial", "6"),
-	      HashPair("Other", "255"),
+    Key("Exif.Photo.MeteringMode", subst_table({
+	    StrPair("Unknown",				"0"),
+	      StrPair("Average",			"1"),
+	      StrPair("Center weighted average",	"2"),
+	      StrPair("Center-weighted average",	"2"),
+	      StrPair("Spot",				"3"),
+	      StrPair("Multi-spot",			"4"),
+	      StrPair("Multi-segment",			"5"),
+	      StrPair("Partial",			"6"),
+	      StrPair("Other",				"255"),
 	      })),
 
-    Key("Exif.Image.ResolutionUnit", hash({
-	    HashPair("None", "1"),
-	      HashPair("inches", "2"),
-	      HashPair("inch", "2"),
-	      HashPair("cm", "3"),
-	      HashPair("centimetre", "3"),
-	      HashPair("centimeter", "3"),
+    Key("Exif.Image.ResolutionUnit", subst_table({
+	    StrPair("None",		"1"),
+	      StrPair("inches",	"2"),
+	      StrPair("inch",		"2"),
+	      StrPair("cm",		"3"),
+	      StrPair("centimetre",	"3"),
+	      StrPair("centimeter",	"3"),
 	      })),
 
-    Key("Exif.Photo.SceneType", hash({
-	    HashPair("Directly Photographed", "1"),
+    Key("Exif.Photo.SceneType", subst_table({
+	    StrPair("Directly Photographed", "1"),
 	      })),
   };
 
@@ -355,7 +363,8 @@ namespace PhotoFinish {
   }
 
   //! Read an EXIF value from a string, with optional substitution for enum-style values
-  Exiv2::Value::AutoPtr exif_read(std::string key, Exiv2::TypeId type, std::string value_string) {
+  Exiv2::Value::AutoPtr exif_value_read(Exiv2::ExifKey key, std::string value_string) {
+    Exiv2::TypeId type = key.defaultTypeId();
     if (type == Exiv2::unsignedRational)
       return Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
     if (type == Exiv2::signedRational)
@@ -364,7 +373,7 @@ namespace PhotoFinish {
     EXIF_value_subst["Exif.GPSInfo.GPSImgDirectionRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
     EXIF_value_subst["Exif.GPSInfo.GPSDestBearingRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
 
-    auto hi = EXIF_value_subst.find(key);
+    auto hi = EXIF_value_subst.find(key.key());
     if (hi != EXIF_value_subst.end()) {
       for (auto i : hi->second)
 	if (boost::iequals(value_string, i.first)) {
