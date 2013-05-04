@@ -61,7 +61,7 @@ namespace PhotoFinish {
     table["InteropIndex"]		= "";
     table["InteropVersion"]		= "";
     table["LensDistortionParams"]	= "";
-    table["LightSource"]		= "";
+    table["LightSource"]		= "Exif.Image.LightSource";
     table["LightValue"]			= "";
     table["Macro"]			= "";
     table["Make"]			= "Exif.Image.Make";
@@ -155,6 +155,26 @@ namespace PhotoFinish {
 	      HashPair("Three-Dimensional Measurement", "3"),
 	      })),
 
+    Key("Exif.GPSInfo.GPSSpeedRef", hash({
+	    HashPair("km/h", "75"),
+	      HashPair("mph", "77"),
+	      HashPair("knots", "78"),
+	      })),
+
+    Key("Exif.GPSInfo.GPSDestDistanceRef", hash({
+	    HashPair("kilometres", "75"),
+	      HashPair("kilometers", "75"),
+	      HashPair("km", "75"),
+	      HashPair("miles", "77"),
+	      HashPair("mi", "77"),
+	      HashPair("nautical miles", "78"),
+	      })),
+
+    Key("Exif.GPSInfo.GPSTrackRef", hash({
+	    HashPair("Magnetic north", "77"),
+	      HashPair("True north", "84"),
+	      })),
+
     Key("Exif.Photo.ExposureProgram", hash({
 	    HashPair("Not Defined", "0"),
 	      HashPair("Manual", "1"),
@@ -213,6 +233,37 @@ namespace PhotoFinish {
 	      HashPair("Auto, Fired, Red-eye reduction", "89"),
 	      HashPair("Auto, Fired, Red-eye reduction, Return not detected", "93"),
 	      HashPair("Auto, Fired, Red-eye reduction, Return detected", "95"),
+	      })),
+
+    Key("Exif.Image.LightSource", hash({
+	    HashPair("Unknown", "0"),
+	      Hashpair("Daylight", "1"),
+	      HashPair("Fluorescent", "2"),
+	      HashPair("Tungsten (Incandescent)", "3"),
+	      HashPair("Tungsten (incandescent light)", "3"),
+	      HashPair("Flash", "4"),
+	      HashPair("Fine Weather", "9"),
+	      HashPair("Cloudy", "10"),
+	      HashPair("Cloudy weather", "10"),
+	      HashPair("Shade", "11"),
+	      HashPair("Daylight Fluorescent", "12"),   // (D 5700 - 7100K)
+	      HashPair("Daylight fluorescent (D 5700 - 7100K)", "12"),
+	      HashPair("Day White Fluorescent", "13"),  // (N 4600 - 5500K)
+	      HashPair("Day white fluorescent (N 4600 - 5400K)", "13"),
+	      HashPair("Cool White Fluorescent", "14"), // (W 3800 - 4500K)
+	      HashPair("Cool white fluorescent (W 3900 - 4500K)", "14"),
+	      HashPair("White Fluorescent", "15"),      // (WW 3250 - 3800K)
+	      HashPair("White fluorescent (WW 3200 - 3700K)", "15"),
+	      HashPair("Warm White Fluorescent", "16"), // (L 2600 - 3250K)
+	      HashPair("Standard Light A", "17"),
+	      HashPair("Standard Light B", "18"),
+	      HashPair("Standard Light C", "19"),
+	      HashPair("D55", "20"),
+	      HashPair("D65", "21"),
+	      HashPair("D75", "22"),
+	      HashPair("D50", "23"),
+	      HashPair("ISO Studio Tungsten", "24"),
+	      HashPair("Other", "255"),
 	      })),
 
     Key("Exif.Photo.MeteringMode", hash({
@@ -309,6 +360,9 @@ namespace PhotoFinish {
       return Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
     if (type == Exiv2::signedRational)
       return Exiv2::Value::AutoPtr(new Exiv2::RationalValue(parse_Rational(value_string)));
+
+    EXIF_value_subst["Exif.GPSInfo.GPSImgDirectionRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
+    EXIF_value_subst["Exif.GPSInfo.GPSDestBearingRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
 
     auto hi = EXIF_value_subst.find(key);
     if (hi != EXIF_value_subst.end()) {
