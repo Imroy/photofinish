@@ -97,6 +97,15 @@ namespace PhotoFinish {
 	      StrPair("Below sea level",	"1"),
 	      })),
 
+    Key("Exif.GPSInfo.GPSDestDistanceRef", subst_table({
+	    StrPair("kilometres",		"75"),
+	      StrPair("kilometers",		"75"),
+	      StrPair("km",			"75"),
+	      StrPair("miles",			"77"),
+	      StrPair("mi",			"77"),
+	      StrPair("nautical miles",		"78"),
+	      })),
+
     Key("Exif.GPSInfo.GPSDifferential", subst_table({
 	    StrPair("No Correction",		"0"),
 	      StrPair("Differential Corrected",	"1"),
@@ -125,13 +134,11 @@ namespace PhotoFinish {
 	      StrPair("knots",	"78"),
 	      })),
 
-    Key("Exif.GPSInfo.GPSDestDistanceRef", subst_table({
-	    StrPair("kilometres",		"75"),
-	      StrPair("kilometers",		"75"),
-	      StrPair("km",			"75"),
-	      StrPair("miles",			"77"),
-	      StrPair("mi",			"77"),
-	      StrPair("nautical miles",		"78"),
+    Key("Exif.GPSInfo.GPSStatus", subst_table({
+	    StrPair("Measurement Active",		"65"),
+	      StrPair("Measurement in progress",	"65"),
+	      StrPair("Measurement Void",		"86"),
+	      StrPair("Measurement Interoperability",	"86"),
 	      })),
 
     Key("Exif.GPSInfo.GPSTrackRef", subst_table({
@@ -244,7 +251,7 @@ namespace PhotoFinish {
 
     Key("Exif.Image.ResolutionUnit", subst_table({
 	    StrPair("None",		"1"),
-	      StrPair("inches",	"2"),
+	      StrPair("inches",		"2"),
 	      StrPair("inch",		"2"),
 	      StrPair("cm",		"3"),
 	      StrPair("centimetre",	"3"),
@@ -328,6 +335,8 @@ namespace PhotoFinish {
 
     EXIF_value_subst["Exif.GPSInfo.GPSImgDirectionRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
     EXIF_value_subst["Exif.GPSInfo.GPSDestBearingRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
+    EXIF_value_subst["Exif.GPSInfo.GPSDestLatitudeRef"] = EXIF_value_subst["Exif.GPSInfo.GPSLatitudeRef"];
+    EXIF_value_subst["Exif.GPSInfo.GPSDestLongitudeRef"] = EXIF_value_subst["Exif.GPSInfo.GPSLongitudeRef"];
 
     auto hi = EXIF_value_subst.find(key.key());
     if (hi != EXIF_value_subst.end()) {
