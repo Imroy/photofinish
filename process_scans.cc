@@ -53,8 +53,12 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   auto resized_dest = orig_dest->dupe();
 
   resized_dest->set_depth(8);
-  resized_dest->set_jpeg(D_JPEG(60, 1, 1, true));
   resized_dest->clear_profile();
+  resized_dest->set_jpeg(D_JPEG(60, 2, 2, true));
+  resized_dest->jp2().set_rates({ 120, 12 });
+  resized_dest->jp2().set_tile_size(1024, 1024);
+  resized_dest->jp2().set_numresolutions(5);
+  resized_dest->tiff().set_compression("deflate");
 
   auto frame = std::make_shared<Frame>(orig_image->width() * 0.25, orig_image->height() * 0.25,
 				       0, 0,
@@ -171,7 +175,7 @@ int main(int argc, char* argv[]) {
 
 	    // Set various format options to give best quality i.e lossless compression or the closest to it
 	    converted_dest->set_jpeg(D_JPEG(100, 1, 1, true));
-	    converted_dest->jp2().set_rates({ 100, 10, 1});
+	    converted_dest->jp2().set_rates({ 1000, 100, 10, 1 });
 	    converted_dest->jp2().set_tile_size(2048, 2048);
 	    converted_dest->jp2().set_numresolutions(7);
 	    converted_dest->tiff().set_compression("deflate");
