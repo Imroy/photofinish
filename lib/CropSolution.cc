@@ -108,13 +108,16 @@ namespace PhotoFinish {
 	  if (first)
 	    maxsize = min(xsize, (img->height() - y) / height_factor);
 
-	  for (double size = minsize; size < maxsize; size += step) {
+	  for (double size = maxsize; size > minsize; size -= step) {
 	    double width = size * width_factor;
 	    if (x + width > img->width())
 	      continue;
 	    double height = size * height_factor;
 	    if (y + height > img->height())
 	      continue;
+
+	    if (omp_get_thread_num() == 0)
+	      std::cerr << "\r\t\t(" << x << ", " << y << ") + (" << width << "×" << height << ")...    ";
 
 	    double distance = 0;
 	    if ((!best_frame) || (distance < best_distance))
@@ -177,6 +180,7 @@ namespace PhotoFinish {
       step /= 16;
       first = false;
     }
+    std::cerr << std::endl;
 
     if (best_frame)
       std::cerr << "\t\tBest frame (" << best_frame->crop_x() << ", " << best_frame->crop_y() << ") + ("

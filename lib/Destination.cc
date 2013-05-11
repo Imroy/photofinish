@@ -116,6 +116,7 @@ namespace PhotoFinish {
 	continue;
       }
 
+      std::cerr << std::setprecision(2) << std::fixed;
       auto frame = solver.solve(img, target);
 
       if ((target->width() > frame->crop_w()) && (target->height() > frame->crop_h())) {
@@ -131,7 +132,7 @@ namespace PhotoFinish {
       double waste = frame->waste(img);
 
       std::cerr << "\tWaste from ("
-		<< std::setprecision(2) << std::fixed << frame->crop_x() << ", " << frame->crop_y() << ") + ("
+		<< frame->crop_x() << ", " << frame->crop_y() << ") + ("
 		<< frame->crop_w() << "×" << frame->crop_h() << ") = "
 		<< waste << "." << std::endl;
       if ((!best_frame) || (waste < best_waste)) {
