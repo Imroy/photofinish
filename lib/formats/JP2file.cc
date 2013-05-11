@@ -216,6 +216,8 @@ namespace PhotoFinish {
     cmsUInt32Number type = img->type();
     if (T_PLANAR(type) != 1)
       throw cmsTypeError("Not Planar", type);
+    if (T_BYTES(type) > 2)
+      throw cmsTypeError("Too deep", type);
 
     OPJ_COLOR_SPACE colour_space;
     switch (T_COLORSPACE(type)) {
@@ -227,6 +229,7 @@ namespace PhotoFinish {
       colour_space = CLRSPC_GRAY;
       break;
 
+    case PT_YCbCr:
     case PT_YUV:
       colour_space = CLRSPC_SYCC;
       break;
@@ -235,10 +238,10 @@ namespace PhotoFinish {
       throw cmsTypeError("Unsupported colour space", type);
       break;
     }
-    unsigned char channels = T_CHANNELS(type);
-    int depth = T_BYTES(type);
 
     std::cerr << "Preparing for file " << _filepath << "..." << std::endl;
+    std::cerr << "\t" << img->width() << "×" << img->height()
+	      << " " << (T_BYTES(type) << 3) << "-bpp " << (colour_space == PT_GRAY ? "greyscale" : "RGB") << std::endl;
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
     event_mgr.error_handler = error_callback;
@@ -248,7 +251,7 @@ namespace PhotoFinish {
     opj_cparameters_t parameters;
     opj_set_default_encoder_parameters(&parameters);
 
-    parameters.tile_size_on = 0;
+    parameters.tile_size_on = OPJ_FALSE;
     parameters.cp_disto_alloc = 1;
 
     if (dest->jp2().defined()) {
@@ -287,12 +290,14 @@ namespace PhotoFinish {
 	std::cerr << "." << std::endl;
 	parameters.tcp_numlayers = d.num_rates();
       }
+      /*
       if (d.tile_size().defined()) {
 	std::cerr << "\tTile size of " << d.tile_size()->first << "×" << d.tile_size()->second << std::endl;
-	parameters.tile_size_on = 1;
+	parameters.tile_size_on = OPJ_TRUE;
 	parameters.cp_tdx = d.tile_size()->first;
 	parameters.cp_tdy = d.tile_size()->second;
       }
+      */
     }
 
     if (parameters.tcp_numlayers == 0) {
@@ -300,6 +305,8 @@ namespace PhotoFinish {
       parameters.tcp_numlayers++;
     }
 
+    unsigned char channels = T_CHANNELS(type);
+    int depth = T_BYTES(type);
     opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(channels * sizeof(opj_image_cmptparm_t));
     memset(components, 0, channels * sizeof(opj_image_cmptparm_t));
     for (unsigned char i = 0; i < channels; i++) {
@@ -329,12 +336,6 @@ namespace PhotoFinish {
 	jp2_image->icc_profile_len = profile_len;
       }
     }
-
-    unsigned char **rows = (unsigned char**)malloc(img->height() * sizeof(unsigned char*));
-    size_t channel_size = img->width() * depth;
-    size_t row_size = channel_size * channels;
-    for (unsigned int y = 0; y < img->height(); y++)
-      rows[y] = (unsigned char*)malloc(row_size);
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
@@ -368,10 +369,22 @@ namespace PhotoFinish {
     if (ofs.fail())
       throw FileOpenError(_filepath.native());
 
-    int size = cio_tell(cio);
-    std::cerr << "\tWriting " << size << " bytes..." << std::endl;
-    ofs.write((char*)cio->buffer, size);
-    ofs.close();
+    {
+      int size = cio_tell(cio);
+      std::cerr << "\tWriting..." << std::endl;
+      char *data = (char*)cio->buffer;
+      unsigned int written = 0;
+      while (size) {
+	unsigned int to_write = size > 1024 ? 1024 : size;
+	ofs.write(data, to_write);
+	data += to_write;
+	written += to_write;
+	size -= to_write;
+	std::cerr << "\r\tWritten " << written << " bytes";
+      }
+      std::cerr << "\r\tWritten " << written << " bytes" << std::endl;
+      ofs.close();
+    }
     opj_cio_close(cio);
     opj_destroy_compress(cinfo);
     opj_image_destroy(jp2_image);
