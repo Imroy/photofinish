@@ -54,6 +54,7 @@ namespace PhotoFinish {
       free(_rowdata);
       _rowdata = NULL;
     }
+    free(_profile);
   }
 
   cmsHPROFILE Image::default_profile(cmsUInt32Number default_type) {
