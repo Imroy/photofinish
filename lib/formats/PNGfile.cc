@@ -169,7 +169,7 @@ namespace PhotoFinish {
       length = ifs.gcount();
       png_process_data(_png, _info, buffer, length);
     } while (length > 0);
-    std::cerr << "\r\tRead " << pack.image->height() << " of " << pack.image->height() << " rows";
+    std::cerr << "\r\tRead " << pack.image->height() << " of " << pack.image->height() << " rows." << std::endl;
 
     png_destroy_read_struct(&_png, &_info, NULL);
     ifs.close();
