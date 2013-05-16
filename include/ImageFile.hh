@@ -57,6 +57,10 @@ namespace PhotoFinish {
     const fs::path _filepath;
     bool _is_open;
 
+    void extract_tags(Image::ptr img);
+
+    void embed_tags(Image::ptr img) const;
+
   public:
     //! Shared pointer for an ImageFile
     typedef std::shared_ptr<ImageFile> ptr;

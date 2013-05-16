@@ -20,6 +20,7 @@
 #define __IMAGE_HH__
 
 #include <memory>
+#include <exiv2/exiv2.hpp>
 #include <lcms2.h>
 #include "Definable.hh"
 #include "sample.h"
@@ -56,6 +57,10 @@ namespace PhotoFinish {
       if (_rowdata[y] == NULL)
 	_rowdata[y] = (unsigned char*)malloc(_row_size);
     }
+
+    Exiv2::ExifData _EXIFtags;
+    Exiv2::IptcData _IPTCtags;
+    Exiv2::XmpData _XMPtags;
 
   public:
     //! Shared pointer for an Image
@@ -132,6 +137,15 @@ namespace PhotoFinish {
 	_rowdata[y] = NULL;
       }
     }
+
+    //! The Exiv2::ExifData object.
+    inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
+
+    //! The Exiv2::IptcData object.
+    inline Exiv2::IptcData& IPTCtags(void) { return _IPTCtags; }
+
+    //! The Exiv2::XmpData object.
+    inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
     //! Create either an sRGB or greyscale profile depending on image type
     static cmsHPROFILE default_profile(cmsUInt32Number default_type);

@@ -158,6 +158,9 @@ namespace PhotoFinish {
     fb.close();
     _is_open = false;
 
+    std::cerr << "\tExtracting tags..." << std::endl;
+    extract_tags(img);
+
     std::cerr << "Done." << std::endl;
     return img;
   }
@@ -312,6 +315,9 @@ namespace PhotoFinish {
     TIFFClose(tiff);
     fb.close();
     _is_open = false;
+
+    std::cerr << "\tEmbedding tags..." << std::endl;
+    embed_tags(img);
 
     std::cerr << "Done." << std::endl;
   }

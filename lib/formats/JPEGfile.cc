@@ -133,6 +133,10 @@ namespace PhotoFinish {
     free(dinfo);
     _is_open = false;
 
+    std::cerr << "\tExtracting tags..." << std::endl;
+    extract_tags(img);
+
+    std::cerr << "Done." << std::endl;
     return img;
   }
 
@@ -172,10 +176,6 @@ namespace PhotoFinish {
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
   void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) {
-    if (_is_open)
-      throw FileOpenError("already open");
-    _is_open = true;
-
     jpeg_compress_struct *cinfo = (jpeg_compress_struct*)malloc(sizeof(jpeg_compress_struct));
     jpeg_create_compress(cinfo);
     jpeg_error_mgr jerr;
@@ -300,10 +300,13 @@ namespace PhotoFinish {
     jpeg_ostream_dest_free(cinfo);
     jpeg_destroy_compress(cinfo);
     free(cinfo);
-    _is_open = false;
   }
 
   void JPEGfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
@@ -311,6 +314,10 @@ namespace PhotoFinish {
 
     write(ofs, img, dest, can_free);
     ofs.close();
+    _is_open = false;
+
+    std::cerr << "\tEmbedding tags..." << std::endl;
+    embed_tags(img);
 
     std::cerr << "Done." << std::endl;
   }

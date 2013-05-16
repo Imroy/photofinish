@@ -41,7 +41,7 @@ namespace PhotoFinish {
     _XMPtags(other._XMPtags)
   {}
 
-  Tags::Tags(fs::path filepath) {
+  Tags::Tags(const fs::path& filepath) {
     load(filepath);
   }
 
@@ -168,18 +168,15 @@ namespace PhotoFinish {
     std::cerr << "Finished loading \"" << filepath.native() << "\"" << std::endl;
   }
 
-  void Tags::extract(fs::path filepath) {
-    Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
-    assert(image.get() != 0);
+  void Tags::copy_from(Image::ptr img) {
+    for (auto ei : img->EXIFtags())
+      _EXIFtags[ei.key()] = ei.value();
 
-    for (auto ei : image->exifData())
-      _EXIFtags.add(ei);
+    for (auto ii : img->IPTCtags())
+      _IPTCtags[ii.key()] = ii.value();
 
-    for (auto ii : image->iptcData())
-      _IPTCtags.add(ii);
-
-    for (auto xi : image->xmpData())
-      _XMPtags.add(xi);
+    for (auto xi : img->XMPtags())
+      _XMPtags[xi.key()] = xi.value();
   }
 
   void Tags::make_thumbnail(Image::ptr img, const D_thumbnail& dt) {
@@ -244,14 +241,15 @@ namespace PhotoFinish {
     _EXIFtags["Exif.Image.ResolutionUnit"] = 2;	// Inches (yuck)
   }
 
-  void Tags::embed(fs::path filepath) const {
-    Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.native());
-    assert(image.get() != 0);
+  void Tags::copy_to(Image::ptr img) const {
+    for (auto ei : _EXIFtags)
+      img->EXIFtags()[ei.key()] = ei.value();
 
-    image->setExifData(_EXIFtags);
-    image->setIptcData(_IPTCtags);
-    image->setXmpData(_XMPtags);
-    image->writeMetadata();
+    for (auto ii : _IPTCtags)
+      img->IPTCtags()[ii.key()] = ii.value();
+
+    for (auto xi : _XMPtags)
+      img->XMPtags()[xi.key()] = xi.value();
   }
 
 }

@@ -30,6 +30,36 @@ namespace PhotoFinish {
     _is_open(false)
   {}
 
+  void ImageFile::extract_tags(Image::ptr img) {
+    if (_is_open)
+      throw FileOpenError("already open");
+
+    Exiv2::Image::AutoPtr imagefile = Exiv2::ImageFactory::open(_filepath.native());
+    assert(imagefile.get() != 0);
+
+    for (auto ei : imagefile->exifData())
+      img->EXIFtags().add(ei);
+
+    for (auto ii : imagefile->iptcData())
+      img->IPTCtags().add(ii);
+
+    for (auto xi : imagefile->xmpData())
+      img->XMPtags().add(xi);
+  }
+
+  void ImageFile::embed_tags(Image::ptr img) const {
+    if (_is_open)
+      throw FileOpenError("already open");
+
+    Exiv2::Image::AutoPtr imagefile = Exiv2::ImageFactory::open(_filepath.native());
+    assert(imagefile.get() != 0);
+
+    imagefile->setExifData(img->EXIFtags());
+    imagefile->setIptcData(img->IPTCtags());
+    imagefile->setXmpData(img->XMPtags());
+    imagefile->writeMetadata();
+  }
+
   ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
     std::string ext = filepath.extension().generic_string().substr(1);
 #ifdef HAZ_PNG

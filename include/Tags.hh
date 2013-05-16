@@ -27,7 +27,6 @@
 #include <memory>
 #include <list>
 #include "Image.hh"
-#include "ImageFile.hh"
 #include "Destination.hh"
 
 namespace fs = boost::filesystem;
@@ -54,7 +53,7 @@ namespace PhotoFinish {
     Tags(const Tags &other);
 
     //! Constructor with a filepath from which to load tags (calls Load)
-    Tags(fs::path filepath);
+    Tags(const fs::path& filepath);
 
     //! Shared pointer for a Tags object
     typedef std::shared_ptr<Tags> ptr;
@@ -83,22 +82,17 @@ namespace PhotoFinish {
     //! Load tags from supplied file path
     void load(fs::path filepath);
 
-    //! Extract EXIF/IPTC/XMP tags from an image file
-    void extract(fs::path filepath);
-
-    //! Extract EXIF/IPTC/XMP tags from an image file
-    void extract(ImageFile::ptr imagefile) { this->extract(imagefile->filepath()); }
+    //! Copy EXIF/IPTC/XMP tags from an image
+    void copy_from(Image::ptr img);
 
     //! Create a thumbnail from the supplied image
     void make_thumbnail(Image::ptr img, const D_thumbnail& dt);
 
     void add_resolution(Image::ptr img);
 
-    //! Embed EXIF/IPTC/XMP tags into an image file
-    void embed(fs::path filepath) const;
+    //! Copy EXIF/IPTC/XMP tags to an image
+    void copy_to(Image::ptr img) const;
 
-    //! Embed EXIF/IPTC/XMP tags into an image file
-    inline void embed(ImageFile::ptr imagefile) const { this->embed(imagefile->filepath()); }
   };
 
 }

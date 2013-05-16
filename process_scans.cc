@@ -69,8 +69,8 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   cmsHPROFILE dest_profile = resized_dest->get_profile(dest_type);
   resized_image->transform_colour_inplace(dest_profile, dest_type);
 
+  filetags->copy_to(resized_image);
   preview_file->write(resized_image, resized_dest, can_free);
-  filetags->embed(preview_file);
 }
 
 int main(int argc, char* argv[]) {
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]) {
 	auto orig_dest = std::make_shared<Destination>();
 	auto orig_image = infile->read(orig_dest);
 	auto filetags = defaulttags->dupe();
-	filetags->extract(infile);
+	filetags->copy_from(orig_image);
 
 	try {
 	  auto converted_file = ImageFile::create(convert_dir / di.path().filename(), convert_format);
@@ -187,8 +187,8 @@ int main(int argc, char* argv[]) {
 	    else
 	      converted_image = orig_image->transform_colour(NULL, converted_type);
 
+	    filetags->copy_to(converted_image);
 	    converted_file->write(converted_image, converted_dest, !do_preview);
-	    filetags->embed(converted_file);
 	  }
 	} catch (std::exception& ex) {
 	  std::cerr << ex.what() << std::endl;
@@ -239,7 +239,7 @@ int main(int argc, char* argv[]) {
 	auto orig_dest = std::make_shared<Destination>();
 	auto orig_image = infile->read(orig_dest);
 	auto filetags = defaulttags->dupe();
-	filetags->extract(infile);
+	filetags->copy_from(orig_image);
 
 	make_preview(orig_image, orig_dest, filetags, preview_file, true);
       } catch (std::exception& ex) {

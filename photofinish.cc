@@ -127,8 +127,8 @@ int main(int argc, char* argv[]) {
 	    cmsHPROFILE dest_profile = destination->get_profile(dest_type);
 	    sharp_image->transform_colour_inplace(dest_profile, dest_type);
 
+	    tags->copy_to(sharp_image);
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
-	    tags->embed(outfile);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

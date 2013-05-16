@@ -175,6 +175,9 @@ namespace PhotoFinish {
     ifs.close();
     _is_open = false;
 
+    std::cerr << "\tExtracting tags..." << std::endl;
+    extract_tags(pack.image);
+
     std::cerr << "Done." << std::endl;
     return pack.image;
   }
@@ -342,6 +345,9 @@ namespace PhotoFinish {
     png_destroy_write_struct(&_png, &_info);
     ofs.close();
     _is_open = false;
+
+    std::cerr << "\tEmbedding tags..." << std::endl;
+    embed_tags(img);
 
     std::cerr << "Done." << std::endl;
   }

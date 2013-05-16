@@ -181,6 +181,9 @@ namespace PhotoFinish {
     std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows." << std::endl;
     _is_open = false;
 
+    std::cerr << "\tExtracting tags..." << std::endl;
+    extract_tags(img);
+
     std::cerr << "Done." << std::endl;
     return img;
   }
@@ -389,6 +392,9 @@ namespace PhotoFinish {
     opj_destroy_compress(cinfo);
     opj_image_destroy(jp2_image);
     _is_open = false;
+
+    std::cerr << "\tEmbedding tags..." << std::endl;
+    embed_tags(img);
 
     std::cerr << "Done." << std::endl;
   }
