@@ -42,7 +42,7 @@ namespace PhotoFinish {
     _depth(other._depth),
     _noresize(other._noresize),
     _jpeg(other._jpeg), _png(other._png),
-    _tiff(other._tiff), _jp2(other._jp2),
+    _tiff(other._tiff), _jp2(other._jp2), _webp(other._webp),
     _intent(other._intent),
     _profile(other._profile),
     _forcergb(other._forcergb),
@@ -71,6 +71,7 @@ namespace PhotoFinish {
       _png = b._png;
       _tiff = b._tiff;
       _jp2 = b._jp2;
+      _webp = b._webp;
       _intent = b._intent;
       _profile = b._profile;
       _forcergb = b._forcergb;
@@ -256,6 +257,9 @@ namespace PhotoFinish {
 
     if (const YAML::Node *n = node.FindValue("jp2"))
       *n >> d._jp2;
+
+    if (const YAML::Node *n = node.FindValue("webp"))
+      *n >> d._webp;
 
     if (const YAML::Node *n = node.FindValue("profile")) {
       d._profile = std::make_shared<D_profile>();

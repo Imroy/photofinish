@@ -5,6 +5,7 @@ HAZ_PNG = 1
 HAZ_JPEG = 1
 HAZ_TIFF = 1
 HAZ_JP2 = 1
+HAZ_WEBP = 1
 
 PROGRAMS = photofinish process_scans
 
@@ -38,6 +39,11 @@ ifeq ($(HAZ_JP2), 1)
 COMMON_FLAGS += -DHAZ_JP2
 PKGS += libopenjpeg1
 LIB_OBJS += lib/formats/JP2file.o
+endif
+ifeq ($(HAZ_WEBP), 1)
+COMMON_FLAGS += -DHAZ_WEBP
+PKGS += libwebp
+LIB_OBJS += lib/formats/WebPfile.o
 endif
 
 COMMON_FLAGS += `pkg-config --cflags $(PKGS)`

@@ -52,6 +52,11 @@ namespace PhotoFinish {
       return std::make_shared<JP2file>(filepath);
 #endif
 
+#ifdef HAZ_WEBP
+    if (boost::iequals(ext, "webp"))
+      return std::make_shared<WebPfile>(filepath);
+#endif
+
     throw UnknownFileType(filepath.generic_string());
   }
 
@@ -78,6 +83,11 @@ namespace PhotoFinish {
       return std::make_shared<JP2file>(filepath.replace_extension(".jp2"));
 #endif
 
+#ifdef HAZ_WEBP
+    if (boost::iequals(format, "webp"))
+      return std::make_shared<WebPfile>(filepath.replace_extension(".webp"));
+#endif
+
     if (boost::iequals(format, "sol"))
       return std::make_shared<SOLfile>(filepath.replace_extension(".bin"));
 
@@ -96,6 +106,9 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "jp2"))
       const_cast<D_JP2&>(dest->jp2()).add_variables(vars);
+
+    if (boost::iequals(format, "webp"))
+      const_cast<D_WebP&>(dest->webp()).add_variables(vars);
   }
 
   Image::ptr ImageFile::read(void) {

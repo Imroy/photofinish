@@ -55,6 +55,7 @@ namespace PhotoFinish {
     D_PNG _png;
     D_TIFF _tiff;
     D_JP2 _jp2;
+    D_WebP _webp;
 
     definable<cmsUInt32Number> _intent;	//! CMS rendering intent
 
@@ -124,6 +125,9 @@ namespace PhotoFinish {
 
     inline D_JP2& jp2(void) { return _jp2; }
     inline void set_jp2(const D_JP2& j) { _jp2 = j; }
+
+    inline D_WebP& webp(void) { return _webp; }
+    inline void set_webp(const D_WebP& w) { _webp = w; }
 
     inline definable<cmsUInt32Number> intent(void) const { return _intent; }
 

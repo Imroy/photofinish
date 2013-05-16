@@ -69,7 +69,7 @@ namespace PhotoFinish {
     definable<std::string> _filter;
     definable<double> _support;
 
-    D_resize(std::string f, double s);
+    D_resize(const std::string& f, double s);
 
   public:
     //! Empty constructor
@@ -95,8 +95,8 @@ namespace PhotoFinish {
     definable<double> _size;		//! A target-specific size (in inches) to override the one in the destination
 
   public:
-    D_target(std::string n, double w, double h);
-    D_target(std::string &n);
+    D_target(const std::string& n, double w, double h);
+    D_target(const std::string& n);
 
     inline std::string name(void) const { return _name; }
     inline definable<double> width(void) const { return _width; }
@@ -166,19 +166,19 @@ namespace PhotoFinish {
     /*!
       \param c Compression string
     */
-    D_TIFF(std::string c);
+    D_TIFF(const std::string& c);
 
     //! Set values from a map of "variables"
     void add_variables(multihash& vars);
 
     inline definable<std::string> artist(void) const { return _artist; }
-    inline void set_artist(std::string a) { _artist = a; set_defined(); }
+    inline void set_artist(const std::string& a) { _artist = a; set_defined(); }
 
     inline definable<std::string> copyright(void) const { return _copyright; }
-    inline void set_copyright(std::string c) { _copyright = c; set_defined(); }
+    inline void set_copyright(const std::string& c) { _copyright = c; set_defined(); }
 
     inline definable<std::string> compression(void) const { return _compression; }
-    inline void set_compression(std::string c) { _compression = c; set_defined(); }
+    inline void set_compression(const std::string& c) { _compression = c; set_defined(); }
 
     friend void operator >> (const YAML::Node& node, D_TIFF& dt);
   };
@@ -202,7 +202,7 @@ namespace PhotoFinish {
     inline void set_numresolutions(int n) { _numresolutions = n; set_defined(); };
 
     inline definable<std::string> prog_order(void) const { return _prog_order; }
-    inline void set_prog_order(std::string po) { _prog_order = po; set_defined(); }
+    inline void set_prog_order(const std::string& po) { _prog_order = po; set_defined(); }
 
     inline int num_rates(void) const { return _rates.size(); }
     inline float rate(int n) const { return _rates[n]; }
@@ -213,6 +213,38 @@ namespace PhotoFinish {
     inline void set_tile_size(int h, int v) { _tile_size = std::pair<int, int>(h, v); set_defined(); }
 
     friend void operator >> (const YAML::Node& node, D_JP2& dj);
+  };
+
+  //! WebP parameters for destination
+  class D_WebP : public Role_Definable {
+  private:
+    definable<std::string> _preset;
+    definable<bool> _lossless;
+    float _quality;			// 0 -> 100
+    definable<unsigned char> _method;	// 0 -> 6
+
+  public:
+    //! Empty constructor
+    D_WebP();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    inline definable<std::string> preset(void) const { return _preset; }
+    inline void set_preset(const std::string& p) { _preset = p; }
+
+    inline definable<bool> lossless(void) const { return _lossless; }
+    inline definable<bool> lossy(void) const { return !_lossless; }
+    inline void set_lossless(bool l = true) { _lossless = l; }
+    inline void set_lossy(bool l = true) { _lossless = !l; }
+
+    inline float quality(void) const { return _quality; }
+    inline void set_quality(float q) { _quality = q; }
+
+    inline definable<unsigned char> method(void) const { return _method; }
+    inline void set_method(unsigned char m) { _method = m; }
+
+    friend void operator >> (const YAML::Node& node, D_WebP& dw);
   };
 
   //! ICC profile parameters for destination
@@ -228,10 +260,10 @@ namespace PhotoFinish {
     D_profile();
 
     //! Constructor
-    D_profile(std::string name, fs::path filepath);
+    D_profile(const std::string& name, fs::path filepath);
 
     //! Constructor
-    D_profile(std::string name, void *data, unsigned int data_size);
+    D_profile(const std::string& name, void *data, unsigned int data_size);
 
     //! Copy constructor
     D_profile(const D_profile& other);

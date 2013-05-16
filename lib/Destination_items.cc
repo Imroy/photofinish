@@ -30,9 +30,20 @@
 namespace PhotoFinish {
 
   void operator >> (const YAML::Node& node, bool& b) {
-    int temp;
-    node >> temp;
-    b = temp > 0 ? true : false;
+    std::string s;
+    node >> s;
+    if (boost::iequals(s.substr(0, 1), "t")) {
+      b = true;
+      return;
+    }
+    if (boost::iequals(s.substr(0, 1), "f")) {
+      b = false;
+      return;
+    }
+
+    int i;
+    node >> i;
+    b = i > 0 ? true : false;
   }
 
   void operator >> (const YAML::Node& node, fs::path& p) {
@@ -62,7 +73,7 @@ namespace PhotoFinish {
   D_resize::D_resize()
   {}
 
-  D_resize::D_resize(std::string f, double s) :
+  D_resize::D_resize(const std::string& f, double s) :
     _filter(f), _support(s)
   {}
 
@@ -79,12 +90,12 @@ namespace PhotoFinish {
 
 
 
-  D_target::D_target(std::string n, double w, double h) :
+  D_target::D_target(const std::string& n, double w, double h) :
     _name(n),
     _width(w), _height(h)
   {}
 
-  D_target::D_target(std::string &n) :
+  D_target::D_target(const std::string& n) :
     _name(n)
   {}
 
@@ -181,7 +192,7 @@ namespace PhotoFinish {
   D_TIFF::D_TIFF()
   {}
 
-  D_TIFF::D_TIFF(std::string c)
+  D_TIFF::D_TIFF(const std::string& c)
     : _compression(c)
   {}
 
@@ -346,17 +357,41 @@ namespace PhotoFinish {
 
 
 
+  D_WebP::D_WebP() :
+    _quality(75)
+  {}
+
+  void D_WebP::add_variables(multihash& vars) {
+  }
+
+  void operator >> (const YAML::Node& node, D_WebP& dw) {
+    if (const YAML::Node *n = node.FindValue("preset"))
+      *n >> dw._preset;
+
+    if (const YAML::Node *n = node.FindValue("lossless"))
+      *n >> dw._lossless;
+
+    if (const YAML::Node *n = node.FindValue("quality"))
+      *n >> dw._quality;
+
+    if (const YAML::Node *n = node.FindValue("method"))
+      *n >> dw._method;
+  }
+
+
+
+
   D_profile::D_profile() :
     _data(NULL), _data_size(0)
   {}
 
-  D_profile::D_profile(std::string name, fs::path filepath) :
+  D_profile::D_profile(const std::string& name, fs::path filepath) :
     _name(name),
     _filepath(filepath),
     _data(NULL), _data_size(0)
   {}
 
-  D_profile::D_profile(std::string name, void *data, unsigned int data_size) :
+  D_profile::D_profile(const std::string& name, void *data, unsigned int data_size) :
     _name(name),
     _data(data), _data_size(data_size)
   {}

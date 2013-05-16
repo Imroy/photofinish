@@ -37,6 +37,10 @@
 #ifdef HAZ_JP2
 #include <openjpeg.h>
 #endif
+#ifdef HAZ_WEBP
+#include <webp/encode.h>
+#include <webp/decode.h>
+#endif
 
 #include "Image.hh"
 #include "Destination.hh"
@@ -161,6 +165,19 @@ namespace PhotoFinish {
   public:
     JP2file(const fs::path filepath);
 
+    Image::ptr read(Destination::ptr dest);
+    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  };
+#endif
+
+#ifdef HAZ_WEBP
+  //! WebP file reader and writer
+  class WebPfile : public ImageFile {
+  private:
+
+  public:
+    WebPfile(const fs::path filepath);
     Image::ptr read(Destination::ptr dest);
     cmsUInt32Number preferred_type(cmsUInt32Number type);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
