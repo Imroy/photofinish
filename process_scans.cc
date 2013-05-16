@@ -38,7 +38,6 @@
 #include "Exception.hh"
 
 namespace fs = boost::filesystem;
-namespace fs3 = boost::filesystem3;
 namespace po = boost::program_options;
 
 using namespace PhotoFinish;
