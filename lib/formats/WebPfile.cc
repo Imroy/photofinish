@@ -112,96 +112,129 @@ namespace PhotoFinish {
     return type;
   }
 
-  struct stream_writer {
+  inline void copy_le_to(unsigned char* dest, unsigned int value, unsigned char length) {
+    for (unsigned char i = 0; i < length; i++) {
+      dest[i] = (unsigned char)(value & 0xff);
+      value >>= 8;
+    }
+  }
+
+  inline unsigned int read_le32(const unsigned char* data) {
+    return data[0] | ((unsigned int)data[1] << 8) | ((unsigned int)data[2] << 16) | ((unsigned int)data[3] << 24);
+  }
+
+  class webp_stream_writer {
+  private:
     std::ostream *stream;
     char chunk[4];
     unsigned int chunk_size;
     unsigned int next_chunk;
 
     // Data for the VP8X chunk
+    bool need_vp8x;
     unsigned int width, height;
     unsigned char *icc_data, *exif_data, *xmp_data;	// no IPTC?
     unsigned int icc_size, exif_size, xmp_size;
 
-    stream_writer(std::ostream* s, unsigned int w, unsigned int h) :
+  public:
+    webp_stream_writer(std::ostream* s, unsigned int w, unsigned int h) :
       stream(s), chunk_size(0), next_chunk(12),
-      width(w - 1), height(h - 1),
+      need_vp8x(false), width(w - 1), height(h - 1),
       icc_data(NULL), exif_data(NULL), xmp_data(NULL),
       icc_size(0), exif_size(0), xmp_size(0) {
       memcpy(chunk, "   ", 4);
     }
-
-    inline void write_le16(unsigned short int x) {
-      unsigned char b[2] = { (unsigned char)(x & 0xff), (unsigned char)(x >> 8) };
-      stream->write((char*)&b, 2);
+    ~webp_stream_writer() {
+      if (icc_data)
+	free(icc_data);
+      if (exif_data)
+	free(exif_data);
+      if (xmp_data)
+	free(xmp_data);
     }
-    inline void write_le24(unsigned int x) {
-      unsigned char b[3] = { (unsigned char)(x & 0xff), (unsigned char)((x >> 8) & 0xff), (unsigned char)((x >> 16) & 0xff) };
-      stream->write((char*)&b, 3);
+    void add_icc(cmsHPROFILE profile) {
+      cmsSaveProfileToMem(profile, NULL, &icc_size);
+      if (icc_size > 0) {
+	icc_data = (unsigned char*)malloc(icc_size);
+	cmsSaveProfileToMem(profile, icc_data, &icc_size);
+      }
+      need_vp8x = true;
     }
-    inline void write_le32(unsigned int x) {
-      unsigned char b[4] = { (unsigned char)(x & 0xff), (unsigned char)((x >> 8) & 0xff), (unsigned char)((x >> 16) & 0xff), (unsigned char)(x >> 24) };
-      stream->write((char*)&b, 4);
+    void add_exif(const Exiv2::ExifData& exif) {
+      Exiv2::Blob blob;
+      Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, exif);
+      exif_size = blob.size();
+      unsigned char *data = exif_data = (unsigned char*)malloc(exif_size);
+      for (auto i : blob)
+	*data++ = i;
+      need_vp8x = true;
     }
-
-    inline unsigned int read_le32(const unsigned char* data) {
-      return data[0] | ((unsigned int)data[1] << 8) | ((unsigned int)data[2] << 16) | ((unsigned int)data[3] << 24);
+    void add_xmp(const Exiv2::XmpData& xmp) {
+      std::string s;
+      Exiv2::XmpParser::encode(s, xmp);
+      xmp_size = s.length() + 1;
+      xmp_data = (unsigned char*)malloc(xmp_size);
+      memcpy(xmp_data, s.c_str(), xmp_size);
+      need_vp8x = true;
     }
-
+    void write_chunk(const char *fourcc, const unsigned char* data, unsigned int length) {
+	stream->write(fourcc, 4);
+	unsigned char l[4];
+	copy_le_to(l, length, 4);
+	stream->write((char*)l, 4);
+	stream->write((char*)data, length);
+	if (length & 0x01)
+	  stream->put(0);
+    }
     void after_vp8(void) {
+      // Write stuff after the image chunk
       if (exif_size) {
 	std::cerr << "\tInserting EXIF chunk (" << exif_size << " bytes)..." << std::endl;
-	stream->write("EXIF", 4);
-	write_le32(exif_size);
-	stream->write((char*)exif_data, exif_size);
-	if (exif_size & 0x01)
-	  stream->write("", 1);
+	write_chunk("EXIF", exif_data, exif_size);
       }
       if (xmp_size) {
 	std::cerr << "\tInserting XMP chunk (" << xmp_size << " bytes)..." << std::endl;
-	stream->write("XMP ", 4);
-	write_le32(xmp_size);
-	stream->write((char*)xmp_data, xmp_size);
-	if (xmp_size & 0x01)
-	  stream->write("", 1);
+	write_chunk("XMP ", xmp_data, xmp_size);
       }
     }
 
-    int write(const unsigned char* data, size_t data_size, const WebPPicture* picture) {
+    int write(unsigned char* data, size_t data_size, const WebPPicture* picture) {
+      if (need_vp8x && (data_size >= 12) && (memcmp(data, "RIFF", 4) == 0) && (memcmp(data + 8, "WEBP", 4) == 0)) {
+	// Correct the file size in the file header
+	unsigned int riff_size = read_le32(data + 4);
+	riff_size += 8 + 10;	// VP8X chunk
+	if (icc_size > 0)
+	  riff_size += 8 + icc_size + (icc_size & 0x01);
+	if (exif_size > 0)
+	  riff_size += 8 + exif_size + (exif_size & 0x01);
+	if (xmp_size > 0)
+	  riff_size += 8 + xmp_size + (xmp_size & 0x01);
+	std::cerr << "\tIncreasing RIFF file size to " << riff_size << " bytes." << std::endl;
+	copy_le_to(data + 4, riff_size, 4);
+      }
+
       while (next_chunk < data_size) {
-	std::string fourcc((char*)&data[next_chunk], data_size - next_chunk < 4 ? data_size - next_chunk : 4);
 	unsigned int size = read_le32(data + next_chunk + 4);
+	std::cerr << "\tFound chunk: \"" << std::string((char*)&data[next_chunk], 4) << "\", " << size << " bytes." << std::endl;
 
-	if (memcmp(chunk, "VP8 ", 4) == 0) {
-	  // Write stuff after the image chunk
-	  after_vp8();
-	}
-
-	std::cerr << "\tFound chunk: \"" << fourcc << "\", " << size << " bytes." << std::endl;
-
-	if (memcmp(data + next_chunk, "VP8 ", 4) == 0) {
+	if (need_vp8x && (memcmp(data + next_chunk, "VP8 ", 4) == 0)) {
 	  std::cerr << "\tInserting VP8X chunk..." << std::endl;
-	  stream->write("VP8X", 4);
-	  write_le32(10);
-	  unsigned int flags = 0;
+	  unsigned char vp8x[10];
 	  if (icc_size)
-	    flags |= 1 << 2;
+	    vp8x[0] |= 1 << 2;
 	  if (exif_size)
-	    flags |= 1 << 4;
+	    vp8x[0] |= 1 << 4;
 	  if (xmp_size)
-	    flags |= 1 << 5;
-	  write_le32(flags);
-	  write_le24(width);
-	  write_le24(height);
+	    vp8x[0] |= 1 << 5;
+	  copy_le_to(vp8x + 4, width, 3);
+	  copy_le_to(vp8x + 7, height, 3);
+	  write_chunk("VP8X", vp8x, 10);
 
 	  if (icc_size) {
 	    std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
-	    stream->write("ICCP", 4);
-	    write_le32(icc_size);
-	    stream->write((char*)icc_data, icc_size);
-	    if (icc_size & 0x01)
-	      stream->write("", 1);
+	    write_chunk("ICCP", icc_data, icc_size);
 	  }
+	  need_vp8x = false;
 	}
 
 	memcpy(chunk, &data[next_chunk], 4);
@@ -215,18 +248,16 @@ namespace PhotoFinish {
 	//      std::cerr << "\r\tWritten " << stream->tellp() << " bytes";
       }
 
-      if ((next_chunk == 0) && (memcmp(chunk, "VP8 ", 4) == 0)) {
-	// Write stuff after the image chunk
+      if ((next_chunk == 0) && (memcmp(chunk, "VP8 ", 4) == 0))
 	after_vp8();
-      }
 
       return 1;
     }
   };
 
-  int stream_writer_func(const uint8_t* data, size_t data_size, const WebPPicture* picture) {
-    stream_writer *wrt = (stream_writer*)picture->custom_ptr;
-    return wrt->write(data, data_size, picture);
+  int webp_stream_writer_func(const uint8_t* data, size_t data_size, const WebPPicture* picture) {
+    webp_stream_writer *wrt = (webp_stream_writer*)picture->custom_ptr;
+    return wrt->write(const_cast<unsigned char*>(data), data_size, picture);
   }
 
   void WebPfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
@@ -306,40 +337,18 @@ namespace PhotoFinish {
     if (ofs.fail())
       throw FileOpenError(_filepath.native());
 
-    stream_writer wrt(&ofs, img->width(), img->height());
-    cmsSaveProfileToMem(img->profile(), NULL, &wrt.icc_size);
-    if (wrt.icc_size > 0) {
-      wrt.icc_data = (unsigned char*)malloc(wrt.icc_size);
-      cmsSaveProfileToMem(img->profile(), wrt.icc_data, &wrt.icc_size);
-    }
-    {
-      Exiv2::Blob blob;
-      Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, img->EXIFtags());
-      wrt.exif_size = blob.size();
-      unsigned char *data = wrt.exif_data = (unsigned char*)malloc(wrt.exif_size);
-      for (auto i : blob)
-	*data++ = i;
-    }
-    {
-      std::string xmp;
-      Exiv2::XmpParser::encode(xmp, img->XMPtags());
-      wrt.xmp_size = xmp.length() + 1;
-      wrt.xmp_data = (unsigned char*)malloc(wrt.xmp_size);
-      memcpy(wrt.xmp_data, xmp.c_str(), wrt.xmp_size);
-    }
+    webp_stream_writer wrt(&ofs, img->width(), img->height());
+    wrt.add_icc(img->profile());
+    wrt.add_exif(img->EXIFtags());
+    wrt.add_xmp(img->XMPtags());
 
-    pic.writer = stream_writer_func;
+    pic.writer = webp_stream_writer_func;
     pic.custom_ptr = &wrt;
 
     std::cerr << "\tEncoding..." << std::endl;
     ok = WebPEncode(&config, &pic);
     std::cerr << std::endl;
     WebPPictureFree(&pic);
-
-    // Fix the size of the file since we've written our own chunks
-    unsigned int size = (int)ofs.tellp() - 8;
-    ofs.seekp(4, std::ios_base::beg);
-    wrt.write_le32(size);
 
     ofs.close();
     _is_open = false;
