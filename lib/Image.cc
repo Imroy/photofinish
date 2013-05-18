@@ -33,9 +33,7 @@ namespace PhotoFinish {
     _row_size(0),
     _rowdata(NULL)
   {
-    unsigned char bytes = T_BYTES(_type);
-    if (T_FLOAT(_type) && (bytes == 0))	// Double-precision floating-point format
-      bytes = 8;
+    unsigned char bytes = T_BYTES_REAL(_type);
     _pixel_size = (T_CHANNELS(_type) + T_EXTRA(_type)) * bytes;
     _row_size = _width * _pixel_size;
 
@@ -180,9 +178,7 @@ namespace PhotoFinish {
     if (own_profile)
       cmsCloseProfile(profile);
 
-    unsigned char dest_bytes = T_BYTES(dest_type);
-    if (T_FLOAT(dest_type) && (dest_bytes == 0))
-      dest_bytes = 8;
+    unsigned char dest_bytes = T_BYTES_REAL(dest_type);
     size_t dest_pixel_size = (T_CHANNELS(dest_type) + T_EXTRA(dest_type)) * dest_bytes;
     size_t dest_row_size = _width * dest_pixel_size;
 
