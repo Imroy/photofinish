@@ -64,9 +64,11 @@ namespace PhotoFinish {
     case PNG_COLOR_TYPE_GRAY:
       type |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       break;
+
     case PNG_COLOR_TYPE_RGB:
       type |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       break;
+
     default:
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
@@ -82,8 +84,10 @@ namespace PhotoFinish {
 	case PNG_RESOLUTION_METER:
 	  img->set_resolution(xres * 0.0254, yres * 0.0254);
 	  break;
+
 	case PNG_RESOLUTION_UNKNOWN:
 	  break;
+
 	default:
 	  std::cerr << "** unknown unit type " << unit_type << " **" << std::endl;
 	}
@@ -183,8 +187,6 @@ namespace PhotoFinish {
   }
 
   cmsUInt32Number PNGfile::preferred_type(cmsUInt32Number type) {
-    type &= FLOAT_MASK;
-
     if (T_COLORSPACE(type) != PT_GRAY) {
       type &= COLORSPACE_MASK;
       type |= COLORSPACE_SH(PT_RGB);
@@ -192,15 +194,20 @@ namespace PhotoFinish {
       type |= CHANNELS_SH(3);
     }
 
-    type &= PLANAR_MASK;
-
     type &= EXTRA_MASK;
 
-    type &= BYTES_MASK;
-    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2))
+    type &= FLOAT_MASK;
+    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
+      type &= BYTES_MASK;
       type |= BYTES_SH(2);
-    else
+    } else {
+      type &= BYTES_MASK;
       type |= BYTES_SH(1);
+    }
+
+    type &= PLANAR_MASK;
+    type &= SWAPFIRST_MASK;
+    type &= DOSWAP_MASK;
 
     return type;
   }
@@ -245,8 +252,8 @@ namespace PhotoFinish {
 
     png_set_write_fn(_png, &ofs, png_write_ostream_cb, png_flush_ostream_cb);
 
-    int png_colour_type, png_channels;
     cmsUInt32Number type = img->type();
+    int png_colour_type;
     switch (T_COLORSPACE(type)) {
     case PT_RGB:
       png_colour_type = PNG_COLOR_TYPE_RGB;
@@ -259,14 +266,13 @@ namespace PhotoFinish {
     default:
       throw cmsTypeError("Not RGB or greyscale", type);
     }
-    png_channels = T_CHANNELS(type);
 
     int depth = T_BYTES(type);
     if (depth > 2)
       throw cmsTypeError("Not 8 or 16-bit", type);
 
     std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
-	      << " " << (depth << 3) << "-bit " << (png_channels == 1 ? "greyscale" : "RGB")
+	      << " " << (depth << 3) << "-bit " << (T_CHANNELS(type) == 1 ? "greyscale" : "RGB")
 	      << " PNG image..." << std::endl;
     png_set_IHDR(_png, _info,
 		 img->width(), img->height(), depth << 3, png_colour_type,
