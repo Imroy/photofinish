@@ -166,6 +166,7 @@ namespace PhotoFinish {
       type |= CHANNELS_SH(1);
     }
 
+    type &= FLOAT_MASK;
     type &= BYTES_MASK;
     if (this->depth().defined()) {
       std::cerr << "Changing depth to " << (this->depth() >> 3) << " bytes..." << std::endl;
