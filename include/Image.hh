@@ -35,7 +35,7 @@
 #define SWAPFIRST_MASK	(0xffffffff ^ SWAPFIRST_SH(1))
 #define FLAVOR_MASK	(0xffffffff ^ FLAVOR_SH(1))
 #define PLANAR_MASK	(0xffffffff ^ PLANAR_SH(1))
-#define ENDIAN16_MASK	(0xffffffff ^ ENDIAN_SH(1))
+#define ENDIAN16_MASK	(0xffffffff ^ ENDIAN16_SH(1))
 #define DOSWAP_MASK	(0xffffffff ^ DOSWAP_SH(1))
 #define EXTRA_MASK	(0xffffffff ^ EXTRA_SH(7))
 #define CHANNELS_MASK	(0xffffffff ^ CHANNELS_SH(15))
