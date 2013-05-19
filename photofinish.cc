@@ -73,11 +73,10 @@ int main(int argc, char* argv[]) {
 
       try {
 	auto orig_image = infile->read();
-	orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL),
-					     FLOAT_SH(1)
-					     | COLORSPACE_SH(PT_Lab)
-					     | CHANNELS_SH(3)
-					     | BYTES_SH(sizeof(SAMPLE) & 0x07));
+	cmsUInt32Number orig_type = orig_image->type();
+	orig_type &= COLORSPACE_MASK & CHANNELS_MASK & FLOAT_MASK & BYTES_MASK;
+	orig_type |= COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | FLOAT_SH(1) | BYTES_SH(sizeof(SAMPLE) & 0x07);
+	orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL), orig_type);
 
 	auto num_destinations = arg_destinations.size();
 	for (auto& di : arg_destinations) {
@@ -100,9 +99,8 @@ int main(int argc, char* argv[]) {
 	    if (destination->sharpen().defined()) {
 	      auto sharpen = Kernel2D::create(destination->sharpen());
 	      sharp_image = sharpen->convolve(sized_image, (sized_image != orig_image) || last_dest);
-	    } else {
+	    } else
 	      sharp_image = sized_image;
-	    }
 	    sized_image.reset();	// Unallocate resized image
 
 	    if (size.defined()) {

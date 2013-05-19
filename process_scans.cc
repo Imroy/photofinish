@@ -43,11 +43,10 @@ namespace po = boost::program_options;
 using namespace PhotoFinish;
 
 void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
-  orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL),
-				       FLOAT_SH(1)
-				       | COLORSPACE_SH(PT_Lab)
-				       | CHANNELS_SH(3)
-				       | BYTES_SH(sizeof(SAMPLE) & 0x07));
+  cmsUInt32Number orig_type = orig_image->type();
+  orig_type &= COLORSPACE_MASK & CHANNELS_MASK & FLOAT_MASK & BYTES_MASK;
+  orig_type |= COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | FLOAT_SH(1) | BYTES_SH(sizeof(SAMPLE) & 0x07);
+  orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL), orig_type);
 
   auto resized_dest = orig_dest->dupe();
 
