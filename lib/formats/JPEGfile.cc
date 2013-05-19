@@ -141,8 +141,6 @@ namespace PhotoFinish {
   }
 
   cmsUInt32Number JPEGfile::preferred_type(cmsUInt32Number type) {
-    type &= FLOAT_MASK;
-
     if ((T_COLORSPACE(type) != PT_GRAY) && (T_COLORSPACE(type) != PT_CMYK)) {
       type &= COLORSPACE_MASK;
       type |= COLORSPACE_SH(PT_RGB);
@@ -154,6 +152,7 @@ namespace PhotoFinish {
 
     type &= EXTRA_MASK;
 
+    type &= FLOAT_MASK;
     type &= BYTES_MASK;
     type |= BYTES_SH(1);
 
@@ -187,7 +186,7 @@ namespace PhotoFinish {
     cinfo->image_height = img->height();
 
     cmsUInt32Number type = img->type();
-    if (T_BYTES(type) != 1)
+    if (T_BYTES_REAL(type) != 1)
       throw cmsTypeError("Not 8-bit", type);
 
     switch (T_COLORSPACE(type)) {

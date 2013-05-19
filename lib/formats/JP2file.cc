@@ -189,8 +189,6 @@ namespace PhotoFinish {
   }
 
   cmsUInt32Number JP2file::preferred_type(cmsUInt32Number type) {
-    type &= FLOAT_MASK;
-
     if (T_COLORSPACE(type) != PT_GRAY) {
       type &= COLORSPACE_MASK;
       type |= COLORSPACE_SH(PT_RGB);
@@ -203,7 +201,8 @@ namespace PhotoFinish {
 
     type &= EXTRA_MASK;
 
-    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
+    type &= FLOAT_MASK;
+    if (T_BYTES_REAL(type) > 2) {
       type &= BYTES_MASK;
       type |= BYTES_SH(2);
     }

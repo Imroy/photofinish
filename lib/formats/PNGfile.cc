@@ -199,7 +199,7 @@ namespace PhotoFinish {
     }
 
     type &= FLOAT_MASK;
-    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
+    if (T_BYTES_REAL(type) > 2) {
       type &= BYTES_MASK;
       type |= BYTES_SH(2);
     } else {
@@ -269,7 +269,7 @@ namespace PhotoFinish {
       throw cmsTypeError("Not RGB or greyscale", type);
     }
 
-    int depth = T_BYTES(type);
+    int depth = T_BYTES_REAL(type);
     if (depth > 2)
       throw cmsTypeError("Not 8 or 16-bit", type);
 

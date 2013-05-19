@@ -195,8 +195,6 @@ namespace PhotoFinish {
   }
 
   cmsUInt32Number TIFFfile::preferred_type(cmsUInt32Number type) {
-    type &= FLOAT_MASK;
-
     if ((T_COLORSPACE(type) != PT_GRAY) && (T_COLORSPACE(type) != PT_CMYK)) {
       type &= COLORSPACE_MASK;
       type |= COLORSPACE_SH(PT_RGB);
@@ -206,7 +204,8 @@ namespace PhotoFinish {
 
     type &= PLANAR_MASK;
 
-    if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
+    type &= FLOAT_MASK;
+    if (T_BYTES_REAL(type) > 2) {
       type &= BYTES_MASK;
       type |= BYTES_SH(2);
     }
@@ -317,7 +316,7 @@ namespace PhotoFinish {
       TIFFcheck(SetField(tiff, TIFFTAG_EXTRASAMPLES, 1, extra_types));
     }
 
-    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, T_BYTES(type) << 3));
+    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, T_BYTES_REAL(type) << 3));
 
     {
       unsigned char *profile_data = NULL;

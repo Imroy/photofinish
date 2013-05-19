@@ -33,8 +33,6 @@ namespace PhotoFinish {
   }
 
   cmsUInt32Number SOLfile::preferred_type(cmsUInt32Number type) {
-    type &= FLOAT_MASK;
-
     type &= COLORSPACE_MASK;
     type |= COLORSPACE_SH(PT_RGB);
     type &= CHANNELS_MASK;
@@ -44,6 +42,7 @@ namespace PhotoFinish {
 
     type &= EXTRA_MASK;
 
+    type &= FLOAT_MASK;
     type &= BYTES_MASK;
     type |= BYTES_SH(2);
 
@@ -79,7 +78,7 @@ namespace PhotoFinish {
     cmsUInt32Number type = img->type();
     if (T_COLORSPACE(type) != PT_RGB)
       throw cmsTypeError("Not RGB", type);
-    if (T_BYTES(type) != 2)
+    if (T_BYTES_REAL(type) != 2)
       throw cmsTypeError("Not 16-bit", type);
 
     Ditherer ditherer(img->width(), 3, { 31, 63, 31 });
