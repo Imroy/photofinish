@@ -61,10 +61,14 @@ namespace PhotoFinish {
 
     cmsUInt32Number type = BYTES_SH(bit_depth >> 3);
     switch (colour_type) {
+    case PNG_COLOR_TYPE_GRAY_ALPHA:
+      type |= EXTRA_SH(1);
     case PNG_COLOR_TYPE_GRAY:
       type |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
       break;
 
+    case PNG_COLOR_TYPE_RGB_ALPHA:
+      type |= EXTRA_SH(1);
     case PNG_COLOR_TYPE_RGB:
       type |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
       break;
@@ -194,8 +198,6 @@ namespace PhotoFinish {
       type |= CHANNELS_SH(3);
     }
 
-    type &= EXTRA_MASK;
-
     type &= FLOAT_MASK;
     if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
       type &= BYTES_MASK;
@@ -256,11 +258,11 @@ namespace PhotoFinish {
     int png_colour_type;
     switch (T_COLORSPACE(type)) {
     case PT_RGB:
-      png_colour_type = PNG_COLOR_TYPE_RGB;
+      png_colour_type = T_EXTRA(type) ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB;
       break;
 
     case PT_GRAY:
-      png_colour_type = PNG_COLOR_TYPE_GRAY;
+      png_colour_type = T_EXTRA(type) ? PNG_COLOR_TYPE_GRAY_ALPHA : PNG_COLOR_TYPE_GRAY;
       break;
 
     default:
