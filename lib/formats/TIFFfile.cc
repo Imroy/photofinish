@@ -177,8 +177,6 @@ namespace PhotoFinish {
 
     type &= PLANAR_MASK;
 
-    type &= EXTRA_MASK;
-
     if ((T_BYTES(type) == 0) || (T_BYTES(type) > 2)) {
       type &= BYTES_MASK;
       type |= BYTES_SH(2);
@@ -274,7 +272,7 @@ namespace PhotoFinish {
       break;
 
     case PT_GRAY:
-      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK));
+      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, T_FLAVOR(type) ? PHOTOMETRIC_MINISWHITE : PHOTOMETRIC_MINISBLACK));
       break;
 
     case PT_CMYK:
@@ -284,10 +282,13 @@ namespace PhotoFinish {
     default:
       break;
     }
-    TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, T_CHANNELS(type)));
+    TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, T_CHANNELS(type) + T_EXTRA(type)));
+    if (T_EXTRA(type)) {
+      uint16 extra_types[1] = { EXTRASAMPLE_ASSOCALPHA };
+      TIFFcheck(SetField(tiff, TIFFTAG_EXTRASAMPLES, 1, extra_types));
+    }
 
-    int depth = T_BYTES(type);
-    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, depth << 3));
+    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, T_BYTES(type) << 3));
 
     {
       unsigned char *profile_data = NULL;
