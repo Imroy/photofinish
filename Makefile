@@ -43,7 +43,7 @@ endif
 ifeq ($(HAZ_WEBP), 1)
 COMMON_FLAGS += -DHAZ_WEBP
 PKGS += libwebp
-LIB_OBJS += lib/formats/WebPfile.o
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/WebP*.cc))
 endif
 
 COMMON_FLAGS += `pkg-config --cflags $(PKGS)`
@@ -57,7 +57,7 @@ PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 all: $(PROGRAMS)
 
 clean:
-	@rm -fv *.o lib/*.o lib/formats/*.o $(PROGRAMS)
+	@rm -fv .depend *.o lib/*.o lib/formats/*.o $(PROGRAMS)
 
 install: $(PROGRAMS)
 	install -t $(BINDIR) $(PROGRAMS)
