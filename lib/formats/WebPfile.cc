@@ -91,7 +91,52 @@ namespace PhotoFinish {
   {}
 
   Image::ptr WebPfile::read(Destination::ptr dest) {
-    throw Unimplemented("WebPfile", "read");
+    if (_is_open)
+      throw FileOpenError("already open");
+    _is_open = true;
+
+    std::cerr << "Opening file " << _filepath << "..." << std::endl;
+    fs::ifstream ifs(_filepath, std::ios_base::in);
+    if (ifs.fail())
+      throw FileOpenError(_filepath.native());
+
+    WebPDecBuffer decbuffer;
+    WebPInitDecBuffer(&decbuffer);
+    decbuffer.colorspace = MODE_RGBA;
+    WebPIDecoder* idec = WebPINewDecoder(&decbuffer);
+
+    unsigned char buffer[1048576];
+    size_t length;
+    Image *img = NULL;
+    int width, height, y = 0, last_y, stride;
+    unsigned char *rowdata, *p;
+    do {
+      ifs.read((char*)buffer, 1048576);
+      length = ifs.gcount();
+      int status = WebPIAppend(idec, buffer, length);
+
+      rowdata = WebPIDecGetRGB(idec, &last_y, &width, &height, &stride);
+      if (rowdata != NULL) {
+	if (img == NULL)
+	  img = new Image(width, height, COLORSPACE_SH(PT_RGB) | BYTES_SH(1) | CHANNELS_SH(3) | EXTRA_SH(1));
+	while (y < last_y) {
+	  memcpy(img->row(y), rowdata, stride);
+	  std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows";
+	  y++;
+	  rowdata += stride;
+	}
+      }
+
+      if (status != VP8_STATUS_SUSPENDED)
+	break;
+    } while (!ifs.eof());
+    std::cerr << "\r\tRead " << height << " of " << height << " rows." << std::endl;
+
+    WebPIDelete(idec);
+
+    //    img->
+
+    return Image::ptr(img);
   }
 
   cmsUInt32Number WebPfile::preferred_type(cmsUInt32Number type) {
@@ -99,11 +144,6 @@ namespace PhotoFinish {
     type |= COLORSPACE_SH(PT_RGB);
     type &= CHANNELS_MASK;
     type |= CHANNELS_SH(3);
-
-    if (T_EXTRA(type) > 1) {
-      type &= EXTRA_MASK;
-      type |= EXTRA_SH(1);
-    }
 
     type &= FLOAT_MASK;
     type &= BYTES_MASK;
@@ -199,23 +239,34 @@ namespace PhotoFinish {
     }
 
     int write(unsigned char* data, size_t data_size, const WebPPicture* picture) {
-      if (need_vp8x && (data_size >= 12) && (memcmp(data, "RIFF", 4) == 0) && (memcmp(data + 8, "WEBP", 4) == 0)) {
-	// Correct the file size in the file header
-	unsigned int riff_size = read_le32(data + 4);
-	riff_size += 8 + 10;	// VP8X chunk
-	if (icc_size > 0)
-	  riff_size += 8 + icc_size + (icc_size & 0x01);
-	if (exif_size > 0)
-	  riff_size += 8 + exif_size + (exif_size & 0x01);
-	if (xmp_size > 0)
-	  riff_size += 8 + xmp_size + (xmp_size & 0x01);
-	std::cerr << "\tIncreasing RIFF file size to " << riff_size << " bytes." << std::endl;
-	copy_le_to(data + 4, riff_size, 4);
-      }
-
       while (next_chunk < data_size) {
 	unsigned int size = read_le32(data + next_chunk + 4);
 	std::cerr << "\tFound chunk: \"" << std::string((char*)&data[next_chunk], 4) << "\", " << size << " bytes." << std::endl;
+
+	if (need_vp8x && (memcmp(data + next_chunk, "VP8X", 4) == 0)) {
+	  std::cerr << "\tModifying VP8X chunk..." << std::endl;
+	  if (icc_size)
+	    data[next_chunk + 8] |= 1 << 2;
+	  if (exif_size)
+	    data[next_chunk + 8 + 1] |= 1 << 4;
+	  if (xmp_size)
+	    data[next_chunk + 8 + 2] |= 1 << 5;
+
+	  if (icc_size) {
+	    if (next_chunk) {
+	      std::cerr << "\tWriting " << next_chunk << " bytes..." << std::endl;
+	      stream->write((char*)data, next_chunk);
+	      data += next_chunk;
+	      data_size -= next_chunk;
+	      next_chunk = 0;
+	    }
+
+	    std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
+	    write_chunk("ICCP", icc_data, icc_size);
+	  }
+
+	  need_vp8x = false;
+	}
 
 	if (need_vp8x && (memcmp(data + next_chunk, "VP8 ", 4) == 0)) {
 	  std::cerr << "\tInserting VP8X chunk..." << std::endl;
@@ -239,7 +290,7 @@ namespace PhotoFinish {
 
 	memcpy(chunk, &data[next_chunk], 4);
 	chunk_size = read_le32(data + next_chunk + 4);
-	next_chunk += size + 8;
+	next_chunk += size + (size & 0x01) + 8;
       }
       if (data_size) {
 	std::cerr << "\tWriting " << data_size << " bytes..." << std::endl;
@@ -349,6 +400,12 @@ namespace PhotoFinish {
     ok = WebPEncode(&config, &pic);
     std::cerr << std::endl;
     WebPPictureFree(&pic);
+
+    unsigned int size = (int)ofs.tellp() - 8;
+    ofs.seekp(4, std::ios_base::beg);
+    unsigned char size_le[4];
+    copy_le_to(size_le, size, 4);
+    ofs.write((char*)size_le, 4);
 
     ofs.close();
     _is_open = false;
