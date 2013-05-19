@@ -60,17 +60,6 @@ namespace PhotoFinish {
     //! Destructor
     ~Kernel2D();
 
-    inline const short unsigned int width(void) const { return _width; }
-    inline const short unsigned int height(void) const { return _height; }
-    inline const short unsigned int centrex(void) const { return _centrex; }
-    inline const short unsigned int centrey(void) const { return _centrey; }
-
-    //! The values array at a certain row
-    inline SAMPLE* row(short unsigned int y) const { return _values[y]; }
-
-    //! The values array at a certain point
-    inline SAMPLE& at(short unsigned int x, short unsigned int y) const { return _values[y][x]; }
-
     //! Convolve and image with this kernel and produce a new image
     /*!
       \param img Source image

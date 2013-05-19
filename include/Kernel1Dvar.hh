@@ -89,18 +89,6 @@ namespace PhotoFinish {
      */
     Image::ptr convolve_v(Image::ptr img, bool can_free = false);
 
-    //! The size of the weights
-    inline const unsigned int& size(unsigned int i) const { return _size[i]; }
-
-    //! The starting point of the weights
-    inline unsigned int& start(unsigned int i) const { return _start[i]; }
-
-    //! The weights array at a certain row
-    inline const SAMPLE* row(unsigned int i) const { return _weights[i]; }
-
-    //! The weights array at a certain point
-    inline const SAMPLE& at(unsigned int f, unsigned int i) const { return _weights[i][f]; }
-
   };
 
   //! Lanczos filter

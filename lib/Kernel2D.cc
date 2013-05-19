@@ -66,8 +66,7 @@ namespace PhotoFinish {
 
   template <typename T>
   void Kernel2D::do_convolve(Image::ptr src, Image::ptr dest, bool can_free) {
-    cmsUInt32Number type = src->type();
-    unsigned int pixel_size = T_CHANNELS(type) + T_EXTRA(type);
+    unsigned char channels = T_CHANNELS(src->type()) + T_EXTRA(src->type());
 
     int *row_needs;
     if (can_free) {
@@ -85,26 +84,26 @@ namespace PhotoFinish {
       short unsigned int ky_start = y < _centrey ? _centrey - y : 0;
       short unsigned int ky_end = y > src->height() - _height + _centrey ? src->height() + _centrey - y : _height;
 
-      for (unsigned int x = 0; x < src->width(); x++, outp += pixel_size) {
+      for (unsigned int x = 0; x < src->width(); x++, outp += channels) {
 	short unsigned int kx_start = x < _centrex ? _centrex - x : 0;
 	short unsigned int kx_end = x > src->width() - _width + _centrex ? src->width() + _centrex - x : _width;
 
 	double weight = 0;
-	for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	for (unsigned char c = 0; c < channels; c++)
 	  outp[c] = 0;
 
 	for (short unsigned int ky = ky_start; ky < ky_end; ky++) {
-	  const SAMPLE *kp = &at(kx_start, ky);
+	  const SAMPLE *kp = _values[ky] + kx_start;
 	  T *inp = (T*)src->at(x + kx_start - _centrex, y + ky - _centrey);
-	  for (short unsigned int kx = kx_start; kx < kx_end; kx++, kp++, inp += T_EXTRA(type)) {
+	  for (short unsigned int kx = kx_start; kx < kx_end; kx++, kp++) {
 	    weight += *kp;
-	    for (unsigned char c = 0; c < T_CHANNELS(type); c++, inp++)
+	    for (unsigned char c = 0; c < channels; c++, inp++)
 	      outp[c] += (*inp) * (*kp);
 	  }
 	}
 	if (fabs(weight) > 1e-5) {
 	  weight = 1.0 / weight;
-	  for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	  for (unsigned char c = 0; c < channels; c++)
 	    outp[c] *= weight;
 	}
       }
@@ -193,9 +192,9 @@ namespace PhotoFinish {
 #pragma omp parallel for schedule(dynamic, 1) shared(total)
     for (short unsigned int y = 0; y < _height; y++)
       for (short unsigned int x = 0; x < _width; x++)
-	total += at(x, y) = -exp((sqr((int)x - _centrex) + sqr((int)y - _centrey)) / (-2.0 * _safe_sigma_sqr));
+	total += _values[y][x] = -exp((sqr((int)x - _centrex) + sqr((int)y - _centrey)) / (-2.0 * _safe_sigma_sqr));
 
-    at(_centrex, _centrey) = -2.0 * total;
+    _values[_centrey][_centrex] = -2.0 * total;
   }
 
 }

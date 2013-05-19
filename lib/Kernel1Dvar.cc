@@ -123,24 +123,24 @@ namespace PhotoFinish {
 
   template <typename T>
   void Kernel1Dvar::do_convolve_h(Image::ptr src, Image::ptr dest, bool can_free) {
-    cmsUInt32Number type = src->type();
-    unsigned int pixel_size = T_CHANNELS(type) + T_EXTRA(type);
+    unsigned char channels = T_CHANNELS(src->type()) + T_EXTRA(src->type());
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
       T *out = (T*)dest->row(y);
 
-      for (unsigned int nx = 0; nx < dest->width(); nx++, out += pixel_size) {
-	unsigned int max = size(nx);
+      for (unsigned int nx = 0; nx < dest->width(); nx++, out += channels) {
+	unsigned int max = _size[nx];
 
-	for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+	for (unsigned char c = 0; c < channels; c++)
 	  out[c] = 0;
-	const SAMPLE *weight = row(nx);
-	const T *in = (T*)src->at(start(nx), y);
-	for (unsigned int j = 0; j < max; j++, weight++, in += T_EXTRA(type)) {
-	  for (unsigned char c = 0; c < T_CHANNELS(type); c++, in++)
+	const SAMPLE *weight = _weights[nx];
+	const T *in = (T*)src->at(_start[nx], y);
+	for (unsigned int j = 0; j < max; j++, weight++) {
+	  for (unsigned char c = 0; c < channels; c++, in++)
 	    out[c] += (*in) * (*weight);
 	}
       }
+
       if (can_free)
 	src->free_row(y);
       if (omp_get_thread_num() == 0)
@@ -185,10 +185,7 @@ namespace PhotoFinish {
       break;
 
     case 8:
-      if (T_FLOAT(img->type()))
-	do_convolve_h<double>(img, ni, can_free);
-      else
-	do_convolve_h<unsigned long>(img, ni, can_free);
+      do_convolve_h<double>(img, ni, can_free);
       break;
 
     }
@@ -198,7 +195,7 @@ namespace PhotoFinish {
 
   template <typename T>
   void Kernel1Dvar::do_convolve_v(Image::ptr src, Image::ptr dest, bool can_free) {
-    cmsUInt32Number type = src->type();
+    unsigned char channels = T_CHANNELS(src->type()) + T_EXTRA(src->type());
 
     int *row_needs;
     if (can_free) {
@@ -212,15 +209,15 @@ namespace PhotoFinish {
     omp_init_lock(&freed_lock);
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int ny = 0; ny < dest->height(); ny++) {
-      unsigned int max = size(ny);
-      unsigned int ystart = start(ny);
+      unsigned int max = _size[ny];
+      unsigned int ystart = _start[ny];
       unsigned int j = 0;
-      const SAMPLE *weight = &at(j, ny);
+      const SAMPLE *weight = _weights[ny];
 
       T *in = (T*)src->row(ystart);
       T *out = (T*)dest->row(ny);
-      for (unsigned int x = 0; x < src->width(); x++, in += T_EXTRA(type), out += T_EXTRA(type)) {
-	for (unsigned char c = 0; c < T_CHANNELS(type); c++, in++, out++)
+      for (unsigned int x = 0; x < src->width(); x++) {
+	for (unsigned char c = 0; c < channels; c++, in++, out++)
 	  *out = (*in) * (*weight);
       }
 
@@ -228,12 +225,13 @@ namespace PhotoFinish {
       for (j = 1; j < max; j++, weight++) {
 	in = (T*)src->row(ystart + j);
 	out = (T*)dest->row(ny);
-	for (unsigned int x = 0; x < src->width(); x++, in += T_EXTRA(type), out += T_EXTRA(type)) {
-	  for (unsigned char c = 0; c < T_CHANNELS(type); c++, in++, out++)
+	for (unsigned int x = 0; x < src->width(); x++) {
+	  for (unsigned char c = 0; c < channels; c++, in++, out++)
 	    *out += (*in) * (*weight);
 	}
       }
-      if (can_free && (((ny < _to_size_i - 1) && (start(ny + 1) > ystart)) || (ny == _to_size_i - 1))) {
+
+      if (can_free && (((ny < _to_size_i - 1) && (_start[ny + 1] > ystart)) || (ny == _to_size_i - 1))) {
 	omp_set_lock(&freed_lock);
 	row_needs[ystart]--;
 	for (;row_needs[next_freed] == 0; next_freed++)
@@ -287,10 +285,7 @@ namespace PhotoFinish {
       break;
 
     case 8:
-      if (T_FLOAT(img->type()))
-	do_convolve_v<double>(img, ni, can_free);
-      else
-	do_convolve_v<unsigned long>(img, ni, can_free);
+      do_convolve_v<double>(img, ni, can_free);
       break;
 
     }
