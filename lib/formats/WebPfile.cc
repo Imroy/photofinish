@@ -247,19 +247,6 @@ namespace PhotoFinish {
 	  stream->put(0);
     }
 
-    //! Write the EXIF and XMP chunks after the image data
-    void after_vp8(void) {
-      // Write stuff after the image chunk
-      if (exif_size) {
-	std::cerr << "\tInserting EXIF chunk (" << exif_size << " bytes)..." << std::endl;
-	write_chunk("EXIF", exif_data, exif_size);
-      }
-      if (xmp_size) {
-	std::cerr << "\tInserting XMP chunk (" << xmp_size << " bytes)..." << std::endl;
-	write_chunk("XMP ", xmp_data, xmp_size);
-      }
-    }
-
     void modify_vp8x(unsigned char* data) {
       if (icc_size)
 	*data |= 1 << 2;
@@ -273,25 +260,11 @@ namespace PhotoFinish {
     int write(unsigned char* data, size_t data_size, const WebPPicture* picture) {
       while (next_chunk < data_size) {
 	unsigned int size = read_le32(data + next_chunk + 4);
-	std::cerr << "\tFound chunk: \"" << std::string((char*)&data[next_chunk], 4) << "\", " << size << " bytes." << std::endl;
+	std::cerr << "\tFound chunk: \"" << std::string((char*)data + next_chunk, 4) << "\", " << size << " bytes." << std::endl;
 
 	if (need_vp8x && (memcmp(data + next_chunk, "VP8X", 4) == 0)) {
 	  std::cerr << "\tModifying VP8X chunk..." << std::endl;
 	  modify_vp8x(data + next_chunk + 8);
-
-	  if (icc_size) {
-	    if (next_chunk) {
-	      std::cerr << "\tWriting " << next_chunk << " bytes..." << std::endl;
-	      stream->write((char*)data, next_chunk);
-	      data += next_chunk;
-	      data_size -= next_chunk;
-	      next_chunk = 0;
-	    }
-
-	    std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
-	    write_chunk("ICCP", icc_data, icc_size);
-	  }
-
 	  need_vp8x = false;
 	}
 
@@ -310,7 +283,7 @@ namespace PhotoFinish {
 	  need_vp8x = false;
 	}
 
-	memcpy(chunk, &data[next_chunk], 4);
+	memcpy(chunk, data + next_chunk, 4);
 	chunk_size = read_le32(data + next_chunk + 4);
 	next_chunk += size + (size & 0x01) + 8;
       }
@@ -321,8 +294,23 @@ namespace PhotoFinish {
 	//      std::cerr << "\r\tWritten " << stream->tellp() << " bytes";
       }
 
-      if ((next_chunk == 0) && (memcmp(chunk, "VP8 ", 4) == 0))
-	after_vp8();
+      // Write stuff after a chunk
+      if (next_chunk == 0) {
+	if (memcmp(chunk, "VP8X", 4) == 0) {
+	  std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
+	  write_chunk("ICCP", icc_data, icc_size);
+	}
+	if (memcmp(chunk, "VP8 ", 4) == 0) {
+	  if (exif_size) {
+	    std::cerr << "\tInserting EXIF chunk (" << exif_size << " bytes)..." << std::endl;
+	    write_chunk("EXIF", exif_data, exif_size);
+	  }
+	  if (xmp_size) {
+	    std::cerr << "\tInserting XMP chunk (" << xmp_size << " bytes)..." << std::endl;
+	    write_chunk("XMP ", xmp_data, xmp_size);
+	  }
+	}
+      }
 
       return 1;
     }
