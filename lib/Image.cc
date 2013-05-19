@@ -104,43 +104,43 @@ namespace PhotoFinish {
   }
 
   template <typename A, typename B>
-  void do_transform_alpha(unsigned int width, unsigned char src_channels, const A* src_row, unsigned char dest_channels, const B* dest_row, A src_max, B dest_max) {
-    double factor = (double)dest_max / src_max;
+  void do_transfer_alpha(unsigned int width, unsigned char src_channels, const A* src_row, unsigned char dest_channels, const B* dest_row) {
+    double factor = (double)maxval<B>() / maxval<A>();
     A *inp = const_cast<A*>(src_row) + src_channels;
     B *outp = const_cast<B*>(dest_row) + dest_channels;
     for (unsigned int x = 0; x < width; x++, inp += 1 + src_channels, outp += 1 + dest_channels) {
       if (*inp < 0)
 	*outp = 0;
-      else if (*inp > src_max)
-	*outp = dest_max;
+      else if (*inp > maxval<A>())
+	*outp = maxval<B>();
       else
 	*outp = (*inp) * factor;
     }
   }
 
-  void transform_alpha(unsigned int width, cmsUInt32Number src_type, const unsigned char* src_row, cmsUInt32Number dest_type, const unsigned char* dest_row) {
+  void transfer_alpha(unsigned int width, cmsUInt32Number src_type, const unsigned char* src_row, cmsUInt32Number dest_type, const unsigned char* dest_row) {
     unsigned char src_channels = (unsigned char)T_CHANNELS(src_type);
     unsigned char dest_channels = (unsigned char)T_CHANNELS(dest_type);
     switch (T_BYTES_REAL(src_type)) {
     case 1:
       switch (T_BYTES_REAL(dest_type)) {
       case 1:
-	do_transform_alpha<unsigned char, unsigned char>(width, src_channels,src_row, dest_channels,dest_row, 255, 255);
+	do_transfer_alpha<unsigned char, unsigned char>(width, src_channels,src_row, dest_channels,dest_row);
 	break;
 
       case 2:
-	do_transform_alpha<unsigned char, short unsigned int>(width, src_channels,src_row, dest_channels,(short unsigned int*)dest_row, 255, 65535);
+	do_transfer_alpha<unsigned char, short unsigned int>(width, src_channels,src_row, dest_channels,(short unsigned int*)dest_row);
 	break;
 
       case 4:
 	if (T_FLOAT(dest_type))
-	  do_transform_alpha<unsigned char, float>(width, src_channels,src_row, dest_channels,(float*)dest_row, 255, 1.0);
+	  do_transfer_alpha<unsigned char, float>(width, src_channels,src_row, dest_channels,(float*)dest_row);
 	else
-	  do_transform_alpha<unsigned char, unsigned int>(width, src_channels,src_row, dest_channels,(unsigned int*)dest_row, 255, 4294967295);
+	  do_transfer_alpha<unsigned char, unsigned int>(width, src_channels,src_row, dest_channels,(unsigned int*)dest_row);
 	break;
 
       case 8:
-	do_transform_alpha<unsigned char, double>(width, src_channels,src_row, dest_channels,(double*)dest_row, 255, 1.0);
+	do_transfer_alpha<unsigned char, double>(width, src_channels,src_row, dest_channels,(double*)dest_row);
 	break;
 
       }
@@ -149,22 +149,22 @@ namespace PhotoFinish {
     case 2:
       switch (T_BYTES_REAL(dest_type)) {
       case 1:
-	do_transform_alpha<short unsigned int, unsigned char>(width, src_channels,(short unsigned int*)src_row, dest_channels,dest_row, 65535, 255);
+	do_transfer_alpha<short unsigned int, unsigned char>(width, src_channels,(short unsigned int*)src_row, dest_channels,dest_row);
 	break;
 
       case 2:
-	do_transform_alpha<short unsigned int, short unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(short unsigned int*)dest_row, 65535, 65535);
+	do_transfer_alpha<short unsigned int, short unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(short unsigned int*)dest_row);
 	break;
 
       case 4:
 	if (T_FLOAT(dest_type))
-	  do_transform_alpha<short unsigned int, float>(width, src_channels,(short unsigned int*)src_row, dest_channels,(float*)dest_row, 65535, 1.0);
+	  do_transfer_alpha<short unsigned int, float>(width, src_channels,(short unsigned int*)src_row, dest_channels,(float*)dest_row);
 	else
-	  do_transform_alpha<short unsigned int, unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(unsigned int*)dest_row, 65535, 4294967295);
+	  do_transfer_alpha<short unsigned int, unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(unsigned int*)dest_row);
 	break;
 
       case 8:
-	do_transform_alpha<short unsigned int, double>(width, src_channels,(short unsigned int*)src_row, dest_channels,(double*)dest_row, 65535, 1.0);
+	do_transfer_alpha<short unsigned int, double>(width, src_channels,(short unsigned int*)src_row, dest_channels,(double*)dest_row);
 	break;
 
       }
@@ -174,44 +174,44 @@ namespace PhotoFinish {
       if (T_FLOAT(src_type)) {
 	switch (T_BYTES_REAL(dest_type)) {
 	case 1:
-	  do_transform_alpha<float, unsigned char>(width, src_channels,(float*)src_row, dest_channels,dest_row,  1.0, 255);
+	  do_transfer_alpha<float, unsigned char>(width, src_channels,(float*)src_row, dest_channels,dest_row);
 	  break;
 
 	case 2:
-	  do_transform_alpha<float, short unsigned int>(width, src_channels,(float*)src_row, dest_channels,(short unsigned int*)dest_row, 1.0, 65535);
+	  do_transfer_alpha<float, short unsigned int>(width, src_channels,(float*)src_row, dest_channels,(short unsigned int*)dest_row);
 	  break;
 
 	case 4:
 	  if (T_FLOAT(dest_type))
-	    do_transform_alpha<float, float>(width, src_channels,(float*)src_row, dest_channels,(float*)dest_row, 1.0, 1.0);
+	    do_transfer_alpha<float, float>(width, src_channels,(float*)src_row, dest_channels,(float*)dest_row);
 	  else
-	    do_transform_alpha<float, unsigned int>(width, src_channels,(float*)src_row, dest_channels,(unsigned int*)dest_row, 1.0, 4294967295);
+	    do_transfer_alpha<float, unsigned int>(width, src_channels,(float*)src_row, dest_channels,(unsigned int*)dest_row);
 	  break;
 
 	case 8:
-	  do_transform_alpha<float, double>(width, src_channels,(float*)src_row, dest_channels,(double*)dest_row, 1.0, 1.0);
+	  do_transfer_alpha<float, double>(width, src_channels,(float*)src_row, dest_channels,(double*)dest_row);
 	  break;
 
 	}
       } else {
 	switch (T_BYTES_REAL(dest_type)) {
 	case 1:
-	  do_transform_alpha<unsigned int, unsigned char>(width, src_channels,(unsigned int*)src_row, dest_channels,dest_row, 4294967295, 255);
+	  do_transfer_alpha<unsigned int, unsigned char>(width, src_channels,(unsigned int*)src_row, dest_channels,dest_row);
 	  break;
 
 	case 2:
-	  do_transform_alpha<unsigned int, short unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(short unsigned int*)dest_row, 4294967295, 65535);
+	  do_transfer_alpha<unsigned int, short unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(short unsigned int*)dest_row);
 	  break;
 
 	case 4:
 	  if (T_FLOAT(dest_type))
-	    do_transform_alpha<unsigned int, float>(width, src_channels,(unsigned int*)src_row, dest_channels,(float*)dest_row, 4294967295, 1.0);
+	    do_transfer_alpha<unsigned int, float>(width, src_channels,(unsigned int*)src_row, dest_channels,(float*)dest_row);
 	  else
-	    do_transform_alpha<unsigned int, unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(unsigned int*)dest_row, 4294967295, 1.0);
+	    do_transfer_alpha<unsigned int, unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(unsigned int*)dest_row);
 	  break;
 
 	case 8:
-	  do_transform_alpha<unsigned int, double>(width, src_channels,(unsigned int*)src_row, dest_channels,(double*)dest_row, 4294967295, 1.0);
+	  do_transfer_alpha<unsigned int, double>(width, src_channels,(unsigned int*)src_row, dest_channels,(double*)dest_row);
 	  break;
 
 	}
@@ -221,22 +221,22 @@ namespace PhotoFinish {
     case 8:
       switch (T_BYTES_REAL(dest_type)) {
       case 1:
-	do_transform_alpha<double, unsigned char>(width, src_channels,(double*)src_row, dest_channels,dest_row, 1.0, 255);
+	do_transfer_alpha<double, unsigned char>(width, src_channels,(double*)src_row, dest_channels,dest_row);
 	break;
 
       case 2:
-	do_transform_alpha<double, short unsigned int>(width, src_channels,(double*)src_row, dest_channels,(short unsigned int*)dest_row, 1.0, 65535);
+	do_transfer_alpha<double, short unsigned int>(width, src_channels,(double*)src_row, dest_channels,(short unsigned int*)dest_row);
 	break;
 
       case 4:
 	if (T_FLOAT(dest_type))
-	  do_transform_alpha<double, float>(width, src_channels,(double*)src_row, dest_channels,(float*)dest_row, 1.0, 1.0);
+	  do_transfer_alpha<double, float>(width, src_channels,(double*)src_row, dest_channels,(float*)dest_row);
 	else
-	  do_transform_alpha<double, unsigned int>(width, src_channels,(double*)src_row, dest_channels,(unsigned int*)dest_row, 1.0, 4294967295);
+	  do_transfer_alpha<double, unsigned int>(width, src_channels,(double*)src_row, dest_channels,(unsigned int*)dest_row);
 	break;
 
       case 8:
-	do_transform_alpha<double, double>(width, src_channels,(double*)src_row, dest_channels,(double*)dest_row, 1.0, 1.0);
+	do_transfer_alpha<double, double>(width, src_channels,(double*)src_row, dest_channels,(double*)dest_row);
 	break;
 
       }
@@ -282,7 +282,7 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < _height; y++) {
       cmsDoTransform(transform, _rowdata[y], dest->row(y), _width);
       if (T_EXTRA(dest_type))
-	transform_alpha(_width, _type, _rowdata[y], dest_type, dest->row(y));
+	transfer_alpha(_width, _type, _rowdata[y], dest_type, dest->row(y));
 
       if (can_free)
 	this->free_row(y);
@@ -335,7 +335,7 @@ namespace PhotoFinish {
       unsigned char *dest_rowdata = (unsigned char*)malloc(dest_row_size);
       cmsDoTransform(transform, src_rowdata, dest_rowdata, _width);
       if (T_EXTRA(dest_type))
-	transform_alpha(_width, _type, src_rowdata, dest_type, dest_rowdata);
+	transfer_alpha(_width, _type, src_rowdata, dest_type, dest_rowdata);
 
       _rowdata[y] = dest_rowdata;
       free(src_rowdata);
