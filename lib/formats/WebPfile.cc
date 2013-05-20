@@ -103,7 +103,22 @@ namespace PhotoFinish {
 
     WebPDecBuffer decbuffer;
     WebPInitDecBuffer(&decbuffer);
-    decbuffer.colorspace = MODE_RGBA;		// No way to find out if the file has an alpha channel?
+
+    decbuffer.colorspace = MODE_RGB;
+    cmsUInt32Number type = COLORSPACE_SH(PT_RGB) | BYTES_SH(1) | CHANNELS_SH(3);
+    {
+      ifs.seekg(12, std::ios_base::beg);
+      char chunk[4];
+      ifs.read(chunk, 4);
+      if (memcmp(chunk, "VP8X", 4) == 0) {
+	unsigned char flags = ifs.get();
+	if (flags & (1 << 3)) {
+	  decbuffer.colorspace = MODE_RGBA;
+	  type |= EXTRA_SH(1);
+	}
+      }
+      ifs.seekg(0, std::ios_base::beg);
+    }
     WebPIDecoder* idec = WebPINewDecoder(&decbuffer);
 
     unsigned char buffer[1048576];
@@ -118,8 +133,10 @@ namespace PhotoFinish {
 
       rowdata = WebPIDecGetRGB(idec, &last_y, &width, &height, &stride);
       if (rowdata != NULL) {
-	if (img == NULL)
-	  img = new Image(width, height, COLORSPACE_SH(PT_RGB) | BYTES_SH(1) | CHANNELS_SH(3) | EXTRA_SH(1));
+	if (img == NULL) {
+	  std::cerr << "\t" << width << "×" << height << " RGB" << (T_EXTRA(type) ? "A" : "") << std::endl;
+	  img = new Image(width, height, type);
+	}
 	while (y < last_y) {
 	  memcpy(img->row(y), rowdata, stride);
 	  std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows";
