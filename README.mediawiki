@@ -26,7 +26,7 @@ My focus has been on image quality and correctness, so many computations are don
 
 === Image file formats ===
 
-* Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000) files
+* Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000), WebP files
 * Embedded ICC profiles are used when reading, and created when writing
 * Falls back to sRGB or a similar greyscale profile
 * Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)
@@ -64,6 +64,8 @@ Photo Finish currently uses the following libraries:
 * [http://www.libpng.org/ LibPNG] for reading and writing PNG files
 * [http://www.ijg.org/ IJG]'s LibJPEG for writing JPEG's
 * [http://www.remotesensing.org/libtiff/ libTIFF] for reading and writing PNG files
+* [http://www.openjpeg.org/ OpenJPEG] for reading and writing JPEG 2000 files
+* [https://developers.google.com/speed/webp/docs/api libwebp] for reading and writing WebP files
 * [http://www.littlecms.com/ Little CMS] (LCMS) for transforming between colour profiles
 * [http://code.google.com/p/yaml-cpp/ libyaml] for reading YAML data files
 * [http://www.exiv2.org/ EXIV] for EXIF/IPTC/XMP metadata
@@ -76,6 +78,6 @@ Photo Finish currently uses the following libraries:
 
 == License ==
 
-Copyright 2012 Ian Tester &lt;imroykun&#x40;gmail.com&gt;
+Copyright 2012-2013 Ian Tester &lt;imroykun&#x40;gmail.com&gt;
 
 Photo Finish is licensed under the GNU GPL version 3 or later.
