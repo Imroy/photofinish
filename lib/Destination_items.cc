@@ -374,8 +374,13 @@ namespace PhotoFinish {
     if (const YAML::Node *n = node.FindValue("quality"))
       *n >> dw._quality;
 
-    if (const YAML::Node *n = node.FindValue("method"))
-      *n >> dw._method;
+    if (const YAML::Node *n = node.FindValue("method")) {
+      int temp;
+      *n >> temp;
+      dw._method = temp;
+    }
+
+    dw.set_defined();
   }
 
 
