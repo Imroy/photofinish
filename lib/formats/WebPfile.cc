@@ -106,17 +106,57 @@ namespace PhotoFinish {
 
     decbuffer.colorspace = MODE_RGB;
     cmsUInt32Number type = COLORSPACE_SH(PT_RGB) | BYTES_SH(1) | CHANNELS_SH(3);
+    cmsHPROFILE profile = NULL;
     {
-      ifs.seekg(12, std::ios_base::beg);
-      char chunk[4];
-      ifs.read(chunk, 4);
-      if (memcmp(chunk, "VP8X", 4) == 0) {
-	unsigned char flags = ifs.get();
-	if (flags & (1 << 3)) {
-	  decbuffer.colorspace = MODE_RGBA;
-	  type |= EXTRA_SH(1);
+      char fourcc[4];
+      unsigned char size_le[4];
+      ifs.read(fourcc, 4);
+      if (memcmp(fourcc, "RIFF", 4) != 0)
+	throw FileContentError(_filepath.native(), "Not a RIFF file");
+
+      ifs.read((char*)size_le, 4);
+      unsigned int file_size = read_le32(size_le);
+
+      ifs.read(fourcc, 4);
+      if (memcmp(fourcc, "WEBP", 4) != 0)
+	throw FileContentError(_filepath.native(), "Not a WebP file");
+
+      unsigned int next_chunk = 0;
+      unsigned int chunk_size;
+      do {
+	ifs.read(fourcc, 4);
+	ifs.read((char*)size_le, 4);
+	chunk_size = read_le32(size_le);
+	next_chunk += 8 + chunk_size + (chunk_size & 0x01);
+	std::cerr << "\tFound \"" << std::string(fourcc, 4) << "\" chunk, " << chunk_size << " bytes long." << std::endl;
+
+	if (memcmp(fourcc, "VP8X", 4) == 0) {
+	  unsigned char flags = ifs.get();
+	  if (flags & (1 << 4)) {
+	    decbuffer.colorspace = MODE_RGBA;
+	    type |= EXTRA_SH(1);
+	  }
 	}
-      }
+	if (memcmp(fourcc, "ICCP", 4) == 0) {
+	  unsigned char *profile_data = (unsigned char*)malloc(chunk_size);
+	  ifs.read((char*)profile_data, chunk_size);
+	  profile = cmsOpenProfileFromMem(profile_data, chunk_size);
+	  if (profile != NULL) {
+	    unsigned int profile_name_len;
+	    if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
+	      char *profile_name = (char*)malloc(profile_name_len);
+	      cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+	      dest->set_profile(profile_name, profile_data, chunk_size);
+	      free(profile_name);
+	    } else
+	      dest->set_profile("WebP", profile_data, chunk_size);
+
+	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << chunk_size << " bytes)." << std::endl;
+	  }
+	}
+	ifs.seekg(next_chunk + 12, std::ios_base::beg);
+	ifs.peek();
+      } while (ifs.good() && (next_chunk < file_size));
       ifs.seekg(0, std::ios_base::beg);
     }
     WebPIDecoder* idec = WebPINewDecoder(&decbuffer);
@@ -152,7 +192,8 @@ namespace PhotoFinish {
 
     WebPIDelete(idec);
 
-    //    img->
+    if (profile != NULL)
+      img->set_profile(profile);
 
     return Image::ptr(img);
   }
