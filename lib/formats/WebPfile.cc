@@ -107,6 +107,8 @@ namespace PhotoFinish {
     decbuffer.colorspace = MODE_RGB;
     cmsUInt32Number type = COLORSPACE_SH(PT_RGB) | BYTES_SH(1) | CHANNELS_SH(3);
     cmsHPROFILE profile = NULL;
+    Exiv2::ExifData EXIFtags;
+    Exiv2::XmpData XMPtags;
     {
       char fourcc[4];
       unsigned char size_le[4];
@@ -154,6 +156,22 @@ namespace PhotoFinish {
 	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << chunk_size << " bytes)." << std::endl;
 	  }
 	}
+	if (memcmp(fourcc, "EXIF", 4) == 0) {
+	  unsigned char *data = (unsigned char*)malloc(chunk_size);
+	  ifs.read((char*)data, chunk_size);
+	  std::cerr << "\tReading EXIF tags..." << std::endl;
+	  Exiv2::ExifParser::decode(EXIFtags, data, chunk_size);
+	  free(data);
+	}
+	if (memcmp(fourcc, "XMP ", 4) == 0) {
+	  char *data = (char*)malloc(chunk_size);
+	  ifs.read(data, chunk_size);
+	  std::string s(data, chunk_size);
+	  std::cerr << "\tReading XMP tags..." << std::endl;
+	  Exiv2::XmpParser::decode(XMPtags, s);
+	  free(data);
+	}
+
 	ifs.seekg(next_chunk + 12, std::ios_base::beg);
 	ifs.peek();
       } while (ifs.good() && (next_chunk < file_size));
@@ -194,6 +212,12 @@ namespace PhotoFinish {
 
     if (profile != NULL)
       img->set_profile(profile);
+
+    for (auto ei : EXIFtags)
+      img->EXIFtags().add(ei);
+
+    for (auto xi : XMPtags)
+      img->XMPtags().add(xi);
 
     return Image::ptr(img);
   }
