@@ -20,10 +20,6 @@
 
 namespace PhotoFinish {
 
-  inline unsigned int read_le32(const unsigned char* data) {
-    return data[0] | ((unsigned int)data[1] << 8) | ((unsigned int)data[2] << 16) | ((unsigned int)data[3] << 24);
-  }
-
   webp_stream_writer::webp_stream_writer(std::ostream* s, unsigned int w, unsigned int h) :
     stream(s), chunk_size(0), next_chunk(12),
     need_vp8x(false), width(w - 1), height(h - 1),
@@ -85,11 +81,11 @@ namespace PhotoFinish {
 
   void webp_stream_writer::modify_vp8x(unsigned char* data) {
     if (icc_size)
-      *data |= 1 << 2;
-    if (exif_size)
-      *data |= 1 << 4;
-    if (xmp_size)
       *data |= 1 << 5;
+    if (exif_size)
+      *data |= 1 << 3;
+    if (xmp_size)
+      *data |= 1 << 2;
   }
 
     //! Write a block of data from the encoder
@@ -107,6 +103,7 @@ namespace PhotoFinish {
       if (need_vp8x && (memcmp(data + next_chunk, "VP8 ", 4) == 0)) {
 	std::cerr << "\tInserting VP8X chunk..." << std::endl;
 	unsigned char vp8x[10];
+	memset(vp8x, 0, 4);
 	modify_vp8x(vp8x);
 	copy_le_to(vp8x + 4, width, 3);
 	copy_le_to(vp8x + 7, height, 3);

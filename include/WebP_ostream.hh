@@ -78,6 +78,10 @@ namespace PhotoFinish {
     }
   }
 
+  inline unsigned int read_le32(const unsigned char* data) {
+    return data[0] | ((unsigned int)data[1] << 8) | ((unsigned int)data[2] << 16) | ((unsigned int)data[3] << 24);
+  }
+
 }; // namespace PhotoFinish
 
 #endif // __WEBP_OSTREAM_HH__
