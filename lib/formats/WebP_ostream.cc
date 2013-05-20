@@ -61,11 +61,12 @@ namespace PhotoFinish {
     //! Add a set of XMP tags to be written
   void webp_stream_writer::add_xmp(const Exiv2::XmpData& xmp) {
     std::string s;
-    Exiv2::XmpParser::encode(s, xmp);
-    xmp_size = s.length() + 1;
-    xmp_data = (unsigned char*)malloc(xmp_size);
-    memcpy(xmp_data, s.c_str(), xmp_size);
-    need_vp8x = true;
+    if (Exiv2::XmpParser::encode(s, xmp) == 0) {
+      xmp_size = s.length() + 1;
+      xmp_data = (unsigned char*)malloc(xmp_size);
+      memcpy(xmp_data, s.c_str(), xmp_size);
+      need_vp8x = true;
+    }
   }
 
     //! Write a RIFF chunk
