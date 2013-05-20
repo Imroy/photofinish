@@ -258,32 +258,38 @@ namespace PhotoFinish {
       if (d.preset().defined())
 	for (auto i : WebP_presets)
 	  if (boost::iequals(i.first, d.preset().get())) {
-	    std::cerr << "\tInitialising config with \"" << d.preset().get() << "\" preset." << std::endl;
+	    std::cerr << "\tUsing preset \"" << d.preset().get() << "\", quality=" << d.quality() << "." << std::endl;
 	    ok = WebPConfigPreset(&config, i.second, d.quality());
 	    if (!ok)
 	      throw WebPError(ok);
 	    need_init = false;
+	    break;
 	  }
       if (need_init) {
-	std::cerr << "\tInitialising config." << std::endl;
 	ok = WebPConfigInit(&config);
 	if (!ok)
 	  throw WebPError(ok);
 	config.quality = d.quality();
+	std::cerr << "\tQuality=" << config.quality << std::endl;
       }
 
-      if (d.lossless().defined())
+      if (d.lossless().defined()) {
 	config.lossless = d.lossless();
+	std::cerr << "\tLossless=" << config.lossless << std::endl;
+      }
 
-      if (d.method().defined())
+      if (d.method().defined()) {
 	config.method = d.method();
+	std::cerr << "\tMethod=" << config.method << std::endl;
+      }
     } else {
-      std::cerr << "\tInitialising config." << std::endl;
       ok = WebPConfigInit(&config);
       if (!ok)
 	throw WebPError(ok);
     }
     config.thread_level = 1;
+    if (!WebPValidateConfig(&config))
+      throw LibraryError("libwebp", "Bad config");
 
     WebPPicture pic;
     ok = WebPPictureInit(&pic);
