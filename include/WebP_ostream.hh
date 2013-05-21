@@ -33,10 +33,19 @@ namespace PhotoFinish {
   */
   class webp_stream_writer {
   private:
+    //! The stream we're writing to
     std::ostream *stream;
-    char chunk[4];
+
+    //! The fourcc of the current chunk
+    char fourcc[4];
+
+    //! The size of the current chunk (just payload)
     unsigned int chunk_size;
+
+    //! The offset in the data buffer of the next chunk header
     unsigned int next_chunk;
+
+    bool header_at_start;
 
     // Data for the VP8X chunk
     bool need_vp8x;
@@ -64,6 +73,15 @@ namespace PhotoFinish {
 
     //! Write a RIFF chunk
     void write_chunk(const char *fourcc, const unsigned char* data, unsigned int length);
+
+    //! Write stuff before a chunk is written
+    void before_chunk(void);
+
+    //! Modify the current chunk
+    void modify_chunk(unsigned char* data);
+
+    //! Write stuff after a chunk has been written
+    void after_chunk(void);
 
     void modify_vp8x(unsigned char* data);
 

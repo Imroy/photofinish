@@ -21,11 +21,11 @@
 namespace PhotoFinish {
 
   webp_stream_writer::webp_stream_writer(std::ostream* s, unsigned int w, unsigned int h) :
-    stream(s), chunk_size(0), next_chunk(12),
+    stream(s), chunk_size(4), next_chunk(12), header_at_start(false),
     need_vp8x(false), width(w - 1), height(h - 1),
     icc_data(NULL), exif_data(NULL), xmp_data(NULL),
     icc_size(0), exif_size(0), xmp_size(0) {
-    memcpy(chunk, "   ", 4);
+    memcpy(fourcc, "   ", 4);
   }
 
   webp_stream_writer::~webp_stream_writer() {
@@ -80,6 +80,49 @@ namespace PhotoFinish {
       stream->put(0);
   }
 
+  void webp_stream_writer::before_chunk(void) {
+    if (need_vp8x && ((memcmp(fourcc, "VP8 ", 4) == 0) || (memcmp(fourcc, "VP8L", 4) == 0))) {
+      std::cerr << "\tInserting VP8X chunk..." << std::endl;
+      unsigned char vp8x[10];
+      memset(vp8x, 0, 4);
+      modify_vp8x(vp8x);
+      copy_le_to(vp8x + 4, width, 3);
+      copy_le_to(vp8x + 7, height, 3);
+      write_chunk("VP8X", vp8x, 10);
+
+      if (icc_size) {
+	std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
+	write_chunk("ICCP", icc_data, icc_size);
+      }
+      need_vp8x = false;
+    }
+  }
+
+  void webp_stream_writer::modify_chunk(unsigned char* data) {
+    if (need_vp8x && (memcmp(data, "VP8X", 4) == 0)) {
+      std::cerr << "\tModifying VP8X chunk..." << std::endl;
+      modify_vp8x(data + 8);
+      need_vp8x = false;
+    }
+  }
+
+  void webp_stream_writer::after_chunk(void) {
+    if (memcmp(fourcc, "VP8X", 4) == 0) {
+      std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
+      write_chunk("ICCP", icc_data, icc_size);
+    }
+    if ((memcmp(fourcc, "VP8 ", 4) == 0) || (memcmp(fourcc, "VP8L", 4) == 0)) {
+      if (exif_size) {
+	std::cerr << "\tInserting EXIF chunk (" << exif_size << " bytes)..." << std::endl;
+	write_chunk("EXIF", exif_data, exif_size);
+      }
+      if (xmp_size) {
+	std::cerr << "\tInserting XMP chunk (" << xmp_size << " bytes)..." << std::endl;
+	write_chunk("XMP ", xmp_data, xmp_size);
+      }
+    }
+  }
+
   void webp_stream_writer::modify_vp8x(unsigned char* data) {
     if (icc_size)
       *data |= 1 << 5;
@@ -89,61 +132,55 @@ namespace PhotoFinish {
       *data |= 1 << 2;
   }
 
-    //! Write a block of data from the encoder
+#define min(a, b) ((a) < (b) ? (a) : (b))
+
+  //! Write a block of data from the encoder
   int webp_stream_writer::write(unsigned char* data, size_t data_size) {
-    while (next_chunk < data_size) {
-      unsigned int size = read_le32(data + next_chunk + 4);
-      std::cerr << "\tFound chunk: \"" << std::string((char*)data + next_chunk, 4) << "\", " << size << " bytes." << std::endl;
-
-      if (need_vp8x && (memcmp(data + next_chunk, "VP8X", 4) == 0)) {
-	std::cerr << "\tModifying VP8X chunk..." << std::endl;
-	modify_vp8x(data + next_chunk + 8);
-	need_vp8x = false;
-      }
-
-      if (need_vp8x && (memcmp(data + next_chunk, "VP8 ", 4) == 0)) {
-	std::cerr << "\tInserting VP8X chunk..." << std::endl;
-	unsigned char vp8x[10];
-	memset(vp8x, 0, 4);
-	modify_vp8x(vp8x);
-	copy_le_to(vp8x + 4, width, 3);
-	copy_le_to(vp8x + 7, height, 3);
-	write_chunk("VP8X", vp8x, 10);
-
-	if (icc_size) {
-	  std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
-	  write_chunk("ICCP", icc_data, icc_size);
-	}
-	need_vp8x = false;
-      }
-
-      memcpy(chunk, data + next_chunk, 4);
-      chunk_size = read_le32(data + next_chunk + 4);
-      next_chunk += size + (size & 0x01) + 8;
+    // First write the end of any chunk in the buffer
+    if (!header_at_start) {
+      unsigned int size = min(next_chunk, data_size);
+      std::cerr << "\tWriting " << size << " bytes..." << std::endl;
+      stream->write((char*)data, size);
+      data += size;
+      data_size -= size;
+      next_chunk -= size;
     }
-    if (data_size) {
+    header_at_start = false;
+
+    // Work through every chunk in the buffer
+    while ((next_chunk < data_size) && (data_size >= 8)) {
+      memcpy(fourcc, data, 4);
+      chunk_size = read_le32(data + 4);
+      next_chunk = 8 + chunk_size + (chunk_size & 0x1);
+
+      before_chunk();
+
+      std::cerr << "\tFound chunk: \"" << std::string((char*)fourcc, 4) << "\", " << chunk_size << " bytes." << std::endl;
+
+      modify_chunk(data);
+
+      // Write a whole chunk if we have it
+      if (next_chunk < data_size) {
+	unsigned int total_size = 8 + chunk_size + (chunk_size & 0x01);
+	std::cerr << "\tWriting " << total_size << " bytes." << std::endl;
+	stream->write((char*)data, total_size);
+	data += total_size;
+	data_size -= total_size;
+	next_chunk = 0;
+	after_chunk();
+      }
+    }
+    // Write the rest of the data
+    if (data_size > 0) {
       std::cerr << "\tWriting " << data_size << " bytes..." << std::endl;
       stream->write((char*)data, data_size);
       next_chunk -= data_size;
-      //      std::cerr << "\r\tWritten " << stream->tellp() << " bytes";
     }
 
-    // Write stuff after a chunk
+    // The end of the buffer coincides with the end of a chunk
     if (next_chunk == 0) {
-      if (memcmp(chunk, "VP8X", 4) == 0) {
-	std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
-	write_chunk("ICCP", icc_data, icc_size);
-      }
-      if (memcmp(chunk, "VP8 ", 4) == 0) {
-	if (exif_size) {
-	  std::cerr << "\tInserting EXIF chunk (" << exif_size << " bytes)..." << std::endl;
-	  write_chunk("EXIF", exif_data, exif_size);
-	}
-	if (xmp_size) {
-	  std::cerr << "\tInserting XMP chunk (" << xmp_size << " bytes)..." << std::endl;
-	  write_chunk("XMP ", xmp_data, xmp_size);
-	}
-      }
+      after_chunk();
+      header_at_start = true;
     }
 
     return 1;
