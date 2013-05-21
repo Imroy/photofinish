@@ -57,6 +57,9 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   resized_dest->jp2().set_tile_size(1024, 1024);
   resized_dest->jp2().set_numresolutions(5);
   resized_dest->tiff().set_compression("deflate");
+  resized_dest->webp().set_preset("photo");
+  resized_dest->webp().set_quality(80);
+  resized_dest->webp().set_method(6);
 
   auto frame = std::make_shared<Frame>(orig_image->width() * 0.25, orig_image->height() * 0.25,
 				       0, 0,
@@ -177,6 +180,9 @@ int main(int argc, char* argv[]) {
 	    converted_dest->jp2().set_tile_size(2048, 2048);
 	    converted_dest->jp2().set_numresolutions(7);
 	    converted_dest->tiff().set_compression("deflate");
+	    converted_dest->webp().set_preset("photo");
+	    converted_dest->webp().set_lossless();
+	    converted_dest->webp().set_method(6);
 
 	    cmsUInt32Number orig_type = orig_image->type();
 	    cmsUInt32Number converted_type = converted_file->preferred_type(converted_dest->modify_type(orig_type));
