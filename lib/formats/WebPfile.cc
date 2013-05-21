@@ -298,6 +298,7 @@ namespace PhotoFinish {
 
     pic.width = img->width();
     pic.height = img->height();
+    pic.use_argb = config.lossless;
     ok = WebPPictureAlloc(&pic);
     if (!ok)
       throw WebPError(ok);
@@ -307,16 +308,18 @@ namespace PhotoFinish {
       std::cerr << "\tCopying image data to blob..." << std::endl;
       unsigned char *rgb = (unsigned char*)malloc(img->row_size() * img->height());
       for (unsigned int y = 0; y < img->height(); y++) {
-	memcpy(&rgb[y * img->row_size()], img->row(y), img->row_size());
+	memcpy(rgb + (y * img->row_size()), img->row(y), img->row_size());
 	if (can_free)
 	  img->free_row(y);
       }
 
-      std::cerr << "\tConverting image data to YCbCr..." << std::endl;
-      if (T_EXTRA(img->type()))
+      if (T_EXTRA(img->type())) {
+	std::cerr << "\tImporting RGBA image data..." << std::endl;
 	WebPPictureImportRGBA(&pic, rgb, img->row_size());
-      else
+      } else {
+	std::cerr << "\tImporting RGB image data..." << std::endl;
 	WebPPictureImportRGB(&pic, rgb, img->row_size());
+      }
       free(rgb);
     }
 
