@@ -27,6 +27,7 @@ My focus has been on image quality and correctness, so many computations are don
 === Image file formats ===
 
 * Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000), WebP files
+* Supports having an alpha channel in PNG, TIFF, and WebP files
 * Embedded ICC profiles are used when reading, and created when writing
 * Falls back to sRGB or a similar greyscale profile
 * Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)
@@ -34,14 +35,12 @@ My focus has been on image quality and correctness, so many computations are don
 
 === Data structures and processing ===
 
-* Image pixel data is stored internally in the [http://en.wikipedia.org/wiki/Lab_color_space CIE L*a*b* colour space] using floating-point components
+* Before rescaling, image pixel data is transformed into the [http://en.wikipedia.org/wiki/Lab_color_space CIE L*a*b* colour space] using floating-point components
 ** This colour space is perceptually uniform, so it is ideal for rescaling of images
 ** Even when the input and output(s) are greyscale, this colour space is used (partly for simplicity, but also because greyscale can have colour to it)
 ** Configurable as either single or double precision at compile-time (DP adds almost nothing in my limited tests)
 * Rescaling is done using a Lanczos filter
 * OpenMP is used in several places to take advantage of SMP systems
-* Dithers using Floyd-Steinberg error diffusion when producing 8-bit component output
-** Not sure if this improves the output or not, it just seemed like the right thing to do
 
 
 == Current limitations ==
