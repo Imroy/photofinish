@@ -39,9 +39,11 @@ namespace CMS {
     cmsHPROFILE _profile;
 
     //! Private constructor for use by named constructors
-    Profile(cmsHPROFILE p);
+    inline Profile(cmsHPROFILE p) { _profile = p; }
 
-    friend class Transform;
+    // To allow the static constructors (and anyone else?!?) to use make_shared on the private constructor
+    // TODO: Since this is specific to GNU libstdc++, #ifdef's should be used to pull in each platform's versionx
+    friend class __gnu_cxx::new_allocator<Profile>;
 
   public:
     //! Empty constructor
@@ -304,6 +306,9 @@ namespace CMS {
 
     //! Private constructor
     Transform(cmsHTRANSFORM t);
+
+    // To allow the static constructors (and anyone else?!?) to use make_shared on the private constructor
+    friend class __gnu_cxx::new_allocator<Transform>;
 
   public:
     //! Construct a transform from two profiles and formats

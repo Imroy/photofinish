@@ -31,11 +31,6 @@ namespace CMS {
     class Profile
   */
 
-  Profile::Profile(cmsHPROFILE p)
-    : _profile(p)
-  {
-  }
-
   Profile::Profile()
     : _profile(cmsCreateProfilePlaceholder(NULL))
   {
@@ -75,13 +70,11 @@ namespace CMS {
   }
 
   Profile::ptr Profile::Lab4(void) {
-    Profile *p = new Profile(cmsCreateLab4Profile(NULL));
-    return Profile::ptr(p);
+    return std::make_shared<Profile>(cmsCreateLab4Profile(NULL));
   }
       
   Profile::ptr Profile::sRGB(void) {
-    Profile *p = new Profile(cmsCreate_sRGBProfile());
-    return Profile::ptr(p);
+    return std::make_shared<Profile>(cmsCreate_sRGBProfile());
   }
       
   Profile::ptr Profile::sGrey(void) {
@@ -96,12 +89,12 @@ namespace CMS {
     };
     // y = (x >= d ? (a*x + b)^Gamma : c*x)
     cmsToneCurve *gamma = cmsBuildParametricToneCurve(NULL, 4, Parameters);
-    Profile *profile = new Profile(cmsCreateGrayProfile(&D65, gamma));
+    Profile::ptr profile = std::make_shared<Profile>(cmsCreateGrayProfile(&D65, gamma));
     cmsFreeToneCurve(gamma);
 
     profile->write_tag(cmsSigProfileDescriptionTag, "en", "AU", "sGrey built-in");
 
-    return Profile::ptr(profile);
+    return profile;
   }
 
   void Profile::write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::string text) {
@@ -409,10 +402,9 @@ namespace CMS {
 				     Intent intent, Intent proofing_intent,
 				     cmsUInt32Number flags)
   {
-    Transform *t = new Transform(cmsCreateProofingTransform(*input, (cmsUInt32Number)informat,
-							    *output, (cmsUInt32Number)outformat,
-							    *proofing, (cmsUInt32Number)intent, (cmsUInt32Number)proofing_intent, flags));
-    return Transform::ptr(t);
+    return std::make_shared<Transform>(cmsCreateProofingTransform(*input, (cmsUInt32Number)informat,
+								  *output, (cmsUInt32Number)outformat,
+								  *proofing, (cmsUInt32Number)intent, (cmsUInt32Number)proofing_intent, flags));
   }
 
   Format Transform::input_format(void) const {
@@ -428,8 +420,7 @@ namespace CMS {
   }
 
   Profile::ptr Transform::device_link(double version, cmsUInt32Number flags) const {
-    Profile *p = new Profile(cmsTransform2DeviceLink(_transform, version, flags));
-    return Profile::ptr(p);
+    return std::make_shared<Profile>(cmsTransform2DeviceLink(_transform, version, flags));
   }
 
   void Transform::transform_buffer(const void* input, void* output, cmsUInt32Number size) const {
