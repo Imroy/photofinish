@@ -61,7 +61,7 @@ Crazy idea:
 
 Photo Finish currently uses the following libraries:
 * [http://www.libpng.org/ LibPNG] for reading and writing PNG files
-* [http://www.ijg.org/ IJG]'s LibJPEG for writing JPEG's
+* [http://www.ijg.org/ IJG]'s LibJPEG for reading and writing JPEG files
 * [http://www.remotesensing.org/libtiff/ libTIFF] for reading and writing PNG files
 * [http://www.openjpeg.org/ OpenJPEG] for reading and writing JPEG 2000 files
 * [https://developers.google.com/speed/webp/docs/api libwebp] for reading and writing WebP files
