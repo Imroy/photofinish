@@ -178,7 +178,7 @@ namespace PhotoFinish {
 
     unsigned char buffer[1048576];
     size_t length;
-    Image *img = NULL;
+    Image::ptr img;
     int width, height, y = 0, last_y, stride;
     unsigned char *rowdata;
     do {
@@ -190,7 +190,7 @@ namespace PhotoFinish {
       if (rowdata != NULL) {
 	if (img == NULL) {
 	  std::cerr << "\t" << width << "×" << height << " RGB" << (format.extra_channels() > 0 ? "A" : "") << std::endl;
-	  img = new Image(width, height, format);
+	  img = std::make_shared<Image>(width, height, format);
 	}
 	while (y < last_y) {
 	  memcpy(img->row(y), rowdata, stride);
@@ -216,7 +216,7 @@ namespace PhotoFinish {
     for (auto xi : XMPtags)
       img->XMPtags().add(xi);
 
-    return Image::ptr(img);
+    return img;
   }
 
   CMS::Format WebPfile::preferred_format(CMS::Format format) {
