@@ -19,7 +19,6 @@
 #include <string>
 #include <map>
 #include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
 #include "Tags.hh"
 
 namespace PhotoFinish {
@@ -263,75 +262,27 @@ namespace PhotoFinish {
 	      })),
   };
 
-  //! Find a close unsigned rational fraction given a floating-point value
-  Exiv2::URational closest_URational(double value) {
-    double margin = fabs(value) * 1e-6;
-    unsigned int num = 0, den;
-    for (den = 1; den < INT_MAX; den++) {
-      double numf = value * den;
-      if ((numf < 0) || (numf > UINT_MAX))
-	break;
-
-      num = round(numf);
-      double error = fabs(num - numf);
-      if (error < margin * den)
-	break;
-    }
-    return Exiv2::URational(num, den);
-  }
-
-  //! Parse a string into an unsigned rational fraction
-  Exiv2::URational parse_URational(std::string s) {
-    size_t slash = s.find_first_of('/');
-    if (slash == std::string::npos)
-      return closest_URational(boost::lexical_cast<double>(s));
-
-    unsigned int num, den;
-    num = boost::lexical_cast<unsigned int>(s.substr(0, slash));
-    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1));
-
-    return Exiv2::URational(num, den);
-  }
-
-  //! Find a close rational fraction given a floating-point value
-  Exiv2::Rational closest_Rational(double value) {
-    double margin = fabs(value) * 1e-6;
-    signed int num = 0;
-    unsigned int den;
-    for (den = 1; den < INT_MAX; den++) {
-      double numf = value * den;
-      if ((numf < INT_MIN) || (numf > INT_MAX))
-	break;
-
-      num = round(numf);
-      double error = fabs(num - numf);
-      if (error < margin * den)
-	break;
-    }
-    return Exiv2::Rational(num, den);
-  }
-
   //! Parse a string into a rational fraction
-  Exiv2::Rational parse_Rational(std::string s) {
+  template <typename Num_type, typename R_type>
+  Exiv2::Value::AutoPtr parse_Rational(std::string s) {
     size_t slash = s.find_first_of('/');
+    Exiv2::ValueType<R_type> *rv;
     if (slash == std::string::npos)
-      return closest_Rational(boost::lexical_cast<double>(s));
+      rv = &closest_Rational<Num_type, R_type>(boost::lexical_cast<double>(s));
+    else
+      rv = new Exiv2::ValueType<R_type>(R_type(boost::lexical_cast<Num_type>(s.substr(0, slash)),
+					       boost::lexical_cast<Num_type>(s.substr(slash + 1, s.length() - slash - 1))));
 
-    signed int num;
-    unsigned int den;
-    num = boost::lexical_cast<signed int>(s.substr(0, slash));
-    den = boost::lexical_cast<unsigned int>(s.substr(slash + 1, s.length() - slash - 1));
-
-    return Exiv2::Rational(num, den);
+    return Exiv2::Value::AutoPtr(rv);
   }
 
   //! Read an EXIF value from a string, with optional substitution for enum-style values
   Exiv2::Value::AutoPtr exif_value_read(Exiv2::ExifKey key, std::string value_string) {
     Exiv2::TypeId type = key.defaultTypeId();
     if (type == Exiv2::unsignedRational)
-      return Exiv2::Value::AutoPtr(new Exiv2::URationalValue(parse_URational(value_string)));
+      return parse_Rational<unsigned int, Exiv2::URational>(value_string);
     if (type == Exiv2::signedRational)
-      return Exiv2::Value::AutoPtr(new Exiv2::RationalValue(parse_Rational(value_string)));
+      return parse_Rational<signed int, Exiv2::Rational>(value_string);
 
     EXIF_value_subst["Exif.GPSInfo.GPSImgDirectionRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];
     EXIF_value_subst["Exif.GPSInfo.GPSDestBearingRef"] = EXIF_value_subst["Exif.GPSInfo.GPSTrackRef"];

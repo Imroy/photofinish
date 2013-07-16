@@ -216,12 +216,10 @@ namespace PhotoFinish {
 #endif
   }
 
-  Exiv2::URational closest_URational(double value);
-
   void Tags::add_resolution(Image::ptr img) {
     Exiv2::URationalValue v;
     if (img->xres().defined()) {
-      v = Exiv2::URationalValue(closest_URational(img->xres()));
+      v = closest_Rational<unsigned int, Exiv2::URational>(img->xres());
       std::cerr << "\tSetting X resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->xres() << ") ppi." << std::endl;
       try {
 	_EXIFtags["Exif.Image.XResolution"] = v;
@@ -230,7 +228,7 @@ namespace PhotoFinish {
       }
     }
     if (img->yres().defined()) {
-      v = Exiv2::URationalValue(closest_URational(img->yres()));
+      v = closest_Rational<unsigned int, Exiv2::URational>(img->yres());
       std::cerr << "\tSetting Y resolution to " << v.value_[0].first << " ÷ " << v.value_[0].second << " (" << img->yres() << ") ppi." << std::endl;
       try {
 	_EXIFtags["Exif.Image.YResolution"] = v;

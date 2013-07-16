@@ -21,6 +21,7 @@
 
 #include <exiv2/exiv2.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 #include <iostream>
 #include <string>
 #include <map>
@@ -94,6 +95,27 @@ namespace PhotoFinish {
     void copy_to(Image::ptr img) const;
 
   };
+
+  //! Find a close rational fraction given a floating-point value
+  template <typename Num_type, typename R_type>
+  Exiv2::ValueType<R_type>& closest_Rational(double value) {
+    double margin = fabs(value) * 1e-6;
+    Num_type num = 0;
+    Num_type den;
+    for (den = 1; den < INT_MAX; den++) {
+      double numf = value * den;
+      if ((numf < INT_MIN) || (numf > INT_MAX))
+	break;
+
+      num = round(numf);
+      double error = fabs(num - numf);
+      if (error < margin * den)
+	break;
+    }
+
+    Exiv2::ValueType<R_type> *rv = new Exiv2::ValueType<R_type>(R_type(num, den));
+    return *rv;
+  }
 
 }
 
