@@ -80,10 +80,10 @@ namespace CMS {
     void write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::string text);
     void write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::wstring text);
 
-    std::string read_info(cmsInfoType type, std::string lang, std::string cc);
-    std::wstring read_info_wide(cmsInfoType type, std::string lang, std::string cc);
+    std::string read_info(cmsInfoType type, std::string lang, std::string cc) const;
+    std::wstring read_info_wide(cmsInfoType type, std::string lang, std::string cc) const;
 
-    void save_to_mem(void* &dest, unsigned int &size);
+    void save_to_mem(void* &dest, unsigned int &size) const;
       
   }; // class Profile
 
@@ -143,25 +143,25 @@ namespace CMS {
     inline operator cmsUInt32Number() const { return _format; }
 
     //! Named constructor
-    static Format &Grey8(void);
+    static Format Grey8(void);
 
     //! Named constructor
-    static Format &Grey16(void);
+    static Format Grey16(void);
 
     //! Named constructor
-    static Format &RGB8(void);
+    static Format RGB8(void);
 
     //! Named constructor
-    static Format &RGB16(void);
+    static Format RGB16(void);
 
     //! Named constructor
-    static Format &CMYK8(void);
+    static Format CMYK8(void);
 
     //! Named constructor
-    static Format &LabFloat(void);
+    static Format LabFloat(void);
 
     //! Named constructor
-    static Format &LabDouble(void);
+    static Format LabDouble(void);
 
     //! Set to 8 bit bytes per channel
     Format &set_8bit(void);
@@ -329,18 +329,18 @@ namespace CMS {
 			cmsUInt32Number flags);
 
     //! Get the input format
-    Format input_format(void);
+    Format input_format(void) const;
 
     //! Get the output format
-    Format output_format(void);
+    Format output_format(void) const;
 
     //! Change the input and output formats
     void change_formats(const Format &informat, const Format &outformat);
 
     //! Create a device link profile from this transform
-    Profile::ptr device_link(double version, cmsUInt32Number flags);
+    Profile::ptr device_link(double version, cmsUInt32Number flags) const;
 
-    void transform_buffer(const void* input, void* output, cmsUInt32Number size);
+    void transform_buffer(const void* input, void* output, cmsUInt32Number size) const;
 
   }; // class Transform
 

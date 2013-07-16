@@ -122,7 +122,7 @@ namespace CMS {
     }
   }
 
-  std::string Profile::read_info(cmsInfoType type, std::string lang, std::string cc) {
+  std::string Profile::read_info(cmsInfoType type, std::string lang, std::string cc) const {
     unsigned int text_len;
     if ((text_len = cmsGetProfileInfoASCII(_profile, type, lang.c_str(), cc.c_str(), NULL, 0)) > 0) {
       char *text = (char*)malloc(text_len);
@@ -135,7 +135,7 @@ namespace CMS {
     return "";
   }
 
-  std::wstring Profile::read_info_wide(cmsInfoType type, std::string lang, std::string cc) {
+  std::wstring Profile::read_info_wide(cmsInfoType type, std::string lang, std::string cc) const {
     unsigned int text_len;
     if ((text_len = cmsGetProfileInfo(_profile, type, lang.c_str(), cc.c_str(), NULL, 0)) > 0) {
       wchar_t *text = (wchar_t*)malloc(text_len * sizeof(wchar_t));
@@ -148,7 +148,7 @@ namespace CMS {
     return (wchar_t*)"";
   }
 
-  void Profile::save_to_mem(void* &dest, unsigned int &size) {
+  void Profile::save_to_mem(void* &dest, unsigned int &size) const {
     cmsSaveProfileToMem(_profile, NULL, &size);
     if (size > 0) {
       dest = malloc(size);
@@ -213,39 +213,32 @@ namespace CMS {
   {
   }
 
-  Format &Format::Grey8(void) {
-    Format *f = new Format(COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(1));
-    return *f;
+  Format Format::Grey8(void) {
+    return Format(COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(1));
   }
 
-  Format &Format::Grey16(void) {
-    Format *f = new Format(COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2));
-    return *f;
+  Format Format::Grey16(void) {
+    return Format(COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1) | BYTES_SH(2));
   }
 
-  Format &Format::RGB8(void) {
-    Format *f = new Format(COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(1));
-    return *f;
+  Format Format::RGB8(void) {
+    return Format(COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(1));
   }
 
-  Format &Format::RGB16(void) {
-    Format *f = new Format(COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2));
-    return *f;
+  Format Format::RGB16(void) {
+    return Format(COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3) | BYTES_SH(2));
   }
 
-  Format &Format::CMYK8(void) {
-    Format *f = new Format(COLORSPACE_SH(PT_CMYK) | CHANNELS_SH(4) | BYTES_SH(1));
-    return *f;
+  Format Format::CMYK8(void) {
+    return Format(COLORSPACE_SH(PT_CMYK) | CHANNELS_SH(4) | BYTES_SH(1));
   }
 
-  Format &Format::LabFloat(void) {
-    Format *f = new Format(FLOAT_SH(1) | COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | BYTES_SH(4));
-    return *f;
+  Format Format::LabFloat(void) {
+    return Format(FLOAT_SH(1) | COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | BYTES_SH(4));
   }
 
-  Format &Format::LabDouble(void) {
-    Format *f = new Format(FLOAT_SH(1) | COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | BYTES_SH(0));
-    return *f;
+  Format Format::LabDouble(void) {
+    return Format(FLOAT_SH(1) | COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | BYTES_SH(0));
   }
 
 // Some masks for manipulating LCMS "types"
@@ -422,11 +415,11 @@ namespace CMS {
     return Transform::ptr(t);
   }
 
-  Format Transform::input_format(void) {
+  Format Transform::input_format(void) const {
     return Format(cmsGetTransformInputFormat(_transform));
   }
 
-  Format Transform::output_format(void) {
+  Format Transform::output_format(void) const {
     return Format(cmsGetTransformOutputFormat(_transform));
   }
 
@@ -434,12 +427,12 @@ namespace CMS {
     cmsChangeBuffersFormat(_transform, (cmsUInt32Number)informat, (cmsUInt32Number)outformat);
   }
 
-  Profile::ptr Transform::device_link(double version, cmsUInt32Number flags) {
+  Profile::ptr Transform::device_link(double version, cmsUInt32Number flags) const {
     Profile *p = new Profile(cmsTransform2DeviceLink(_transform, version, flags));
     return Profile::ptr(p);
   }
 
-  void Transform::transform_buffer(const void* input, void* output, cmsUInt32Number size) {
+  void Transform::transform_buffer(const void* input, void* output, cmsUInt32Number size) const {
     cmsDoTransform(_transform, input, output, size);
   }
 
