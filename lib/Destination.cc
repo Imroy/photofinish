@@ -149,52 +149,55 @@ namespace PhotoFinish {
     return best_frame;
   }
 
-  cmsUInt32Number Destination::modify_type(cmsUInt32Number type) {
+  CMS::Format Destination::modify_format(CMS::Format format) {
     if (this->forcergb().defined() && this->forcergb()) {
       std::cerr << "Forcing RGB..." << std::endl;
-      type &= COLORSPACE_MASK;
-      type |= COLORSPACE_SH(PT_RGB);
-      type &= CHANNELS_MASK;
-      type |= CHANNELS_SH(3);
+      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_channels(3);
     }
 
     if (this->forcegrey().defined() && this->forcegrey()) {
       std::cerr << "Forcing greyscale..." << std::endl;
-      type &= COLORSPACE_MASK;
-      type |= COLORSPACE_SH(PT_GRAY);
-      type &= CHANNELS_MASK;
-      type |= CHANNELS_SH(1);
+      format.set_colour_model(CMS::ColourModel::Greyscale);
+      format.set_channels(1);
     }
 
-    type &= FLOAT_MASK;
-    type &= BYTES_MASK;
     if (this->depth().defined()) {
       std::cerr << "Changing depth to " << (this->depth() >> 3) << " bytes..." << std::endl;
-      type |= BYTES_SH(this->depth() >> 3);
+      switch (this->depth() >> 3) {
+      case 1: format.set_8bit();
+	break;
+
+      case 2: format.set_16bit();
+	break;
+
+      case 4: format.set_32bit();
+	break;
+
+      default:
+	std::cerr << "Invalid depth." << std::endl;
+	format.set_8bit();
+	break;
+      }
     } else {
       std::cerr << "Changing depth to 1 byte..." << std::endl;
-      type |= BYTES_SH(1);
+      format.set_8bit();
     }
 
-    return type;
+    return format;
   }
 
-  cmsHPROFILE Destination::get_profile(cmsUInt32Number default_type) {
-    cmsHPROFILE profile = NULL;
+  CMS::Profile::ptr Destination::get_profile(CMS::ColourModel default_colourmodel) {
+    CMS::Profile::ptr profile;
 
     if (this->profile()) {
       profile = this->profile()->profile();
 
       std::string profile_name = this->profile()->name();
-      cmsMLU *DescriptionMLU = cmsMLUalloc(NULL, 1);
-      if (DescriptionMLU != NULL) {
-	std::cerr << "Adding name \"" << profile_name << "\" to profile..." << std::endl;
-	if (cmsMLUsetASCII(DescriptionMLU,  "en", "AU", profile_name.c_str()))
-	  cmsWriteTag(profile, cmsSigProfileDescriptionTag,  DescriptionMLU);
-	cmsMLUfree(DescriptionMLU);
-      }
+      std::cerr << "Adding name \"" << profile_name << "\" to profile..." << std::endl;
+      profile->write_tag(cmsSigProfileDescriptionTag, "en", "AU", profile_name);
     } else {
-      profile = Image::default_profile(default_type);
+      profile = Image::default_profile(default_colourmodel, "unknown");
     }
 
     return profile;
@@ -230,15 +233,15 @@ namespace PhotoFinish {
       std::string intent;
       *n >> intent;
       if (boost::iequals(intent.substr(0, 10), "perceptual"))
-	d._intent = INTENT_PERCEPTUAL;
+	d._intent = CMS::Intent::Perceptual;
       else if (boost::iequals(intent.substr(0, 8), "relative"))
-	d._intent = INTENT_RELATIVE_COLORIMETRIC;
+	d._intent = CMS::Intent::Relative_colormetric;
       else if (boost::iequals(intent.substr(0, 10), "saturation"))
-	d._intent = INTENT_SATURATION;
+	d._intent = CMS::Intent::Saturation;
       else if (boost::iequals(intent.substr(0, 8), "absolute"))
-	d._intent = INTENT_ABSOLUTE_COLORIMETRIC;
+	d._intent = CMS::Intent::Absolute_colormetric;
       else
-	d._intent = INTENT_PERCEPTUAL;
+	d._intent = CMS::Intent::Perceptual;
     }
 
     if (const YAML::Node *n = node.FindValue("sharpen"))

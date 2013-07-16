@@ -23,8 +23,8 @@
 #include <memory>
 #include <vector>
 #include "yaml-cpp/yaml.h"
-#include <lcms2.h>
 #include <boost/filesystem.hpp>
+#include "CMS.hh"
 #include "Image.hh"
 #include "Definable.hh"
 
@@ -284,7 +284,7 @@ namespace PhotoFinish {
     inline bool has_data(void) const { return _data != NULL; }
 
     //! The profile data for LCMS2
-    cmsHPROFILE profile(void) const;
+    CMS::Profile::ptr profile(void) const;
 
     //! The profile data
     inline void* data(void) const { return _data; }

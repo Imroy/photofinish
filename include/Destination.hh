@@ -23,6 +23,7 @@
 #include <string>
 #include <map>
 #include <boost/filesystem.hpp>
+#include "CMS.hh"
 #include "Destination_items.hh"
 #include "Image.hh"
 #include "Frame.hh"
@@ -57,7 +58,7 @@ namespace PhotoFinish {
     D_JP2 _jp2;
     D_WebP _webp;
 
-    definable<cmsUInt32Number> _intent;	//! CMS rendering intent
+    definable<CMS::Intent> _intent;	//! CMS rendering intent
 
     D_profile::ptr _profile;
 
@@ -129,13 +130,13 @@ namespace PhotoFinish {
     inline D_WebP& webp(void) { return _webp; }
     inline void set_webp(const D_WebP& w) { _webp = w; }
 
-    inline definable<cmsUInt32Number> intent(void) const { return _intent; }
+    inline definable<CMS::Intent> intent(void) const { return _intent; }
 
     //! Modify an LCMS2 pixel format using some of the parameters in the destination
-    cmsUInt32Number modify_type(cmsUInt32Number orig_type = 0);
+    CMS::Format modify_format(CMS::Format format);
 
     //! Return an LCMS2 profile object from the profile data
-    cmsHPROFILE get_profile(cmsUInt32Number default_type);
+    CMS::Profile::ptr get_profile(CMS::ColourModel default_colourmodel);
 
     inline const D_profile::ptr profile(void) const { return _profile; }
     inline void set_profile(std::string name, fs::path filepath) { _profile = std::make_shared<D_profile>(name, filepath); }

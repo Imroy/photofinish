@@ -26,7 +26,6 @@
 #include <jpeglib.h>
 #include <setjmp.h>
 #include <omp.h>
-#include <lcms2.h>
 #include "ImageFile.hh"
 #include "Image.hh"
 
@@ -45,7 +44,7 @@ namespace PhotoFinish {
   void jpeg_istream_src_free(j_decompress_ptr dinfo);
 
   //! Read an ICC profile from APP2 markers in a JPEG file
-  cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
+  CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
   Image::ptr JPEGfile::read(Destination::ptr dest) {
     if (_is_open)
@@ -71,24 +70,26 @@ namespace PhotoFinish {
 
     jpeg_start_decompress(dinfo);
 
-    cmsUInt32Number type = CHANNELS_SH(dinfo->num_components) | BYTES_SH(1);
+    CMS::Format format;
+    format.set_8bit();
+    format.set_channels(dinfo->num_components);
     switch (dinfo->jpeg_color_space) {
     case JCS_GRAYSCALE:
-      type |= COLORSPACE_SH(PT_GRAY);
+      format.set_colour_model(CMS::ColourModel::Greyscale);
       break;
 
     case JCS_YCbCr:
       dinfo->out_color_space = JCS_RGB;
     case JCS_RGB:
-      type |= COLORSPACE_SH(PT_RGB);
+      format.set_colour_model(CMS::ColourModel::RGB);
       break;
 
     case JCS_YCCK:
       dinfo->out_color_space = JCS_CMYK;
     case JCS_CMYK:
-      type |= COLORSPACE_SH(PT_CMYK);
+      format.set_colour_model(CMS::ColourModel::CMYK);
       if (dinfo->saw_Adobe_marker)
-	type |= FLAVOR_SH(1);
+	format.set_vanilla();
       break;
 
     default:
@@ -96,7 +97,7 @@ namespace PhotoFinish {
       exit(1);
     }
 
-    auto img = std::make_shared<Image>(dinfo->output_width, dinfo->output_height, type);
+    auto img = std::make_shared<Image>(dinfo->output_width, dinfo->output_height, format);
     dest->set_depth(8);
 
     if (dinfo->saw_JFIF_marker) {
@@ -114,9 +115,9 @@ namespace PhotoFinish {
       }
     }
 
-    cmsHPROFILE profile = jpeg_read_profile(dinfo, dest);
+    CMS::Profile::ptr profile = jpeg_read_profile(dinfo, dest);
     if (!profile)
-      profile = Image::default_profile(type);
+      profile = Image::default_profile(format, "file");
     img->set_profile(profile);
 
     JSAMPROW jpeg_row[1];
@@ -140,23 +141,20 @@ namespace PhotoFinish {
     return img;
   }
 
-  cmsUInt32Number JPEGfile::preferred_type(cmsUInt32Number type) {
-    if ((T_COLORSPACE(type) != PT_GRAY) && (T_COLORSPACE(type) != PT_CMYK)) {
-      type &= COLORSPACE_MASK;
-      type |= COLORSPACE_SH(PT_RGB);
-      type &= CHANNELS_MASK;
-      type |= CHANNELS_SH(3);
+  CMS::Format JPEGfile::preferred_format(CMS::Format format) {
+    if ((format.colour_model() != CMS::ColourModel::Greyscale)
+	&& (format.colour_model() != CMS::ColourModel::CMYK)) {
+      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_channels(3);
     }
 
-    type &= PLANAR_MASK;
+    format.set_planar(false);
 
-    type &= EXTRA_MASK;
+    format.set_extra_channels(0);
 
-    type &= FLOAT_MASK;
-    type &= BYTES_MASK;
-    type |= BYTES_SH(1);
+    format.set_8bit();
 
-    return type;
+    return format;
   }
 
   //! Setup a "destination manager" on the given JPEG compression structure to write to an ostream
@@ -185,31 +183,31 @@ namespace PhotoFinish {
     cinfo->image_width = img->width();
     cinfo->image_height = img->height();
 
-    cmsUInt32Number type = img->type();
-    if (T_BYTES_REAL(type) != 1)
-      throw cmsTypeError("Not 8-bit", type);
+    CMS::Format format = img->format();
+    if (format.bytes_per_channel() != 1)
+      throw cmsTypeError("Not 8-bit", format);
 
-    switch (T_COLORSPACE(type)) {
-    case PT_GRAY:
+    switch (format.colour_model()) {
+    case CMS::ColourModel::Greyscale:
       cinfo->in_color_space = JCS_GRAYSCALE;
       break;
 
-    case PT_RGB:
+    case CMS::ColourModel::RGB:
       cinfo->in_color_space = JCS_RGB;
       break;
 
-    case PT_YCbCr:
+    case CMS::ColourModel::YCbCr:
       cinfo->in_color_space = JCS_YCbCr;
       break;
 
-    case PT_CMYK:
+    case CMS::ColourModel::CMYK:
       cinfo->in_color_space = JCS_CMYK;
       break;
 
     default:
       break;
     }
-    cinfo->input_components = T_CHANNELS(type);
+    cinfo->input_components = format.channels();
 
     jpeg_set_defaults(cinfo);
     {
@@ -224,7 +222,7 @@ namespace PhotoFinish {
 	  quality = jpeg.quality();
 	if (jpeg.progressive().defined())
 	  progressive = jpeg.progressive();
-	if (jpeg.sample().defined() && (T_COLORSPACE(type) == PT_RGB)) {
+	if (jpeg.sample().defined() && (format.colour_model() == CMS::ColourModel::RGB)) {
 	  sample_h = jpeg.sample()->first;
 	  sample_v = jpeg.sample()->second;
 	}
@@ -235,12 +233,12 @@ namespace PhotoFinish {
 
       if (progressive) {
 	std::cerr << "\tProgressive JPEG." << std::endl;
-	switch (T_COLORSPACE(type)) {
-	case PT_GRAY:
+	switch (format.colour_model()) {
+	case CMS::ColourModel::Greyscale:
 	  jpegfile_scan_greyscale(cinfo);
 	  break;
 
-	case PT_RGB:
+	case CMS::ColourModel::RGB:
 	  jpegfile_scan_RGB(cinfo);
 	  break;
 
@@ -249,7 +247,7 @@ namespace PhotoFinish {
 	}
       }
 
-      if (T_COLORSPACE(type) != PT_GRAY) {
+      if (format.colour_model() != CMS::ColourModel::Greyscale) {
 	std::cerr << "\tJPEG chroma sub-sampling of " << sample_h << "×" << sample_v << "." << std::endl;
 	cinfo->comp_info[0].h_samp_factor = sample_h;
 	cinfo->comp_info[0].v_samp_factor = sample_v;
@@ -265,17 +263,15 @@ namespace PhotoFinish {
     jpeg_start_compress(cinfo, TRUE);
 
     {
-      unsigned char *profile_data = NULL;
-      unsigned int profile_len = 0;
+      void *profile_data;
+      unsigned int profile_len;
+      img->profile()->save_to_mem(profile_data, profile_len);
 
-      cmsSaveProfileToMem(img->profile(), NULL, &profile_len);
       if (profile_len > 0) {
 	if (profile_len > 255 * 65519)
 	  std::cerr << "** Profile is too big to fit in APP2 markers! **" << std::endl;
 	else {
-	  profile_data = (unsigned char*)malloc(profile_len);
-	  cmsSaveProfileToMem(img->profile(), profile_data, &profile_len);
-	  jpeg_write_profile(cinfo, profile_data, profile_len);
+	  jpeg_write_profile(cinfo, (unsigned char*)profile_data, profile_len);
 	  free(profile_data);
 	}
       }

@@ -299,9 +299,6 @@ namespace PhotoFinish {
     }
   };
 
-  //! Set up an error handler with LCMS2 that will throw a LibraryError exception
-  void lcms2_error_adaptor(void);
-
   class cmsTypeError : public ErrorMsg {
   private:
     const unsigned int _type;

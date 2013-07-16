@@ -30,6 +30,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "CMS.hh"
 #include "Image.hh"
 #include "ImageFile.hh"
 #include "Destination.hh"
@@ -43,10 +44,11 @@ namespace po = boost::program_options;
 using namespace PhotoFinish;
 
 void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
-  cmsUInt32Number orig_type = orig_image->type();
-  orig_type &= COLORSPACE_MASK & CHANNELS_MASK & FLOAT_MASK & BYTES_MASK;
-  orig_type |= COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | FLOAT_SH(1) | BYTES_SH(sizeof(SAMPLE) & 0x07);
-  orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL), orig_type);
+  CMS::Format orig_format = orig_image->format();
+  orig_format.set_colour_model(CMS::ColourModel::Lab);
+  orig_format.set_channels(3);
+  orig_format.set_float();
+  orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
 
   auto resized_dest = orig_dest->dupe();
 
@@ -67,12 +69,40 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 
   auto resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
 
-  cmsUInt32Number dest_type = preview_file->preferred_type(resized_dest->modify_type(resized_image->type()));
-  cmsHPROFILE dest_profile = resized_dest->get_profile(dest_type);
-  resized_image->transform_colour_inplace(dest_profile, dest_type);
+  CMS::Format dest_format = preview_file->preferred_format(resized_dest->modify_format(resized_image->format()));
+  CMS::Profile::ptr dest_profile = resized_dest->get_profile(dest_format.colour_model());
+  resized_image->transform_colour_inplace(dest_profile, dest_format);
 
   filetags->copy_to(resized_image);
   preview_file->write(resized_image, resized_dest, can_free);
+}
+
+void preview_dir(fs::path dir, std::string format, std::shared_ptr<Tags> tags) {
+  std::vector<fs::directory_entry> dir_list;
+  for (auto di = fs::directory_iterator(dir); di != fs::directory_iterator(); di++)
+    dir_list.push_back(*di);
+  sort(dir_list.begin(), dir_list.end());
+
+  for (auto di : dir_list) {
+    std::cerr << di << std::endl;
+    try {
+      auto infile = ImageFile::create(di.path());
+      auto preview_file = ImageFile::create(di.path().filename(), format);
+
+      if (exists(preview_file->filepath())
+        && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
+        continue;
+
+      auto orig_dest = std::make_shared<Destination>();
+      auto orig_image = infile->read(orig_dest);
+      auto filetags = tags->dupe();
+      filetags->copy_from(orig_image);
+
+      make_preview(orig_image, orig_dest, filetags, preview_file, true);
+    } catch (std::exception& ex) {
+      std::cerr << ex.what() << std::endl;
+    }
+  }
 }
 
 int main(int argc, char* argv[]) {
@@ -184,13 +214,13 @@ int main(int argc, char* argv[]) {
 	    converted_dest->webp().set_lossless();
 	    converted_dest->webp().set_method(6);
 
-	    cmsUInt32Number orig_type = orig_image->type();
-	    cmsUInt32Number converted_type = converted_file->preferred_type(converted_dest->modify_type(orig_type));
+	    CMS::Format orig_format = orig_image->format();
+	    CMS::Format converted_format = converted_file->preferred_format(converted_dest->modify_format(orig_format));
 	    Image::ptr converted_image;
-	    if (orig_type == converted_type)
+	    if (orig_format == converted_format)
 	      converted_image = orig_image;
 	    else
-	      converted_image = orig_image->transform_colour(NULL, converted_type);
+	      converted_image = orig_image->transform_colour(NULL, converted_format);
 
 	    filetags->copy_to(converted_image);
 	    converted_file->write(converted_image, converted_dest, !do_preview);
@@ -222,34 +252,14 @@ int main(int argc, char* argv[]) {
   }
 
   if (do_preview) {
-    if (!exists(works_dir)) {
+    if (exists(convert_dir))
+      preview_dir(convert_dir, preview_format, defaulttags);
+
+    if (exists(works_dir))
+      preview_dir(works_dir, preview_format, defaulttags);
+    else {
       std::cerr << "Creating directory " << works_dir << "." << std::endl;
       create_directory(works_dir);
-    }
-    std::vector<fs::directory_entry> dir_list;
-    for (auto di = fs::directory_iterator(works_dir); di != fs::directory_iterator(); di++)
-      dir_list.push_back(*di);
-    sort(dir_list.begin(), dir_list.end());
-
-    for (auto di : dir_list) {
-      std::cerr << di << std::endl;
-      try {
-	auto infile = ImageFile::create(di.path());
-	auto preview_file = ImageFile::create(di.path().filename(), preview_format);
-
-	if (exists(preview_file->filepath())
-	    && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
-	  continue;
-
-	auto orig_dest = std::make_shared<Destination>();
-	auto orig_image = infile->read(orig_dest);
-	auto filetags = defaulttags->dupe();
-	filetags->copy_from(orig_image);
-
-	make_preview(orig_image, orig_dest, filetags, preview_file, true);
-      } catch (std::exception& ex) {
-	std::cerr << ex.what() << std::endl;
-      }
     }
   }
 }

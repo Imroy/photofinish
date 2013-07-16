@@ -1,0 +1,369 @@
+/*
+        Copyright 2013 Ian Tester
+
+        This file is part of Photo Finish.
+
+        Photo Finish is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+
+        Photo Finish is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#ifndef __CMS_HH__
+#define __CMS_HH__
+
+#include <istream>
+#include <ostream>
+#include <memory>
+#include <boost/filesystem.hpp>
+#include <lcms2.h>
+#include <lcms2_plugin.h>
+#include "Exception.hh"
+
+namespace fs = boost::filesystem;
+
+namespace CMS {
+
+  class Transform;
+
+  //! Wrap LCMS2's cmsHPROFILE
+  class Profile {
+  private:
+    cmsHPROFILE _profile;
+
+    //! Private constructor for use by named constructors
+    Profile(cmsHPROFILE p);
+
+    friend class Transform;
+
+  public:
+    //! Empty constructor
+    Profile();
+
+    //! Copy constructor
+    Profile(const Profile& other);
+
+    //! Constructor from file path
+    Profile(fs::path filepath);
+
+    //! Constructor from memory
+    Profile(const void* data, cmsUInt32Number size);
+
+    //! Constructor from an istream
+    Profile(std::istream stream);
+
+    //! Deconstructor
+    ~Profile();
+
+    //! Cast to a profile handle for direct use with LCMS2
+    inline operator cmsHPROFILE() const { return _profile; }
+
+    //! Shared pointer typedef
+    typedef std::shared_ptr<Profile> ptr;
+
+    //! Named constructor
+    static ptr Lab4(void);
+      
+    //! Named constructor
+    static ptr sRGB(void);
+      
+    //! Named constructor
+    static ptr sGrey(void);
+
+    void write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::string text);
+    void write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::wstring text);
+
+    std::string read_info(cmsInfoType type, std::string lang, std::string cc);
+    std::wstring read_info_wide(cmsInfoType type, std::string lang, std::string cc);
+
+    void save_to_mem(void* &dest, unsigned int &size);
+      
+  }; // class Profile
+
+  //! An enum class of LCMS2's colour models
+  enum class ColourModel {
+    Any = 0,
+      Greyscale = 3,
+      RGB,
+      CMY,
+      CMYK,
+      YCbCr,
+      YUV,	// Lu'v'
+      XYZ,
+      Lab,	// Lab v4
+      YUVK,	// Lu'v'K
+      HSV,
+      HLS,
+      Yxy,
+
+      MCH1,
+      MCH2,
+      MCH3,
+      MCH4,
+      MCH5,
+      MCH6,
+      MCH7,
+      MCH8,
+      MCH9,
+      MCH10,
+      MCH11,
+      MCH12,
+      MCH13,
+      MCH14,
+      MCH15,
+
+      LabV2,	// Lab v2
+
+      }; // class ColourModel
+
+  std::ostream& operator<< (std::ostream& out, ColourModel model);
+
+  //! Wrap LCMS2's pixel format
+  class Format {
+  private:
+    cmsUInt32Number _format;
+
+    //! Private constructor for use by named constructors
+    Format(cmsUInt32Number f);
+
+    friend class Transform;
+
+  public:
+    //! Empty constructor
+    Format();
+
+    //! Cast to an unsigned int for direct use with LCMS2
+    inline operator cmsUInt32Number() const { return _format; }
+
+    //! Named constructor
+    static Format &Grey8(void);
+
+    //! Named constructor
+    static Format &Grey16(void);
+
+    //! Named constructor
+    static Format &RGB8(void);
+
+    //! Named constructor
+    static Format &RGB16(void);
+
+    //! Named constructor
+    static Format &CMYK8(void);
+
+    //! Named constructor
+    static Format &LabFloat(void);
+
+    //! Named constructor
+    static Format &LabDouble(void);
+
+    //! Set to 8 bit bytes per channel
+    Format &set_8bit(void);
+
+    //! Is the format 8-bits per channel?
+    inline bool is_8bit(void) const { return (T_BYTES(_format) == 1) && (T_FLOAT(_format) == 0); }
+
+    //! Set to 16 bits per channel
+    Format &set_16bit(void);
+
+    //! Is the format 16-bits (integer) per channel?
+    inline bool is_16bit(void) const { return (T_BYTES(_format) == 2) && (T_FLOAT(_format) == 0); }
+
+    //! Set to 32 bits per channel
+    Format &set_32bit(void);
+
+    //! Is the format 32-bits (integer) per channel?
+    inline bool is_32bit(void) const { return (T_BYTES(_format) == 4) && (T_FLOAT(_format) == 0); }
+
+    //! Set to 16 bit half-precision floating point values per channel
+    Format &set_half(void);
+
+    //! Is the format a half-precision floating point value(s) per channel?
+    inline bool is_half(void) const { return (T_BYTES(_format) == 2) && (T_FLOAT(_format) == 1); }
+
+    //! Set to 32 bit single-precision floating point values per channel
+    Format &set_float(void);
+
+    //! Is the format a single-precision floating point value(s) per channel?
+    inline bool is_float(void) const { return (T_BYTES(_format) == 4) && (T_FLOAT(_format) == 1); }
+
+    //! Set to 64 bit double-precision floating point value(s) per channel
+    Format &set_double(void);
+
+    //! Is the format a double-precision floating point value(s) per channel?
+    inline bool is_double(void) const { return (T_BYTES(_format) == 0) && (T_FLOAT(_format) == 1); }
+
+    //! Is the format integer?
+    inline bool is_integer(void) const { return (T_FLOAT(_format) == 0); }
+
+    //! Is the format floating point?
+    inline bool is_fp(void) const { return (T_FLOAT(_format) == 1); }
+
+    //! Set the number of channels
+    Format &set_channels(unsigned int c);
+
+    //! Get the number of channels
+    inline unsigned int channels(void) const { return T_CHANNELS(_format); }
+
+    //! Set the number of 'extra' channels e.g alpha
+    Format &set_extra_channels(unsigned int e);
+
+    //! Get the number of 'extra' channels e.g alpha
+    inline unsigned int extra_channels(void) const { return T_EXTRA(_format); }
+
+    //! Get the total number of channels i.e channels() + extra_channels()
+    inline unsigned int total_channels(void) const { return T_CHANNELS(_format) + T_EXTRA(_format); }
+
+    inline unsigned int bytes_per_channel(void) const { unsigned int b = T_BYTES(_format); return b == 0 ? 8 : b; }
+
+    inline unsigned int bytes_per_pixel(void) const { return this->bytes_per_channel() * this->total_channels(); }
+
+    //! Set the format as being swapped e.g BGR
+    Format &set_swap(bool s = true);
+
+    //! Set the format as not being swapped e.g RGB
+    Format &unset_swap(void);
+
+    //! Is the channel order swapped?
+    inline bool is_swapped(void) const { return T_DOSWAP(_format); }
+
+    //! 
+    Format &set_endianswap(bool e = true);
+
+    Format &unset_endianswap(void);
+
+    inline bool is_endianswapped(void) const { return T_ENDIAN16(_format); }
+
+    Format &set_swapfirst(bool f = true);
+
+    Format &unset_swapfirst(void);
+
+    inline bool is_swappedfirst(void) const { return T_SWAPFIRST(_format); }
+
+    //! Set the format to be planar
+    Format &set_planar(bool p = true);
+
+    //! Set the format to be packed
+    Format &set_packed(void);
+
+    //! Is the format planar?
+    inline bool is_planar(void) const { return T_PLANAR(_format); }
+
+    //! Is the format packed?
+    inline bool is_packed(void) const { return T_PLANAR(_format) == 0; }
+
+    //! Set the flavour to 'vanilla' i.e minimum value is white
+    Format &set_vanilla(bool v = true);
+
+    //! Set the flavour to 'chocolate' i.e minimum value is black
+    Format &set_chocolate(void);
+
+    //! Is the flavour 'vanilla'? i.e minimum value is white
+    inline bool is_vanilla(void) const { return T_FLAVOR(_format); }
+
+    //! Is the flavour 'chocolate'? i.e minimum value is black
+    inline bool is_chocolate(void) const { return T_FLAVOR(_format) == 0; }
+
+    //! Set the colour model of the pixel format
+    Format &set_colour_model(const ColourModel cm);
+
+    //! Get the colour model of the pixel format
+    inline ColourModel colour_model(void) const { return (ColourModel)T_COLORSPACE(_format); }
+
+  }; // class Format
+
+  //! Wrap LCMS2's intents
+  enum class Intent {
+    // ICC intents
+    Perceptual,
+      Relative_colormetric,
+      Saturation,
+      Absolute_colormetric,
+
+    // non-ICC intents
+      Preserve_k_only_perceptual = 10,
+      Preserve_k_only_relative_colormetric,
+      Preserve_k_only_saturation,
+      Preserve_k_only_absolute_colormetric,
+      Preserve_k_plane_perceptual,
+      Preserve_k_plane_relative_colormetric,
+      Preserve_k_plane_saturation,
+      Preserve_k_plane_absolute_colormetric,
+      };
+
+  //! Wrap LCMS2's transform object
+  class Transform {
+  private:
+    cmsHTRANSFORM _transform;
+
+    //! Private constructor
+    Transform(cmsHTRANSFORM t);
+
+  public:
+    //! Construct a transform from two profiles and formats
+    Transform(Profile::ptr input, const Format &informat,
+	      Profile::ptr output, const Format &outformat,
+	      Intent intent, cmsUInt32Number flags);
+
+    //! Construct a transform from multiple profiles
+    Transform(std::vector<Profile::ptr> profile,
+	      const Format &informat, const Format &outformat,
+	      Intent intent, cmsUInt32Number flags);
+
+    //! Deconstructor
+    ~Transform();
+
+    typedef std::shared_ptr<Transform> ptr;
+
+    //! Named constructor for creating a proofing transform
+    static ptr Proofing(Profile::ptr input, const Format &informat,
+			Profile::ptr output, const Format &outformat,
+			Profile::ptr proofing,
+			Intent intent, Intent proofing_intent,
+			cmsUInt32Number flags);
+
+    //! Get the input format
+    Format input_format(void);
+
+    //! Get the output format
+    Format output_format(void);
+
+    //! Change the input and output formats
+    void change_formats(const Format &informat, const Format &outformat);
+
+    //! Create a device link profile from this transform
+    Profile::ptr device_link(double version, cmsUInt32Number flags);
+
+    void transform_buffer(const void* input, void* output, cmsUInt32Number size);
+
+  }; // class Transform
+
+  // istream IO handler
+  cmsIOHANDLER* OpenIOhandlerFromIStream(std::istream* is);
+  cmsIOHANDLER* OpenIOhandlerFromIFStream(fs::path filepath);
+
+  cmsUInt32Number istream_read(cmsIOHANDLER* iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count);
+  cmsBool istream_seek(cmsIOHANDLER* iohandler, cmsUInt32Number offset);
+  cmsBool istream_close(cmsIOHANDLER* iohandler);
+  cmsUInt32Number istream_tell(cmsIOHANDLER* iohandler);
+  cmsBool istream_write(cmsIOHANDLER* iohandler, cmsUInt32Number size, const void* Buffer);
+
+  // ostream IO handlers
+  cmsUInt32Number ostream_read(cmsIOHANDLER* iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count);
+  cmsBool ostream_seek(cmsIOHANDLER* iohandler, cmsUInt32Number offset);
+  cmsBool ostream_close(cmsIOHANDLER* iohandler);
+  cmsUInt32Number ostream_tell(cmsIOHANDLER* iohandler);
+  cmsBool ostream_write(cmsIOHANDLER* iohandler, cmsUInt32Number size, const void* Buffer);
+
+}; // namespace CMS
+
+//! Set up an error handler with LCMS2 that will throw a LibraryError exception
+void lcms2_error_adaptor(void);
+
+#endif // __CMS_HH__

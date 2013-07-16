@@ -23,7 +23,6 @@
 #include <memory>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <lcms2.h>
 
 #ifdef HAZ_PNG
 #include <png.h>
@@ -42,6 +41,7 @@
 #include <webp/decode.h>
 #endif
 
+#include "CMS.hh"
 #include "Image.hh"
 #include "Destination.hh"
 #include "Exception.hh"
@@ -104,7 +104,7 @@ namespace PhotoFinish {
     virtual Image::ptr read(Destination::ptr dest) = 0;
 
     //! Modify an LCMS2 pixel format into a "type" that the file format can write
-    virtual cmsUInt32Number preferred_type(cmsUInt32Number type = 0) = 0;
+    virtual CMS::Format preferred_format(CMS::Format format) = 0;
 
     //! Write an image to the file
     /*!
@@ -126,7 +126,7 @@ namespace PhotoFinish {
     PNGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
-    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -140,7 +140,7 @@ namespace PhotoFinish {
     JPEGfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
-    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    CMS::Format preferred_format(CMS::Format format);
     //! Special version of write() that takes an open ostream object
     void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
@@ -156,7 +156,7 @@ namespace PhotoFinish {
     TIFFfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
-    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -170,7 +170,7 @@ namespace PhotoFinish {
     JP2file(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
-    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -183,7 +183,7 @@ namespace PhotoFinish {
   public:
     WebPfile(const fs::path filepath);
     Image::ptr read(Destination::ptr dest);
-    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 #endif
@@ -203,7 +203,7 @@ namespace PhotoFinish {
     SOLfile(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
-    cmsUInt32Number preferred_type(cmsUInt32Number type);
+    CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   };
 

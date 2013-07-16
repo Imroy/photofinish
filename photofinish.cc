@@ -73,10 +73,11 @@ int main(int argc, char* argv[]) {
 
       try {
 	auto orig_image = infile->read();
-	cmsUInt32Number orig_type = orig_image->type();
-	orig_type &= COLORSPACE_MASK & CHANNELS_MASK & FLOAT_MASK & BYTES_MASK;
-	orig_type |= COLORSPACE_SH(PT_Lab) | CHANNELS_SH(3) | FLOAT_SH(1) | BYTES_SH(sizeof(SAMPLE) & 0x07);
-	orig_image->transform_colour_inplace(cmsCreateLab4Profile(NULL), orig_type);
+	CMS::Format orig_format = orig_image->format();
+	orig_format.set_colour_model(CMS::ColourModel::Lab);
+	orig_format.set_channels(3);
+	orig_format.set_float();
+	orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
 
 	auto num_destinations = arg_destinations.size();
 	for (auto& di : arg_destinations) {
@@ -121,9 +122,9 @@ int main(int argc, char* argv[]) {
 	      format = destination->format();
 	    auto outfile = ImageFile::create(destination->dir() / fi.stem(), format);
 
-	    cmsUInt32Number dest_type = outfile->preferred_type(destination->modify_type(sharp_image->type()));
-	    cmsHPROFILE dest_profile = destination->get_profile(dest_type);
-	    sharp_image->transform_colour_inplace(dest_profile, dest_type);
+	    CMS::Format dest_format = outfile->preferred_format(destination->modify_format(sharp_image->format()));
+	    CMS::Profile::ptr dest_profile = destination->get_profile(dest_format.colour_model());
+	    sharp_image->transform_colour_inplace(dest_profile, dest_format);
 
 	    tags->copy_to(sharp_image);
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);

@@ -21,7 +21,7 @@
 #include <zlib.h>
 #include <time.h>
 #include <omp.h>
-#include <lcms2.h>
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <iostream>
@@ -59,25 +59,42 @@ namespace PhotoFinish {
 
     pack->destination->set_depth(bit_depth);
 
-    cmsUInt32Number type = BYTES_SH(bit_depth >> 3);
+    CMS::Format format;
+    switch (bit_depth >> 3) {
+    case 1: format.set_8bit();
+      break;
+
+    case 2: format.set_16bit();
+      break;
+
+    case 4: format.set_32bit();
+      break;
+
+    default:
+      std::cerr << "** Unknown depth " << (bit_depth >> 3) << " **" << std::endl;
+      throw LibraryError("libTIFF", "depth");
+    }
+
     switch (colour_type) {
     case PNG_COLOR_TYPE_GRAY_ALPHA:
-      type |= EXTRA_SH(1);
+      format.set_extra_channels(1);
     case PNG_COLOR_TYPE_GRAY:
-      type |= COLORSPACE_SH(PT_GRAY) | CHANNELS_SH(1);
+      format.set_colour_model(CMS::ColourModel::Greyscale);
+      format.set_channels(1);
       break;
 
     case PNG_COLOR_TYPE_RGB_ALPHA:
-      type |= EXTRA_SH(1);
+      format.set_extra_channels(1);
     case PNG_COLOR_TYPE_RGB:
-      type |= COLORSPACE_SH(PT_RGB) | CHANNELS_SH(3);
+      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_channels(3);
       break;
 
     default:
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
       exit(1);
     }
-    auto img = std::make_shared<Image>(width, height, type);
+    auto img = std::make_shared<Image>(width, height, format);
     pack->image = img;
 
     {
@@ -108,11 +125,11 @@ namespace PhotoFinish {
       unsigned int profile_len;
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
-	cmsOpenProfileFromMem(profile_data, profile_len);
+	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
 	void *data_copy = malloc(profile_len);
 	memcpy(data_copy, profile_data, profile_len);
 	pack->destination->set_profile(profile_name, data_copy, profile_len);
-	img->set_profile(pack->destination->get_profile(type));
+	img->set_profile(profile);
       }
     }
   }
@@ -190,28 +207,20 @@ namespace PhotoFinish {
     return pack.image;
   }
 
-  cmsUInt32Number PNGfile::preferred_type(cmsUInt32Number type) {
-    if (T_COLORSPACE(type) != PT_GRAY) {
-      type &= COLORSPACE_MASK;
-      type |= COLORSPACE_SH(PT_RGB);
-      type &= CHANNELS_MASK;
-      type |= CHANNELS_SH(3);
+  CMS::Format PNGfile::preferred_format(CMS::Format format) {
+    if (format.colour_model() != CMS::ColourModel::Greyscale) {
+      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_channels(3);
     }
 
-    type &= FLOAT_MASK;
-    if (T_BYTES_REAL(type) > 2) {
-      type &= BYTES_MASK;
-      type |= BYTES_SH(2);
-    } else {
-      type &= BYTES_MASK;
-      type |= BYTES_SH(1);
-    }
+    if (!format.is_8bit())
+      format.set_16bit();
 
-    type &= PLANAR_MASK;
-    type &= SWAPFIRST_MASK;
-    type &= DOSWAP_MASK;
+    format.set_planar(false);
+    format.unset_swapfirst();
+    format.unset_endianswap();
 
-    return type;
+    return format;
   }
 
   //! libPNG callback for writing to an ostream
@@ -254,27 +263,27 @@ namespace PhotoFinish {
 
     png_set_write_fn(_png, &ofs, png_write_ostream_cb, png_flush_ostream_cb);
 
-    cmsUInt32Number type = img->type();
+    CMS::Format format = img->format();
     int png_colour_type;
-    switch (T_COLORSPACE(type)) {
-    case PT_RGB:
-      png_colour_type = T_EXTRA(type) ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB;
+    switch (format.colour_model()) {
+    case CMS::ColourModel::RGB:
+      png_colour_type = format.extra_channels() ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB;
       break;
 
-    case PT_GRAY:
-      png_colour_type = T_EXTRA(type) ? PNG_COLOR_TYPE_GRAY_ALPHA : PNG_COLOR_TYPE_GRAY;
+    case CMS::ColourModel::Greyscale:
+      png_colour_type = format.extra_channels() ? PNG_COLOR_TYPE_GRAY_ALPHA : PNG_COLOR_TYPE_GRAY;
       break;
 
     default:
-      throw cmsTypeError("Not RGB or greyscale", type);
+      throw cmsTypeError("Not RGB or greyscale", format);
     }
 
-    int depth = T_BYTES_REAL(type);
+    int depth = format.bytes_per_channel();
     if (depth > 2)
-      throw cmsTypeError("Not 8 or 16-bit", type);
+      throw cmsTypeError("Not 8 or 16-bit", format);
 
     std::cerr << "\tWriting header for " << img->width() << "×" << img->height()
-	      << " " << (depth << 3) << "-bit " << (T_CHANNELS(type) == 1 ? "greyscale" : "RGB")
+	      << " " << (depth << 3) << "-bit " << (format.channels() == 1 ? "greyscale" : "RGB")
 	      << " PNG image..." << std::endl;
     png_set_IHDR(_png, _info,
 		 img->width(), img->height(), depth << 3, png_colour_type,
@@ -289,34 +298,25 @@ namespace PhotoFinish {
     }
 
     {
-      cmsUInt32Number intent = INTENT_PERCEPTUAL;        // Default value
+      CMS::Intent intent = CMS::Intent::Perceptual;        // Default value
       if (dest->intent().defined())
 	intent = dest->intent();
 
-      char *profile_name = NULL;
-      unsigned int profile_name_len;
-      if ((profile_name_len = cmsGetProfileInfoASCII(img->profile(), cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
-	profile_name = (char*)malloc(profile_name_len);
-	cmsGetProfileInfoASCII(img->profile(), cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
-
-	if (strncmp(profile_name, "sGrey built-in", 14) == 0)
-	  png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
-	else if (strncmp(profile_name, "sRGB built-in", 13) == 0)
-	  png_set_sRGB_gAMA_and_cHRM(_png, _info, intent);
+      std::string profile_name = img->profile()->read_info(cmsInfoDescription, "en", cmsNoCountry);
+      if (profile_name.length() > 0) {
+	if (boost::iequals(profile_name, "sGrey built-in"))
+	  png_set_sRGB_gAMA_and_cHRM(_png, _info, (int)intent);
+	else if (boost::iequals(profile_name, "sRGB built-in"))
+	  png_set_sRGB_gAMA_and_cHRM(_png, _info, (int)intent);
       }
 
-      unsigned char *profile_data = NULL;
-      unsigned int profile_len = 0;
-      cmsSaveProfileToMem(img->profile(), NULL, &profile_len);
+      void *profile_data;
+      unsigned int profile_len;
+      img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {
-	profile_data = (unsigned char*)malloc(profile_len);
-	cmsSaveProfileToMem(img->profile(), profile_data, &profile_len);
-
 	std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << profile_len << " bytes)." << std::endl;
-	png_set_iCCP(_png, _info, profile_name, 0, profile_data, profile_len);
+	png_set_iCCP(_png, _info, profile_name.c_str(), 0, (unsigned char*)profile_data, profile_len);
       }
-      if (profile_name)
-	free(profile_name);
     }
 
     {
@@ -331,7 +331,7 @@ namespace PhotoFinish {
 
     png_write_info(_png, _info);
 
-    if (T_FLAVOR(type))
+    if (format.is_vanilla())
       png_set_invert_mono(_png);
 
     if (depth > 1)

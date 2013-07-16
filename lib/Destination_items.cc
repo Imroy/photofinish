@@ -428,11 +428,11 @@ namespace PhotoFinish {
     return *this;
   }
 
-  cmsHPROFILE D_profile::profile(void) const {
+  CMS::Profile::ptr D_profile::profile(void) const {
     if (_filepath.defined())
-      return cmsOpenProfileFromFile(_filepath->c_str(), "r");
+      return std::make_shared<CMS::Profile>(_filepath);
     if (_data != NULL)
-      return cmsOpenProfileFromMem(_data, _data_size);
+      return std::make_shared<CMS::Profile>(_data, _data_size);
 
     throw Uninitialised("D_profile", "filepath and data");
   }

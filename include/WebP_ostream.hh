@@ -21,7 +21,7 @@
 
 #include <iostream>
 #include <exiv2/exiv2.hpp>
-#include <lcms2.h>
+#include "CMS.hh"
 
 namespace PhotoFinish {
 
@@ -50,7 +50,7 @@ namespace PhotoFinish {
     // Data for the VP8X chunk
     bool need_vp8x;
     unsigned int width, height;
-    unsigned char *icc_data, *exif_data, *xmp_data;	// no IPTC?
+    void *icc_data, *exif_data, *xmp_data;	// no IPTC?
     unsigned int icc_size, exif_size, xmp_size;
 
   public:
@@ -63,7 +63,7 @@ namespace PhotoFinish {
     ~webp_stream_writer();
 
     //! Add an LCMS2 profile to be written
-    void add_icc(cmsHPROFILE profile);
+    void add_icc(CMS::Profile::ptr profile);
 
     //! Add a set of EXIF tags to be written
     void add_exif(const Exiv2::ExifData& exif);
@@ -72,7 +72,7 @@ namespace PhotoFinish {
     void add_xmp(const Exiv2::XmpData& xmp);
 
     //! Write a RIFF chunk
-    void write_chunk(const char *fourcc, const unsigned char* data, unsigned int length);
+    void write_chunk(const char *fourcc, const void* data, unsigned int length);
 
     //! Write stuff before a chunk is written
     void before_chunk(void);

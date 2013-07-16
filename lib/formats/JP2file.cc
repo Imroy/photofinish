@@ -18,7 +18,6 @@
 */
 #include <boost/algorithm/string.hpp>
 #include <openjpeg.h>
-#include <lcms2.h>
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Exception.hh"
@@ -128,18 +127,35 @@ namespace PhotoFinish {
       }
 
     int depth = jp2_image->comps[0].prec;
-    cmsUInt32Number type = PLANAR_SH(1) | CHANNELS_SH(jp2_image->numcomps) | BYTES_SH(depth >> 3);
+    CMS::Format format;
+    format.set_planar();
+    format.set_channels(jp2_image->numcomps);
+    switch (depth >> 3) {
+    case 1: format.set_8bit();
+      break;
+
+    case 2: format.set_16bit();
+      break;
+
+    case 4: format.set_32bit();
+      break;
+
+    default:
+      std::cerr << "** Unknown depth " << (depth >> 3) << " **" << std::endl;
+      throw LibraryError("OpenJPEG", "depth");
+    }
+
     switch (jp2_image->color_space) {
     case CLRSPC_SRGB:
-      type |= COLORSPACE_SH(PT_RGB);
+      format.set_colour_model(CMS::ColourModel::RGB);
       break;
 
     case CLRSPC_GRAY:
-      type |= COLORSPACE_SH(PT_GRAY);
+      format.set_colour_model(CMS::ColourModel::Greyscale);
       break;
 
     case CLRSPC_SYCC:
-      type |= COLORSPACE_SH(PT_YUV);
+      format.set_colour_model(CMS::ColourModel::YUV);
       break;
 
     default:
@@ -148,32 +164,28 @@ namespace PhotoFinish {
     }
     dest->set_depth(depth);
 
-    auto img = std::make_shared<Image>(jp2_image->x1 - jp2_image->x0, jp2_image->y1 - jp2_image->y0, type);
+    auto img = std::make_shared<Image>(jp2_image->x1 - jp2_image->x0, jp2_image->y1 - jp2_image->y0, format);
 
-    cmsHPROFILE profile;
     if (jp2_image->icc_profile_buf != NULL) {
-      profile = cmsOpenProfileFromMem(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
+      CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
       void *data_copy = malloc(jp2_image->icc_profile_len);
       memcpy(data_copy, jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
-      char *profile_name = NULL;
-      unsigned int profile_name_len;
-      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
-	profile_name = (char*)malloc(profile_name_len);
-	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+
+      std::string profile_name = profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+      if (profile_name.length() > 0)
 	dest->set_profile(profile_name, data_copy, jp2_image->icc_profile_len);
-	free(profile_name);
-      } else
+      else
 	dest->set_profile("JP2 ICC profile", data_copy, jp2_image->icc_profile_len);
       img->set_profile(profile);
     }
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
-      for (unsigned char c = 0; c < T_CHANNELS(type); c++)
+      for (unsigned char c = 0; c < format.channels(); c++)
 	if (depth == 1)
-	  read_planar<unsigned char>(img->width(), T_CHANNELS(type), jp2_image, img->row(y), y);
+	  read_planar<unsigned char>(img->width(), format.channels(), jp2_image, img->row(y), y);
 	else
-	  read_planar<short unsigned int>(img->width(), T_CHANNELS(type), jp2_image, (short unsigned int*)img->row(y), y);
+	  read_planar<short unsigned int>(img->width(), format.channels(), jp2_image, (short unsigned int*)img->row(y), y);
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tCopied " << (y + 1) << " of " << img->height() << " rows";
@@ -188,26 +200,20 @@ namespace PhotoFinish {
     return img;
   }
 
-  cmsUInt32Number JP2file::preferred_type(cmsUInt32Number type) {
-    if (T_COLORSPACE(type) != PT_GRAY) {
-      type &= COLORSPACE_MASK;
-      type |= COLORSPACE_SH(PT_RGB);
-      type &= CHANNELS_MASK;
-      type |= CHANNELS_SH(3);
+  CMS::Format JP2file::preferred_format(CMS::Format format) {
+    if (format.colour_model() != CMS::ColourModel::Greyscale) {
+      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_channels(3);
     }
 
-    type &= PLANAR_MASK;
-    type |= PLANAR_SH(1);
+    format.set_planar();
 
-    type &= EXTRA_MASK;
+    format.set_extra_channels(0);
 
-    type &= FLOAT_MASK;
-    if (T_BYTES_REAL(type) > 2) {
-      type &= BYTES_MASK;
-      type |= BYTES_SH(2);
-    }
+    if (!format.is_8bit() && !format.is_16bit())
+      format.set_16bit();
 
-    return type;
+    return format;
   }
 
   void JP2file::write(Image::ptr img, Destination::ptr dest, bool can_free) {
@@ -215,35 +221,35 @@ namespace PhotoFinish {
       throw FileOpenError("already open");
     _is_open = true;
 
-    cmsUInt32Number type = img->type();
-    if (T_PLANAR(type) != 1)
-      throw cmsTypeError("Not Planar", type);
-    if (T_BYTES(type) > 2)
-      throw cmsTypeError("Too deep", type);
+    CMS::Format format = img->format();
+    if (!format.is_planar())
+      throw cmsTypeError("Not Planar", format);
+    if (format.bytes_per_channel() > 2)
+      throw cmsTypeError("Too deep", format);
 
     OPJ_COLOR_SPACE colour_space;
-    switch (T_COLORSPACE(type)) {
-    case PT_RGB:
+    switch (format.colour_model()) {
+    case CMS::ColourModel::RGB:
       colour_space = CLRSPC_SRGB;
       break;
 
-    case PT_GRAY:
+    case CMS::ColourModel::Greyscale:
       colour_space = CLRSPC_GRAY;
       break;
 
-    case PT_YCbCr:
-    case PT_YUV:
+    case CMS::ColourModel::YCbCr:
+    case CMS::ColourModel::YUV:
       colour_space = CLRSPC_SYCC;
       break;
 
     default:
-      throw cmsTypeError("Unsupported colour space", type);
+      throw cmsTypeError("Unsupported colour model", format);
       break;
     }
 
     std::cerr << "Preparing for file " << _filepath << "..." << std::endl;
     std::cerr << "\t" << img->width() << "×" << img->height()
-	      << " " << (T_BYTES(type) << 3) << "-bpp " << (colour_space == PT_GRAY ? "greyscale" : "RGB") << std::endl;
+	      << " " << (format.bytes_per_channel() << 3) << "-bpp " << (colour_space == PT_GRAY ? "greyscale" : "RGB") << std::endl;
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
     event_mgr.error_handler = error_callback;
@@ -307,8 +313,8 @@ namespace PhotoFinish {
       parameters.tcp_numlayers++;
     }
 
-    unsigned char channels = T_CHANNELS(type);
-    int depth = T_BYTES(type);
+    unsigned char channels = format.channels();
+    int depth = format.bytes_per_channel();
     opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(channels * sizeof(opj_image_cmptparm_t));
     memset(components, 0, channels * sizeof(opj_image_cmptparm_t));
     for (unsigned char i = 0; i < channels; i++) {
@@ -326,15 +332,12 @@ namespace PhotoFinish {
       return;
 
     {
-      unsigned char *profile_data = NULL;
-      unsigned int profile_len = 0;
-      cmsSaveProfileToMem(img->profile(), NULL, &profile_len);
+      void *profile_data;
+      unsigned int profile_len;
+      img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {
-	profile_data = (unsigned char*)malloc(profile_len);
-	cmsSaveProfileToMem(img->profile(), profile_data, &profile_len);
-
 	std::cerr << "\tEmbedding profile (" << profile_len << " bytes)." << std::endl;
-	jp2_image->icc_profile_buf = profile_data;
+	jp2_image->icc_profile_buf = (unsigned char*)profile_data;
 	jp2_image->icc_profile_len = profile_len;
       }
     }

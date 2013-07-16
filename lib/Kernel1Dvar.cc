@@ -123,7 +123,7 @@ namespace PhotoFinish {
 
   template <typename T>
   void Kernel1Dvar::do_convolve_h(Image::ptr src, Image::ptr dest, bool can_free) {
-    unsigned char channels = T_CHANNELS(src->type()) + T_EXTRA(src->type());
+    unsigned char channels = src->format().total_channels();
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
       T *out = (T*)dest->row(y);
@@ -151,7 +151,8 @@ namespace PhotoFinish {
 
   //! Convolve an image horizontally
   Image::ptr Kernel1Dvar::convolve_h(Image::ptr img, bool can_free) {
-    auto ni = std::make_shared<Image>(_to_size_i, img->height(), img->type());
+    auto ni = std::make_shared<Image>(_to_size_i, img->height(), img->format());
+    ni->set_profile(img->profile());
 
     if (img->xres().defined())
       ni->set_xres(img->xres() / _scale);
@@ -168,7 +169,7 @@ namespace PhotoFinish {
       }
     }
 
-    switch (T_BYTES_REAL(img->type())) {
+    switch (img->format().bytes_per_channel()) {
     case 1:
       do_convolve_h<unsigned char>(img, ni, can_free);
       break;
@@ -178,7 +179,7 @@ namespace PhotoFinish {
       break;
 
     case 4:
-      if (T_FLOAT(img->type()))
+      if (img->format().is_fp())
 	do_convolve_h<float>(img, ni, can_free);
       else
 	do_convolve_h<unsigned int>(img, ni, can_free);
@@ -195,7 +196,7 @@ namespace PhotoFinish {
 
   template <typename T>
   void Kernel1Dvar::do_convolve_v(Image::ptr src, Image::ptr dest, bool can_free) {
-    unsigned char channels = T_CHANNELS(src->type()) + T_EXTRA(src->type());
+    unsigned char channels = src->format().total_channels();
 
     int *row_needs;
     if (can_free) {
@@ -251,7 +252,8 @@ namespace PhotoFinish {
 
   //! Convolve an image vertically
   Image::ptr Kernel1Dvar::convolve_v(Image::ptr img, bool can_free) {
-    auto ni = std::make_shared<Image>(img->width(), _to_size_i, img->type());
+    auto ni = std::make_shared<Image>(img->width(), _to_size_i, img->format());
+    ni->set_profile(img->profile());
 
     if (img->xres().defined())
       ni->set_xres(img->xres());
@@ -268,7 +270,7 @@ namespace PhotoFinish {
       }
     }
 
-    switch (T_BYTES_REAL(img->type())) {
+    switch (img->format().bytes_per_channel()) {
     case 1:
       do_convolve_v<unsigned char>(img, ni, can_free);
       break;
@@ -278,7 +280,7 @@ namespace PhotoFinish {
       break;
 
     case 4:
-      if (T_FLOAT(img->type()))
+      if (img->format().is_fp())
 	do_convolve_v<float>(img, ni, can_free);
       else
 	do_convolve_v<unsigned int>(img, ni, can_free);

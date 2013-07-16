@@ -25,16 +25,15 @@
 
 namespace PhotoFinish {
 
-  Image::Image(unsigned int w, unsigned int h, cmsUInt32Number t) :
+  Image::Image(unsigned int w, unsigned int h, CMS::Format f) :
     _width(w),
     _height(h),
     _profile(NULL),
-    _type(t),
+    _format(f),
     _row_size(0),
     _rowdata(NULL)
   {
-    unsigned char bytes = T_BYTES_REAL(_type);
-    _pixel_size = (T_CHANNELS(_type) + T_EXTRA(_type)) * bytes;
+    _pixel_size = _format.bytes_per_pixel();
     _row_size = _width * _pixel_size;
 
     _rowdata = (unsigned char**)malloc(_height * sizeof(unsigned char*));
@@ -52,52 +51,28 @@ namespace PhotoFinish {
       free(_rowdata);
       _rowdata = NULL;
     }
-    free(_profile);
   }
 
-  cmsHPROFILE Image::default_profile(cmsUInt32Number default_type) {
-    cmsHPROFILE profile = NULL;
-    switch (T_COLORSPACE(default_type)) {
-    case PT_RGB:
-      std::cerr << "\tUsing default sRGB profile." << std::endl;
-      profile = cmsCreate_sRGBProfile();
+  CMS::Profile::ptr Image::default_profile(CMS::ColourModel default_colourmodel, std::string for_desc) {
+    CMS::Profile::ptr profile = NULL;
+    switch (default_colourmodel) {
+    case CMS::ColourModel::RGB:
+      std::cerr << "\tUsing default sRGB profile for " << for_desc << "." << std::endl;
+      return CMS::Profile::sRGB();
       break;
 
-    case PT_GRAY:
-      std::cerr << "\tUsing default greyscale profile." << std::endl;
-      // Build a greyscale profile with the same gamma curve and white point as sRGB.
-      // Copied from cmsCreate_sRGBProfileTHR() and Build_sRGBGamma().
-      {
-	cmsCIExyY D65;
-	cmsWhitePointFromTemp(&D65, 6504);
-	double Parameters[5] = {
-	  2.4,			// Gamma
-	  1.0 / 1.055,		// a
-	  0.055 / 1.055,	// b
-	  1.0 / 12.92,		// c
-	  0.04045,		// d
-	};
-	// y = (x >= d ? (a*x + b)^Gamma : c*x)
-	cmsToneCurve *gamma = cmsBuildParametricToneCurve(NULL, 4, Parameters);
-	profile = cmsCreateGrayProfile(&D65, gamma);
-	cmsFreeToneCurve(gamma);
-
-	cmsMLU *DescriptionMLU = cmsMLUalloc(NULL, 1);
-	if (DescriptionMLU != NULL) {
-	  if (cmsMLUsetWide(DescriptionMLU,  "en", "AU", L"sGrey built-in"))
-	    cmsWriteTag(profile, cmsSigProfileDescriptionTag,  DescriptionMLU);
-	  cmsMLUfree(DescriptionMLU);
-	}
-      }
+    case CMS::ColourModel::Greyscale:
+      std::cerr << "\tUsing default greyscale profile for " << for_desc << "." << std::endl;
+      return CMS::Profile::sGrey();
       break;
 
-    case PT_Lab:
-      std::cerr << "\tUsing default Lab profile." << std::endl;
-      profile = cmsCreateLab4Profile(NULL);
+    case CMS::ColourModel::Lab:
+      std::cerr << "\tUsing default Lab profile for " << for_desc << "." << std::endl;
+      return CMS::Profile::Lab4();
       break;
 
     default:
-      std::cerr << "** Cannot assign a default profile for colour space " << T_COLORSPACE(default_type) << " **" << std::endl;
+      std::cerr << "** Cannot assign a default profile for colour model " << default_colourmodel << " **" << std::endl;
     }
 
     return profile;
@@ -118,12 +93,12 @@ namespace PhotoFinish {
     }
   }
 
-  void transfer_alpha(unsigned int width, cmsUInt32Number src_type, const unsigned char* src_row, cmsUInt32Number dest_type, const unsigned char* dest_row) {
-    unsigned char src_channels = (unsigned char)T_CHANNELS(src_type);
-    unsigned char dest_channels = (unsigned char)T_CHANNELS(dest_type);
-    switch (T_BYTES_REAL(src_type)) {
+  void transfer_alpha(unsigned int width, CMS::Format src_format, const unsigned char* src_row, CMS::Format dest_format, const unsigned char* dest_row) {
+    unsigned char src_channels = (unsigned char)src_format.channels();
+    unsigned char dest_channels = (unsigned char)dest_format.channels();
+    switch (src_format.bytes_per_channel()) {
     case 1:
-      switch (T_BYTES_REAL(dest_type)) {
+      switch (dest_format.bytes_per_channel()) {
       case 1:
 	do_transfer_alpha<unsigned char, unsigned char>(width, src_channels,src_row, dest_channels,dest_row);
 	break;
@@ -133,7 +108,7 @@ namespace PhotoFinish {
 	break;
 
       case 4:
-	if (T_FLOAT(dest_type))
+	if (dest_format.is_fp())
 	  do_transfer_alpha<unsigned char, float>(width, src_channels,src_row, dest_channels,(float*)dest_row);
 	else
 	  do_transfer_alpha<unsigned char, unsigned int>(width, src_channels,src_row, dest_channels,(unsigned int*)dest_row);
@@ -147,7 +122,7 @@ namespace PhotoFinish {
       break;
 
     case 2:
-      switch (T_BYTES_REAL(dest_type)) {
+      switch (dest_format.bytes_per_channel()) {
       case 1:
 	do_transfer_alpha<short unsigned int, unsigned char>(width, src_channels,(short unsigned int*)src_row, dest_channels,dest_row);
 	break;
@@ -157,7 +132,7 @@ namespace PhotoFinish {
 	break;
 
       case 4:
-	if (T_FLOAT(dest_type))
+	if (dest_format.is_fp())
 	  do_transfer_alpha<short unsigned int, float>(width, src_channels,(short unsigned int*)src_row, dest_channels,(float*)dest_row);
 	else
 	  do_transfer_alpha<short unsigned int, unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(unsigned int*)dest_row);
@@ -171,8 +146,8 @@ namespace PhotoFinish {
       break;
 
     case 4:
-      if (T_FLOAT(src_type)) {
-	switch (T_BYTES_REAL(dest_type)) {
+      if (src_format.is_fp()) {
+	switch (dest_format.bytes_per_channel()) {
 	case 1:
 	  do_transfer_alpha<float, unsigned char>(width, src_channels,(float*)src_row, dest_channels,dest_row);
 	  break;
@@ -182,7 +157,7 @@ namespace PhotoFinish {
 	  break;
 
 	case 4:
-	  if (T_FLOAT(dest_type))
+	  if (dest_format.is_fp())
 	    do_transfer_alpha<float, float>(width, src_channels,(float*)src_row, dest_channels,(float*)dest_row);
 	  else
 	    do_transfer_alpha<float, unsigned int>(width, src_channels,(float*)src_row, dest_channels,(unsigned int*)dest_row);
@@ -194,7 +169,7 @@ namespace PhotoFinish {
 
 	}
       } else {
-	switch (T_BYTES_REAL(dest_type)) {
+	switch (dest_format.bytes_per_channel()) {
 	case 1:
 	  do_transfer_alpha<unsigned int, unsigned char>(width, src_channels,(unsigned int*)src_row, dest_channels,dest_row);
 	  break;
@@ -204,7 +179,7 @@ namespace PhotoFinish {
 	  break;
 
 	case 4:
-	  if (T_FLOAT(dest_type))
+	  if (dest_format.is_fp())
 	    do_transfer_alpha<unsigned int, float>(width, src_channels,(unsigned int*)src_row, dest_channels,(float*)dest_row);
 	  else
 	    do_transfer_alpha<unsigned int, unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(unsigned int*)dest_row);
@@ -219,7 +194,7 @@ namespace PhotoFinish {
       break;
 
     case 8:
-      switch (T_BYTES_REAL(dest_type)) {
+      switch (dest_format.bytes_per_channel()) {
       case 1:
 	do_transfer_alpha<double, unsigned char>(width, src_channels,(double*)src_row, dest_channels,dest_row);
 	break;
@@ -229,7 +204,7 @@ namespace PhotoFinish {
 	break;
 
       case 4:
-	if (T_FLOAT(dest_type))
+	if (dest_format.is_fp())
 	  do_transfer_alpha<double, float>(width, src_channels,(double*)src_row, dest_channels,(float*)dest_row);
 	else
 	  do_transfer_alpha<double, unsigned int>(width, src_channels,(double*)src_row, dest_channels,(unsigned int*)dest_row);
@@ -246,43 +221,38 @@ namespace PhotoFinish {
 
   }
 
-  Image::ptr Image::transform_colour(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent, bool can_free) {
+  std::string profile_name(CMS::Profile::ptr profile) {
+    return profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+  }
+
+  Image::ptr Image::transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent, bool can_free) {
+    CMS::Profile::ptr profile = _profile;
+    if (_profile == NULL)
+      profile = default_profile(_format, "source");
+    if (dest_profile == NULL)
+      dest_profile = profile;
+
 #pragma omp parallel
     {
 #pragma omp master
       {
-	std::cerr << "Transforming colour using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Transforming colour from \"" << profile_name(profile) << "\" (" << _format << ") to \"" << profile_name(dest_profile) << "\" (" << dest_format << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
-    cmsHPROFILE profile = _profile;
-    bool own_profile = false;
-    if (_profile == NULL) {
-      profile = default_profile(_type);
-      own_profile = true;
-      if (dest_profile == NULL) {
-	dest_profile = profile;
-	own_profile = false;
-      }
-    } else
-      if (dest_profile == NULL)
-	dest_profile = default_profile(dest_type);
+    CMS::Transform transform(profile, _format,
+			     dest_profile, dest_format,
+			     intent, 0);
 
-    cmsHTRANSFORM transform = cmsCreateTransform(profile, _type,
-						 dest_profile, dest_type,
-						 intent, 0);
-    if (own_profile)
-      cmsCloseProfile(profile);
-
-    auto dest = std::make_shared<Image>(_width, _height, dest_type);
+    auto dest = std::make_shared<Image>(_width, _height, dest_format);
     dest->set_profile(dest_profile);
     dest->set_resolution(_xres, _yres);
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
-      cmsDoTransform(transform, _rowdata[y], dest->row(y), _width);
-      if (T_EXTRA(dest_type))
-	transfer_alpha(_width, _type, _rowdata[y], dest_type, dest->row(y));
+      transform.transform_buffer(_rowdata[y], dest->row(y), _width);
+      if (dest_format.extra_channels())
+	transfer_alpha(_width, _format, _rowdata[y], dest_format, dest->row(y));
 
       if (can_free)
 	this->free_row(y);
@@ -291,41 +261,28 @@ namespace PhotoFinish {
     }
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
-    cmsDeleteTransform(transform);
-
     return dest;
   }
 
-  void Image::transform_colour_inplace(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent) {
+  void Image::transform_colour_inplace(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent) {
+    CMS::Profile::ptr profile = _profile;
+    if (_profile == NULL)
+      profile = default_profile(_format, "source");
+    if (dest_profile == NULL)
+      dest_profile = profile;
+
 #pragma omp parallel
     {
 #pragma omp master
       {
-	std::cerr << "Transforming colour in-place using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Transforming colour in-place from \"" << profile_name(profile) << "\" (" << _format << ") to \"" << profile_name(dest_profile) << "\" (" << dest_format << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
-    cmsHPROFILE profile = _profile;
-    bool own_profile = false;
-    if (_profile == NULL) {
-      profile = default_profile(_type);
-      own_profile = true;
-      if (dest_profile == NULL) {
-	dest_profile = profile;
-	own_profile = false;
-      }
-    } else
-      if (dest_profile == NULL)
-	dest_profile = default_profile(dest_type);
-
-    cmsHTRANSFORM transform = cmsCreateTransform(profile, _type,
-						 dest_profile, dest_type,
-						 intent, 0);
-    if (own_profile)
-      cmsCloseProfile(profile);
-
-    unsigned char dest_bytes = T_BYTES_REAL(dest_type);
-    size_t dest_pixel_size = (T_CHANNELS(dest_type) + T_EXTRA(dest_type)) * dest_bytes;
+    CMS::Transform transform(profile, _format,
+			     dest_profile, dest_format,
+			     intent, 0);
+    size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
 
 #pragma omp parallel for schedule(dynamic, 1)
@@ -333,9 +290,9 @@ namespace PhotoFinish {
       _check_rowdata_alloc(y);
       unsigned char *src_rowdata = _rowdata[y];
       unsigned char *dest_rowdata = (unsigned char*)malloc(dest_row_size);
-      cmsDoTransform(transform, src_rowdata, dest_rowdata, _width);
-      if (T_EXTRA(dest_type))
-	transfer_alpha(_width, _type, src_rowdata, dest_type, dest_rowdata);
+      transform.transform_buffer(src_rowdata, dest_rowdata, _width);
+      if (dest_format.extra_channels())
+	transfer_alpha(_width, _format, src_rowdata, dest_format, dest_rowdata);
 
       _rowdata[y] = dest_rowdata;
       free(src_rowdata);
@@ -345,10 +302,8 @@ namespace PhotoFinish {
     }
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
-    cmsDeleteTransform(transform);
-
     _profile = dest_profile;
-    _type = dest_type;
+    _format = dest_format;
     _pixel_size = dest_pixel_size;
     _row_size = dest_row_size;
   }

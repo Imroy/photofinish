@@ -21,25 +21,9 @@
 
 #include <memory>
 #include <exiv2/exiv2.hpp>
-#include <lcms2.h>
 #include "Definable.hh"
+#include "CMS.hh"
 #include "sample.h"
-
-// Why doesn't lcms2.h define something like this?
-#define T_BYTES_REAL(t) (T_BYTES(t) == 0 ? 8 : T_BYTES(t))
-
-// Some masks for manipulating LCMS "types"
-#define FLOAT_MASK	(0xffffffff ^ FLOAT_SH(1))
-#define OPTIMIZED_MASK	(0xffffffff ^ OPTIMIZED_SH(1))
-#define COLORSPACE_MASK	(0xffffffff ^ COLORSPACE_SH(31))
-#define SWAPFIRST_MASK	(0xffffffff ^ SWAPFIRST_SH(1))
-#define FLAVOR_MASK	(0xffffffff ^ FLAVOR_SH(1))
-#define PLANAR_MASK	(0xffffffff ^ PLANAR_SH(1))
-#define ENDIAN16_MASK	(0xffffffff ^ ENDIAN16_SH(1))
-#define DOSWAP_MASK	(0xffffffff ^ DOSWAP_SH(1))
-#define EXTRA_MASK	(0xffffffff ^ EXTRA_SH(7))
-#define CHANNELS_MASK	(0xffffffff ^ CHANNELS_SH(15))
-#define BYTES_MASK	(0xffffffff ^ BYTES_SH(7))
 
 namespace PhotoFinish {
 
@@ -47,8 +31,8 @@ namespace PhotoFinish {
   class Image {
   private:
     unsigned int _width, _height;
-    cmsHPROFILE _profile;
-    cmsUInt32Number _type;
+    CMS::Profile::ptr _profile;
+    CMS::Format _format;
     size_t _pixel_size, _row_size;
     unsigned char **_rowdata;
     definable<double> _xres, _yres;		// PPI
@@ -69,9 +53,9 @@ namespace PhotoFinish {
     //! Constructor
     /*!
       \param w,h Width and height of the image
-      \param t LCMS2 pixel type
+      \param t LCMS2 pixel format
     */
-    Image(unsigned int w, unsigned int h, cmsUInt32Number t);
+    Image(unsigned int w, unsigned int h, CMS::Format f);
 
     //! Destructor
     ~Image();
@@ -83,13 +67,13 @@ namespace PhotoFinish {
     inline const unsigned int height(void) const { return _height; }
 
     //! Get the ICC profile
-    inline const cmsHPROFILE profile(void) const { return _profile; }
+    inline const CMS::Profile::ptr profile(void) const { return _profile; }
 
     //! Set the ICC profile
-    inline void set_profile(cmsHPROFILE p) { _profile = p; }
+    inline void set_profile(CMS::Profile::ptr p) { _profile = p; }
 
-    //! Get the CMS type
-    inline cmsUInt32Number type(void) const { return _type; }
+    //! Get the CMS format
+    inline CMS::Format format(void) const { return _format; }
 
     //! The X resolution of this image (PPI)
     inline const definable<double> xres(void) const { return _xres; }
@@ -147,26 +131,28 @@ namespace PhotoFinish {
     //! The Exiv2::XmpData object.
     inline Exiv2::XmpData& XMPtags(void) { return _XMPtags; }
 
-    //! Create either an sRGB or greyscale profile depending on image type
-    static cmsHPROFILE default_profile(cmsUInt32Number default_type);
+    //! Create either an sRGB or greyscale profile depending on image format
+    static CMS::Profile::ptr default_profile(CMS::ColourModel default_colourmodel, std::string for_desc);
+
+    inline static CMS::Profile::ptr default_profile(CMS::Format format, std::string for_desc) { return default_profile(format.colour_model(), for_desc); }
 
     //! Transform this image into a different colour space and/or ICC profile, making a new image
     /*!
       \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
-      \param dest_type The LCMS2 pixel format.
+      \param dest_format The LCMS2 pixel format.
       \param intent The ICC intent of the transform, defaults to perceptual.
       \param can_free Whether rows can be freed after transforming, defaults to false.
       \return A new image
      */
-    ptr transform_colour(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent = INTENT_PERCEPTUAL, bool can_free = false);
+    ptr transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual, bool can_free = false);
 
     //! Transform this image in-place into a different colour space and/or ICC profile
     /*!
       \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
-      \param dest_type The LCMS2 pixel format.
+      \param dest_format The LCMS2 pixel format.
       \param intent The ICC intent of the transform, defaults to perceptual.
      */
-    void transform_colour_inplace(cmsHPROFILE dest_profile, cmsUInt32Number dest_type, cmsUInt32Number intent = INTENT_PERCEPTUAL);
+    void transform_colour_inplace(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual);
 
   };
 

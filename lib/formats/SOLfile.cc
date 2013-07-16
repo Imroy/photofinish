@@ -16,7 +16,6 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <lcms2.h>
 #include "ImageFile.hh"
 #include "Image.hh"
 #include "Ditherer.hh"
@@ -32,21 +31,17 @@ namespace PhotoFinish {
     throw Unimplemented("SOLfile", "read");
   }
 
-  cmsUInt32Number SOLfile::preferred_type(cmsUInt32Number type) {
-    type &= COLORSPACE_MASK;
-    type |= COLORSPACE_SH(PT_RGB);
-    type &= CHANNELS_MASK;
-    type |= CHANNELS_SH(3);
+  CMS::Format SOLfile::preferred_format(CMS::Format format) {
+    format.set_colour_model(CMS::ColourModel::RGB);
+    format.set_channels(3);
 
-    type &= PLANAR_MASK;
+    format.set_planar(false);
 
-    type &= EXTRA_MASK;
+    format.set_extra_channels(0);
 
-    type &= FLOAT_MASK;
-    type &= BYTES_MASK;
-    type |= BYTES_SH(2);
+    format.set_16bit();
 
-    return type;
+    return format;
   }
 
   unsigned char header[12] = { 0x53, 0x4f, 0x4c, 0x3a, 0x00, 0x00, 0x00, 0x00,
@@ -75,11 +70,11 @@ namespace PhotoFinish {
       write_be(&height, 4, ofs);
     }
 
-    cmsUInt32Number type = img->type();
-    if (T_COLORSPACE(type) != PT_RGB)
-      throw cmsTypeError("Not RGB", type);
-    if (T_BYTES_REAL(type) != 2)
-      throw cmsTypeError("Not 16-bit", type);
+    CMS::Format format = img->format();
+    if (format.colour_model() != CMS::ColourModel::RGB)
+      throw cmsTypeError("Not RGB", format);
+    if (format.bytes_per_channel() != 2)
+      throw cmsTypeError("Not 16-bit", format);
 
     Ditherer ditherer(img->width(), 3, { 31, 63, 31 });
     unsigned char *temprow = (unsigned char*)malloc(img->width() * 3);

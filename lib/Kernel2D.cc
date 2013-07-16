@@ -66,7 +66,7 @@ namespace PhotoFinish {
 
   template <typename T>
   void Kernel2D::do_convolve(Image::ptr src, Image::ptr dest, bool can_free) {
-    unsigned char channels = T_CHANNELS(src->type()) + T_EXTRA(src->type());
+    unsigned char channels = src->format().total_channels();
 
     int *row_needs;
     if (can_free) {
@@ -136,14 +136,14 @@ namespace PhotoFinish {
 		  << " kernel using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
-    auto out = std::make_shared<Image>(img->width(), img->height(), img->type());
+    auto out = std::make_shared<Image>(img->width(), img->height(), img->format());
 
     if (img->xres().defined())
       out->set_xres(img->xres());
     if (img->yres().defined())
       out->set_yres(img->yres());
 
-    switch (T_BYTES_REAL(img->type())) {
+    switch (img->format().bytes_per_channel()) {
     case 1:
       do_convolve<unsigned char>(img, out, can_free);
       break;
@@ -153,14 +153,14 @@ namespace PhotoFinish {
       break;
 
     case 4:
-      if (T_FLOAT(img->type()))
+      if (img->format().is_fp())
 	do_convolve<float>(img, out, can_free);
       else
 	do_convolve<unsigned int>(img, out, can_free);
       break;
 
     case 8:
-      if (T_FLOAT(img->type()))
+      if (img->format().is_fp())
 	do_convolve<double>(img, out, can_free);
       else
 	do_convolve<unsigned long>(img, out, can_free);

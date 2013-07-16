@@ -38,12 +38,8 @@ namespace PhotoFinish {
   }
 
     //! Add an LCMS2 profile to be written
-  void webp_stream_writer::add_icc(cmsHPROFILE profile) {
-    cmsSaveProfileToMem(profile, NULL, &icc_size);
-    if (icc_size > 0) {
-      icc_data = (unsigned char*)malloc(icc_size);
-      cmsSaveProfileToMem(profile, icc_data, &icc_size);
-    }
+  void webp_stream_writer::add_icc(CMS::Profile::ptr profile) {
+    profile->save_to_mem(icc_data, icc_size);
     need_vp8x = true;
   }
 
@@ -52,7 +48,8 @@ namespace PhotoFinish {
     Exiv2::Blob blob;
     Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, exif);
     exif_size = blob.size();
-    unsigned char *data = exif_data = (unsigned char*)malloc(exif_size);
+    exif_data = malloc(exif_size);
+    unsigned char *data = (unsigned char*)exif_data;
     for (auto i : blob)
       *data++ = i;
     need_vp8x = true;
@@ -63,14 +60,14 @@ namespace PhotoFinish {
     std::string s;
     if (Exiv2::XmpParser::encode(s, xmp) == 0) {
       xmp_size = s.length() + 1;
-      xmp_data = (unsigned char*)malloc(xmp_size);
+      xmp_data = malloc(xmp_size);
       memcpy(xmp_data, s.c_str(), xmp_size);
       need_vp8x = true;
     }
   }
 
     //! Write a RIFF chunk
-  void webp_stream_writer::write_chunk(const char *fourcc, const unsigned char* data, unsigned int length) {
+  void webp_stream_writer::write_chunk(const char *fourcc, const void* data, unsigned int length) {
     stream->write(fourcc, 4);
     unsigned char l[4];
     copy_le_to(l, length, 4);

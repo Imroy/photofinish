@@ -105,8 +105,8 @@ namespace PhotoFinish {
     WebPInitDecBuffer(&decbuffer);
 
     decbuffer.colorspace = MODE_RGB;
-    cmsUInt32Number type = COLORSPACE_SH(PT_RGB) | BYTES_SH(1) | CHANNELS_SH(3);
-    cmsHPROFILE profile = NULL;
+    CMS::Format format = CMS::Format::RGB8();
+    CMS::Profile::ptr profile;
     Exiv2::ExifData EXIFtags;
     Exiv2::XmpData XMPtags;
     {
@@ -136,21 +136,18 @@ namespace PhotoFinish {
 	  unsigned char flags = ifs.get();
 	  if (flags & (1 << 4)) {
 	    decbuffer.colorspace = MODE_RGBA;
-	    type |= EXTRA_SH(1);
+	    format.set_extra_channels(1);
 	  }
 	}
 	if (memcmp(fourcc, "ICCP", 4) == 0) {
 	  unsigned char *profile_data = (unsigned char*)malloc(chunk_size);
 	  ifs.read((char*)profile_data, chunk_size);
-	  profile = cmsOpenProfileFromMem(profile_data, chunk_size);
+	  profile = std::make_shared<CMS::Profile>(profile_data, chunk_size);
 	  if (profile != NULL) {
-	    unsigned int profile_name_len;
-	    if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
-	      char *profile_name = (char*)malloc(profile_name_len);
-	      cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+	    std::string profile_name = profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+	    if (profile_name.length() > 0)
 	      dest->set_profile(profile_name, profile_data, chunk_size);
-	      free(profile_name);
-	    } else
+	    else
 	      dest->set_profile("WebP", profile_data, chunk_size);
 
 	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << chunk_size << " bytes)." << std::endl;
@@ -192,8 +189,8 @@ namespace PhotoFinish {
       rowdata = WebPIDecGetRGB(idec, &last_y, &width, &height, &stride);
       if (rowdata != NULL) {
 	if (img == NULL) {
-	  std::cerr << "\t" << width << "×" << height << " RGB" << (T_EXTRA(type) ? "A" : "") << std::endl;
-	  img = new Image(width, height, type);
+	  std::cerr << "\t" << width << "×" << height << " RGB" << (format.extra_channels() > 0 ? "A" : "") << std::endl;
+	  img = new Image(width, height, format);
 	}
 	while (y < last_y) {
 	  memcpy(img->row(y), rowdata, stride);
@@ -222,17 +219,12 @@ namespace PhotoFinish {
     return Image::ptr(img);
   }
 
-  cmsUInt32Number WebPfile::preferred_type(cmsUInt32Number type) {
-    type &= COLORSPACE_MASK;
-    type |= COLORSPACE_SH(PT_RGB);
-    type &= CHANNELS_MASK;
-    type |= CHANNELS_SH(3);
+  CMS::Format WebPfile::preferred_format(CMS::Format format) {
+    format.set_colour_model(CMS::ColourModel::RGB);
+    format.set_channels(3);
+    format.set_8bit();
 
-    type &= FLOAT_MASK;
-    type &= BYTES_MASK;
-    type |= BYTES_SH(1);
-
-    return type;
+    return format;
   }
 
   //! Wrapper around the webp_stream_writer class
@@ -313,7 +305,7 @@ namespace PhotoFinish {
 	  img->free_row(y);
       }
 
-      if (T_EXTRA(img->type())) {
+      if (img->format().extra_channels() > 0) {
 	std::cerr << "\tImporting RGBA image data..." << std::endl;
 	WebPPictureImportRGBA(&pic, rgb, img->row_size());
       } else {

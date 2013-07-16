@@ -23,12 +23,12 @@
 #include <string.h>
 #include <math.h>
 #include <jpeglib.h>
-#include <lcms2.h>
+#include "CMS.hh"
 #include "Destination.hh"
 
 namespace PhotoFinish {
 
-  cmsHPROFILE jpeg_read_profile(jpeg_decompress_struct* dinfo, Destination::ptr dest) {
+  CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct* dinfo, Destination::ptr dest) {
     unsigned int profile_size = 0;
     unsigned char num_markers = 0;
     std::map<unsigned char, jpeg_marker_struct*> app2_markers;
@@ -62,15 +62,12 @@ namespace PhotoFinish {
       pos += app2_markers[i]->data_length - 14;
     }
 
-    cmsHPROFILE profile = cmsOpenProfileFromMem(profile_data, profile_size);
+    CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
     if (profile != NULL) {
-      unsigned int profile_name_len;
-      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
-	char *profile_name = (char*)malloc(profile_name_len);
-	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
+      std::string profile_name = profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+      if (profile_name.length() > 0)
 	dest->set_profile(profile_name, profile_data, profile_size);
-	free(profile_name);
-      } else
+      else
 	dest->set_profile("JPEG APP2", profile_data, profile_size);
       std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_size << " bytes in " << (int)num_markers << " APP2 markers)" << std::endl;
     }

@@ -72,12 +72,27 @@ namespace PhotoFinish {
 
     TIFFcheck(GetField(tiff, TIFFTAG_SAMPLESPERPIXEL, &channels));
 
-    cmsUInt32Number type = BYTES_SH(bit_depth >> 3);
+    CMS::Format format;
+    switch (bit_depth >> 3) {
+    case 1: format.set_8bit();
+      break;
+
+    case 2: format.set_16bit();
+      break;
+
+    case 4: format.set_32bit();
+      break;
+
+    default:
+      std::cerr << "** Unknown depth " << (bit_depth >> 3) << " **" << std::endl;
+      throw LibraryError("libTIFF", "depth");
+    }
+
     bool need_alpha_mult = false;
     {
       uint16 extra_count, *extra_types;
       if (TIFFGetField(tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
-	type |= EXTRA_SH(extra_count & 0x07);
+	format.set_extra_channels(extra_count & 0x07);
 	for (int i = 0; i < extra_count; i++) {
 	  std::cerr << "\tImage has an ";
 	  switch (extra_types[i]) {
@@ -96,29 +111,29 @@ namespace PhotoFinish {
       }
     }
     std::cerr << "\tImage has " << channels << " channels." << std::endl;
-    type |= CHANNELS_SH(channels);
+    format.set_channels(channels);
 
     TIFFcheck(GetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric));
     switch (photometric) {
     case PHOTOMETRIC_MINISWHITE:
-      type |= FLAVOR_SH(1);
+      format.set_vanilla();
     case PHOTOMETRIC_MINISBLACK:
-      type |= COLORSPACE_SH(PT_GRAY);
+      format.set_colour_model(CMS::ColourModel::Greyscale);
       break;
 
     case PHOTOMETRIC_RGB:
-      type |= COLORSPACE_SH(PT_RGB);
+      format.set_colour_model(CMS::ColourModel::RGB);
       break;
 
     case PHOTOMETRIC_SEPARATED:
-      type |= COLORSPACE_SH(PT_CMYK);
+      format.set_colour_model(CMS::ColourModel::CMYK);
       break;
 
     default:
       std::cerr << "** unsupported TIFF photometric interpretation " << photometric << " **" << std::endl;
       exit(1);
     }
-    auto img = std::make_shared<Image>(width, height, type);
+    auto img = std::make_shared<Image>(width, height, format);
 
     {
       float xres, yres;
@@ -141,24 +156,22 @@ namespace PhotoFinish {
       }
     }
 
-    cmsHPROFILE profile = NULL;
-    uint32 profile_len;
-    void *profile_data;
-    if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
-      profile = cmsOpenProfileFromMem(profile_data, profile_len);
-      void *data_copy = malloc(profile_len);
-      memcpy(data_copy, profile_data, profile_len);
+    {
+      uint32 profile_len;
+      void *profile_data;
+      if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
+	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
+	void *data_copy = malloc(profile_len);
+	memcpy(data_copy, profile_data, profile_len);
 
-      unsigned int profile_name_len;
-      if ((profile_name_len = cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, NULL, 0)) > 0) {
-	char *profile_name = (char*)malloc(profile_name_len);
-	cmsGetProfileInfoASCII(profile, cmsInfoDescription, "en", cmsNoCountry, profile_name, profile_name_len);
-	dest->set_profile(profile_name, data_copy, profile_len);
-	free(profile_name);
-      } else
-	dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
-      img->set_profile(dest->get_profile(type));
-      std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_len << " bytes)" << std::endl;
+	std::string profile_name = profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+	if (profile_name.length() > 0)
+	  dest->set_profile(profile_name, data_copy, profile_len);
+	else
+	  dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
+	img->set_profile(profile);
+	std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_len << " bytes)" << std::endl;
+      }
     }
 
     std::cerr << "\tReading TIFF image..." << std::endl;
@@ -194,23 +207,19 @@ namespace PhotoFinish {
     return img;
   }
 
-  cmsUInt32Number TIFFfile::preferred_type(cmsUInt32Number type) {
-    if ((T_COLORSPACE(type) != PT_GRAY) && (T_COLORSPACE(type) != PT_CMYK)) {
-      type &= COLORSPACE_MASK;
-      type |= COLORSPACE_SH(PT_RGB);
-      type &= CHANNELS_MASK;
-      type |= CHANNELS_SH(3);
+  CMS::Format TIFFfile::preferred_format(CMS::Format format) {
+    if ((format.colour_model() != CMS::ColourModel::Greyscale)
+	&& (format.colour_model() != CMS::ColourModel::CMYK)) {
+      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_channels(3);
     }
 
-    type &= PLANAR_MASK;
+    format.set_planar(false);
 
-    type &= FLOAT_MASK;
-    if (T_BYTES_REAL(type) > 2) {
-      type &= BYTES_MASK;
-      type |= BYTES_SH(2);
-    }
+    if (!format.is_8bit() && !format.is_16bit())
+      format.set_16bit();
 
-    return type;
+    return format;
   }
 
   void TIFFfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
@@ -293,39 +302,36 @@ namespace PhotoFinish {
       TIFFcheck(SetField (tiff, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH));
     }
 
-    cmsUInt32Number type = img->type();
-    switch (T_COLORSPACE(type)) {
-    case PT_RGB:
+    CMS::Format format = img->format();
+    switch (format.colour_model()) {
+    case CMS::ColourModel::RGB:
       TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB));
       break;
 
-    case PT_GRAY:
-      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, T_FLAVOR(type) ? PHOTOMETRIC_MINISWHITE : PHOTOMETRIC_MINISBLACK));
+    case CMS::ColourModel::Greyscale:
+      TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, format.is_vanilla() ? PHOTOMETRIC_MINISWHITE : PHOTOMETRIC_MINISBLACK));
       break;
 
-    case PT_CMYK:
+    case CMS::ColourModel::CMYK:
       TIFFcheck(SetField(tiff, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_SEPARATED));
       break;
 
     default:
       break;
     }
-    TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, T_CHANNELS(type) + T_EXTRA(type)));
-    if (T_EXTRA(type)) {
+    TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, format.total_channels()));
+    if (format.extra_channels()) {
       uint16 extra_types[1] = { EXTRASAMPLE_ASSOCALPHA };
       TIFFcheck(SetField(tiff, TIFFTAG_EXTRASAMPLES, 1, extra_types));
     }
 
-    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, T_BYTES_REAL(type) << 3));
+    TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, format.bytes_per_channel() << 3));
 
     {
-      unsigned char *profile_data = NULL;
+      void *profile_data = NULL;
       unsigned int profile_len = 0;
-      cmsSaveProfileToMem(img->profile(), NULL, &profile_len);
+      img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {
-	profile_data = (unsigned char*)malloc(profile_len);
-	cmsSaveProfileToMem(img->profile(), profile_data, &profile_len);
-
 	std::cerr << "\tEmbedding profile (" << profile_len << " bytes)." << std::endl;
 	TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, profile_len, profile_data));
       }
