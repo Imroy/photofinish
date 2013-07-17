@@ -79,11 +79,11 @@ namespace PhotoFinish {
   }
 
   template <typename A, typename B>
-  void do_transfer_alpha(unsigned int width, unsigned char src_channels, const A* src_row, unsigned char dest_channels, const B* dest_row) {
+  void transfer_alpha_typed2(unsigned int width, unsigned char src_channels, const A* src_row, unsigned char dest_channels, const B* dest_row) {
     double factor = (double)maxval<B>() / maxval<A>();
     A *inp = const_cast<A*>(src_row) + src_channels;
     B *outp = const_cast<B*>(dest_row) + dest_channels;
-    for (unsigned int x = 0; x < width; x++, inp += 1 + src_channels, outp += 1 + dest_channels) {
+    for (unsigned int x = width; x; x--, inp += 1 + src_channels, outp += 1 + dest_channels) {
       if (*inp < 0)
 	*outp = 0;
       else if (*inp > maxval<A>())
@@ -93,133 +93,57 @@ namespace PhotoFinish {
     }
   }
 
-  void transfer_alpha(unsigned int width, CMS::Format src_format, const unsigned char* src_row, CMS::Format dest_format, const unsigned char* dest_row) {
-    unsigned char src_channels = (unsigned char)src_format.channels();
+  template <typename A>
+  void transfer_alpha_typed(unsigned int width, unsigned char src_channels, const A* src_row, CMS::Format dest_format, const void* dest_row) {
     unsigned char dest_channels = (unsigned char)dest_format.channels();
-    switch (src_format.bytes_per_channel()) {
+    switch (dest_format.bytes_per_channel()) {
     case 1:
-      switch (dest_format.bytes_per_channel()) {
-      case 1:
-	do_transfer_alpha<unsigned char, unsigned char>(width, src_channels,src_row, dest_channels,dest_row);
-	break;
-
-      case 2:
-	do_transfer_alpha<unsigned char, short unsigned int>(width, src_channels,src_row, dest_channels,(short unsigned int*)dest_row);
-	break;
-
-      case 4:
-	if (dest_format.is_fp())
-	  do_transfer_alpha<unsigned char, float>(width, src_channels,src_row, dest_channels,(float*)dest_row);
-	else
-	  do_transfer_alpha<unsigned char, unsigned int>(width, src_channels,src_row, dest_channels,(unsigned int*)dest_row);
-	break;
-
-      case 8:
-	do_transfer_alpha<unsigned char, double>(width, src_channels,src_row, dest_channels,(double*)dest_row);
-	break;
-
-      }
+      transfer_alpha_typed2<A, unsigned char>(width, src_channels, src_row, dest_channels, (unsigned char*)dest_row);
       break;
 
     case 2:
-      switch (dest_format.bytes_per_channel()) {
-      case 1:
-	do_transfer_alpha<short unsigned int, unsigned char>(width, src_channels,(short unsigned int*)src_row, dest_channels,dest_row);
-	break;
-
-      case 2:
-	do_transfer_alpha<short unsigned int, short unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(short unsigned int*)dest_row);
-	break;
-
-      case 4:
-	if (dest_format.is_fp())
-	  do_transfer_alpha<short unsigned int, float>(width, src_channels,(short unsigned int*)src_row, dest_channels,(float*)dest_row);
-	else
-	  do_transfer_alpha<short unsigned int, unsigned int>(width, src_channels,(short unsigned int*)src_row, dest_channels,(unsigned int*)dest_row);
-	break;
-
-      case 8:
-	do_transfer_alpha<short unsigned int, double>(width, src_channels,(short unsigned int*)src_row, dest_channels,(double*)dest_row);
-	break;
-
-      }
+      transfer_alpha_typed2<A, short unsigned int>(width, src_channels, src_row, dest_channels,(short unsigned int*)dest_row);
       break;
 
     case 4:
-      if (src_format.is_fp()) {
-	switch (dest_format.bytes_per_channel()) {
-	case 1:
-	  do_transfer_alpha<float, unsigned char>(width, src_channels,(float*)src_row, dest_channels,dest_row);
-	  break;
-
-	case 2:
-	  do_transfer_alpha<float, short unsigned int>(width, src_channels,(float*)src_row, dest_channels,(short unsigned int*)dest_row);
-	  break;
-
-	case 4:
-	  if (dest_format.is_fp())
-	    do_transfer_alpha<float, float>(width, src_channels,(float*)src_row, dest_channels,(float*)dest_row);
-	  else
-	    do_transfer_alpha<float, unsigned int>(width, src_channels,(float*)src_row, dest_channels,(unsigned int*)dest_row);
-	  break;
-
-	case 8:
-	  do_transfer_alpha<float, double>(width, src_channels,(float*)src_row, dest_channels,(double*)dest_row);
-	  break;
-
-	}
-      } else {
-	switch (dest_format.bytes_per_channel()) {
-	case 1:
-	  do_transfer_alpha<unsigned int, unsigned char>(width, src_channels,(unsigned int*)src_row, dest_channels,dest_row);
-	  break;
-
-	case 2:
-	  do_transfer_alpha<unsigned int, short unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(short unsigned int*)dest_row);
-	  break;
-
-	case 4:
-	  if (dest_format.is_fp())
-	    do_transfer_alpha<unsigned int, float>(width, src_channels,(unsigned int*)src_row, dest_channels,(float*)dest_row);
-	  else
-	    do_transfer_alpha<unsigned int, unsigned int>(width, src_channels,(unsigned int*)src_row, dest_channels,(unsigned int*)dest_row);
-	  break;
-
-	case 8:
-	  do_transfer_alpha<unsigned int, double>(width, src_channels,(unsigned int*)src_row, dest_channels,(double*)dest_row);
-	  break;
-
-	}
-      }
+      if (dest_format.is_fp())
+	transfer_alpha_typed2<A, float>(width, src_channels, src_row, dest_channels,(float*)dest_row);
+      else
+	transfer_alpha_typed2<A, unsigned int>(width, src_channels, src_row, dest_channels,(unsigned int*)dest_row);
       break;
 
     case 8:
-      switch (dest_format.bytes_per_channel()) {
-      case 1:
-	do_transfer_alpha<double, unsigned char>(width, src_channels,(double*)src_row, dest_channels,dest_row);
-	break;
-
-      case 2:
-	do_transfer_alpha<double, short unsigned int>(width, src_channels,(double*)src_row, dest_channels,(short unsigned int*)dest_row);
-	break;
-
-      case 4:
-	if (dest_format.is_fp())
-	  do_transfer_alpha<double, float>(width, src_channels,(double*)src_row, dest_channels,(float*)dest_row);
-	else
-	  do_transfer_alpha<double, unsigned int>(width, src_channels,(double*)src_row, dest_channels,(unsigned int*)dest_row);
-	break;
-
-      case 8:
-	do_transfer_alpha<double, double>(width, src_channels,(double*)src_row, dest_channels,(double*)dest_row);
-	break;
-
-      }
+      transfer_alpha_typed2<A, double>(width, src_channels, src_row, dest_channels,(double*)dest_row);
       break;
 
     }
 
   }
+
+  void transfer_alpha(unsigned int width, CMS::Format src_format, const void* src_row, CMS::Format dest_format, const void* dest_row) {
+    unsigned char src_channels = (unsigned char)src_format.channels();
+    switch (src_format.bytes_per_channel()) {
+    case 1:
+      transfer_alpha_typed<unsigned char>(width, src_channels, (unsigned char*)src_row, dest_format, dest_row);
+      break;
+
+    case 2:
+      transfer_alpha_typed<short unsigned int>(width, src_channels, (short unsigned int*)src_row, dest_format, dest_row);
+      break;
+
+    case 4:
+      if (src_format.is_fp())
+	transfer_alpha_typed<float>(width, src_channels, (float*)src_row, dest_format, dest_row);
+      else
+	transfer_alpha_typed<unsigned int>(width, src_channels, (unsigned int*)src_row, dest_format, dest_row);
+      break;
+
+    case 8:
+      transfer_alpha_typed<double>(width, src_channels, (double*)src_row, dest_format, dest_row);
+      break;
+    }
+  }
+
 
   std::string profile_name(CMS::Profile::ptr profile) {
     return profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
@@ -253,7 +177,7 @@ namespace PhotoFinish {
       dest->check_rowdata_alloc(y);
       transform.transform_buffer(_rowdata[y], dest->row(y), _width);
       if (dest_format.extra_channels())
-	transfer_alpha(_width, _format, _rowdata[y], dest_format, dest->row(y));
+	transfer_alpha(_width, _format, row(y), dest_format, dest->row(y));
 
       if (can_free)
 	this->free_row(y);
@@ -288,13 +212,13 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
-      unsigned char *src_rowdata = _rowdata[y];
-      unsigned char *dest_rowdata = (unsigned char*)malloc(dest_row_size);
+      void *src_rowdata = row(y);
+      void *dest_rowdata = malloc(dest_row_size);
       transform.transform_buffer(src_rowdata, dest_rowdata, _width);
       if (dest_format.extra_channels())
 	transfer_alpha(_width, _format, src_rowdata, dest_format, dest_rowdata);
 
-      _rowdata[y] = dest_rowdata;
+      _rowdata[y] = (unsigned char*)dest_rowdata;
       free(src_rowdata);
 
       if (omp_get_thread_num() == 0)
