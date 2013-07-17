@@ -121,7 +121,7 @@ namespace PhotoFinish {
     }
   }
 
-  // Template function that does the actual horizontal convolving
+  // Template method that does the actual horizontal convolving
   template <typename T, int channels>
   void Kernel1Dvar::convolve_h_type_channels(Image::ptr src, Image::ptr dest, bool can_free) {
 #pragma omp parallel
@@ -140,13 +140,11 @@ namespace PhotoFinish {
       T *out = dest->row<T>(y);
 
       for (unsigned int nx = 0; nx < dest->width(); nx++, out += channels) {
-	unsigned int max = _size[nx];
-
 	for (unsigned char c = 0; c < channels; c++)
 	  out[c] = 0;
 	const SAMPLE *weight = _weights[nx];
 	const T *in = src->at<T>(_start[nx], y);
-	for (unsigned int j = 0; j < max; j++, weight++) {
+	for (unsigned int j = _size[nx]; j; j--, weight++) {
 	  for (unsigned char c = 0; c < channels; c++, in++)
 	    out[c] += (*in) * (*weight);
 	}
@@ -160,7 +158,7 @@ namespace PhotoFinish {
     std::cerr << "\r\tConvolved " << src->height() << " of " << src->height() << " rows." << std::endl;
   }
 
-  // Template function that handles each type for horizontal convolving
+  // Template method that handles each type for horizontal convolving
   template <typename T>
   void Kernel1Dvar::convolve_h_type(Image::ptr src, Image::ptr dest, bool can_free) {
     unsigned char channels = src->format().total_channels();
@@ -225,7 +223,7 @@ namespace PhotoFinish {
     return ni;
   }
 
-  // Template function that does the actual vertical convolving
+  // Template method that does the actual vertical convolving
   template <typename T, int channels>
   void Kernel1Dvar::convolve_v_type_channels(Image::ptr src, Image::ptr dest, bool can_free) {
 #pragma omp parallel
@@ -258,8 +256,8 @@ namespace PhotoFinish {
       T *in = src->row<T>(ystart);
       dest->check_rowdata_alloc(ny);
       T *out = dest->row<T>(ny);
-      for (unsigned int x = 0; x < src->width(); x++) {
-	for (unsigned char c = 0; c < channels; c++, in++, out++)
+      for (unsigned int x = src->width(); x; x--) {
+	for (unsigned char c = channels; c; c--, in++, out++)
 	  *out = (*in) * (*weight);
       }
 
@@ -267,8 +265,8 @@ namespace PhotoFinish {
       for (j = 1; j < max; j++, weight++) {
 	in = src->row<T>(ystart + j);
 	out = dest->row<T>(ny);
-	for (unsigned int x = 0; x < src->width(); x++) {
-	  for (unsigned char c = 0; c < channels; c++, in++, out++)
+	for (unsigned int x = src->width(); x; x--) {
+	  for (unsigned char c = channels; c; c--, in++, out++)
 	    *out += (*in) * (*weight);
 	}
       }
@@ -291,7 +289,7 @@ namespace PhotoFinish {
     }
   }
 
-  // Template function that handles each type for vertical convolving
+  // Template method that handles each type for vertical convolving
   template <typename T>
   void Kernel1Dvar::convolve_v_type(Image::ptr src, Image::ptr dest, bool can_free) {
     unsigned char channels = src->format().total_channels();
