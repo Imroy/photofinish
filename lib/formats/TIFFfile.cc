@@ -176,19 +176,20 @@ namespace PhotoFinish {
 
     std::cerr << "\tReading TIFF image..." << std::endl;
     for (unsigned int y = 0; y < height; y++) {
+      img->check_rowdata_alloc(y);
       TIFFcheck(ReadScanline(tiff, img->row(y), y));
       if (need_alpha_mult)
 	switch (bit_depth) {
 	case 8:
-	  alpha_mult<unsigned char>(img->row(y), width, channels);
+	  alpha_mult<unsigned char>(img->row<unsigned char>(y), width, channels);
 	  break;
 
 	case 16:
-	  alpha_mult<unsigned short int>((unsigned short int*)img->row(y), width, channels);
+	  alpha_mult<unsigned short int>(img->row<short unsigned int>(y), width, channels);
 	  break;
 
 	case 32:
-	  alpha_mult<unsigned int>((unsigned int*)img->row(y), width, channels);
+	  alpha_mult<unsigned int>(img->row<unsigned int>(y), width, channels);
 	  break;
 
 	}

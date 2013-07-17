@@ -181,11 +181,12 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
+      img->check_rowdata_alloc(y);
       for (unsigned char c = 0; c < format.channels(); c++)
 	if (depth == 1)
-	  read_planar<unsigned char>(img->width(), format.channels(), jp2_image, img->row(y), y);
+	  read_planar<unsigned char>(img->width(), format.channels(), jp2_image, img->row<unsigned char>(y), y);
 	else
-	  read_planar<short unsigned int>(img->width(), format.channels(), jp2_image, (short unsigned int*)img->row(y), y);
+	  read_planar<short unsigned int>(img->width(), format.channels(), jp2_image, img->row<short unsigned int>(y), y);
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tCopied " << (y + 1) << " of " << img->height() << " rows";
@@ -345,9 +346,9 @@ namespace PhotoFinish {
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
       if (depth == 1)
-	write_planar<unsigned char>(img->width(), channels, img->row(y), jp2_image, y);
+	write_planar<unsigned char>(img->width(), channels, img->row<unsigned char>(y), jp2_image, y);
       else
-	write_planar<short unsigned int>(img->width(), channels, (short unsigned int*)img->row(y), jp2_image, y);
+	write_planar<short unsigned int>(img->width(), channels, img->row<short unsigned int>(y), jp2_image, y);
 
       if (can_free)
 	img->free_row(y);

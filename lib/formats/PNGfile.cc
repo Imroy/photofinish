@@ -137,6 +137,7 @@ namespace PhotoFinish {
   //! Called by libPNG when a row of image data has been read
   void png_row_cb(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
     pngfile_cb_pack *pack = (pngfile_cb_pack*)png_get_progressive_ptr(png);
+    pack->image->check_rowdata_alloc(row_num);
     memcpy(pack->image->row(row_num), row_data, pack->image->row_size());
     std::cerr << "\r\tRead " << (row_num + 1) << " of " << pack->image->height() << " rows";
   }
@@ -339,7 +340,7 @@ namespace PhotoFinish {
 
     std::cerr << "\tWriting image..." << std::endl;
     for (unsigned int y = 0; y < img->height(); y++) {
-      png_write_row(_png, (png_const_bytep)img->row(y));
+      png_write_row(_png, img->row<unsigned char>(y));
 
       if (can_free)
 	img->free_row(y);

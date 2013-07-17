@@ -80,7 +80,8 @@ namespace PhotoFinish {
     omp_init_lock(&freed_lock);
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
-      T *outp = (T*)dest->row(y);
+      dest->check_rowdata_alloc(y);
+      T *outp = dest->row<T>(y);
       short unsigned int ky_start = y < _centrey ? _centrey - y : 0;
       short unsigned int ky_end = y > src->height() - _height + _centrey ? src->height() + _centrey - y : _height;
 
@@ -94,7 +95,7 @@ namespace PhotoFinish {
 
 	for (short unsigned int ky = ky_start; ky < ky_end; ky++) {
 	  const SAMPLE *kp = _values[ky] + kx_start;
-	  T *inp = (T*)src->at(x + kx_start - _centrex, y + ky - _centrey);
+	  T *inp = src->at<T>(x + kx_start - _centrex, y + ky - _centrey);
 	  for (short unsigned int kx = kx_start; kx < kx_end; kx++, kp++) {
 	    weight += *kp;
 	    for (unsigned char c = 0; c < channels; c++, inp++)

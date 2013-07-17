@@ -37,11 +37,6 @@ namespace PhotoFinish {
     unsigned char **_rowdata;
     definable<double> _xres, _yres;		// PPI
 
-    inline void _check_rowdata_alloc(unsigned int y) {
-      if (_rowdata[y] == NULL)
-	_rowdata[y] = (unsigned char*)malloc(_row_size);
-    }
-
     Exiv2::ExifData _EXIFtags;
     Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
@@ -102,17 +97,21 @@ namespace PhotoFinish {
     //! Retun the size of a row in bytes
     inline size_t row_size(void) const { return _row_size; }
 
-    //! Pointer to pixel data at start of row
-    inline unsigned char* row(unsigned int y) {
-      _check_rowdata_alloc(y);
-      return _rowdata[y];
+    inline void check_rowdata_alloc(unsigned int y) {
+      if (_rowdata[y] == NULL)
+	_rowdata[y] = (unsigned char*)malloc(_row_size);
     }
 
+    //! Pointer to pixel data at start of row
+    template <typename T=void>
+    inline T* row(unsigned int y) { return (T*)_rowdata[y]; }
+
     //! Pointer to pixel data at coordinates
-    inline unsigned char* at(unsigned int x, unsigned int y) {
-      _check_rowdata_alloc(y);
-      return &(_rowdata[y][x * _pixel_size]);
-    }
+    template <typename T>
+    inline T* at(unsigned int x, unsigned int y) { return (T*)&_rowdata[y][x * _pixel_size]; }
+
+    template <typename T>
+    inline T& at(unsigned int x, unsigned int y, unsigned char c) { return *((T*)&_rowdata[y][x * _pixel_size] + c); }
 
     //! Free the memory storing row 'y'
     inline void free_row(unsigned int y) {

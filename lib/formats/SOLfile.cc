@@ -80,7 +80,7 @@ namespace PhotoFinish {
     unsigned char *temprow = (unsigned char*)malloc(img->width() * 3);
 
     for (unsigned int y = 0; y < img->height(); y++) {
-      ditherer.dither((unsigned short *)img->row(y), temprow, y == img->height() - 1);
+      ditherer.dither(img->row<short unsigned int>(y), temprow, y == img->height() - 1);
       if (can_free)
 	img->free_row(y);
 

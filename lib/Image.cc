@@ -250,6 +250,7 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
+      dest->check_rowdata_alloc(y);
       transform.transform_buffer(_rowdata[y], dest->row(y), _width);
       if (dest_format.extra_channels())
 	transfer_alpha(_width, _format, _rowdata[y], dest_format, dest->row(y));
@@ -287,7 +288,6 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
-      _check_rowdata_alloc(y);
       unsigned char *src_rowdata = _rowdata[y];
       unsigned char *dest_rowdata = (unsigned char*)malloc(dest_row_size);
       transform.transform_buffer(src_rowdata, dest_rowdata, _width);

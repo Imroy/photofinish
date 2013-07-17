@@ -126,7 +126,8 @@ namespace PhotoFinish {
     unsigned char channels = src->format().total_channels();
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
-      T *out = (T*)dest->row(y);
+      dest->check_rowdata_alloc(y);
+      T *out = dest->row<T>(y);
 
       for (unsigned int nx = 0; nx < dest->width(); nx++, out += channels) {
 	unsigned int max = _size[nx];
@@ -134,7 +135,7 @@ namespace PhotoFinish {
 	for (unsigned char c = 0; c < channels; c++)
 	  out[c] = 0;
 	const SAMPLE *weight = _weights[nx];
-	const T *in = (T*)src->at(_start[nx], y);
+	const T *in = src->at<T>(_start[nx], y);
 	for (unsigned int j = 0; j < max; j++, weight++) {
 	  for (unsigned char c = 0; c < channels; c++, in++)
 	    out[c] += (*in) * (*weight);
@@ -215,8 +216,9 @@ namespace PhotoFinish {
       unsigned int j = 0;
       const SAMPLE *weight = _weights[ny];
 
-      T *in = (T*)src->row(ystart);
-      T *out = (T*)dest->row(ny);
+      T *in = src->row<T>(ystart);
+      dest->check_rowdata_alloc(ny);
+      T *out = dest->row<T>(ny);
       for (unsigned int x = 0; x < src->width(); x++) {
 	for (unsigned char c = 0; c < channels; c++, in++, out++)
 	  *out = (*in) * (*weight);
@@ -224,8 +226,8 @@ namespace PhotoFinish {
 
       weight++;
       for (j = 1; j < max; j++, weight++) {
-	in = (T*)src->row(ystart + j);
-	out = (T*)dest->row(ny);
+	in = src->row<T>(ystart + j);
+	out = dest->row<T>(ny);
 	for (unsigned int x = 0; x < src->width(); x++) {
 	  for (unsigned char c = 0; c < channels; c++, in++, out++)
 	    *out += (*in) * (*weight);

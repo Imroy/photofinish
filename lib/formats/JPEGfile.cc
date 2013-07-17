@@ -122,7 +122,8 @@ namespace PhotoFinish {
 
     JSAMPROW jpeg_row[1];
     while (dinfo->output_scanline < dinfo->output_height) {
-      jpeg_row[0] = (unsigned char*)img->row(dinfo->output_scanline);
+      img->check_rowdata_alloc(dinfo->output_scanline);
+      jpeg_row[0] = img->row<unsigned char>(dinfo->output_scanline);
       jpeg_read_scanlines(dinfo, jpeg_row, 1);
       std::cerr << "\r\tRead " << dinfo->output_scanline << " of " << img->height() << " rows";
     }
@@ -281,7 +282,7 @@ namespace PhotoFinish {
     std::cerr << "\tWriting " << img->width() << "×" << img->height() << " JPEG image..." << std::endl;
     while (cinfo->next_scanline < cinfo->image_height) {
       unsigned int y = cinfo->next_scanline;
-      jpeg_row[0] = (unsigned char*)img->row(y);
+      jpeg_row[0] = img->row<unsigned char>(y);
       jpeg_write_scanlines(cinfo, jpeg_row, 1);
 
       if (can_free)
