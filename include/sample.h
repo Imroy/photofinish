@@ -16,10 +16,12 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
-  In case this isn't defined already
-  e.g Not using make and the supplied Makefile to build
-*/
 #ifndef SAMPLE
 #define SAMPLE float
+#endif
+
+// See CMS.hh for the set_*() methods
+// TODO: Figure out the preprocessor voodoo to do essentially "set_ ## SAMPLE()"
+#ifndef SET_SAMPLE_FORMAT
+#define SET_SAMPLE_FORMAT(x) ((x).set_float())
 #endif

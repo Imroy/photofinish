@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
 	CMS::Format orig_format = orig_image->format();
 	orig_format.set_colour_model(CMS::ColourModel::Lab);
 	orig_format.set_channels(3);
-	orig_format.set_float();
+	SET_SAMPLE_FORMAT(orig_format);
 	orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
 
 	auto num_destinations = arg_destinations.size();

@@ -47,7 +47,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   CMS::Format orig_format = orig_image->format();
   orig_format.set_colour_model(CMS::ColourModel::Lab);
   orig_format.set_channels(3);
-  orig_format.set_float();
+  SET_SAMPLE_FORMAT(orig_format);
   orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
 
   auto resized_dest = orig_dest->dupe();
