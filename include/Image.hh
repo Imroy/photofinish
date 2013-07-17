@@ -104,14 +104,14 @@ namespace PhotoFinish {
 
     //! Pointer to pixel data at start of row
     template <typename T=void>
-    inline T* row(unsigned int y) { return (T*)_rowdata[y]; }
+    inline T* row(unsigned int y) const { return (T*)_rowdata[y]; }
 
     //! Pointer to pixel data at coordinates
     template <typename T>
-    inline T* at(unsigned int x, unsigned int y) { return (T*)&_rowdata[y][x * _pixel_size]; }
+    inline T* at(unsigned int x, unsigned int y) const { return (T*)&_rowdata[y][x * _pixel_size]; }
 
     template <typename T>
-    inline T& at(unsigned int x, unsigned int y, unsigned char c) { return *((T*)&_rowdata[y][x * _pixel_size] + c); }
+    inline T& at(unsigned int x, unsigned int y, unsigned char c) const { return *((T*)&_rowdata[y][x * _pixel_size] + c); }
 
     //! Free the memory storing row 'y'
     inline void free_row(unsigned int y) {
