@@ -47,11 +47,17 @@ namespace PhotoFinish {
     //! Evaluate the filter at a given point
     virtual SAMPLE eval(double x) const throw(Uninitialised) = 0;
 
-    template <typename T>
-    void do_convolve_h(Image::ptr src, Image::ptr dest, bool can_free = false);
+    template <typename T, int channels>
+    void convolve_h_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
 
     template <typename T>
-    void do_convolve_v(Image::ptr src, Image::ptr dest, bool can_free = false);
+    void convolve_h_type(Image::ptr src, Image::ptr dest, bool can_free = false);
+
+    template <typename T, int channels>
+    void convolve_v_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
+
+    template <typename T>
+    void convolve_v_type(Image::ptr src, Image::ptr dest, bool can_free = false);
 
   public:
     //! Shared pointer for a Kernel1Dvar
