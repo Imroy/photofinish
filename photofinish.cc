@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
 	    auto outfile = ImageFile::create(destination->dir() / fi.stem(), format);
 
 	    CMS::Format dest_format = outfile->preferred_format(destination->modify_format(sharp_image->format()));
-	    CMS::Profile::ptr dest_profile = destination->get_profile(dest_format.colour_model());
+	    CMS::Profile::ptr dest_profile = destination->get_profile(dest_format.colour_model(), "destination");
 	    sharp_image->transform_colour_inplace(dest_profile, dest_format);
 
 	    tags->copy_to(sharp_image);

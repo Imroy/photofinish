@@ -76,7 +76,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   resized_format.set_colour_model(orig_model);
   resized_format.set_channels(orig_channels);
   CMS::Format dest_format = preview_file->preferred_format(resized_dest->modify_format(resized_format));
-  CMS::Profile::ptr dest_profile = resized_dest->get_profile(dest_format.colour_model());
+  CMS::Profile::ptr dest_profile = resized_dest->get_profile(dest_format.colour_model(), "preview");
   resized_image->transform_colour_inplace(dest_profile, dest_format);
 
   filetags->copy_to(resized_image);

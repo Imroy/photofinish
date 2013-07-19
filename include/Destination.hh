@@ -136,7 +136,7 @@ namespace PhotoFinish {
     CMS::Format modify_format(CMS::Format format);
 
     //! Return an LCMS2 profile object from the profile data
-    CMS::Profile::ptr get_profile(CMS::ColourModel default_colourmodel);
+    CMS::Profile::ptr get_profile(CMS::ColourModel default_colourmodel, std::string for_desc);
 
     inline const D_profile::ptr profile(void) const { return _profile; }
     inline void set_profile(std::string name, fs::path filepath) { _profile = std::make_shared<D_profile>(name, filepath); }

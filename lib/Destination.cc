@@ -187,7 +187,7 @@ namespace PhotoFinish {
     return format;
   }
 
-  CMS::Profile::ptr Destination::get_profile(CMS::ColourModel default_colourmodel) {
+  CMS::Profile::ptr Destination::get_profile(CMS::ColourModel default_colourmodel, std::string for_desc) {
     CMS::Profile::ptr profile;
 
     if (this->profile()) {
@@ -197,7 +197,7 @@ namespace PhotoFinish {
       std::cerr << "Adding name \"" << profile_name << "\" to profile..." << std::endl;
       profile->write_tag(cmsSigProfileDescriptionTag, "en", "AU", profile_name);
     } else {
-      profile = Image::default_profile(default_colourmodel, "unknown");
+      profile = Image::default_profile(default_colourmodel, for_desc);
     }
 
     return profile;
