@@ -21,6 +21,7 @@
 #include <string.h>
 #include <math.h>
 #include "Ditherer.hh"
+#include "sample.h"
 
 namespace PhotoFinish {
 

@@ -19,6 +19,7 @@
 #ifndef __DITHERER_HH__
 #define __DITHERER_HH__
 #include <lcms2.h>
+#include "sample.h"
 
 namespace PhotoFinish {
 
