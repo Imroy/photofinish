@@ -221,7 +221,6 @@ namespace PhotoFinish {
 
   CMS::Format WebPfile::preferred_format(CMS::Format format) {
     format.set_colour_model(CMS::ColourModel::RGB);
-    format.set_channels(3);
     format.set_8bit();
 
     return format;

@@ -75,7 +75,6 @@ int main(int argc, char* argv[]) {
 	auto orig_image = infile->read();
 	CMS::Format orig_format = orig_image->format();
 	orig_format.set_colour_model(CMS::ColourModel::Lab);
-	orig_format.set_channels(3);
 	SET_SAMPLE_FORMAT(orig_format);
 	orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
 

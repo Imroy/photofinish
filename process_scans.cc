@@ -46,10 +46,8 @@ using namespace PhotoFinish;
 void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
   CMS::Format orig_format = orig_image->format();
   CMS::ColourModel orig_model = orig_format.colour_model();
-  unsigned char orig_channels = orig_format.channels();
 
   orig_format.set_colour_model(CMS::ColourModel::Lab);
-  orig_format.set_channels(3);
   SET_SAMPLE_FORMAT(orig_format);
   orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
 
@@ -74,7 +72,6 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 
   CMS::Format resized_format = resized_image->format();
   resized_format.set_colour_model(orig_model);
-  resized_format.set_channels(orig_channels);
   CMS::Format dest_format = preview_file->preferred_format(resized_dest->modify_format(resized_format));
   CMS::Profile::ptr dest_profile = resized_dest->get_profile(dest_format.colour_model(), "preview");
   resized_image->transform_colour_inplace(dest_profile, dest_format);

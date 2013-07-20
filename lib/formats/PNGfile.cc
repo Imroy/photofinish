@@ -80,14 +80,12 @@ namespace PhotoFinish {
       format.set_extra_channels(1);
     case PNG_COLOR_TYPE_GRAY:
       format.set_colour_model(CMS::ColourModel::Greyscale);
-      format.set_channels(1);
       break;
 
     case PNG_COLOR_TYPE_RGB_ALPHA:
       format.set_extra_channels(1);
     case PNG_COLOR_TYPE_RGB:
       format.set_colour_model(CMS::ColourModel::RGB);
-      format.set_channels(3);
       break;
 
     default:
@@ -211,7 +209,6 @@ namespace PhotoFinish {
   CMS::Format PNGfile::preferred_format(CMS::Format format) {
     if (format.colour_model() != CMS::ColourModel::Greyscale) {
       format.set_colour_model(CMS::ColourModel::RGB);
-      format.set_channels(3);
     }
 
     if (!format.is_8bit())

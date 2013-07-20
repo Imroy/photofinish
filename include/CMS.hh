@@ -207,9 +207,6 @@ namespace CMS {
     //! Is the format floating point?
     inline bool is_fp(void) const { return (T_FLOAT(_format) == 1); }
 
-    //! Set the number of channels
-    Format &set_channels(unsigned int c);
-
     //! Get the number of channels
     inline unsigned int channels(void) const { return T_CHANNELS(_format); }
 
@@ -272,8 +269,9 @@ namespace CMS {
     //! Is the flavour 'chocolate'? i.e minimum value is black
     inline bool is_chocolate(void) const { return T_FLAVOR(_format) == 0; }
 
-    //! Set the colour model of the pixel format
-    Format &set_colour_model(const ColourModel cm);
+    //! Set the colour model and number of channels
+    //! 'channels is only used if the colour model is unknown
+    Format &set_colour_model(const ColourModel cm, unsigned int channels = 0);
 
     //! Get the colour model of the pixel format
     inline ColourModel colour_model(void) const { return (ColourModel)T_COLORSPACE(_format); }

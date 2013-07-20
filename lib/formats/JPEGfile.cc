@@ -72,22 +72,21 @@ namespace PhotoFinish {
 
     CMS::Format format;
     format.set_8bit();
-    format.set_channels(dinfo->num_components);
     switch (dinfo->jpeg_color_space) {
     case JCS_GRAYSCALE:
-      format.set_colour_model(CMS::ColourModel::Greyscale);
+      format.set_colour_model(CMS::ColourModel::Greyscale, dinfo->num_components);
       break;
 
     case JCS_YCbCr:
       dinfo->out_color_space = JCS_RGB;
     case JCS_RGB:
-      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_colour_model(CMS::ColourModel::RGB, dinfo->num_components);
       break;
 
     case JCS_YCCK:
       dinfo->out_color_space = JCS_CMYK;
     case JCS_CMYK:
-      format.set_colour_model(CMS::ColourModel::CMYK);
+      format.set_colour_model(CMS::ColourModel::CMYK, dinfo->num_components);
       if (dinfo->saw_Adobe_marker)
 	format.set_vanilla();
       break;
@@ -146,7 +145,6 @@ namespace PhotoFinish {
     if ((format.colour_model() != CMS::ColourModel::Greyscale)
 	&& (format.colour_model() != CMS::ColourModel::CMYK)) {
       format.set_colour_model(CMS::ColourModel::RGB);
-      format.set_channels(3);
     }
 
     format.set_planar(false);

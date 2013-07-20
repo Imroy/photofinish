@@ -153,13 +153,11 @@ namespace PhotoFinish {
     if (this->forcergb().defined() && this->forcergb()) {
       std::cerr << "Forcing RGB..." << std::endl;
       format.set_colour_model(CMS::ColourModel::RGB);
-      format.set_channels(3);
     }
 
     if (this->forcegrey().defined() && this->forcegrey()) {
       std::cerr << "Forcing greyscale..." << std::endl;
       format.set_colour_model(CMS::ColourModel::Greyscale);
-      format.set_channels(1);
     }
 
     if (this->depth().defined()) {

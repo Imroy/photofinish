@@ -292,12 +292,6 @@ namespace CMS {
     return *this;
   }
 
-  Format &Format::set_channels(unsigned int c) {
-    _format &= CHANNELS_MASK;
-    _format |= CHANNELS_SH(c);
-    return *this;
-  }
-
   Format &Format::set_extra_channels(unsigned int e) {
     _format &= EXTRA_MASK;
     _format |= EXTRA_SH(e);
@@ -359,9 +353,46 @@ namespace CMS {
     return *this;
   }
 
-  Format &Format::set_colour_model(const ColourModel cm) {
+  Format &Format::set_colour_model(const ColourModel cm, unsigned int channels) {
     _format &= COLORSPACE_MASK;
     _format |= COLORSPACE_SH((int)cm);
+
+    // TODO: What should be done if the supplied number of channels is wrong?
+    switch (cm) {
+    case ColourModel::Greyscale:
+      channels = 1;
+      break;
+
+    case ColourModel::RGB:
+    case ColourModel::CMY:
+    case ColourModel::YCbCr:
+    case ColourModel::YUV:
+    case ColourModel::XYZ:
+    case ColourModel::Lab:
+    case ColourModel::HSV:
+    case ColourModel::HLS:
+    case ColourModel::Yxy:
+    case ColourModel::LabV2:
+      channels = 3;
+      break;
+
+    case ColourModel::CMYK:
+    case ColourModel::YUVK:
+      channels = 4;
+      break;
+
+    default:
+      // Handle the MCH* colour models
+      if ((int)cm > 14)
+	channels = (int)cm - 14;
+      break;
+    }
+
+    if ((channels > 0) && (channels < cmsMAXCHANNELS)) {
+      _format &= CHANNELS_MASK;
+      _format |= CHANNELS_SH(channels);
+    }
+
     return *this;
   }
 

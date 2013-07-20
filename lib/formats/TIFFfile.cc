@@ -111,22 +111,21 @@ namespace PhotoFinish {
       }
     }
     std::cerr << "\tImage has " << channels << " channels." << std::endl;
-    format.set_channels(channels);
 
     TIFFcheck(GetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric));
     switch (photometric) {
     case PHOTOMETRIC_MINISWHITE:
       format.set_vanilla();
     case PHOTOMETRIC_MINISBLACK:
-      format.set_colour_model(CMS::ColourModel::Greyscale);
+      format.set_colour_model(CMS::ColourModel::Greyscale, channels);
       break;
 
     case PHOTOMETRIC_RGB:
-      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_colour_model(CMS::ColourModel::RGB, channels);
       break;
 
     case PHOTOMETRIC_SEPARATED:
-      format.set_colour_model(CMS::ColourModel::CMYK);
+      format.set_colour_model(CMS::ColourModel::CMYK, channels);
       break;
 
     default:
@@ -212,7 +211,6 @@ namespace PhotoFinish {
     if ((format.colour_model() != CMS::ColourModel::Greyscale)
 	&& (format.colour_model() != CMS::ColourModel::CMYK)) {
       format.set_colour_model(CMS::ColourModel::RGB);
-      format.set_channels(3);
     }
 
     format.set_planar(false);

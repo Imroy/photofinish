@@ -129,7 +129,6 @@ namespace PhotoFinish {
     int depth = jp2_image->comps[0].prec;
     CMS::Format format;
     format.set_planar();
-    format.set_channels(jp2_image->numcomps);
     switch (depth >> 3) {
     case 1: format.set_8bit();
       break;
@@ -147,15 +146,15 @@ namespace PhotoFinish {
 
     switch (jp2_image->color_space) {
     case CLRSPC_SRGB:
-      format.set_colour_model(CMS::ColourModel::RGB);
+      format.set_colour_model(CMS::ColourModel::RGB, jp2_image->numcomps);
       break;
 
     case CLRSPC_GRAY:
-      format.set_colour_model(CMS::ColourModel::Greyscale);
+      format.set_colour_model(CMS::ColourModel::Greyscale, jp2_image->numcomps);
       break;
 
     case CLRSPC_SYCC:
-      format.set_colour_model(CMS::ColourModel::YUV);
+      format.set_colour_model(CMS::ColourModel::YUV, jp2_image->numcomps);
       break;
 
     default:
@@ -204,7 +203,6 @@ namespace PhotoFinish {
   CMS::Format JP2file::preferred_format(CMS::Format format) {
     if (format.colour_model() != CMS::ColourModel::Greyscale) {
       format.set_colour_model(CMS::ColourModel::RGB);
-      format.set_channels(3);
     }
 
     format.set_planar();
