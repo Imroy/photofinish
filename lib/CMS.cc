@@ -396,6 +396,43 @@ namespace CMS {
     return *this;
   }
 
+  std::ostream& operator<< (std::ostream& out, Format f) {
+    out << f.colour_model() << "[";
+    if (f.extra_channels() > 0)
+      out << "(" << f.channels() << "+" << f.extra_channels() << ")×";
+    else
+      out << f.channels() << "×";
+    if (f.is_integer())
+      out << (f.bytes_per_channel() * 8) << "b";
+    else {
+      if (f.is_half())
+	out << "HP";
+      else if (f.is_float())
+	out << "SP";
+      else if (f.is_double())
+	out << "DP";
+    }
+    if (f.is_optimised())
+      out << ", optimised";
+    if (f.is_swappedfirst())
+      out << ", swappedfirst";
+    if (f.is_vanilla())
+      out << ", vanilla";
+    else
+      out << ", chocolate";
+    if (f.is_planar())
+      out << ", planar";
+    if (f.is_endianswapped())
+      out << ", endianswapped";
+    if (f.is_swapped())
+      out << ", swapped";
+
+    out << "]";
+
+    return out;
+  }
+
+
 
 
   /*

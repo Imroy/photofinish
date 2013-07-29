@@ -207,6 +207,8 @@ namespace CMS {
     //! Is the format floating point?
     inline bool is_fp(void) const { return (T_FLOAT(_format) == 1); }
 
+    inline bool is_optimised(void) const { return (T_OPTIMIZED(_format) == 1); }
+
     //! Get the number of channels
     inline unsigned int channels(void) const { return T_CHANNELS(_format); }
 
@@ -270,13 +272,15 @@ namespace CMS {
     inline bool is_chocolate(void) const { return T_FLAVOR(_format) == 0; }
 
     //! Set the colour model and number of channels
-    //! 'channels is only used if the colour model is unknown
+    //! 'channels' is only used if the colour model is unknown
     Format &set_colour_model(const ColourModel cm, unsigned int channels = 0);
 
     //! Get the colour model of the pixel format
     inline ColourModel colour_model(void) const { return (ColourModel)T_COLORSPACE(_format); }
 
   }; // class Format
+
+  std::ostream& operator<< (std::ostream& out, Format f);
 
   //! Wrap LCMS2's intents
   enum class Intent {
