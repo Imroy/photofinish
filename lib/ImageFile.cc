@@ -122,6 +122,7 @@ namespace PhotoFinish {
 
     Exiv2::Image::AutoPtr imagefile = Exiv2::ImageFactory::open(_filepath.native());
     assert(imagefile.get() != 0);
+    imagefile->readMetadata();
 
     for (auto ei : imagefile->exifData())
       img->EXIFtags().add(ei);
