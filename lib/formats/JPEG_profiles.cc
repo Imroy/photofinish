@@ -78,6 +78,7 @@ namespace PhotoFinish {
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size) {
     unsigned char num_markers = ceil(size / 65519.0); // max 65533 bytes in a marker, minus 14 bytes for the ICC overhead
     std::cerr << "\tEmbedding profile from data (" << size << " bytes, " << (int)num_markers << " markers)." << std::endl;
+
     unsigned int data_left = size;
     for (unsigned char i = 0; i < num_markers; i++) {
       int marker_data_size = data_left > 65519 ? 65519 : data_left;
@@ -86,8 +87,10 @@ namespace PhotoFinish {
       APP2[12] = i + 1;
       APP2[13] = num_markers;
       memcpy(APP2 + 14, data, marker_data_size);
+
       jpeg_write_marker(cinfo, JPEG_APP0 + 2, APP2, marker_data_size + 14);
       data += marker_data_size;
+      data_left -= marker_data_size;
     }
   }
 
