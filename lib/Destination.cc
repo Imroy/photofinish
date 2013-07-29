@@ -89,7 +89,7 @@ namespace PhotoFinish {
   Destination::ptr Destination::add_variables(multihash& vars) {
     auto ret = std::make_shared<Destination>(*this);
 
-    ImageFile::add_variables(ret, vars);
+    ImageWriter::add_variables(ret, vars);
     ret->_variables = vars;
 
     return ret;

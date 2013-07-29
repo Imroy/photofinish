@@ -33,115 +33,11 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  JPEGfile::JPEGfile(const fs::path filepath) :
-    ImageFile(filepath)
+  JPEGwriter::JPEGwriter(const fs::path filepath) :
+    ImageWriter(filepath)
   {}
 
-  //! Set up a "source manager" on the given JPEG decompression structure to read from an istream
-  void jpeg_istream_src(j_decompress_ptr dinfo, std::istream* is);
-
-  //! Free the data structures of the istream source manager
-  void jpeg_istream_src_free(j_decompress_ptr dinfo);
-
-  //! Read an ICC profile from APP2 markers in a JPEG file
-  CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
-
-  Image::ptr JPEGfile::read(Destination::ptr dest) {
-    if (_is_open)
-      throw FileOpenError("already open");
-    _is_open = true;
-
-    std::cerr << "Opening file " << _filepath << "..." << std::endl;
-    fs::ifstream ifs(_filepath, std::ios_base::in);
-    if (ifs.fail())
-      throw FileOpenError(_filepath.native());
-
-    jpeg_decompress_struct *dinfo = (jpeg_decompress_struct*)malloc(sizeof(jpeg_decompress_struct));
-    jpeg_create_decompress(dinfo);
-    struct jpeg_error_mgr jerr;
-    dinfo->err = jpeg_std_error(&jerr);
-
-    jpeg_istream_src(dinfo, &ifs);
-
-    jpeg_save_markers(dinfo, JPEG_APP0 + 2, 0xFFFF);
-
-    jpeg_read_header(dinfo, TRUE);
-    dinfo->dct_method = JDCT_FLOAT;
-
-    jpeg_start_decompress(dinfo);
-
-    CMS::Format format;
-    format.set_8bit();
-    switch (dinfo->jpeg_color_space) {
-    case JCS_GRAYSCALE:
-      format.set_colour_model(CMS::ColourModel::Greyscale, dinfo->num_components);
-      break;
-
-    case JCS_YCbCr:
-      dinfo->out_color_space = JCS_RGB;
-    case JCS_RGB:
-      format.set_colour_model(CMS::ColourModel::RGB, dinfo->num_components);
-      break;
-
-    case JCS_YCCK:
-      dinfo->out_color_space = JCS_CMYK;
-    case JCS_CMYK:
-      format.set_colour_model(CMS::ColourModel::CMYK, dinfo->num_components);
-      if (dinfo->saw_Adobe_marker)
-	format.set_vanilla();
-      break;
-
-    default:
-      std::cerr << "** unsupported JPEG colour space " << dinfo->jpeg_color_space << " **" << std::endl;
-      exit(1);
-    }
-
-    auto img = std::make_shared<Image>(dinfo->output_width, dinfo->output_height, format);
-    dest->set_depth(8);
-
-    if (dinfo->saw_JFIF_marker) {
-      switch (dinfo->density_unit) {
-      case 1:	// pixels per inch (yuck)
-	img->set_resolution(dinfo->X_density, dinfo->Y_density);
-	break;
-
-      case 2:	// pixels per centimetre
-	img->set_resolution(dinfo->X_density * 2.54, dinfo->Y_density * 2.54);
-	break;
-
-      default:
-	std::cerr << "** Unknown density unit (" << (int)dinfo->density_unit << ") **" << std::endl;
-      }
-    }
-
-    CMS::Profile::ptr profile = jpeg_read_profile(dinfo, dest);
-    if (!profile)
-      profile = Image::default_profile(format, "file");
-    img->set_profile(profile);
-
-    JSAMPROW jpeg_row[1];
-    while (dinfo->output_scanline < dinfo->output_height) {
-      img->check_rowdata_alloc(dinfo->output_scanline);
-      jpeg_row[0] = img->row<unsigned char>(dinfo->output_scanline);
-      jpeg_read_scanlines(dinfo, jpeg_row, 1);
-      std::cerr << "\r\tRead " << dinfo->output_scanline << " of " << img->height() << " rows";
-    }
-    std::cerr << "\r\tRead " << img->height() << " of " << img->height() << " rows." << std::endl;
-
-    jpeg_finish_decompress(dinfo);
-    jpeg_istream_src_free(dinfo);
-    jpeg_destroy_decompress(dinfo);
-    free(dinfo);
-    _is_open = false;
-
-    std::cerr << "\tExtracting tags..." << std::endl;
-    extract_tags(img);
-
-    std::cerr << "Done." << std::endl;
-    return img;
-  }
-
-  CMS::Format JPEGfile::preferred_format(CMS::Format format) {
+  CMS::Format JPEGwriter::preferred_format(CMS::Format format) {
     if ((format.colour_model() != CMS::ColourModel::Greyscale)
 	&& (format.colour_model() != CMS::ColourModel::CMYK)) {
       format.set_colour_model(CMS::ColourModel::RGB);
@@ -171,7 +67,7 @@ namespace PhotoFinish {
   //! Write an ICC profile into APP2 markers in a JPEG file
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
-  void JPEGfile::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) {
+  void JPEGwriter::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) {
     jpeg_compress_struct *cinfo = (jpeg_compress_struct*)malloc(sizeof(jpeg_compress_struct));
     jpeg_create_compress(cinfo);
     jpeg_error_mgr jerr;
@@ -296,7 +192,7 @@ namespace PhotoFinish {
     free(cinfo);
   }
 
-  void JPEGfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
+  void JPEGwriter::write(Image::ptr img, Destination::ptr dest, bool can_free) {
     if (_is_open)
       throw FileOpenError("already open");
     _is_open = true;

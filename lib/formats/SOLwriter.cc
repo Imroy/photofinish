@@ -23,15 +23,11 @@
 namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
-  SOLfile::SOLfile(const fs::path filepath) :
-    ImageFile(filepath)
+  SOLwriter::SOLwriter(const fs::path filepath) :
+    ImageWriter(filepath)
   {}
 
-  Image::ptr SOLfile::read(Destination::ptr dest) {
-    throw Unimplemented("SOLfile", "read");
-  }
-
-  CMS::Format SOLfile::preferred_format(CMS::Format format) {
+  CMS::Format SOLwriter::preferred_format(CMS::Format format) {
     format.set_colour_model(CMS::ColourModel::RGB);
 
     format.set_planar(false);
@@ -53,7 +49,7 @@ namespace PhotoFinish {
       stream.put(*in);
   }
 
-  void SOLfile::write(Image::ptr img, Destination::ptr dest, bool can_free) {
+  void SOLwriter::write(Image::ptr img, Destination::ptr dest, bool can_free) {
     if (_is_open)
       throw FileOpenError("already open");
     _is_open = true;

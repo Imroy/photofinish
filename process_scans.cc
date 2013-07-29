@@ -43,7 +43,7 @@ namespace po = boost::program_options;
 
 using namespace PhotoFinish;
 
-void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageFile::ptr preview_file, bool can_free = false) {
+void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageWriter::ptr preview_file, bool can_free = false) {
   CMS::Format orig_format = orig_image->format();
   CMS::ColourModel orig_model = orig_format.colour_model();
 
@@ -89,12 +89,15 @@ void preview_dir(fs::path dir, std::string format, std::shared_ptr<Tags> tags) {
   for (auto di : dir_list) {
     std::cerr << di << std::endl;
     try {
-      auto infile = ImageFile::create(di.path());
-      auto preview_file = ImageFile::create(di.path().filename(), format);
+      ImageFilepath infilepath(di.path());
+      ImageFilepath preview_filepath(di.path().filename(), format);
 
-      if (exists(preview_file->filepath())
-        && (last_write_time(preview_file->filepath()) > last_write_time(infile->filepath())))
+      if (exists(preview_filepath)
+        && (last_write_time(preview_filepath) > last_write_time(infilepath)))
         continue;
+
+      auto infile = ImageReader::open(infilepath);
+      auto preview_file = ImageWriter::open(preview_filepath);
 
       auto orig_dest = std::make_shared<Destination>();
       auto orig_image = infile->read(orig_dest);
@@ -190,7 +193,8 @@ int main(int argc, char* argv[]) {
 	continue;
 
       try {
-	auto infile = ImageFile::create(di.path());
+	ImageFilepath infilepath(di.path());
+	auto infile = ImageReader::open(infilepath);
 
 	auto orig_dest = std::make_shared<Destination>();
 	auto orig_image = infile->read(orig_dest);
@@ -198,8 +202,8 @@ int main(int argc, char* argv[]) {
 	filetags->copy_from(orig_image);
 
 	try {
-	  auto converted_file = ImageFile::create(convert_dir / di.path().filename(), convert_format);
-	  if (do_conversion && (!exists(converted_file->filepath()) || (last_write_time(converted_file->filepath()) < last_write_time(infile->filepath())))) {
+	  ImageFilepath converted_filepath(convert_dir / di.path().filename(), convert_format);
+	  if (do_conversion && (!exists(converted_filepath) || (last_write_time(converted_filepath) < last_write_time(infilepath)))) {
 	    if (!fs::exists(convert_dir)) {
 	      std::cerr << "Creating directory " << convert_dir << "." << std::endl;
 	      fs::create_directory(convert_dir);
@@ -217,6 +221,8 @@ int main(int argc, char* argv[]) {
 	    converted_dest->webp().set_lossless();
 	    converted_dest->webp().set_method(6);
 
+	    auto converted_file = ImageWriter::open(converted_filepath);
+
 	    CMS::Format orig_format = orig_image->format();
 	    CMS::Format converted_format = converted_file->preferred_format(converted_dest->modify_format(orig_format));
 	    Image::ptr converted_image;
@@ -233,9 +239,9 @@ int main(int argc, char* argv[]) {
 	}
 
 	try {
-	  auto preview_file = ImageFile::create(di.path().filename(), preview_format);
-	  if (do_preview && (!exists(preview_file->filepath()) || (last_write_time(preview_file->filepath()) < last_write_time(infile->filepath()))))
-	    make_preview(orig_image, orig_dest, filetags, preview_file, true);
+	  ImageFilepath preview_filepath(di.path().filename(), preview_format);
+	  if (do_preview && (!exists(preview_filepath) || (last_write_time(preview_filepath) < last_write_time(infilepath))))
+	    make_preview(orig_image, orig_dest, filetags, ImageWriter::open(preview_filepath), true);
 	} catch (std::exception& ex) {
 	  std::cerr << ex.what() << std::endl;
 	}

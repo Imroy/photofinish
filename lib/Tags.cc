@@ -200,7 +200,7 @@ namespace PhotoFinish {
     dest->set_jpeg(D_JPEG(50, 1, 1, false));
     dest->set_depth(8);
 
-    JPEGfile thumbfile("");
+    JPEGwriter thumbfile("");
 
     CMS::Format dest_format = thumbfile.preferred_format(dest->modify_format(img->format()));
     CMS::Profile::ptr dest_profile = dest->get_profile(CMS::ColourModel::RGB, "JPEG thumbnail");

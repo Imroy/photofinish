@@ -63,7 +63,8 @@ int main(int argc, char* argv[]) {
 
   for (auto fi : arg_filenames) {
     try {
-      auto infile = ImageFile::create(fi);
+      ImageFilepath infilepath(fi);
+      auto infile = ImageReader::open(infilepath);
       auto tags = defaulttags->dupe();
       {
 	fs::path tagpath = fi.parent_path() / ("." + fi.stem().native() + ".tags");
@@ -119,7 +120,8 @@ int main(int argc, char* argv[]) {
 	    std::string format = "jpeg";
 	    if (destination->format().defined())
 	      format = destination->format();
-	    auto outfile = ImageFile::create(destination->dir() / fi.stem(), format);
+	    ImageFilepath outfilepath(destination->dir() / fi.stem(), format);
+	    auto outfile = ImageWriter::open(outfilepath);
 
 	    CMS::Format dest_format = outfile->preferred_format(destination->modify_format(sharp_image->format()));
 	    CMS::Profile::ptr dest_profile = destination->get_profile(dest_format.colour_model(), "destination");

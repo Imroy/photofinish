@@ -14,28 +14,28 @@ PKGS = lcms2 exiv2 yaml-cpp
 
 COMMON_FLAGS = -Wall -Iinclude -fopenmp -finput-charset=UTF-8
 LIBS = -lm -lstdc++ -lgomp -lboost_filesystem -lboost_system -lboost_program_options
-LIB_OBJS = $(patsubst %.cc,%.o, $(wildcard lib/*.cc)) lib/formats/SOLfile.o
+LIB_OBJS = $(patsubst %.cc,%.o, $(wildcard lib/*.cc)) lib/formats/SOLwriter.o
 
 ifeq ($(HAZ_PNG), 1)
 COMMON_FLAGS += -DHAZ_PNG
 PKGS += libpng
-LIB_OBJS += lib/formats/PNGfile.o
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/PNG*.cc))
 endif
 ifeq ($(HAZ_JPEG), 1)
 COMMON_FLAGS += -DHAZ_JPEG
 LIBS += -ljpeg
-LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JPEGfile*.cc))
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JPEG*.cc))
 endif
 ifeq ($(HAZ_TIFF), 1)
 COMMON_FLAGS += -DHAZ_TIFF
 PKGS += libtiff-4
 LIBS += -ltiffxx
-LIB_OBJS += lib/formats/TIFFfile.o
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/TIFF*.cc))
 endif
 ifeq ($(HAZ_JP2), 1)
 COMMON_FLAGS += -DHAZ_JP2
 PKGS += libopenjpeg1
-LIB_OBJS += lib/formats/JP2file.o
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JP2*.cc))
 endif
 ifeq ($(HAZ_WEBP), 1)
 COMMON_FLAGS += -DHAZ_WEBP

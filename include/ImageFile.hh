@@ -51,44 +51,68 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  //! Abstract base class for image files
-  class ImageFile {
+  //! Class for holding filename and the image format
+  class ImageFilepath {
+  private:
+    fs::path _filepath;
+    std::string _format;
+
+  public:
+    //! Constructor
+    /*!
+      \param filepath The path of the image file
+      \param format Format of the image file
+    */
+    ImageFilepath(const fs::path filepath, const std::string format);
+
+    //! Constructor
+    /*!
+      Guess the format from the file extension.
+      \param filepath The path of the image file
+    */
+    ImageFilepath(const fs::path filepath) throw(UnknownFileType);
+
+    fs::path fixed_filepath(void) const throw(UnknownFileType);
+
+    inline void fix_filepath(void) throw(UnknownFileType) { _filepath = fixed_filepath(); }
+
+    //! File path of this image file
+    inline virtual const fs::path filepath(void) const { return _filepath; }
+
+    //! Format of this image file
+    inline virtual std::string format(void) const { return _format; }
+
+    inline friend std::ostream& operator << (std::ostream& out, const ImageFilepath& fp) {
+      out << fp._filepath << "(" << fp._format << ")";
+      return out;
+    }
+
+  }; // class ImageFilepath
+
+  inline bool exists(const ImageFilepath& fp) { return exists(fp.filepath()); }
+  inline std::time_t last_write_time(const ImageFilepath& fp) { return last_write_time(fp.filepath()); }
+
+  //! Abstract base class for reading image files
+  class ImageReader {
   protected:
     const fs::path _filepath;
     bool _is_open;
 
+    //! Private constructor
+    ImageReader(const fs::path fp);
+
+    //! Extract tags from file
     void extract_tags(Image::ptr img);
 
-    void embed_tags(Image::ptr img) const;
-
   public:
-    //! Shared pointer for an ImageFile
-    typedef std::shared_ptr<ImageFile> ptr;
-
-    //! Constructor
-    /*!
-      \param filepath The path of the image file
-    */
-    ImageFile(const fs::path filepath);
+    //! Shared pointer for an ImageReader
+    typedef std::shared_ptr<ImageReader> ptr;
 
     //! Named constructor
     /*! Use the extension of the file path to decide what class to use
       \param filepath File path
     */
-    static ImageFile::ptr create(const fs::path filepath) throw(UnknownFileType);
-
-    //! Named constructor
-    /*! Use the format to decide what class to use
-      \param filepath File path
-      \param format File format
-    */
-    static ImageFile::ptr create(fs::path filepath, const std::string format) throw(UnknownFileType);
-
-    //! Add variables to one of the configuration objects based on destination format
-    static void add_variables(Destination::ptr dest, multihash& vars);
-
-    //! File path of this image file
-    inline virtual const fs::path filepath(void) const { return _filepath; }
+    static ImageReader::ptr open(const ImageFilepath& ifp) throw(UnknownFileType);
 
     //! Read the file into an image
     /*!
@@ -103,6 +127,34 @@ namespace PhotoFinish {
     */
     virtual Image::ptr read(Destination::ptr dest) = 0;
 
+  }; // class ImageReader
+
+
+
+  //! Abstract base class for writing image files
+  class ImageWriter {
+  protected:
+    const fs::path _filepath;
+    bool _is_open;
+
+    //! Private constructor
+    ImageWriter(const fs::path fp);
+
+    void embed_tags(Image::ptr img) const;
+
+  public:
+    //! Shared pointer for an ImageWriter
+    typedef std::shared_ptr<ImageWriter> ptr;
+
+    //! Named constructor
+    /*! Use the extension of the file path to decide what class to use
+      \param filepath File path
+    */
+    static ImageWriter::ptr open(const ImageFilepath& ifp) throw(UnknownFileType);
+
+    //! Add variables to one of the configuration objects based on destination format
+    static void add_variables(Destination::ptr dest, multihash& vars);
+
     //! Modify an LCMS2 pixel format into a "type" that the file format can write
     virtual CMS::Format preferred_format(CMS::Format format) = 0;
 
@@ -113,79 +165,135 @@ namespace PhotoFinish {
       \param can_free Can each row of the image be freed after it is written?
     */
     virtual void write(Image::ptr img, Destination::ptr dest, bool can_free = false) = 0;
-  };
+
+  }; // class ImageWriter
+
+
 
 #ifdef HAZ_PNG
-  //! PNG file reader and writer
-  class PNGfile : public ImageFile {
+  //! PNG file reader
+  class PNGreader : public ImageReader {
   private:
     png_structp _png;
     png_infop _info;
 
   public:
-    PNGfile(const fs::path filepath);
+    PNGreader(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+  }; // class PNGreader
+
+
+  //! PNG file writer
+  class PNGwriter : public ImageWriter {
+  private:
+    png_structp _png;
+    png_infop _info;
+
+  public:
+    PNGwriter(const fs::path filepath);
+
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
-  };
+  }; // class PNGwriter
 #endif
 
 #ifdef HAZ_JPEG
-  //! JPEG file reader and writer
-  class JPEGfile : public ImageFile {
+  //! JPEG file reader
+  class JPEGreader : public ImageReader {
   private:
 
   public:
-    JPEGfile(const fs::path filepath);
+    JPEGreader(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+  }; // class JPEGreader
+
+
+  //! JPEG file writer
+  class JPEGwriter : public ImageWriter {
+  private:
+
+  public:
+    JPEGwriter(const fs::path filepath);
+
     CMS::Format preferred_format(CMS::Format format);
     //! Special version of write() that takes an open ostream object
     void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
-  };
+  }; // class JPEGwriter
 #endif
 
 #ifdef HAZ_TIFF
-  //! TIFF file reader and writer
-  class TIFFfile : public ImageFile {
+  //! TIFF file reader
+  class TIFFreader : public ImageReader {
   private:
 
   public:
-    TIFFfile(const fs::path filepath);
+    TIFFreader(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+  }; // class TIFFreader
+
+
+  //! TIFF file writer
+  class TIFFwriter : public ImageWriter {
+  private:
+
+  public:
+    TIFFwriter(const fs::path filepath);
+
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
-  };
+  }; // class TIFFwriter
 #endif
 
 #ifdef HAZ_JP2
-  //! JPEG 2000 file reader and writer
-  class JP2file : public ImageFile {
+  //! JPEG 2000 file reader
+  class JP2reader : public ImageReader {
   private:
 
   public:
-    JP2file(const fs::path filepath);
+    JP2reader(const fs::path filepath);
 
     Image::ptr read(Destination::ptr dest);
+  }; // class JP2reader
+
+
+  //! JPEG 2000 file writer
+  class JP2writer : public ImageWriter {
+  private:
+
+  public:
+    JP2writer(const fs::path filepath);
+
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
-  };
+  }; // class JP2writer
 #endif
 
 #ifdef HAZ_WEBP
-  //! WebP file reader and writer
-  class WebPfile : public ImageFile {
+  //! WebP file reader
+  class WebPreader : public ImageReader {
   private:
 
   public:
-    WebPfile(const fs::path filepath);
+    WebPreader(const fs::path filepath);
+
     Image::ptr read(Destination::ptr dest);
+  }; // class WebPreader
+
+
+  //! WebP file writer
+  class WebPwriter : public ImageWriter {
+  private:
+
+  public:
+    WebPwriter(const fs::path filepath);
+
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
-  };
+  }; // class WebPwriter
 #endif
 
   //! Write the boot logo files for use on Motorola Atrix 4G and possibly other phones
@@ -196,16 +304,15 @@ namespace PhotoFinish {
     The image data is as uncompressed 5-6-5 bit pixels i.e 16 bits per pixel.
     No footer.
    */
-  class SOLfile : public ImageFile {
+  class SOLwriter : public ImageWriter {
   private:
 
   public:
-    SOLfile(const fs::path filepath);
+    SOLwriter(const fs::path filepath);
 
-    Image::ptr read(Destination::ptr dest);
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
-  };
+  }; // class SOLwriter
 
   //! A template function that we specialise for each type a pixel component could be in
   template <typename T>

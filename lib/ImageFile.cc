@@ -25,12 +25,98 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  ImageFile::ImageFile(const fs::path filepath) :
+  ImageFilepath::ImageFilepath(const fs::path filepath, const std::string format) :
     _filepath(filepath),
+    _format(format)
+  {}
+
+  ImageFilepath::ImageFilepath(const fs::path filepath) throw(UnknownFileType) :
+    _filepath(filepath)
+  {
+    std::string ext = filepath.extension().generic_string().substr(1);
+    bool unknown = true;
+#ifdef HAZ_PNG
+    if (boost::iequals(ext, "png")) {
+      _format = "png";
+      unknown = false;
+    }
+#endif
+
+#ifdef HAZ_JPEG
+    if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg")) {
+      _format = "jpeg";
+      unknown = false;
+    }
+#endif
+
+#ifdef HAZ_TIFF
+    if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif")) {
+      _format = "tiff";
+      unknown = false;
+    }
+#endif
+
+#ifdef HAZ_JP2
+    if (boost::iequals(ext, "jp2")) {
+      _format = "jp2";
+      unknown = false;
+    }
+#endif
+
+#ifdef HAZ_WEBP
+    if (boost::iequals(ext, "webp")) {
+      _format = "webp";
+      unknown = false;
+    }
+#endif
+
+    if (unknown)
+      throw UnknownFileType(filepath.generic_string());
+  }
+
+  fs::path ImageFilepath::fixed_filepath(void) const throw(UnknownFileType) {
+    fs::path fp(_filepath);
+#ifdef HAZ_PNG
+    if (boost::iequals(_format, "png"))
+      return fp.replace_extension(".png");
+#endif
+
+#ifdef HAZ_JPEG
+    if (boost::iequals(_format, "jpeg")
+        || boost::iequals(_format, "jpg"))
+      return fp.replace_extension(".jpeg");
+#endif
+
+#ifdef HAZ_TIFF
+    if (boost::iequals(_format, "tiff")
+        || boost::iequals(_format, "tif"))
+      return fp.replace_extension(".tiff");
+#endif
+
+#ifdef HAZ_JP2
+    if (boost::iequals(_format, "jp2"))
+      return fp.replace_extension(".jp2");
+#endif
+
+#ifdef HAZ_WEBP
+    if (boost::iequals(_format, "webp"))
+      return fp.replace_extension(".webp");
+#endif
+
+    if (boost::iequals(_format, "sol"))
+      return fp.replace_extension(".bin");
+
+    throw UnknownFileType(_format);
+  }
+
+
+
+  ImageReader::ImageReader(const fs::path fp) :
+    _filepath(fp),
     _is_open(false)
   {}
 
-  void ImageFile::extract_tags(Image::ptr img) {
+  void ImageReader::extract_tags(Image::ptr img) {
     if (_is_open)
       throw FileOpenError("already open");
 
@@ -47,7 +133,51 @@ namespace PhotoFinish {
       img->XMPtags().add(xi);
   }
 
-  void ImageFile::embed_tags(Image::ptr img) const {
+  ImageReader::ptr ImageReader::open(const ImageFilepath& ifp) throw(UnknownFileType) {
+    ImageReader *ir = NULL;
+#ifdef HAZ_PNG
+    if (boost::iequals(ifp.format(), "png"))
+      ir = new PNGreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_JPEG
+    if (boost::iequals(ifp.format(), "jpeg"))
+      ir = new JPEGreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_TIFF
+    if (boost::iequals(ifp.format(), "tiff"))
+      ir = new TIFFreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_JP2
+    if (boost::iequals(ifp.format(), "jp2"))
+      ir = new JP2reader(ifp.filepath());
+#endif
+
+#ifdef HAZ_WEBP
+    if (boost::iequals(ifp.format(), "webp"))
+      ir = new WebPreader(ifp.filepath());
+#endif
+
+    if (ir == NULL)
+      throw UnknownFileType(ifp.format());
+    else
+      return ImageReader::ptr(ir);
+  }
+
+  Image::ptr ImageReader::read(void) {
+    auto temp = std::make_shared<Destination>();
+    return this->read(temp);
+  }
+
+
+  ImageWriter::ImageWriter(const fs::path fp) :
+    _filepath(fp),
+    _is_open(false)
+  {}
+
+  void ImageWriter::embed_tags(Image::ptr img) const {
     if (_is_open)
       throw FileOpenError("already open");
 
@@ -60,71 +190,45 @@ namespace PhotoFinish {
     imagefile->writeMetadata();
   }
 
-  ImageFile::ptr ImageFile::create(const fs::path filepath) throw(UnknownFileType) {
-    std::string ext = filepath.extension().generic_string().substr(1);
+  ImageWriter::ptr ImageWriter::open(const ImageFilepath& ifp) throw(UnknownFileType) {
+    ImageWriter *iw = NULL;
 #ifdef HAZ_PNG
-    if (boost::iequals(ext, "png"))
-      return std::make_shared<PNGfile>(filepath);
+    if (boost::iequals(ifp.format(), "png"))
+      iw = new PNGwriter(ifp.fixed_filepath());
 #endif
 
 #ifdef HAZ_JPEG
-    if (boost::iequals(ext, "jpeg") || boost::iequals(ext, "jpg"))
-      return std::make_shared<JPEGfile>(filepath);
+    if (boost::iequals(ifp.format(), "jpeg")
+        || boost::iequals(ifp.format(), "jpg"))
+      iw = new JPEGwriter(ifp.fixed_filepath());
 #endif
 
 #ifdef HAZ_TIFF
-    if (boost::iequals(ext, "tiff") || boost::iequals(ext, "tif"))
-      return std::make_shared<TIFFfile>(filepath);
+    if (boost::iequals(ifp.format(), "tiff")
+        || boost::iequals(ifp.format(), "tif"))
+      iw = new TIFFwriter(ifp.fixed_filepath());
 #endif
 
 #ifdef HAZ_JP2
-    if (boost::iequals(ext, "jp2"))
-      return std::make_shared<JP2file>(filepath);
+    if (boost::iequals(ifp.format(), "jp2"))
+      iw = new JP2writer(ifp.fixed_filepath());
 #endif
 
 #ifdef HAZ_WEBP
-    if (boost::iequals(ext, "webp"))
-      return std::make_shared<WebPfile>(filepath);
+    if (boost::iequals(ifp.format(), "webp"))
+      iw = new WebPwriter(ifp.fixed_filepath());
 #endif
 
-    throw UnknownFileType(filepath.generic_string());
+    if (boost::iequals(ifp.format(), "sol"))
+      iw = new SOLwriter(ifp.fixed_filepath());
+
+    if (iw == NULL)
+      throw UnknownFileType(ifp.format());
+    else
+      return ImageWriter::ptr(iw);
   }
 
-  ImageFile::ptr ImageFile::create(fs::path filepath, const std::string format) throw(UnknownFileType) {
-#ifdef HAZ_PNG
-    if (boost::iequals(format, "png"))
-      return std::make_shared<PNGfile>(filepath.replace_extension(".png"));
-#endif
-
-#ifdef HAZ_JPEG
-    if (boost::iequals(format, "jpeg")
-	|| boost::iequals(format, "jpg"))
-      return std::make_shared<JPEGfile>(filepath.replace_extension(".jpeg"));
-#endif
-
-#ifdef HAZ_TIFF
-    if (boost::iequals(format, "tiff")
-	|| boost::iequals(format, "tif"))
-      return std::make_shared<TIFFfile>(filepath.replace_extension(".tiff"));
-#endif
-
-#ifdef HAZ_JP2
-    if (boost::iequals(format, "jp2"))
-      return std::make_shared<JP2file>(filepath.replace_extension(".jp2"));
-#endif
-
-#ifdef HAZ_WEBP
-    if (boost::iequals(format, "webp"))
-      return std::make_shared<WebPfile>(filepath.replace_extension(".webp"));
-#endif
-
-    if (boost::iequals(format, "sol"))
-      return std::make_shared<SOLfile>(filepath.replace_extension(".bin"));
-
-    throw UnknownFileType(format);
-  }
-
-  void ImageFile::add_variables(Destination::ptr dest, multihash& vars) {
+  void ImageWriter::add_variables(Destination::ptr dest, multihash& vars) {
     std::string format = dest->format().get();
     if (boost::iequals(format, "jpeg")
 	|| boost::iequals(format, "jpg"))
@@ -139,11 +243,6 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "webp"))
       const_cast<D_WebP&>(dest->webp()).add_variables(vars);
-  }
-
-  Image::ptr ImageFile::read(void) {
-    auto temp = std::make_shared<Destination>();
-    return this->read(temp);
   }
 
 }
