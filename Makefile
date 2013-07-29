@@ -67,7 +67,7 @@ $(PROGRAMS): %: $(LIB_OBJS) %.o
 
 depend:
 	touch .depend
-	makedepend -f .depend -I include *.cc lib/*.cc lib/formats/*.cc 2> /dev/null
+	makedepend -f .depend -I include -I lib/formats *.cc lib/*.cc lib/formats/*.cc 2> /dev/null
 
 ifneq ($(wildcard .depend),)
 include .depend

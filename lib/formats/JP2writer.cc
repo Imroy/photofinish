@@ -21,28 +21,13 @@
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Exception.hh"
+#include "JP2.hh"
 
 namespace PhotoFinish {
 
   JP2writer::JP2writer(const fs::path filepath) :
     ImageWriter(filepath)
   {}
-
-  void error_callback(const char* msg, void* client_data);
-  void warning_callback(const char* msg, void* client_data);
-  void info_callback(const char* msg, void* client_data);
-
-  //! Read a row of planar pixel data into OpenJPEG's planar components
-  template <typename T>
-  void write_planar(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int y) {
-    T *in = row;
-    unsigned int index_start = y * width;
-    for (unsigned char c = 0; c < channels; c++) {
-      unsigned int index = index_start;
-      for (unsigned int x = 0; x < width; x++, index++, in++)
-	image->comps[c].data[index] = *in;
-    }
-  }
 
   CMS::Format JP2writer::preferred_format(CMS::Format format) {
     if (format.colour_model() != CMS::ColourModel::Greyscale) {

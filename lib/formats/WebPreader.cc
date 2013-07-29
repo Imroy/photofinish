@@ -17,7 +17,6 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <boost/algorithm/string.hpp>
-#include <webp/encode.h>
 #include <webp/decode.h>
 #include <omp.h>
 #include "ImageFile.hh"

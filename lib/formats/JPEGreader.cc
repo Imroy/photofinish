@@ -28,6 +28,7 @@
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "JPEG.hh"
 
 namespace fs = boost::filesystem;
 
@@ -36,15 +37,6 @@ namespace PhotoFinish {
   JPEGreader::JPEGreader(const fs::path filepath) :
     ImageReader(filepath)
   {}
-
-  //! Set up a "source manager" on the given JPEG decompression structure to read from an istream
-  void jpeg_istream_src(j_decompress_ptr dinfo, std::istream* is);
-
-  //! Free the data structures of the istream source manager
-  void jpeg_istream_src_free(j_decompress_ptr dinfo);
-
-  //! Read an ICC profile from APP2 markers in a JPEG file
-  CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
 
   Image::ptr JPEGreader::read(Destination::ptr dest) {
     if (_is_open)

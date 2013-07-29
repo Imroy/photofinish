@@ -21,28 +21,13 @@
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Exception.hh"
+#include "JP2.hh"
 
 namespace PhotoFinish {
 
   JP2reader::JP2reader(const fs::path filepath) :
     ImageReader(filepath)
   {}
-
-  void error_callback(const char* msg, void* client_data);
-  void warning_callback(const char* msg, void* client_data);
-  void info_callback(const char* msg, void* client_data);
-
-  //! Read a row of image data from OpenJPEG's planar integer components into an LCMS2-compatible single array
-  template <typename T>
-  inline void read_planar(unsigned int width, unsigned char channels, opj_image_t* image, T* row, unsigned int y) {
-    T *out = row;
-    unsigned int index_start = y * width;
-    for (unsigned char c = 0; c < channels; c++) {
-      unsigned int index = index_start;
-      for (unsigned int x = 0; x < width; x++, out++, index++)
-	*out = image->comps[c].data[index];
-    }
-  }
 
   Image::ptr JP2reader::read(Destination::ptr dest) {
     if (_is_open)

@@ -89,6 +89,9 @@ namespace PhotoFinish {
     int write(unsigned char* data, size_t data_size);
   }; // class webp_stream_writer
 
+  //! Wrapper around the webp_stream_writer class
+  int webp_stream_writer_func(const uint8_t* data, size_t data_size, const WebPPicture* picture);
+
   inline void copy_le_to(unsigned char* dest, unsigned int value, unsigned char length) {
     for (unsigned char i = 0; i < length; i++) {
       dest[i] = (unsigned char)(value & 0xff);

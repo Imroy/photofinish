@@ -317,6 +317,61 @@ namespace PhotoFinish {
       return ("Error with value of cmsType: " + _msg + ".").c_str();
     }
   };
+
+  //! WebP exception
+  class WebPError : public std::exception {
+  private:
+    int _code;
+
+  public:
+    //! Constructor
+    /*!
+      \param c Error code
+    */
+    WebPError(int c) :
+      _code(c)
+    {}
+
+    virtual const char* what() const throw() {
+      switch (_code) {
+      case 0:
+	return std::string("No error").c_str();
+
+      case 1:
+	return std::string("Out of memory").c_str();
+
+      case 2:
+	return std::string("Bitstream out of memory").c_str();
+
+      case 3:
+	return std::string("NULL parameter").c_str();
+
+      case 4:
+	return std::string("Invalid configuration").c_str();
+
+      case 5:
+	return std::string("Bad dimension").c_str();
+
+      case 6:
+	return std::string("Partition is larger than 512 KiB").c_str();
+
+      case 7:
+	return std::string("Partition is larger than 16 MiB").c_str();
+
+      case 8:
+	return std::string("Bad write").c_str();
+
+      case 9:
+	return std::string("File is larger than 4 GiB").c_str();
+
+      case 10:
+	return std::string("User abort").c_str();
+
+      }
+      return std::string("Dunno").c_str();
+    }
+  };
+
 }
 
 #endif /* __EXCEPTION_HH__ */

@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <webp/encode.h>
 #include "WebP_ostream.hh"
 
 namespace PhotoFinish {
@@ -181,6 +182,11 @@ namespace PhotoFinish {
     }
 
     return 1;
+  }
+
+  int webp_stream_writer_func(const uint8_t* data, size_t data_size, const WebPPicture* picture) {
+    webp_stream_writer *wrt = (webp_stream_writer*)picture->custom_ptr;
+    return wrt->write(const_cast<unsigned char*>(data), data_size);
   }
 
 }; // namespace PhotoFinish

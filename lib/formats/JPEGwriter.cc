@@ -28,6 +28,7 @@
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "JPEG.hh"
 
 namespace fs = boost::filesystem;
 
@@ -51,21 +52,6 @@ namespace PhotoFinish {
 
     return format;
   }
-
-  //! Setup a "destination manager" on the given JPEG compression structure to write to an ostream
-  void jpeg_ostream_dest(j_compress_ptr cinfo, std::ostream* os);
-
-  //! Free the data structures of the ostream destination manager
-  void jpeg_ostream_dest_free(j_compress_ptr cinfo);
-
-  //! Create a scan "script" for an RGB image
-  void jpegfile_scan_RGB(jpeg_compress_struct* cinfo);
-
-  //! Create a scan "script" for a greyscale image
-  void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
-
-  //! Write an ICC profile into APP2 markers in a JPEG file
-  void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
   void JPEGwriter::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) {
     jpeg_compress_struct *cinfo = (jpeg_compress_struct*)malloc(sizeof(jpeg_compress_struct));
