@@ -18,8 +18,11 @@
 */
 #ifndef __JPEG_HH__
 #define __JPEG_HH__
+#include <stdio.h>
 #include <jpeglib.h>
 #include "CMS.hh"
+#include "Image.hh"
+#include "Destination.hh"
 
 namespace PhotoFinish {
 
@@ -41,8 +44,11 @@ namespace PhotoFinish {
   //! Create a scan "script" for a greyscale image
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
+  //! Read EXIF, XMP, and IPTC metadata from app markers in a JPEG file
+  void jpeg_read_metadata(jpeg_decompress_struct* dinfo, Image::ptr img);
+
   //! Read an ICC profile from APP2 markers in a JPEG file
-  CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct*, Destination::ptr dest);
+  CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct* dinfo, Destination::ptr dest);
 
   //! Write an ICC profile into APP2 markers in a JPEG file
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
