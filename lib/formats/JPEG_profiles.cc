@@ -31,15 +31,15 @@ namespace PhotoFinish {
   CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct* dinfo, Destination::ptr dest) {
     unsigned int profile_size = 0;
     unsigned char num_markers = 0;
-    std::map<unsigned char, jpeg_marker_struct*> app2_markers;
+    std::map<unsigned char, jpeg_marker_struct*> icc_markers;
     for (jpeg_marker_struct *marker = dinfo->marker_list; marker != NULL; marker = marker->next)
       if ((marker->marker == JPEG_APP0 + 2)
 	  && (marker->data_length > 14)
-	  && (strncmp((char*)marker->data, "ICC_PROFILE", 11) == 0)) {
+	  && (memcmp(marker->data, "ICC_PROFILE\0", 12) == 0)) {
 
 	profile_size += marker->data_length - 14;
 	unsigned char i = *(marker->data + 12) - 1;
-	app2_markers[i] = marker;
+	icc_markers[i] = marker;
 
 	unsigned char j = *(marker->data + 13);
 	if ((i > 0) && (j != num_markers))
@@ -50,16 +50,16 @@ namespace PhotoFinish {
     if (profile_size == 0)	// Probably no APP2 markers
       return NULL;
 
-    if (num_markers != app2_markers.size()) {
-      std::cerr << "** Supposed to have " << (int)num_markers << " APP2 markers, but only have " << app2_markers.size() << " in list **" << std::endl;
+    if (num_markers != icc_markers.size()) {
+      std::cerr << "** Supposed to have " << (int)num_markers << " APP2 markers, but only have " << icc_markers.size() << " in list **" << std::endl;
       return NULL;
     }
 
     unsigned char *profile_data = (unsigned char*)malloc(profile_size);
     unsigned char *pos = profile_data;
     for (unsigned int i = 0; i < num_markers; i++) {
-      memcpy(pos, app2_markers[i]->data + 14, app2_markers[i]->data_length - 14);
-      pos += app2_markers[i]->data_length - 14;
+      memcpy(pos, icc_markers[i]->data + 14, icc_markers[i]->data_length - 14);
+      pos += icc_markers[i]->data_length - 14;
     }
 
     CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
@@ -83,7 +83,7 @@ namespace PhotoFinish {
     for (unsigned char i = 0; i < num_markers; i++) {
       int marker_data_size = data_left > 65519 ? 65519 : data_left;
       JOCTET *APP2 = (JOCTET*)malloc(marker_data_size + 14);
-      strcpy((char*)APP2, "ICC_PROFILE");
+      memcpy(APP2, "ICC_PROFILE\0", 12);
       APP2[12] = i + 1;
       APP2[13] = num_markers;
       memcpy(APP2 + 14, data, marker_data_size);
