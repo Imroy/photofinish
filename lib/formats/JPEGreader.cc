@@ -55,9 +55,7 @@ namespace PhotoFinish {
 
     jpeg_istream_src(dinfo, &ifs);
 
-    jpeg_save_markers(dinfo, JPEG_APP0 + 1, 0xFFFF);	// For EXIF and XMP metadata
     jpeg_save_markers(dinfo, JPEG_APP0 + 2, 0xFFFF);	// For ICC profile
-    jpeg_save_markers(dinfo, JPEG_APP0 + 13, 0xFFFF);	// For Photoshop 3.0 metadata (which contains IPTC metadata)
 
     jpeg_read_header(dinfo, TRUE);
     dinfo->dct_method = JDCT_FLOAT;
@@ -108,8 +106,6 @@ namespace PhotoFinish {
       }
     }
 
-    jpeg_read_metadata(dinfo, img);
-
     CMS::Profile::ptr profile = jpeg_read_profile(dinfo, dest);
     if (!profile)
       profile = Image::default_profile(format, "file");
@@ -129,6 +125,9 @@ namespace PhotoFinish {
     jpeg_destroy_decompress(dinfo);
     free(dinfo);
     _is_open = false;
+
+    std::cerr << "\tExtracting tags..." << std::endl;
+    extract_tags(img);
 
     std::cerr << "Done." << std::endl;
     return img;

@@ -44,9 +44,6 @@ namespace PhotoFinish {
   //! Create a scan "script" for a greyscale image
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo);
 
-  //! Read EXIF, XMP, and IPTC metadata from app markers in a JPEG file
-  void jpeg_read_metadata(jpeg_decompress_struct* dinfo, Image::ptr img);
-
   //! Read an ICC profile from APP2 markers in a JPEG file
   CMS::Profile::ptr jpeg_read_profile(jpeg_decompress_struct* dinfo, Destination::ptr dest);
 
