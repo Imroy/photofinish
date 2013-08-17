@@ -163,8 +163,8 @@ namespace PhotoFinish {
 
     if (ir == NULL)
       throw UnknownFileType(ifp.format());
-    else
-      return ImageReader::ptr(ir);
+
+    return ImageReader::ptr(ir);
   }
 
   Image::ptr ImageReader::read(void) {
@@ -225,8 +225,8 @@ namespace PhotoFinish {
 
     if (iw == NULL)
       throw UnknownFileType(ifp.format());
-    else
-      return ImageWriter::ptr(iw);
+
+    return ImageWriter::ptr(iw);
   }
 
   void ImageWriter::add_variables(Destination::ptr dest, multihash& vars) {
