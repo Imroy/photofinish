@@ -130,7 +130,8 @@ namespace PhotoFinish {
       throw FileOpenError(_filepath.native());
 
     webp_stream_writer wrt(&ofs, img->width(), img->height());
-    wrt.add_icc(img->profile());
+    if (img->has_profile())
+      wrt.add_icc(img->profile());
     wrt.add_exif(img->EXIFtags());
     wrt.add_xmp(img->XMPtags());
 

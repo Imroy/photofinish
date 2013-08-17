@@ -143,7 +143,7 @@ namespace PhotoFinish {
 
     jpeg_start_compress(cinfo, TRUE);
 
-    {
+    if (img->has_profile()) {
       void *profile_data;
       unsigned int profile_len;
       img->profile()->save_to_mem(profile_data, profile_len);

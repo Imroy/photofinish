@@ -159,7 +159,7 @@ namespace PhotoFinish {
     if (jp2_image == NULL)
       return;
 
-    {
+    if (img->has_profile()) {
       void *profile_data;
       unsigned int profile_len;
       img->profile()->save_to_mem(profile_data, profile_len);

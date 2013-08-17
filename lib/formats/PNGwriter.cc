@@ -126,7 +126,7 @@ namespace PhotoFinish {
       png_set_pHYs(_png, _info, xres, yres, PNG_RESOLUTION_METER);
     }
 
-    {
+    if (img->has_profile()) {
       CMS::Intent intent = CMS::Intent::Perceptual;        // Default value
       if (dest->intent().defined())
 	intent = dest->intent();
