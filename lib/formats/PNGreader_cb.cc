@@ -34,7 +34,7 @@ namespace PhotoFinish {
     unsigned int width, height;
     int bit_depth, colour_type;
     png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
-    std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
+    std::cerr << "\t" << width << "Ã—" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
     _destination->set_depth(bit_depth);
 
@@ -89,7 +89,7 @@ namespace PhotoFinish {
 	  std::cerr << "** unknown unit type " << unit_type << " **" << std::endl;
 	}
 	if (_image->xres().defined() && _image->yres().defined())
-	  std::cerr << "\tImage has resolution of " << _image->xres() << "×" << _image->yres() << " PPI." << std::endl;
+	  std::cerr << "\tImage has resolution of " << _image->xres() << "Ã—" << _image->yres() << " PPI." << std::endl;
       }
     }
 
