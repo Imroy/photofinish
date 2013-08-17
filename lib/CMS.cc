@@ -196,13 +196,15 @@ namespace CMS {
   /*
     class Format
   */
-  Format::Format(cmsUInt32Number f)
-    : _format(f)
+  Format::Format(cmsUInt32Number f, bool pa)
+    : _format(f),
+      _premult_alpha(pa)
   {
   }
 
   Format::Format()
-    : _format(0)
+    : _format(0),
+      _premult_alpha(false)
   {
   }
 
@@ -289,6 +291,22 @@ namespace CMS {
     _format |= FLOAT_SH(1);
     _format &= BYTES_MASK;
     _format |= BYTES_SH(0);
+    return *this;
+  }
+
+  Format &Format::set_channel_type(unsigned char bytes, bool fp) {
+    _format &= BYTES_MASK;
+    _format |= BYTES_SH(bytes);
+    _format &= FLOAT_MASK;
+    _format |= FLOAT_SH(fp);
+    return *this;
+  }
+
+  Format &Format::set_channel_type(const Format& other) {
+    _format &= BYTES_MASK;
+    _format |= BYTES_SH(T_BYTES(other._format));
+    _format &= FLOAT_MASK;
+    _format |= FLOAT_SH(T_FLOAT(other._format));
     return *this;
   }
 
@@ -393,6 +411,16 @@ namespace CMS {
       _format |= CHANNELS_SH(channels);
     }
 
+    return *this;
+  }
+
+  Format &Format::set_premult_alpha(bool pa) {
+    _premult_alpha = pa;
+    return *this;
+  }
+
+  Format &Format::unset_premult_alpha() {
+    _premult_alpha = false;
     return *this;
   }
 

@@ -41,6 +41,15 @@ namespace PhotoFinish {
     Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
 
+    template <typename SRC, typename DST>
+    void _un_alpha_mult_src_dst(void);
+
+    template <typename SRC, typename DST>
+    void _alpha_mult_src_dst(CMS::Format dest_format);
+
+    template <typename SRC>
+    void _alpha_mult_src(CMS::Format dest_format);
+
   public:
     //! Shared pointer for an Image
     typedef std::shared_ptr<Image> ptr;
@@ -60,6 +69,8 @@ namespace PhotoFinish {
 
     //! The height of this image
     inline const unsigned int height(void) const { return _height; }
+
+    inline bool has_profile(void) const { return _profile == NULL ? false : true; }
 
     //! Get the ICC profile
     inline const CMS::Profile::ptr profile(void) const { return _profile; }
@@ -153,7 +164,38 @@ namespace PhotoFinish {
      */
     void transform_colour_inplace(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual);
 
+    //! Un-pre-multiply the colour values with the alpha channel
+    /*!
+      Converts data to floating point (SAMPLE) in the process
+     */
+    void un_alpha_mult(void);
+
+    //! Pre-multiply the colour values with the alpha
+    /*!
+      \param dest_format Destination format, only the channel type (bytes and float flag) are used.
+     */
+    void alpha_mult(CMS::Format dest_format);
+
   };
+
+  //! A template function that we specialise for each type a pixel component could be in
+  template <typename T>
+  T maxval(void);
+
+  template <>
+  inline unsigned char maxval<unsigned char>(void) { return 255; }
+
+  template <>
+  inline unsigned short int maxval<unsigned short int>(void) { return 65535; }
+
+  template <>
+  inline unsigned int maxval<unsigned int>(void) { return 4294967295; }
+
+  template <>
+  inline float maxval<float>(void) { return 1.0; }
+
+  template <>
+  inline double maxval<double>(void) { return 1.0; }
 
 }
 

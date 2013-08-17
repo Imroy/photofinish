@@ -131,9 +131,10 @@ namespace CMS {
   class Format {
   private:
     cmsUInt32Number _format;
+    bool _premult_alpha;
 
     //! Private constructor for use by named constructors
-    Format(cmsUInt32Number f);
+    Format(cmsUInt32Number f, bool pa = false);
 
     friend class Transform;
 
@@ -200,6 +201,16 @@ namespace CMS {
 
     //! Is the format a double-precision floating point value(s) per channel?
     inline bool is_double(void) const { return (T_BYTES(_format) == 0) && (T_FLOAT(_format) == 1); }
+
+    //! Set the channel type (bytes and float flag)
+    Format &set_channel_type(unsigned char bytes, bool fp = false);
+
+    //! Set the channel type (bytes and float flag) from another Format object
+    Format &set_channel_type(const Format& other);
+
+    //! Set the channel type (bytes and float flag) from the template type
+    template <typename P>
+    Format &set_channel_type(void);
 
     //! Is the format integer?
     inline bool is_integer(void) const { return (T_FLOAT(_format) == 0); }
@@ -278,7 +289,44 @@ namespace CMS {
     //! Get the colour model of the pixel format
     inline ColourModel colour_model(void) const { return (ColourModel)T_COLORSPACE(_format); }
 
+    Format &set_premult_alpha(bool pa = true);
+
+    Format &unset_premult_alpha();
+
+    inline bool is_premult_alpha(void) const { return _premult_alpha; }
+
+    //! Get the maximum value supported by this format
+    template <typename T>
+    T maxval(void) {
+      if (is_8bit())
+	return 255;
+
+      if (is_16bit())
+	return 65535;
+
+      if (is_32bit())
+	return 4294967295;
+
+      return 1;	// Assume floating point
+    }
+
   }; // class Format
+
+  template <>
+  inline Format &Format::set_channel_type<unsigned char>(void) { return set_8bit(); }
+
+  template <>
+  inline Format &Format::set_channel_type<unsigned short int>(void) { return set_16bit(); }
+
+  template <>
+  inline Format &Format::set_channel_type<unsigned int>(void) { return set_32bit(); }
+
+  template <>
+  inline Format &Format::set_channel_type<float>(void) { return set_float(); }
+
+  template <>
+  inline Format &Format::set_channel_type<double>(void) { return set_double(); }
+
 
   std::ostream& operator<< (std::ostream& out, Format f);
 

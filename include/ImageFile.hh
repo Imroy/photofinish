@@ -314,25 +314,6 @@ namespace PhotoFinish {
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class SOLwriter
 
-  //! A template function that we specialise for each type a pixel component could be in
-  template <typename T>
-  T maxval(void);
-
-  template <>
-  inline unsigned char maxval<unsigned char>(void) { return 255; }
-
-  template <>
-  inline unsigned short int maxval<unsigned short int>(void) { return 65535; }
-
-  template <>
-  inline unsigned int maxval<unsigned int>(void) { return 4294967295; }
-
-  template <>
-  inline float maxval<float>(void) { return 1.0; }
-
-  template <>
-  inline double maxval<double>(void) { return 1.0; }
-
 }
 
 #endif // __IMAGEFILE_HH__

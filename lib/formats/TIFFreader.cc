@@ -33,18 +33,6 @@ namespace PhotoFinish {
 
 #define TIFFcheck(x) if ((rc = TIFF##x) != 1) throw LibraryError("libtiff", "TIFF" #x " returned " + rc)
 
-  // Pre-multiply the colour values with the alpha
-  template <typename P>
-  void alpha_mult(const P* row, unsigned int width, unsigned char channels) {
-    P *p = const_cast<P*>(row);
-    for (unsigned int x = 0; x < width; x++, p += channels + 1) {
-      if (p[channels] == 0)
-	continue;
-      for (unsigned char c = 0; c < channels; c++)
-	p[c] = (p[c] * maxval<P>()) / p[channels];
-    }
-  }
-
   Image::ptr TIFFreader::read(Destination::ptr dest) {
     if (_is_open)
       throw FileOpenError("already open");
@@ -88,7 +76,6 @@ namespace PhotoFinish {
       throw LibraryError("libTIFF", "depth");
     }
 
-    bool need_alpha_mult = false;
     {
       uint16 extra_count, *extra_types;
       if (TIFFGetField(tiff, TIFFTAG_EXTRASAMPLES, &extra_count, &extra_types) == 1) {
@@ -99,7 +86,7 @@ namespace PhotoFinish {
 	  case EXTRASAMPLE_UNSPECIFIED: std::cerr << "unspecified ";
 	    break;
 	  case EXTRASAMPLE_ASSOCALPHA: std::cerr << "associated alpha ";
-	    need_alpha_mult = true;
+	    format.set_premult_alpha();
 	    break;
 	  case EXTRASAMPLE_UNASSALPHA: std::cerr << "unassociated alpha ";
 	    break;
@@ -177,21 +164,6 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < height; y++) {
       img->check_rowdata_alloc(y);
       TIFFcheck(ReadScanline(tiff, img->row(y), y));
-      if (need_alpha_mult)
-	switch (bit_depth) {
-	case 8:
-	  alpha_mult<unsigned char>(img->row<unsigned char>(y), width, channels);
-	  break;
-
-	case 16:
-	  alpha_mult<unsigned short int>(img->row<short unsigned int>(y), width, channels);
-	  break;
-
-	case 32:
-	  alpha_mult<unsigned int>(img->row<unsigned int>(y), width, channels);
-	  break;
-
-	}
       std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows";
     }
     std::cerr << "\r\tRead " << height << " of " << height << " rows." << std::endl;
