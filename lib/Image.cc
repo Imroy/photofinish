@@ -278,12 +278,13 @@ namespace PhotoFinish {
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
     _format = dest_format;
+    _format.unset_premult_alpha();
     _pixel_size = dest_pixel_size;
     _row_size = dest_row_size;
   }
 
   void Image::un_alpha_mult(void) {
-    if (_format.extra_channels()) {
+    if (_format.extra_channels() && _format.is_premult_alpha()) {
       if (_format.is_8bit())
 	_un_alpha_mult_src_dst<unsigned char, SAMPLE>();
       else if (_format.is_16bit())
@@ -336,6 +337,7 @@ namespace PhotoFinish {
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
     _format.set_channel_type(dest_format);
+    _format.set_premult_alpha();
     _pixel_size = dest_pixel_size;
     _row_size = dest_row_size;
   }
@@ -356,7 +358,7 @@ namespace PhotoFinish {
   }
 
   void Image::alpha_mult(CMS::Format dest_format) {
-    if (_format.extra_channels()) {
+    if (_format.extra_channels() && !_format.is_premult_alpha()) {
       if (_format.is_8bit())
 	_alpha_mult_src<unsigned char>(dest_format);
       else if (_format.is_16bit())
