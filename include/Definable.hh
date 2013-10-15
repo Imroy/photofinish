@@ -21,7 +21,6 @@
 
 #include <ostream>
 #include <string>
-#include "yaml-cpp/yaml.h"
 
 namespace PhotoFinish {
 
@@ -92,12 +91,6 @@ namespace PhotoFinish {
       else
 	out << std::string("[undefined]");
       return out;
-    }
-
-    //! Allow the contained data to be read from a YAML document
-    inline friend void operator >> (const YAML::Node& node, definable<T>& data) {
-      node >> data._item;
-      data._defined = true;
     }
 
   };

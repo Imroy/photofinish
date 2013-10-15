@@ -202,84 +202,86 @@ namespace PhotoFinish {
   }
 
   //! Read a Destination record from a YAML file
-  void operator >> (const YAML::Node& node, Destination& d) {
-    if (const YAML::Node *n = node.FindValue("name"))
-      *n >> d._name;
+  void Destination::read_config(const YAML::Node& node) {
+    if (node["name"])
+      _name = node["name"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("dir"))
-      *n >> d._dir;
+    if (node["dir"])
+      _dir = node["dir"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("size"))
-      *n >> d._size;
+    if (node["size"])
+      _size = node["size"].as<double>();
 
-    if (const YAML::Node *n = node.FindValue("format"))
-      *n >> d._format;
+    if (node["format"])
+      _format = node["format"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("depth"))
-      *n >> d._depth;
+    if (node["depth"])
+      _depth = node["depth"].as<int>();
 
-    if (const YAML::Node *n = node.FindValue("noresize"))
-      *n >> d._noresize;
+    if (node["noresize"])
+      _noresize = node["noresize"].as<bool>();
 
-    if (const YAML::Node *n = node.FindValue("forcergb"))
-      *n >> d._forcergb;
+    if (node["forcergb"])
+      _forcergb = node["forcergb"].as<bool>();
 
-    if (const YAML::Node *n = node.FindValue("forcegrey"))
-      *n >> d._forcegrey;
+    if (node["forcegrey"])
+      _forcegrey = node["forcegrey"].as<bool>();
 
-    if (const YAML::Node *n = node.FindValue("intent")) {
+    if (node["intent"]) {
       std::string intent;
-      *n >> intent;
+      intent = node["intent"].as<std::string>();
       if (boost::iequals(intent.substr(0, 10), "perceptual"))
-	d._intent = CMS::Intent::Perceptual;
+	_intent = CMS::Intent::Perceptual;
       else if (boost::iequals(intent.substr(0, 8), "relative"))
-	d._intent = CMS::Intent::Relative_colormetric;
+	_intent = CMS::Intent::Relative_colormetric;
       else if (boost::iequals(intent.substr(0, 10), "saturation"))
-	d._intent = CMS::Intent::Saturation;
+	_intent = CMS::Intent::Saturation;
       else if (boost::iequals(intent.substr(0, 8), "absolute"))
-	d._intent = CMS::Intent::Absolute_colormetric;
+	_intent = CMS::Intent::Absolute_colormetric;
       else
-	d._intent = CMS::Intent::Perceptual;
+	_intent = CMS::Intent::Perceptual;
     }
 
-    if (const YAML::Node *n = node.FindValue("sharpen"))
-      *n >> d._sharpen;
+    if (node["sharpen"])
+      _sharpen.read_config(node["sharpen"]);
 
-    if (const YAML::Node *n = node.FindValue("resize"))
-      *n >> d._resize;
+    if (node["resize"])
+      _resize.read_config(node["resize"]);
 
-    if (const YAML::Node *n = node.FindValue("jpeg"))
-      *n >> d._jpeg;
+    if (node["jpeg"])
+      _jpeg.read_config(node["jpeg"]);
 
-    if (const YAML::Node *n = node.FindValue("png"))
-      *n >> d._png;
+    if (node["png"])
+      _png.read_config(node["png"]);
 
-    if (const YAML::Node *n = node.FindValue("tiff"))
-      *n >> d._tiff;
+    if (node["tiff"])
+      _tiff.read_config(node["tiff"]);
 
-    if (const YAML::Node *n = node.FindValue("jp2"))
-      *n >> d._jp2;
+    if (node["jp2"])
+      _jp2.read_config(node["jp2"]);
 
-    if (const YAML::Node *n = node.FindValue("webp"))
-      *n >> d._webp;
+    if (node["webp"])
+      _webp.read_config(node["webp"]);
 
-    if (const YAML::Node *n = node.FindValue("profile")) {
-      d._profile = std::make_shared<D_profile>();
-      *n >> *(d._profile);
+    if (node["profile"]) {
+      _profile = std::make_shared<D_profile>();
+      _profile->read_config(node["profile"]);
     }
 
-    if (const YAML::Node *n = node.FindValue("thumbnail"))
-      *n >> d._thumbnail;
+    if (node["thumbnail"])
+      _thumbnail.read_config(node["thumbnail"]);
 
+    /*
     if (const YAML::Node *targets = node.FindValue("targets")) {
       for(auto ti = targets->begin(); ti != targets->end(); ti++) {
 	std::string name;
 	ti.first() >> name;
 	auto target = std::make_shared<D_target>(name);
 	ti.second() >> *target;
-	d._targets[name] = target;
+	_targets[name] = target;
       }
     }
+    */
   }
 
 
@@ -309,15 +311,12 @@ namespace PhotoFinish {
     if (fin.fail())
       throw FileOpenError(filepath.native());
 
-    YAML::Parser parser(fin);
-    YAML::Node doc;
+    YAML::Node doc = YAML::Load(fin);
 
-    parser.GetNextDocument(doc);
     for (auto it = doc.begin(); it != doc.end(); it++) {
-      std::string destname;
-      it.first() >> destname;
+      std::string destname = it->first.as<std::string>();
       auto destination = std::make_shared<Destination>();
-      it.second() >> *destination;
+      destination->read_config(it->second);
       _destinations[destname] = destination;
     }
   }

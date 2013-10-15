@@ -29,6 +29,7 @@
 
 namespace PhotoFinish {
 
+  /*
   void operator >> (const YAML::Node& node, bool& b) {
     std::string s;
     node >> s;
@@ -45,27 +46,21 @@ namespace PhotoFinish {
     node >> i;
     b = i > 0 ? true : false;
   }
-
-  void operator >> (const YAML::Node& node, fs::path& p) {
-    std::string temp;
-    node >> temp;
-    p = temp;
-  }
-
+  */
 
 
   D_sharpen::D_sharpen()
   {}
 
   //! Read a D_sharpen record from a YAML file
-  void operator >> (const YAML::Node& node, D_sharpen& ds) {
-    if (const YAML::Node *n = node.FindValue("radius"))
-      *n >> ds._radius;
+  void D_sharpen::read_config(const YAML::Node& node) {
+    if (node["radius"])
+      _radius = node["radius"].as<double>();
 
-    if (const YAML::Node *n = node.FindValue("sigma"))
-      *n >> ds._sigma;
+    if (node["sigma"])
+      _sigma = node["sigma"].as<double>();
 
-    ds.set_defined();
+    set_defined();
   }
 
 
@@ -78,14 +73,14 @@ namespace PhotoFinish {
   {}
 
   //! Read a D_resize record from a YAML file
-  void operator >> (const YAML::Node& node, D_resize& dr) {
-    if (const YAML::Node *n = node.FindValue("filter"))
-      *n >> dr._filter;
+  void D_resize::read_config(const YAML::Node& node) {
+    if (node["filter"])
+      _filter = node["filter"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("support"))
-      *n >> dr._support;
+    if (node["support"])
+      _support = node["support"].as<double>();
 
-    dr.set_defined();
+    set_defined();
   }
 
 
@@ -100,15 +95,15 @@ namespace PhotoFinish {
   {}
 
   //! Read a D_target record from a YAML file
-  void operator >> (const YAML::Node& node, D_target& dt) {
-    if (const YAML::Node *n = node.FindValue("width"))
-      *n >> dt._width;
+  void D_target::read_config(const YAML::Node& node) {
+    if (node["width"])
+      _width = node["width"].as<double>();
 
-    if (const YAML::Node *n = node.FindValue("height"))
-      *n >> dt._height;
+    if (node["height"])
+      _height = node["height"].as<double>();
 
-    if (const YAML::Node *n = node.FindValue("size"))
-      *n >> dt._size;
+    if (node["size"])
+      _size = node["size"].as<double>();
   }
 
 
@@ -153,29 +148,29 @@ namespace PhotoFinish {
   }
 
   //! Read a D_JPEG record from a YAML file
-  void operator >> (const YAML::Node& node, D_JPEG& dj) {
-    if (const YAML::Node *n = node.FindValue("qual"))
-      *n >> dj._quality;
+  void D_JPEG::read_config(const YAML::Node& node) {
+    if (node["qual"])
+      _quality = node["qual"].as<int>();
 
-    if (const YAML::Node *n = node.FindValue("sample")) {
-      std::string sample;
-      *n >> sample;
+    if (node["sample"]) {
+      std::string sample = node["sample"].as<std::string>();
       size_t x = sample.find_first_of("x×");
       if (x != std::string::npos) {
 	try {
 	  int h = boost::lexical_cast<int>(sample.substr(0, x));
 	  int v = boost::lexical_cast<int>(sample.substr(x + 1, sample.length() - x - 1));
-	  dj._sample = std::pair<int, int>(h, v);
+	  _sample = std::pair<int, int>(h, v);
 	} catch (boost::bad_lexical_cast &ex) {
 	  std::cerr << ex.what();
 	}
       } else
 	std::cerr << "D_JPEG: Failed to parse sample \"" << sample << "\"." << std::endl;
     }
-    if (const YAML::Node *n = node.FindValue("pro"))
-      *n >> dj._progressive;
 
-    dj.set_defined();
+    if (node["pro"])
+      _progressive = node["pro"].as<bool>();
+
+    set_defined();
   }
 
 
@@ -184,7 +179,7 @@ namespace PhotoFinish {
   }
 
   //! Read a D_PNG record from a YAML file
-  void operator >> (const YAML::Node& node, D_PNG& dp) {
+  void D_PNG::read_config(const YAML::Node& node) {
   }
 
 
@@ -224,17 +219,17 @@ namespace PhotoFinish {
   }
 
   //! Read a D_TIFF record from a YAML file
-  void operator >> (const YAML::Node& node, D_TIFF& dt) {
-    if (const YAML::Node *n = node.FindValue("artist"))
-      *n >> dt._artist;
+  void D_TIFF::read_config(const YAML::Node& node) {
+    if (node["artist"])
+      _artist = node["artist"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("copyright"))
-      *n >> dt._copyright;
+    if (node["copyright"])
+      _copyright = node["copyright"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("compression"))
-      *n >> dt._compression;
+    if (node["compression"])
+      _compression = node["compression"].as<std::string>();
 
-    dt.set_defined();
+    set_defined();
   }
 
 
@@ -309,20 +304,19 @@ namespace PhotoFinish {
   }
 
   //! Read a D_JP2 record from a YAML file
-  void operator >> (const YAML::Node& node, D_JP2& dj) {
-    if (const YAML::Node *n = node.FindValue("numresolutions"))
-      *n >> dj._numresolutions;
+  void D_JP2::read_config(const YAML::Node& node) {
+    if (node["numresolutions"])
+      _numresolutions = node["numresolutions"].as<int>();
 
-    if (const YAML::Node *n = node.FindValue("prog_order"))
-      *n >> dj._prog_order;
+    if (node["prog_order"])
+      _prog_order = node["prog_order"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("rate")) {
-      std::string rate;
-      *n >> rate;
+    if (node["rate"]) {
+      std::string rate = node["rate"].as<std::string>();
       size_t sep = rate.find_first_of(",/");
       while (sep != std::string::npos) {
 	try {
-	  dj._rates.push_back(boost::lexical_cast<float>(rate.substr(0, sep)));
+	  _rates.push_back(boost::lexical_cast<float>(rate.substr(0, sep)));
 	  rate = rate.substr(sep + 1, rate.length() - sep -1);
 	} catch (boost::bad_lexical_cast &ex) {
 	  std::cerr << ex.what();
@@ -331,27 +325,27 @@ namespace PhotoFinish {
 	sep = rate.find_first_of(",/");
       }
       try {
-	dj._rates.push_back(boost::lexical_cast<float>(rate));
+	_rates.push_back(boost::lexical_cast<float>(rate));
       } catch (boost::bad_lexical_cast &ex) {
       }
     }
 
-    if (const YAML::Node *n = node.FindValue("tile")) {
-      std::string tile_size;
-      *n >> tile_size;
+    if (node["tile"]) {
+      std::string tile_size = node["tile"].as<std::string>();
       size_t sep = tile_size.find_first_of("x×/,");
       if (sep != std::string::npos) {
 	try {
 	  int h = boost::lexical_cast<int>(tile_size.substr(0, sep));
 	  int v = boost::lexical_cast<int>(tile_size.substr(sep + 1, tile_size.length() - sep - 1));
-	  dj._tile_size = std::pair<int, int>(h, v);
+	  _tile_size = std::pair<int, int>(h, v);
 	} catch (boost::bad_lexical_cast &ex) {
 	  std::cerr << ex.what();
 	}
       } else
 	std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
     }
-    dj.set_defined();
+
+    set_defined();
   }
 
 
@@ -364,23 +358,20 @@ namespace PhotoFinish {
   void D_WebP::add_variables(multihash& vars) {
   }
 
-  void operator >> (const YAML::Node& node, D_WebP& dw) {
-    if (const YAML::Node *n = node.FindValue("preset"))
-      *n >> dw._preset;
+  void D_WebP::read_config(const YAML::Node& node) {
+    if (node["preset"])
+      _preset = node["preset"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("lossless"))
-      *n >> dw._lossless;
+    if (node["lossless"])
+      _lossless = node["lossless"].as<bool>();
 
-    if (const YAML::Node *n = node.FindValue("quality"))
-      *n >> dw._quality;
+    if (node["quality"])
+      _quality = node["quality"].as<float>();
 
-    if (const YAML::Node *n = node.FindValue("method")) {
-      int temp;
-      *n >> temp;
-      dw._method = temp;
-    }
+    if (node["method"])
+      _method = node["method"].as<int>();
 
-    dw.set_defined();
+    set_defined();
   }
 
 
@@ -438,12 +429,12 @@ namespace PhotoFinish {
   }
 
   //! Read a D_profile record from a YAML file
-  void operator >> (const YAML::Node& node, D_profile& dp) {
-    if (const YAML::Node *n = node.FindValue("name"))
-      *n >> dp._name;
+  void D_profile::read_config(const YAML::Node& node) {
+    if (node["name"])
+      _name = node["name"].as<std::string>();
 
-    if (const YAML::Node *n = node.FindValue("filename"))
-      *n >> dp._filepath;
+    if (node["filename"])
+      _filepath = node["filename"].as<std::string>();
   }
 
 
@@ -451,17 +442,17 @@ namespace PhotoFinish {
   {}
 
   //! Read a D_thumbnail record from a YAML file
-  void operator >> (const YAML::Node& node, D_thumbnail& dt) {
-    if (const YAML::Node *n = node.FindValue("generate"))
-      *n >> dt._generate;
+  void D_thumbnail::read_config(const YAML::Node& node) {
+    if (node["generate"])
+      _generate = node["generate"].as<bool>();
 
-    if (const YAML::Node *n = node.FindValue("maxwidth"))
-      *n >> dt._maxwidth;
+    if (node["maxwidth"])
+      _maxwidth = node["maxwidth"].as<double>();
 
-    if (const YAML::Node *n = node.FindValue("maxheight"))
-      *n >> dt._maxheight;
+    if (node["maxheight"])
+      _maxheight = node["maxheight"].as<double>();
 
-    dt.set_defined();
+    set_defined();
   }
 
 }

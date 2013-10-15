@@ -149,7 +149,7 @@ namespace PhotoFinish {
     inline const D_thumbnail& thumbnail(void) const { return _thumbnail; }
 
     //! Read a destination record from a YAML document
-    friend void operator >> (const YAML::Node& node, Destination& d);
+    void read_config(const YAML::Node& node);
   };
 
   //! A wrapper class for reading destinations from a YAML file and storing them in a map

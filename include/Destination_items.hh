@@ -32,13 +32,6 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
-  //! Read a boolean value from a YAML file. Why doesn't yaml-cpp define this ?
-  void operator >> (const YAML::Node& node, bool& b);
-
-  //! Read a boost.filesystem path from a YAML file
-  void operator >> (const YAML::Node& node, fs::path& p);
-
-
   //! A simple hash
   typedef std::map<std::string, std::string> hash;
 
@@ -60,7 +53,7 @@ namespace PhotoFinish {
     inline definable<double> radius(void) const { return _radius; }
     inline definable<double> sigma(void) const { return _sigma; }
 
-    friend void operator >> (const YAML::Node& node, D_sharpen& ds);
+    void read_config(const YAML::Node& node);
   };
 
   //! Resize parameters for destination
@@ -84,7 +77,7 @@ namespace PhotoFinish {
     inline definable<std::string> filter(void) const { return _filter; }
     inline definable<double> support(void) const { return _support; }
 
-    friend void operator >> (const YAML::Node& node, D_resize& dr);
+    void read_config(const YAML::Node& node);
   };
 
   //! Target parameters for destination
@@ -103,7 +96,7 @@ namespace PhotoFinish {
     inline definable<double> height(void) const { return _height; }
     inline definable<double> size(void) const { return _size; }
 
-    friend void operator >> (const YAML::Node& node, D_target& dt);
+    void read_config(const YAML::Node& node);
 
     typedef std::shared_ptr<D_target> ptr;
   };
@@ -139,7 +132,7 @@ namespace PhotoFinish {
     inline definable<bool> progressive(void) const { return _progressive; }
     inline void set_progressive(bool p = true) { _progressive = p; set_defined(); }
 
-    friend void operator >> (const YAML::Node& node, D_JPEG& dj);
+    void read_config(const YAML::Node& node);
   };
 
   //! PNG parameters for destination
@@ -149,7 +142,7 @@ namespace PhotoFinish {
   public:
     D_PNG();
 
-    friend void operator >> (const YAML::Node& node, D_PNG& dp);
+    void read_config(const YAML::Node& node);
   };
 
   //! TIFF parameters for destination
@@ -180,7 +173,7 @@ namespace PhotoFinish {
     inline definable<std::string> compression(void) const { return _compression; }
     inline void set_compression(const std::string& c) { _compression = c; set_defined(); }
 
-    friend void operator >> (const YAML::Node& node, D_TIFF& dt);
+    void read_config(const YAML::Node& node);
   };
 
   //! JP2 parameters for destination
@@ -212,7 +205,7 @@ namespace PhotoFinish {
     inline definable< std::pair<int, int> > tile_size(void) const { return _tile_size; }
     inline void set_tile_size(int h, int v) { _tile_size = std::pair<int, int>(h, v); set_defined(); }
 
-    friend void operator >> (const YAML::Node& node, D_JP2& dj);
+    void read_config(const YAML::Node& node);
   };
 
   //! WebP parameters for destination
@@ -244,7 +237,7 @@ namespace PhotoFinish {
     inline definable<unsigned char> method(void) const { return _method; }
     inline void set_method(unsigned char m) { _method = m; }
 
-    friend void operator >> (const YAML::Node& node, D_WebP& dw);
+    void read_config(const YAML::Node& node);
   };
 
   //! ICC profile parameters for destination
@@ -292,7 +285,7 @@ namespace PhotoFinish {
     //! The size of the profile data
     inline unsigned int data_size(void) const { return _data_size; }
 
-    friend void operator >> (const YAML::Node& node, D_profile& dp);
+    void read_config(const YAML::Node& node);
 
     //! Shared pointer for a D_profile
     typedef std::shared_ptr<D_profile> ptr;
@@ -311,7 +304,7 @@ namespace PhotoFinish {
     inline definable<double> maxwidth(void) const { return _maxwidth; }
     inline definable<double> maxheight(void) const { return _maxheight; }
 
-    friend void operator >> (const YAML::Node& node, D_thumbnail& dt);
+    void read_config(const YAML::Node& node);
   };
 
 }
