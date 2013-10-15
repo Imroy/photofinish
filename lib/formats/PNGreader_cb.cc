@@ -57,12 +57,14 @@ namespace PhotoFinish {
     switch (colour_type) {
     case PNG_COLOR_TYPE_GRAY_ALPHA:
       format.set_extra_channels(1);
+      format.set_premult_alpha();
     case PNG_COLOR_TYPE_GRAY:
       format.set_colour_model(CMS::ColourModel::Greyscale);
       break;
 
     case PNG_COLOR_TYPE_RGB_ALPHA:
       format.set_extra_channels(1);
+      format.set_premult_alpha();
     case PNG_COLOR_TYPE_RGB:
       format.set_colour_model(CMS::ColourModel::RGB);
       break;

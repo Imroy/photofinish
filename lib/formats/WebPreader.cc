@@ -75,6 +75,7 @@ namespace PhotoFinish {
 	  if (flags & (1 << 4)) {
 	    decbuffer.colorspace = MODE_RGBA;
 	    format.set_extra_channels(1);
+	    format.set_premult_alpha();
 	  }
 	}
 	if (memcmp(fourcc, "ICCP", 4) == 0) {
