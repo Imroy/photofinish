@@ -247,7 +247,9 @@ namespace PhotoFinish {
 
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
+    unsigned char alphachan = _format.channels();
     SAMPLE scale = (SAMPLE)maxval<SAMPLE>() / maxval<SRC>();
+    SAMPLE src_scale = scale * (SAMPLE)maxval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -256,15 +258,15 @@ namespace PhotoFinish {
 
       SRC *in = (SRC*)src_rowdata;
       SAMPLE *out = (SAMPLE*)dest_rowdata;
-      for (unsigned int x = 0; x < _width; x++, in += _format.channels() + _format.extra_channels(), out += _format.channels() + _format.extra_channels()) {
-	SRC alpha = in[_format.channels()];
+      for (unsigned int x = 0; x < _width; x++, in += _format.total_channels(), out += dest_format.total_channels()) {
+	SRC alpha = in[alphachan];
 	unsigned char c;
 	if (alpha > 0) {
-	  SAMPLE recip_alpha = scale * (SAMPLE)maxval<SRC>() / alpha;
-	  for (c = 0; c < _format.channels(); c++)
+	  SAMPLE recip_alpha = src_scale / alpha;
+	  for (c = 0; c < alphachan; c++)
 	    out[c] = in[c] * recip_alpha;
 	} else
-	  for (c = 0; c < _format.channels(); c++)
+	  for (c = 0; c < alphachan; c++)
 	    out[c] = maxval<SAMPLE>();
 	for (; c < _format.total_channels(); c++)
 	  out[c] = in[c] * scale;
@@ -313,6 +315,8 @@ namespace PhotoFinish {
 
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
+    unsigned char alphachan = _format.channels();
+    SAMPLE src_scale = scale / maxval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -322,10 +326,17 @@ namespace PhotoFinish {
       SRC *in = (SRC*)src_rowdata;
       DST *out = (DST*)dest_rowdata;
       for (unsigned int x = 0; x < _width; x++, in += _format.total_channels(), out += dest_format.total_channels()) {
-	SAMPLE alpha = scale * in[_format.channels()] / maxval<SRC>();
+	SAMPLE alpha = in[alphachan] * src_scale;
 	unsigned char c;
-	for (c = 0; c < _format.channels(); c++)
-	  out[c] = in[c] * alpha;
+	for (c = 0; c < alphachan; c++) {
+	  SAMPLE temp = in[c] * alpha;
+	  if (temp > maxval<DST>())
+	    out[c] = maxval<DST>();
+	  else if (temp < 0)
+	    out[c] = 0;
+	  else
+	    out[c] = temp;
+	}
 	for (; c < dest_format.total_channels(); c++)
 	  out[c] = in[c] * scale;
       }
@@ -340,6 +351,7 @@ namespace PhotoFinish {
 
     _format.set_channel_type(dest_format);
     _format.set_premult_alpha();
+    _format.set_packed();
     _pixel_size = dest_pixel_size;
     _row_size = dest_row_size;
   }
@@ -362,7 +374,7 @@ namespace PhotoFinish {
   }
 
   void Image::alpha_mult(CMS::Format dest_format) {
-    if (_format.extra_channels() && !_format.is_premult_alpha()) {
+    if ((_format.extra_channels() > 0) && !_format.is_premult_alpha()) {
       if (_format.is_8bit())
 	_alpha_mult_src<unsigned char>(dest_format);
       else if (_format.is_16bit())
