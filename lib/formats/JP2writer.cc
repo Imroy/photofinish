@@ -34,7 +34,7 @@ namespace PhotoFinish {
       format.set_colour_model(CMS::ColourModel::RGB);
     }
 
-    format.set_planar();
+    //    format.set_planar();
 
     format.set_extra_channels(0);
 
@@ -50,8 +50,6 @@ namespace PhotoFinish {
     _is_open = true;
 
     CMS::Format format = img->format();
-    if (!format.is_planar())
-      throw cmsTypeError("Not Planar", format);
     if (format.bytes_per_channel() > 2)
       throw cmsTypeError("Too deep", format);
 
@@ -77,7 +75,7 @@ namespace PhotoFinish {
 
     std::cerr << "Preparing for file " << _filepath << "..." << std::endl;
     std::cerr << "\t" << img->width() << "×" << img->height()
-	      << " " << (format.bytes_per_channel() << 3) << "-bpp " << (colour_space == PT_GRAY ? "greyscale" : "RGB") << std::endl;
+	      << " " << (format.bytes_per_channel() << 3) << "-bpp " << (format.is_planar() ? "planar" : "packed" ) << " " << (colour_space == PT_GRAY ? "greyscale" : "RGB") << std::endl;
     opj_event_mgr_t event_mgr;
     memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
     event_mgr.error_handler = error_callback;
@@ -172,10 +170,16 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
-      if (depth == 1)
-	write_planar<unsigned char>(img->width(), channels, img->row<unsigned char>(y), jp2_image, y);
+      if (format.is_planar())
+	if (depth == 1)
+	  write_planar<unsigned char>(img->width(), channels, img->row<unsigned char>(y), jp2_image, y);
+	else
+	  write_planar<short unsigned int>(img->width(), channels, img->row<short unsigned int>(y), jp2_image, y);
       else
-	write_planar<short unsigned int>(img->width(), channels, img->row<short unsigned int>(y), jp2_image, y);
+	if (depth == 1)
+	  write_packed<unsigned char>(img->width(), channels, img->row<unsigned char>(y), jp2_image, y);
+	else
+	  write_packed<short unsigned int>(img->width(), channels, img->row<short unsigned int>(y), jp2_image, y);
 
       if (can_free)
 	img->free_row(y);

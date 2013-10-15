@@ -55,6 +55,16 @@ namespace PhotoFinish {
     }
   }
 
+  //! Read a row of packed pixel data into OpenJPEG's planar components
+  template <typename T>
+  void write_packed(unsigned int width, unsigned char channels, T* row, opj_image_t* image, unsigned int y) {
+    T *in = row;
+    unsigned int index = y * width;
+    for (unsigned int x = 0; x < width; x++, index++)
+      for (unsigned char c = 0; c < channels; c++, in++)
+	image->comps[c].data[index] = *in;
+  }
+
 } // namespace PhotoFinish
 
 
