@@ -271,17 +271,15 @@ namespace PhotoFinish {
     if (node["thumbnail"])
       _thumbnail.read_config(node["thumbnail"]);
 
-    /*
-    if (const YAML::Node *targets = node.FindValue("targets")) {
-      for(auto ti = targets->begin(); ti != targets->end(); ti++) {
-	std::string name;
-	ti.first() >> name;
-	auto target = std::make_shared<D_target>(name);
-	ti.second() >> *target;
-	_targets[name] = target;
+    if (node["targets"]) {
+      YAML::Node targets = node["targets"];
+      for(auto ti = targets.begin(); ti != targets.end(); ti++) {
+	std::string tname = ti->first.as<std::string>();
+	auto target = std::make_shared<D_target>(tname);
+	target->read_config(ti->second);
+	_targets[tname] = target;
       }
     }
-    */
   }
 
 
@@ -313,10 +311,10 @@ namespace PhotoFinish {
 
     YAML::Node doc = YAML::Load(fin);
 
-    for (auto it = doc.begin(); it != doc.end(); it++) {
-      std::string destname = it->first.as<std::string>();
+    for (auto di = doc.begin(); di != doc.end(); di++) {
+      std::string destname = di->first.as<std::string>();
       auto destination = std::make_shared<Destination>();
-      destination->read_config(it->second);
+      destination->read_config(di->second);
       _destinations[destname] = destination;
     }
   }
