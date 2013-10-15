@@ -29,26 +29,6 @@
 
 namespace PhotoFinish {
 
-  /*
-  void operator >> (const YAML::Node& node, bool& b) {
-    std::string s;
-    node >> s;
-    if (boost::iequals(s.substr(0, 1), "t")) {
-      b = true;
-      return;
-    }
-    if (boost::iequals(s.substr(0, 1), "f")) {
-      b = false;
-      return;
-    }
-
-    int i;
-    node >> i;
-    b = i > 0 ? true : false;
-  }
-  */
-
-
   D_sharpen::D_sharpen()
   {}
 
