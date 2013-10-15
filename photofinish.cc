@@ -127,8 +127,11 @@ int main(int argc, char* argv[]) {
 
 	    CMS::Format dest_format = outfile->preferred_format(destination->modify_format(sharp_image->format()));
 	    CMS::Profile::ptr dest_profile = destination->get_profile(dest_format.colour_model(), "destination");
-	    sharp_image->transform_colour_inplace(dest_profile, dest_format.copy_with_other_channels(sharp_image->format()));
-	    sharp_image->alpha_mult(dest_format);
+	    if ((sharp_image->format().extra_channels() > 0) && !sharp_image->format().is_premult_alpha()) {
+	      sharp_image->transform_colour_inplace(dest_profile, dest_format.copy_with_other_channels(sharp_image->format()));
+	      sharp_image->alpha_mult(dest_format);
+	    } else
+	      sharp_image->transform_colour_inplace(dest_profile, dest_format);
 
 	    tags->copy_to(sharp_image);
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
