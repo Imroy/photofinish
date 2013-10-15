@@ -34,9 +34,10 @@ namespace PhotoFinish {
       format.set_colour_model(CMS::ColourModel::RGB);
     }
 
-    //    format.set_planar();
+    format.set_planar();
 
     format.set_extra_channels(0);
+    format.set_premult_alpha();
 
     if (!format.is_8bit() && !format.is_16bit())
       format.set_16bit();

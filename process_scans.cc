@@ -75,11 +75,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   resized_format.set_colour_model(orig_model);
   CMS::Format dest_format = preview_file->preferred_format(resized_dest->modify_format(resized_format));
   CMS::Profile::ptr dest_profile = resized_dest->get_profile(dest_format.colour_model(), "preview");
-  if ((resized_image->format().extra_channels() > 0) && !resized_image->format().is_premult_alpha()) {
-    resized_image->transform_colour_inplace(dest_profile, dest_format.copy_with_other_channels(resized_image->format()));
-    resized_image->alpha_mult(dest_format);
-  } else
-    resized_image->transform_colour_inplace(dest_profile, dest_format);
+  resized_image->transform_colour_inplace(dest_profile, dest_format);
 
   filetags->copy_to(resized_image);
   preview_file->write(resized_image, resized_dest, can_free);

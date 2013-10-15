@@ -38,6 +38,9 @@ namespace PhotoFinish {
 
   CMS::Format WebPwriter::preferred_format(CMS::Format format) {
     format.set_colour_model(CMS::ColourModel::RGB);
+
+    format.set_packed();
+    format.set_premult_alpha();
     format.set_8bit();
 
     return format;

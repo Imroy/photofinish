@@ -39,7 +39,7 @@ namespace PhotoFinish {
       format.set_colour_model(CMS::ColourModel::RGB);
     }
 
-    format.set_planar(false);
+    format.set_packed();
 
     if (!format.is_8bit() && !format.is_16bit())
       format.set_16bit();
@@ -146,7 +146,8 @@ namespace PhotoFinish {
     }
     TIFFcheck(SetField(tiff, TIFFTAG_SAMPLESPERPIXEL, format.total_channels()));
     if (format.extra_channels()) {
-      uint16 extra_types[1] = { EXTRASAMPLE_ASSOCALPHA };
+      uint16 extra_types[1];
+      extra_types[0] = format.is_premult_alpha() ? EXTRASAMPLE_ASSOCALPHA : EXTRASAMPLE_UNASSALPHA;
       TIFFcheck(SetField(tiff, TIFFTAG_EXTRASAMPLES, 1, extra_types));
     }
 

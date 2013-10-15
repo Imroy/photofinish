@@ -156,6 +156,16 @@ namespace PhotoFinish {
     if (dest_profile == NULL)
       dest_profile = profile;
 
+    CMS::Format orig_dest_format = dest_format;
+    bool need_alpha_mult = false;
+    if (!_format.is_premult_alpha() && dest_format.is_premult_alpha()) {
+      dest_format.set_channel_type(_format);
+      dest_format.set_extra_channels(_format.extra_channels());
+      dest_format.set_packed();
+      dest_format.unset_premult_alpha();
+      need_alpha_mult = true;
+    }
+
 #pragma omp parallel
     {
 #pragma omp master
@@ -186,6 +196,10 @@ namespace PhotoFinish {
     }
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
+
+    if (need_alpha_mult)
+      dest->alpha_mult(orig_dest_format);
+
     return dest;
   }
 
@@ -195,6 +209,16 @@ namespace PhotoFinish {
       profile = default_profile(_format, "source");
     if (dest_profile == NULL)
       dest_profile = profile;
+
+    CMS::Format orig_dest_format = dest_format;
+    bool need_alpha_mult = false;
+    if ((!_format.is_premult_alpha()) && dest_format.is_premult_alpha()) {
+      dest_format.set_channel_type(_format);
+      dest_format.set_extra_channels(_format.extra_channels());
+      dest_format.set_packed();
+      dest_format.unset_premult_alpha();
+      need_alpha_mult = true;
+    }
 
 #pragma omp parallel
     {
@@ -230,6 +254,9 @@ namespace PhotoFinish {
     _format = dest_format;
     _pixel_size = dest_pixel_size;
     _row_size = dest_row_size;
+
+    if (need_alpha_mult)
+      alpha_mult(orig_dest_format);
   }
 
   template <typename SRC>
@@ -358,7 +385,13 @@ namespace PhotoFinish {
 
   template <typename SRC>
   void Image::_alpha_mult_src(CMS::Format dest_format) {
-    dest_format = _format.copy_with_other_channels(dest_format);
+    // We only take the channel type (bytes and float flag) and number of extra channels from dest_format
+    {
+      CMS::Format temp_format = _format;
+      temp_format.set_channel_type(dest_format);
+      temp_format.set_extra_channels(dest_format.extra_channels());
+      dest_format = temp_format;
+    }
 
     if (dest_format.is_8bit())
       _alpha_mult_src_dst<SRC, unsigned char>(dest_format);
@@ -386,7 +419,7 @@ namespace PhotoFinish {
       else
 	_alpha_mult_src<double>(dest_format);
     } else
-      std::cerr << "CPAG::Image::alpha_mult: format=" << dest_format << std::endl;
+      std::cerr << "CPAG::Image::alpha_mult: format=" << _format << std::endl;
   }
 
 

@@ -45,7 +45,10 @@ namespace PhotoFinish {
     if (!format.is_8bit())
       format.set_16bit();
 
-    format.set_planar(false);
+    format.set_packed();
+
+    format.set_premult_alpha();
+
     format.unset_swapfirst();
     format.unset_endianswap();
 

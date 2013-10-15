@@ -89,6 +89,7 @@ namespace PhotoFinish {
 	    format.set_premult_alpha();
 	    break;
 	  case EXTRASAMPLE_UNASSALPHA: std::cerr << "unassociated alpha ";
+	    format.unset_premult_alpha();
 	    break;
 	  default: std::cerr << "unknown ";
 	  }
