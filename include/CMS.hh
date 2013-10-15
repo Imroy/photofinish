@@ -295,6 +295,9 @@ namespace CMS {
 
     inline bool is_premult_alpha(void) const { return _premult_alpha; }
 
+    //! Make a copy of this format, but replace the channel type (bytes and float flag) and extra channels from another format
+    Format copy_with_other_channels(const Format& other) const;
+
     //! Get the maximum value supported by this format
     template <typename T>
     T maxval(void) {

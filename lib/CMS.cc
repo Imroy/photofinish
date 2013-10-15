@@ -424,6 +424,14 @@ namespace CMS {
     return *this;
   }
 
+  Format Format::copy_with_other_channels(const Format& other) const {
+    Format n(*this);
+    n.set_channel_type(other);
+    n.set_extra_channels(other.extra_channels());
+    return n;
+  }
+
+
   std::ostream& operator<< (std::ostream& out, Format f) {
     out << f.colour_model() << "[";
     if (f.extra_channels() > 0)

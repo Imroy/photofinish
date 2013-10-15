@@ -344,6 +344,9 @@ namespace PhotoFinish {
 
   template <typename SRC>
   void Image::_alpha_mult_src(CMS::Format dest_format) {
+    // We only take the channel type (bytes and float flag) and number of extra channels from dest_format
+    dest_format = _format.copy_with_other_channels(dest_format);
+
     if (dest_format.is_8bit())
       _alpha_mult_src_dst<SRC, unsigned char>(dest_format);
     else if (dest_format.is_16bit())
