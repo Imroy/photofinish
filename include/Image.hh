@@ -41,8 +41,8 @@ namespace PhotoFinish {
     Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
 
-    template <typename SRC, typename DST>
-    void _un_alpha_mult_src_dst(void);
+    template <typename SRC>
+    void _un_alpha_mult_src(void);
 
     template <typename SRC, typename DST>
     void _alpha_mult_src_dst(CMS::Format dest_format);

@@ -232,21 +232,22 @@ namespace PhotoFinish {
     _row_size = dest_row_size;
   }
 
-  template <typename SRC, typename DST>
-  void Image::_un_alpha_mult_src_dst(void) {
+  template <typename SRC>
+  void Image::_un_alpha_mult_src(void) {
+    CMS::Format dest_format = _format;
+    SET_SAMPLE_FORMAT(dest_format);
+
 #pragma omp parallel
     {
 #pragma omp master
       {
-	std::cerr << "Un-pre-multiplying colour from the alpha channel using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Un-pre-multiplying colour from the alpha channel and transforming into " << dest_format << " using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
-    CMS::Format dest_format = _format;
-    SET_SAMPLE_FORMAT(dest_format);
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
-    SAMPLE scale = (SAMPLE)maxval<DST>() / maxval<SRC>();
+    SAMPLE scale = (SAMPLE)maxval<SAMPLE>() / maxval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -254,7 +255,7 @@ namespace PhotoFinish {
       void *dest_rowdata = malloc(dest_row_size);
 
       SRC *in = (SRC*)src_rowdata;
-      DST *out = (DST*)dest_rowdata;
+      SAMPLE *out = (SAMPLE*)dest_rowdata;
       for (unsigned int x = 0; x < _width; x++, in += _format.channels() + _format.extra_channels(), out += _format.channels() + _format.extra_channels()) {
 	SRC alpha = in[_format.channels()];
 	unsigned char c;
@@ -264,7 +265,7 @@ namespace PhotoFinish {
 	    out[c] = in[c] * recip_alpha;
 	} else
 	  for (c = 0; c < _format.channels(); c++)
-	    out[c] = maxval<DST>();
+	    out[c] = maxval<SAMPLE>();
 	for (; c < _format.total_channels(); c++)
 	  out[c] = in[c] * scale;
       }
@@ -286,31 +287,32 @@ namespace PhotoFinish {
   void Image::un_alpha_mult(void) {
     if (_format.extra_channels() && _format.is_premult_alpha()) {
       if (_format.is_8bit())
-	_un_alpha_mult_src_dst<unsigned char, SAMPLE>();
+	_un_alpha_mult_src<unsigned char>();
       else if (_format.is_16bit())
-	_un_alpha_mult_src_dst<short unsigned int, SAMPLE>();
+	_un_alpha_mult_src<short unsigned int>();
       else if (_format.is_32bit())
-	_un_alpha_mult_src_dst<unsigned int, SAMPLE>();
+	_un_alpha_mult_src<unsigned int>();
       else if (_format.is_float())
-	_un_alpha_mult_src_dst<float, SAMPLE>();
+	_un_alpha_mult_src<float>();
       else
-	_un_alpha_mult_src_dst<double, SAMPLE>();
-    }
+	_un_alpha_mult_src<double>();
+    } else
+      std::cerr << "CPAG::Image::un_alpha_mult: format=" << _format << std::endl;
   }
 
   template <typename SRC, typename DST>
   void Image::_alpha_mult_src_dst(CMS::Format dest_format) {
+    SAMPLE scale = (SAMPLE)maxval<DST>() / maxval<SRC>();
 #pragma omp parallel
     {
 #pragma omp master
       {
-	std::cerr << "Pre-multiplying colour from the alpha channel using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Pre-multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << scale << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
-    SAMPLE scale = (SAMPLE)maxval<DST>() / maxval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -319,12 +321,12 @@ namespace PhotoFinish {
 
       SRC *in = (SRC*)src_rowdata;
       DST *out = (DST*)dest_rowdata;
-      for (unsigned int x = 0; x < _width; x++, in += _format.total_channels(), out += _format.total_channels()) {
+      for (unsigned int x = 0; x < _width; x++, in += _format.total_channels(), out += dest_format.total_channels()) {
 	SAMPLE alpha = scale * in[_format.channels()] / maxval<SRC>();
 	unsigned char c;
 	for (c = 0; c < _format.channels(); c++)
 	  out[c] = in[c] * alpha;
-	for (; c < _format.total_channels(); c++)
+	for (; c < dest_format.total_channels(); c++)
 	  out[c] = in[c] * scale;
       }
 
@@ -344,7 +346,6 @@ namespace PhotoFinish {
 
   template <typename SRC>
   void Image::_alpha_mult_src(CMS::Format dest_format) {
-    // We only take the channel type (bytes and float flag) and number of extra channels from dest_format
     dest_format = _format.copy_with_other_channels(dest_format);
 
     if (dest_format.is_8bit())
@@ -372,7 +373,8 @@ namespace PhotoFinish {
 	_alpha_mult_src<float>(dest_format);
       else
 	_alpha_mult_src<double>(dest_format);
-    }
+    } else
+      std::cerr << "CPAG::Image::alpha_mult: format=" << dest_format << std::endl;
   }
 
 
