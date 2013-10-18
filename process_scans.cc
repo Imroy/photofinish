@@ -46,11 +46,12 @@ using namespace PhotoFinish;
 void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr filetags, ImageWriter::ptr preview_file, bool can_free = false) {
   CMS::ColourModel orig_model = orig_image->format().colour_model();
 
-  CMS::Format orig_format;
-  orig_format.set_colour_model(CMS::ColourModel::Lab);
-  SET_SAMPLE_FORMAT(orig_format);
-  orig_image->un_alpha_mult();
-  orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
+  {
+    CMS::Format internal_format;
+    internal_format.set_colour_model(CMS::ColourModel::Lab);
+    SET_SAMPLE_FORMAT(internal_format);
+    orig_image->transform_colour_inplace(CMS::Profile::Lab4(), internal_format);
+  }
 
   auto resized_dest = orig_dest->dupe();
 

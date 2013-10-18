@@ -158,12 +158,16 @@ namespace PhotoFinish {
 
     CMS::Format orig_dest_format = dest_format;
     bool need_alpha_mult = false;
-    if (!_format.is_premult_alpha() && dest_format.is_premult_alpha()) {
-      dest_format.set_channel_type(_format);
-      dest_format.set_extra_channels(_format.extra_channels());
-      dest_format.set_packed();
-      dest_format.unset_premult_alpha();
-      need_alpha_mult = true;
+    if (_format.extra_channels() > 0) {
+      if (_format.is_premult_alpha() && (!dest_format.is_premult_alpha()))
+	this->un_alpha_mult();
+      else if ((!_format.is_premult_alpha()) && dest_format.is_premult_alpha()) {
+	dest_format.set_channel_type(_format);
+	dest_format.set_extra_channels(_format.extra_channels());
+	dest_format.set_packed();
+	dest_format.unset_premult_alpha();
+	need_alpha_mult = true;
+      }
     }
 
 #pragma omp parallel
@@ -212,12 +216,16 @@ namespace PhotoFinish {
 
     CMS::Format orig_dest_format = dest_format;
     bool need_alpha_mult = false;
-    if ((!_format.is_premult_alpha()) && dest_format.is_premult_alpha()) {
-      dest_format.set_channel_type(_format);
-      dest_format.set_extra_channels(_format.extra_channels());
-      dest_format.set_packed();
-      dest_format.unset_premult_alpha();
-      need_alpha_mult = true;
+    if (_format.extra_channels() > 0) {
+      if (_format.is_premult_alpha() && (!dest_format.is_premult_alpha()))
+	this->un_alpha_mult();
+      else if ((!_format.is_premult_alpha()) && dest_format.is_premult_alpha()) {
+	dest_format.set_channel_type(_format);
+	dest_format.set_extra_channels(_format.extra_channels());
+	dest_format.set_packed();
+	dest_format.unset_premult_alpha();
+	need_alpha_mult = true;
+      }
     }
 
 #pragma omp parallel
@@ -268,7 +276,7 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	std::cerr << "Un-pre-multiplying colour from the alpha channel and transforming into " << dest_format << " using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Un-multiplying colour from the alpha channel and transforming into " << dest_format << " using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
@@ -314,7 +322,7 @@ namespace PhotoFinish {
   }
 
   void Image::un_alpha_mult(void) {
-    if (_format.extra_channels() && _format.is_premult_alpha()) {
+    if ((_format.extra_channels() > 0) && _format.is_premult_alpha()) {
       if (_format.is_8bit())
 	_un_alpha_mult_src<unsigned char>();
       else if (_format.is_16bit())
@@ -336,7 +344,7 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	std::cerr << "Pre-multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << scale << ") using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << scale << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 

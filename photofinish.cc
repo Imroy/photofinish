@@ -74,12 +74,13 @@ int main(int argc, char* argv[]) {
 
       try {
 	auto orig_image = infile->read();
-	orig_image->un_alpha_mult();
-	CMS::Format orig_format;
-	orig_format.set_colour_model(CMS::ColourModel::Lab);
-	SET_SAMPLE_FORMAT(orig_format);
-	orig_format.set_extra_channels(orig_image->format().extra_channels());
-	orig_image->transform_colour_inplace(CMS::Profile::Lab4(), orig_format);
+	{
+	  CMS::Format internal_format;
+	  internal_format.set_colour_model(CMS::ColourModel::Lab);
+	  SET_SAMPLE_FORMAT(internal_format);
+	  internal_format.set_extra_channels(orig_image->format().extra_channels());
+	  orig_image->transform_colour_inplace(CMS::Profile::Lab4(), internal_format);
+	}
 
 	auto num_destinations = arg_destinations.size();
 	for (auto& di : arg_destinations) {
