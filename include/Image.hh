@@ -180,22 +180,25 @@ namespace PhotoFinish {
 
   //! A template function that we specialise for each type a pixel component could be in
   template <typename T>
-  T maxval(void);
+  T scaleval(void);
 
   template <>
-  inline unsigned char maxval<unsigned char>(void) { return 255; }
+  inline unsigned char scaleval<unsigned char>(void) { return 0xff; }
 
   template <>
-  inline unsigned short int maxval<unsigned short int>(void) { return 65535; }
+  inline unsigned short int scaleval<unsigned short int>(void) { return 0xffff; }
 
   template <>
-  inline unsigned int maxval<unsigned int>(void) { return 4294967295; }
+  inline unsigned int scaleval<unsigned int>(void) { return 0xffffffff; }
 
   template <>
-  inline float maxval<float>(void) { return 1.0; }
+  inline unsigned long int scaleval<unsigned long int>(void) { return 0xffffffffffffffff; }
 
   template <>
-  inline double maxval<double>(void) { return 1.0; }
+  inline float scaleval<float>(void) { return 1.0; }
+
+  template <>
+  inline double scaleval<double>(void) { return 1.0; }
 
 }
 

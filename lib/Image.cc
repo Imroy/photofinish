@@ -80,14 +80,14 @@ namespace PhotoFinish {
 
   template <typename A, typename B>
   void transfer_alpha_typed2(unsigned int width, unsigned char src_channels, const A* src_row, unsigned char dest_channels, const B* dest_row) {
-    double factor = (double)maxval<B>() / maxval<A>();
+    double factor = (double)scaleval<B>() / scaleval<A>();
     A *inp = const_cast<A*>(src_row) + src_channels;
     B *outp = const_cast<B*>(dest_row) + dest_channels;
     for (unsigned int x = width; x; x--, inp += 1 + src_channels, outp += 1 + dest_channels) {
       if (*inp < 0)
 	*outp = 0;
-      else if (*inp > maxval<A>())
-	*outp = maxval<B>();
+      else if (*inp > scaleval<A>())
+	*outp = scaleval<B>();
       else
 	*outp = (*inp) * factor;
     }
@@ -276,15 +276,15 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	std::cerr << "Un-multiplying colour from the alpha channel and transforming into " << dest_format << " using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Un-multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << (SAMPLE)scaleval<SAMPLE>() << "/" << (SAMPLE)scaleval<SRC>() << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
     unsigned char alphachan = _format.channels();
-    SAMPLE scale = (SAMPLE)maxval<SAMPLE>() / maxval<SRC>();
-    SAMPLE src_scale = scale * (SAMPLE)maxval<SRC>();
+    SAMPLE scale = (SAMPLE)scaleval<SAMPLE>() / scaleval<SRC>();
+    SAMPLE src_scale = scale * (SAMPLE)scaleval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -302,7 +302,7 @@ namespace PhotoFinish {
 	    out[c] = in[c] * recip_alpha;
 	} else
 	  for (c = 0; c < alphachan; c++)
-	    out[c] = maxval<SAMPLE>();
+	    out[c] = scaleval<SAMPLE>();
 	for (; c < _format.total_channels(); c++)
 	  out[c] = in[c] * scale;
       }
@@ -339,19 +339,19 @@ namespace PhotoFinish {
 
   template <typename SRC, typename DST>
   void Image::_alpha_mult_src_dst(CMS::Format dest_format) {
-    SAMPLE scale = (SAMPLE)maxval<DST>() / maxval<SRC>();
 #pragma omp parallel
     {
 #pragma omp master
       {
-	std::cerr << "Multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << scale << ") using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << (SAMPLE)scaleval<DST>() << "/" << (SAMPLE)scaleval<SRC>() << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
     unsigned char alphachan = _format.channels();
-    SAMPLE src_scale = scale / maxval<SRC>();
+    SAMPLE scale = (SAMPLE)scaleval<DST>() / scaleval<SRC>();
+    SAMPLE src_scale = scale / scaleval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -365,8 +365,8 @@ namespace PhotoFinish {
 	unsigned char c;
 	for (c = 0; c < alphachan; c++) {
 	  SAMPLE temp = in[c] * alpha;
-	  if (temp > maxval<DST>())
-	    out[c] = maxval<DST>();
+	  if (temp > scaleval<DST>())
+	    out[c] = scaleval<DST>();
 	  else if (temp < 0)
 	    out[c] = 0;
 	  else
