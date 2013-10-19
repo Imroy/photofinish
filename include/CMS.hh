@@ -295,9 +295,9 @@ namespace CMS {
 
     inline bool is_premult_alpha(void) const { return _premult_alpha; }
 
-    //! Get the maximum value supported by this format
+    //! Get the maximum value used/supported by this format
     template <typename T>
-    T maxval(void) {
+    T scaleval(void) {
       if (is_8bit())
 	return 255;
 
