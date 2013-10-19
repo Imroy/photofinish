@@ -183,6 +183,46 @@ namespace PhotoFinish {
       convolve_h_type_channels<T, 5>(src, dest, can_free);
       break;
 
+    case 6:
+      convolve_h_type_channels<T, 6>(src, dest, can_free);
+      break;
+
+    case 7:
+      convolve_h_type_channels<T, 7>(src, dest, can_free);
+      break;
+
+    case 8:
+      convolve_h_type_channels<T, 8>(src, dest, can_free);
+      break;
+
+    case 9:
+      convolve_h_type_channels<T, 9>(src, dest, can_free);
+      break;
+
+    case 10:
+      convolve_h_type_channels<T, 10>(src, dest, can_free);
+      break;
+
+    case 11:
+      convolve_h_type_channels<T, 11>(src, dest, can_free);
+      break;
+
+    case 12:
+      convolve_h_type_channels<T, 12>(src, dest, can_free);
+      break;
+
+    case 13:
+      convolve_h_type_channels<T, 13>(src, dest, can_free);
+      break;
+
+    case 14:
+      convolve_h_type_channels<T, 14>(src, dest, can_free);
+      break;
+
+    case 15:
+      convolve_h_type_channels<T, 15>(src, dest, can_free);
+      break;
+
     default:
       std::cerr << "** Cannot handle " << (int)channels << " channels **" << std::endl;
     }
@@ -312,6 +352,46 @@ namespace PhotoFinish {
 
     case 5:
       convolve_v_type_channels<T, 5>(src, dest, can_free);
+      break;
+
+    case 6:
+      convolve_v_type_channels<T, 6>(src, dest, can_free);
+      break;
+
+    case 7:
+      convolve_v_type_channels<T, 7>(src, dest, can_free);
+      break;
+
+    case 8:
+      convolve_v_type_channels<T, 8>(src, dest, can_free);
+      break;
+
+    case 9:
+      convolve_v_type_channels<T, 9>(src, dest, can_free);
+      break;
+
+    case 10:
+      convolve_v_type_channels<T, 10>(src, dest, can_free);
+      break;
+
+    case 11:
+      convolve_v_type_channels<T, 11>(src, dest, can_free);
+      break;
+
+    case 12:
+      convolve_v_type_channels<T, 12>(src, dest, can_free);
+      break;
+
+    case 13:
+      convolve_v_type_channels<T, 13>(src, dest, can_free);
+      break;
+
+    case 14:
+      convolve_v_type_channels<T, 14>(src, dest, can_free);
+      break;
+
+    case 15:
+      convolve_v_type_channels<T, 15>(src, dest, can_free);
       break;
 
     default:
