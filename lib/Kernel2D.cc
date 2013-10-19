@@ -64,10 +64,8 @@ namespace PhotoFinish {
     }
   }
 
-  template <typename T>
-  void Kernel2D::do_convolve(Image::ptr src, Image::ptr dest, bool can_free) {
-    unsigned char channels = src->format().total_channels();
-
+  template <typename T, int channels>
+  void Kernel2D::convolve_type_channels(Image::ptr src, Image::ptr dest, bool can_free) {
     int *row_needs;
     if (can_free) {
       int num_threads = omp_get_num_threads();
@@ -81,17 +79,17 @@ namespace PhotoFinish {
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
       dest->check_rowdata_alloc(y);
-      T *outp = dest->row<T>(y);
+      T *out = dest->row<T>(y);
       short unsigned int ky_start = y < _centrey ? _centrey - y : 0;
       short unsigned int ky_end = y > src->height() - _height + _centrey ? src->height() + _centrey - y : _height;
 
-      for (unsigned int x = 0; x < src->width(); x++, outp += channels) {
+      for (unsigned int x = 0; x < src->width(); x++) {
 	short unsigned int kx_start = x < _centrex ? _centrex - x : 0;
 	short unsigned int kx_end = x > src->width() - _width + _centrex ? src->width() + _centrex - x : _width;
 
-	double weight = 0;
+	SAMPLE temp[channels], weight = 0;
 	for (unsigned char c = 0; c < channels; c++)
-	  outp[c] = 0;
+	  temp[c] = 0;
 
 	for (short unsigned int ky = ky_start; ky < ky_end; ky++) {
 	  const SAMPLE *kp = _values[ky] + kx_start;
@@ -99,14 +97,21 @@ namespace PhotoFinish {
 	  for (short unsigned int kx = kx_start; kx < kx_end; kx++, kp++) {
 	    weight += *kp;
 	    for (unsigned char c = 0; c < channels; c++, inp++)
-	      outp[c] += (*inp) * (*kp);
+	      temp[c] += (*inp) * (*kp);
 	  }
 	}
 	if (fabs(weight) > 1e-5) {
 	  weight = 1.0 / weight;
 	  for (unsigned char c = 0; c < channels; c++)
-	    outp[c] *= weight;
+	    temp[c] *= weight;
 	}
+	for (unsigned char c = 0; c < channels; c++, out++)
+	  if (temp[c] > scaleval<T>())
+	    *out = scaleval<T>();
+	  else if (temp[c] < 0)
+	    *out = 0;
+	    else
+	    *out = temp[c];
       }
       if (can_free && (y > _centrey)) {
 	omp_set_lock(&freed_lock);
@@ -124,6 +129,75 @@ namespace PhotoFinish {
       free(row_needs);
       for (; next_freed < src->height(); next_freed++)
 	src->free_row(next_freed);
+    }
+  }
+
+  template <typename T>
+  void Kernel2D::convolve_type(Image::ptr src, Image::ptr dest, bool can_free) {
+    unsigned char channels = src->format().total_channels();
+    switch (channels) {
+    case 1:
+      convolve_type_channels<T, 1>(src, dest, can_free);
+      break;
+
+    case 2:
+      convolve_type_channels<T, 2>(src, dest, can_free);
+      break;
+
+    case 3:
+      convolve_type_channels<T, 3>(src, dest, can_free);
+      break;
+
+    case 4:
+      convolve_type_channels<T, 4>(src, dest, can_free);
+      break;
+
+    case 5:
+      convolve_type_channels<T, 5>(src, dest, can_free);
+      break;
+
+    case 6:
+      convolve_type_channels<T, 6>(src, dest, can_free);
+      break;
+
+    case 7:
+      convolve_type_channels<T, 7>(src, dest, can_free);
+      break;
+
+    case 8:
+      convolve_type_channels<T, 8>(src, dest, can_free);
+      break;
+
+    case 9:
+      convolve_type_channels<T, 9>(src, dest, can_free);
+      break;
+
+    case 10:
+      convolve_type_channels<T, 10>(src, dest, can_free);
+      break;
+
+    case 11:
+      convolve_type_channels<T, 11>(src, dest, can_free);
+      break;
+
+    case 12:
+      convolve_type_channels<T, 12>(src, dest, can_free);
+      break;
+
+    case 13:
+      convolve_type_channels<T, 13>(src, dest, can_free);
+      break;
+
+    case 14:
+      convolve_type_channels<T, 14>(src, dest, can_free);
+      break;
+
+    case 15:
+      convolve_type_channels<T, 15>(src, dest, can_free);
+      break;
+
+    default:
+      std::cerr << "** Cannot handle " << (int)channels << " channels **" << std::endl;
     }
   }
 
@@ -146,25 +220,25 @@ namespace PhotoFinish {
 
     switch (img->format().bytes_per_channel()) {
     case 1:
-      do_convolve<unsigned char>(img, out, can_free);
+      convolve_type<unsigned char>(img, out, can_free);
       break;
 
     case 2:
-      do_convolve<short unsigned int>(img, out, can_free);
+      convolve_type<short unsigned int>(img, out, can_free);
       break;
 
     case 4:
       if (img->format().is_fp())
-	do_convolve<float>(img, out, can_free);
+	convolve_type<float>(img, out, can_free);
       else
-	do_convolve<unsigned int>(img, out, can_free);
+	convolve_type<unsigned int>(img, out, can_free);
       break;
 
     case 8:
       if (img->format().is_fp())
-	do_convolve<double>(img, out, can_free);
+	convolve_type<double>(img, out, can_free);
       else
-	do_convolve<unsigned long>(img, out, can_free);
+	convolve_type<unsigned long>(img, out, can_free);
       break;
 
     }

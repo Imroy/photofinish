@@ -42,7 +42,10 @@ namespace PhotoFinish {
     Kernel2D(short unsigned int size, short unsigned int centre);
 
     template <typename T>
-    void do_convolve(Image::ptr src, Image::ptr dest, bool can_free = false);
+    void convolve_type(Image::ptr src, Image::ptr dest, bool can_free = false);
+
+    template <typename T, int channels>
+    void convolve_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
 
   public:
     //! Shared pointer for a Kernel2D
