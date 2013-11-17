@@ -12,7 +12,7 @@ BINDIR = $(PREFIX)/bin
 # Libraries with pkg-config data
 PKGS = lcms2 exiv2 yaml-cpp
 
-COMMON_FLAGS = -Wall -Iinclude -fopenmp -finput-charset=UTF-8
+COMMON_FLAGS = -Wall -Iinclude -fopenmp -finput-charset=UTF-8 -Wformat -Wformat-security -Werror=format-security -D_FORTIFY_SOURCE=2 -fstack-protector --param ssp-buffer-size=4 -fPIE -pie
 LIBS = -lm -lstdc++ -lgomp -lboost_filesystem -lboost_system -lboost_program_options
 LIB_OBJS = $(patsubst %.cc,%.o, $(wildcard lib/*.cc)) lib/formats/SOLwriter.o
 
@@ -46,6 +46,7 @@ endif
 COMMON_FLAGS += `pkg-config --cflags $(PKGS)`
 CFLAGS += $(COMMON_FLAGS)
 CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
+LDFLAGS += -Wl,-z,relro -Wl,-z,now -fPIE -pie
 LIBS += `pkg-config --libs $(PKGS)`
 
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
