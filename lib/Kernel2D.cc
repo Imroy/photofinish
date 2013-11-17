@@ -106,12 +106,7 @@ namespace PhotoFinish {
 	    temp[c] *= weight;
 	}
 	for (unsigned char c = 0; c < channels; c++, out++)
-	  if (temp[c] > scaleval<T>())
-	    *out = scaleval<T>();
-	  else if (temp[c] < 0)
-	    *out = 0;
-	    else
-	    *out = temp[c];
+	  *out = limitval<T>(temp[c]);
       }
       if (can_free && (y > _centrey)) {
 	omp_set_lock(&freed_lock);
@@ -130,6 +125,7 @@ namespace PhotoFinish {
       for (; next_freed < src->height(); next_freed++)
 	src->free_row(next_freed);
     }
+    omp_destroy_lock(&freed_lock);
   }
 
   template <typename T>

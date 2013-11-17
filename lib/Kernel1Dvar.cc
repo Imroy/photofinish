@@ -138,16 +138,19 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < src->height(); y++) {
       dest->check_rowdata_alloc(y);
       T *out = dest->row<T>(y);
+      SAMPLE temp[channels];
 
-      for (unsigned int nx = 0; nx < dest->width(); nx++, out += channels) {
+      for (unsigned int nx = 0; nx < dest->width(); nx++) {
 	for (unsigned char c = 0; c < channels; c++)
-	  out[c] = 0;
+	  temp[c] = 0;
 	const SAMPLE *weight = _weights[nx];
 	const T *in = src->at<T>(_start[nx], y);
 	for (unsigned int j = _size[nx]; j; j--, weight++) {
 	  for (unsigned char c = 0; c < channels; c++, in++)
-	    out[c] += (*in) * (*weight);
+	    temp[c] += (*in) * (*weight);
 	}
+	for (unsigned char c = 0; c < channels; c++, out++)
+	  *out = limitval<T>(temp[c]);
       }
 
       if (can_free)
@@ -290,25 +293,23 @@ namespace PhotoFinish {
     for (unsigned int ny = 0; ny < dest->height(); ny++) {
       unsigned int max = _size[ny];
       unsigned int ystart = _start[ny];
-      unsigned int j = 0;
-      const SAMPLE *weight = _weights[ny];
 
-      T *in = src->row<T>(ystart);
       dest->check_rowdata_alloc(ny);
       T *out = dest->row<T>(ny);
-      for (unsigned int x = src->width(); x; x--) {
-	for (unsigned char c = channels; c; c--, in++, out++)
-	  *out = (*in) * (*weight);
-      }
+      SAMPLE temp[channels];
+      for (unsigned int x = 0; x < src->width(); x++) {
+	for (unsigned char c = 0; c < channels; c++)
+	  temp[c] = 0;
 
-      weight++;
-      for (j = 1; j < max; j++, weight++) {
-	in = src->row<T>(ystart + j);
-	out = dest->row<T>(ny);
-	for (unsigned int x = src->width(); x; x--) {
-	  for (unsigned char c = channels; c; c--, in++, out++)
-	    *out += (*in) * (*weight);
+	const SAMPLE *weight = _weights[ny];
+	for (unsigned int j = 0; j < max; j++, weight++) {
+	  T *in = src->at<T>(x, ystart + j);
+	  for (unsigned char c = 0; c < channels; c++, in++)
+	    temp[c] += (*in) * (*weight);
 	}
+
+	for (unsigned char c = 0; c < channels; c++, out++)
+	  *out = limitval<T>(temp[c]);
       }
 
       if (can_free && (((ny < _to_size_i - 1) && (_start[ny + 1] > ystart)) || (ny == _to_size_i - 1))) {
@@ -327,6 +328,7 @@ namespace PhotoFinish {
       for (; next_freed < src->height(); next_freed++)
 	src->free_row(next_freed);
     }
+    omp_destroy_lock(&freed_lock);
   }
 
   // Template method that handles each type for vertical convolving
