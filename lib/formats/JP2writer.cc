@@ -87,7 +87,7 @@ namespace PhotoFinish {
     opj_set_default_encoder_parameters(&parameters);
 
     parameters.tile_size_on = OPJ_FALSE;
-    parameters.cp_disto_alloc = 1;
+    parameters.irreversible = 1;
 
     if (dest->jp2().defined()) {
       D_JP2 d = dest->jp2();
@@ -123,21 +123,30 @@ namespace PhotoFinish {
 	  std::cerr << " " << d.rate(i);
 	}
 	std::cerr << "." << std::endl;
-	parameters.tcp_numlayers = d.num_rates();
+	parameters.cp_disto_alloc = 1;
       }
-      /*
+      parameters.tcp_numlayers = d.num_rates();
       if (d.tile_size().defined()) {
 	std::cerr << "\tTile size of " << d.tile_size()->first << "×" << d.tile_size()->second << std::endl;
 	parameters.tile_size_on = OPJ_TRUE;
 	parameters.cp_tdx = d.tile_size()->first;
 	parameters.cp_tdy = d.tile_size()->second;
       }
-      */
     }
 
     if (parameters.tcp_numlayers == 0) {
       parameters.tcp_rates[0] = 0;
       parameters.tcp_numlayers++;
+      parameters.cp_disto_alloc = 1;
+    }
+
+    if (parameters.tile_size_on == OPJ_TRUE) {
+      int size = parameters.cp_tdx < parameters.cp_tdy ? parameters.cp_tdx : parameters.cp_tdy;
+      double maxres = log(size) / log(2);
+      if (parameters.numresolution > maxres) {
+	parameters.numresolution = floor(maxres);
+	std::cerr << "\tDropping number of resolutions to " << parameters.numresolution << " to fit tile size." << std::endl;
+      }
     }
 
     unsigned char channels = format.channels();
