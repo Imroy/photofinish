@@ -319,226 +319,282 @@ $(document).ready(function(){initNavTree('_destination__items_8cc_source.html','
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;</div>
 <div class="line"><a name="l00218"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___j_p2.html#a6d72a9eb9393447c707eb80e7fe2a834">  218</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a6d72a9eb9393447c707eb80e7fe2a834">D_JP2::D_JP2</a>() :</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    _rates()</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;  {}</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;</div>
-<div class="line"><a name="l00222"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___j_p2.html#a193a8087221647734efb84f5642af9c5">  222</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a193a8087221647734efb84f5642af9c5">D_JP2::add_variables</a>(<a class="code" href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18">multihash</a>&amp; vars) {</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">if</span> (!_numresolutions.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;numresolutions&quot;</span>);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        _numresolutions = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(vi-&gt;second[0]);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        vars.erase(vi);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;      }</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    }</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    <span class="keywordflow">if</span> (!_prog_order.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;prog_order&quot;</span>);</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        _prog_order = vi-&gt;second[0];</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        vars.erase(vi);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;      }</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;    }</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;    <span class="keywordflow">if</span> (_rates.size() == 0) {</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;rate&quot;</span>);</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a365c9c700d58a5175dd01939e36b5422">rate</a> = vi-&gt;second[0];</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        <span class="keywordtype">size_t</span> sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">while</span> (sep != std::string::npos) {</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;          <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            _rates.push_back(boost::lexical_cast&lt;float&gt;(rate.substr(0, sep)));</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            vars.erase(vi);</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            rate = rate.substr(sep + 1, rate.length() - sep -1);</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;          } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            std::cerr &lt;&lt; ex.what();</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;          }</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;          sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        }</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;          _rates.push_back(boost::lexical_cast&lt;float&gt;(rate));</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        }</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      }</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    }</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">if</span> (!_tile_size.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;tile&quot;</span>);</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;        std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a24df2945f93448ff93192e786fee4dbe">tile_size</a> = vi-&gt;second[0];</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        <span class="keywordtype">size_t</span> sep = tile_size.find_first_of(<span class="stringliteral">&quot;x×/,&quot;</span>);</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        <span class="keywordflow">if</span> (sep != std::string::npos) {</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;          <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keywordtype">int</span> h = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(0, sep));</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            <span class="keywordtype">int</span> v = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(sep + 1, tile_size.length() - sep - 1));</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            _tile_size = std::pair&lt;int, int&gt;(h, v);</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            vars.erase(vi);</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    _rates(),</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    _qualities()</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  {}</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;</div>
+<div class="line"><a name="l00223"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___j_p2.html#a193a8087221647734efb84f5642af9c5">  223</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a193a8087221647734efb84f5642af9c5">D_JP2::add_variables</a>(<a class="code" href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18">multihash</a>&amp; vars) {</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    <span class="keywordflow">if</span> (!_numresolutions.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;numresolutions&quot;</span>);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        _numresolutions = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(vi-&gt;second[0]);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        vars.erase(vi);</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;      }</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    }</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keywordflow">if</span> (!_prog_order.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;prog_order&quot;</span>);</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        _prog_order = vi-&gt;second[0];</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        vars.erase(vi);</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;      }</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;    }</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordflow">if</span> (_rates.size() == 0) {</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;rate&quot;</span>);</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a365c9c700d58a5175dd01939e36b5422">rate</a> = vi-&gt;second[0];</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordtype">size_t</span> sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        <span class="keywordflow">while</span> (sep != std::string::npos) {</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;          <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;            _rates.push_back(boost::lexical_cast&lt;float&gt;(rate.substr(0, sep)));</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            vars.erase(vi);</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;            <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;            rate = rate.substr(sep + 1, rate.length() - sep -1);</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;          } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            std::cerr &lt;&lt; ex.what();</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;          }</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;          sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        }</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;          _rates.push_back(boost::lexical_cast&lt;float&gt;(rate));</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        }</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;      }</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;    }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keywordflow">if</span> (_qualities.size() == 0) {</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;quality&quot;</span>);</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a2581e35f5a625ce3cc956a403715a5fd">quality</a> = vi-&gt;second[0];</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        <span class="keywordtype">size_t</span> sep = quality.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;        <span class="keywordflow">while</span> (sep != std::string::npos) {</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;          <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;            _qualities.push_back(boost::lexical_cast&lt;float&gt;(quality.substr(0, sep)));</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;            vars.erase(vi);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;            <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;            quality = quality.substr(sep + 1, quality.length() - sep -1);</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;          } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;            std::cerr &lt;&lt; ex.what();</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;          }</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;        } <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;D_JP2: Failed to parse tile size \&quot;&quot;</span> &lt;&lt; tile_size &lt;&lt; <span class="stringliteral">&quot;\&quot;.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;      }</div>
-<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    }</div>
-<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;  }</div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;</div>
-<div class="line"><a name="l00287"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___j_p2.html#ae4a9dac272d2f89cd28326a78f79bad9">  287</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___j_p2.html#ae4a9dac272d2f89cd28326a78f79bad9">D_JP2::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;numresolutions&quot;</span>])</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;      _numresolutions = node[<span class="stringliteral">&quot;numresolutions&quot;</span>].as&lt;<span class="keywordtype">int</span>&gt;();</div>
-<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;</div>
-<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;prog_order&quot;</span>])</div>
-<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      _prog_order = node[<span class="stringliteral">&quot;prog_order&quot;</span>].as&lt;std::string&gt;();</div>
-<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;</div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;rate&quot;</span>]) {</div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a365c9c700d58a5175dd01939e36b5422">rate</a> = node[<span class="stringliteral">&quot;rate&quot;</span>].as&lt;std::string&gt;();</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      <span class="keywordtype">size_t</span> sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;      <span class="keywordflow">while</span> (sep != std::string::npos) {</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;          _rates.push_back(boost::lexical_cast&lt;float&gt;(rate.substr(0, sep)));</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;          rate = rate.substr(sep + 1, rate.length() - sep -1);</div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;          std::cerr &lt;&lt; ex.what();</div>
-<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;          <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        }</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;      }</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;        _rates.push_back(boost::lexical_cast&lt;float&gt;(rate));</div>
-<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;      } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;      }</div>
-<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;    }</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;tile&quot;</span>]) {</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;      std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a24df2945f93448ff93192e786fee4dbe">tile_size</a> = node[<span class="stringliteral">&quot;tile&quot;</span>].as&lt;std::string&gt;();</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;      <span class="keywordtype">size_t</span> sep = tile_size.find_first_of(<span class="stringliteral">&quot;x×/,&quot;</span>);</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      <span class="keywordflow">if</span> (sep != std::string::npos) {</div>
-<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;          <span class="keywordtype">int</span> h = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(0, sep));</div>
-<div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;          <span class="keywordtype">int</span> v = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(sep + 1, tile_size.length() - sep - 1));</div>
-<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;          _tile_size = std::pair&lt;int, int&gt;(h, v);</div>
-<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;          std::cerr &lt;&lt; ex.what();</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        }</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      } <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;D_JP2: Failed to parse tile size \&quot;&quot;</span> &lt;&lt; tile_size &lt;&lt; <span class="stringliteral">&quot;\&quot;.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    }</div>
-<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;</div>
-<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;    <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;  }</div>
-<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;</div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;</div>
-<div class="line"><a name="l00334"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f">  334</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f">D_WebP::D_WebP</a>() :</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    _quality(75)</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;  {}</div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;</div>
-<div class="line"><a name="l00338"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___web_p.html#a2e30cd1b962996b759cd72046347642b">  338</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___web_p.html#a2e30cd1b962996b759cd72046347642b">D_WebP::add_variables</a>(<a class="code" href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18">multihash</a>&amp; vars) {</div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;  }</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;</div>
-<div class="line"><a name="l00341"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___web_p.html#a813f83cc20ca13fc5301e5d5fde3ab54">  341</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___web_p.html#a813f83cc20ca13fc5301e5d5fde3ab54">D_WebP::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;preset&quot;</span>])</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;      _preset = node[<span class="stringliteral">&quot;preset&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;          }</div>
+<div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;          sep = quality.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        }</div>
+<div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;          _qualities.push_back(boost::lexical_cast&lt;float&gt;(quality));</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;        }</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;      }</div>
+<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    }</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;</div>
+<div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;    <span class="keywordflow">if</span> (!_tile_size.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
+<div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;      <span class="keyword">auto</span> vi = vars.find(<span class="stringliteral">&quot;tile&quot;</span>);</div>
+<div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      <span class="keywordflow">if</span> (vi != vars.end()) {</div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;        std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a24df2945f93448ff93192e786fee4dbe">tile_size</a> = vi-&gt;second[0];</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;        <span class="keywordtype">size_t</span> sep = tile_size.find_first_of(<span class="stringliteral">&quot;x×/,&quot;</span>);</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;        <span class="keywordflow">if</span> (sep != std::string::npos) {</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;          <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            <span class="keywordtype">int</span> h = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(0, sep));</div>
+<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;            <span class="keywordtype">int</span> v = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(sep + 1, tile_size.length() - sep - 1));</div>
+<div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;            _tile_size = std::pair&lt;int, int&gt;(h, v);</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            vars.erase(vi);</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;          } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;            std::cerr &lt;&lt; ex.what();</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;          }</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        } <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;D_JP2: Failed to parse tile size \&quot;&quot;</span> &lt;&lt; tile_size &lt;&lt; <span class="stringliteral">&quot;\&quot;.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;      }</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;    }</div>
+<div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    <span class="keywordflow">if</span> (!_reversible.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>()) {</div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;      <span class="keywordflow">if</span> (vars.find(<span class="stringliteral">&quot;reversible&quot;</span>) != vars.end())</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        _reversible = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (vars.find(<span class="stringliteral">&quot;irreversible&quot;</span>) != vars.end())</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;        _reversible = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    }</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;  }</div>
+<div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;</div>
+<div class="line"><a name="l00319"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___j_p2.html#ae4a9dac272d2f89cd28326a78f79bad9">  319</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___j_p2.html#ae4a9dac272d2f89cd28326a78f79bad9">D_JP2::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;numresolutions&quot;</span>])</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      _numresolutions = node[<span class="stringliteral">&quot;numresolutions&quot;</span>].as&lt;<span class="keywordtype">int</span>&gt;();</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;prog_order&quot;</span>])</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;      _prog_order = node[<span class="stringliteral">&quot;prog_order&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;rate&quot;</span>]) {</div>
+<div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;      std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a365c9c700d58a5175dd01939e36b5422">rate</a> = node[<span class="stringliteral">&quot;rate&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;      <span class="keywordtype">size_t</span> sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      <span class="keywordflow">while</span> (sep != std::string::npos) {</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;          _rates.push_back(boost::lexical_cast&lt;float&gt;(rate.substr(0, sep)));</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;          rate = rate.substr(sep + 1, rate.length() - sep -1);</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;          std::cerr &lt;&lt; ex.what();</div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;          <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        }</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        sep = rate.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;      }</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;      <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;        _rates.push_back(boost::lexical_cast&lt;float&gt;(rate));</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;      } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;      }</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    }</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;lossless&quot;</span>])</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;      _lossless = node[<span class="stringliteral">&quot;lossless&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;();</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;</div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;quality&quot;</span>])</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;      _quality = node[<span class="stringliteral">&quot;quality&quot;</span>].as&lt;<span class="keywordtype">float</span>&gt;();</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;method&quot;</span>])</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;      _method = node[<span class="stringliteral">&quot;method&quot;</span>].as&lt;<span class="keywordtype">int</span>&gt;();</div>
-<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;</div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
-<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;  }</div>
-<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;</div>
-<div class="line"><a name="l00360"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">  360</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>() :</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;    _data(NULL), _data_size(0)</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;  {}</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;quality&quot;</span>]) {</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;      std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a2581e35f5a625ce3cc956a403715a5fd">quality</a> = node[<span class="stringliteral">&quot;quality&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;      <span class="keywordtype">size_t</span> sep = quality.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;      <span class="keywordflow">while</span> (sep != std::string::npos) {</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;          _qualities.push_back(boost::lexical_cast&lt;float&gt;(quality.substr(0, sep)));</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;          quality = quality.substr(sep + 1, quality.length() - sep -1);</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;          std::cerr &lt;&lt; ex.what();</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;          <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;        }</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        sep = quality.find_first_of(<span class="stringliteral">&quot;,/&quot;</span>);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;      }</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;      <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        _qualities.push_back(boost::lexical_cast&lt;float&gt;(quality));</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;      } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;      }</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    }</div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;</div>
-<div class="line"><a name="l00364"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#ab5b6dfde7c76fad1a4598a81800dc739">  364</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>(<span class="keyword">const</span> std::string&amp; name, fs::path filepath) :</div>
-<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    _name(name),</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    _filepath(filepath),</div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    _data(NULL), _data_size(0)</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;  {}</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;</div>
-<div class="line"><a name="l00370"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#ac3e79f5dd8e7afd7f4678b289eb2e2b4">  370</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">void</span> *data, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> data_size) :</div>
-<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;    _name(name),</div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    _data(data), _data_size(data_size)</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;  {}</div>
-<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;</div>
-<div class="line"><a name="l00375"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a5b840e8fc4a0550a8c49e72e93e40463">  375</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__profile.html">D_profile</a>&amp; other) :</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    _name(other._name),</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    _filepath(other._filepath),</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    _data(memcpy(malloc(other._data_size), other._data, other._data_size)),</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    _data_size(other._data_size)</div>
-<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;  {}</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;</div>
-<div class="line"><a name="l00382"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a3d62633c6030dcae01e7a63760a83c77">  382</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a3d62633c6030dcae01e7a63760a83c77">D_profile::~D_profile</a>() {</div>
-<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;    <span class="keywordflow">if</span> (_data != NULL) {</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;      free(_data);</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;      _data = NULL;</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;      _data_size = 0;</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    }</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;  }</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;tile&quot;</span>]) {</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;      std::string <a class="code" href="class_photo_finish_1_1_d___j_p2.html#a24df2945f93448ff93192e786fee4dbe">tile_size</a> = node[<span class="stringliteral">&quot;tile&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;      <span class="keywordtype">size_t</span> sep = tile_size.find_first_of(<span class="stringliteral">&quot;x×/,&quot;</span>);</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;      <span class="keywordflow">if</span> (sep != std::string::npos) {</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;          <span class="keywordtype">int</span> h = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(0, sep));</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;          <span class="keywordtype">int</span> v = boost::lexical_cast&lt;<span class="keywordtype">int</span>&gt;(tile_size.substr(sep + 1, tile_size.length() - sep - 1));</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160;          _tile_size = std::pair&lt;int, int&gt;(h, v);</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;        } <span class="keywordflow">catch</span> (boost::bad_lexical_cast &amp;ex) {</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;          std::cerr &lt;&lt; ex.what();</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        }</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      } <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;        std::cerr &lt;&lt; <span class="stringliteral">&quot;D_JP2: Failed to parse tile size \&quot;&quot;</span> &lt;&lt; tile_size &lt;&lt; <span class="stringliteral">&quot;\&quot;.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    }</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;reversible&quot;</span>])</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;      _reversible = node[<span class="stringliteral">&quot;reversible&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;();</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;irreversible&quot;</span>])</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;      _reversible = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;  }</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;</div>
 <div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;</div>
-<div class="line"><a name="l00390"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a04192b431fefe553190e96e74fd00600">  390</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html">D_profile</a>&amp; <a class="code" href="class_photo_finish_1_1_d__profile.html#a04192b431fefe553190e96e74fd00600">D_profile::operator=</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__profile.html">D_profile</a>&amp; b) {</div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;b) {</div>
-<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;      _name = b._name;</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;      _filepath = b._filepath;</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;      _data = malloc(b._data_size);</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      memcpy(_data, b._data, b._data_size);</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;      _data_size = b._data_size;</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;    }</div>
-<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;  }</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;</div>
-<div class="line"><a name="l00402"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a533a231331f5de3d834afd432f1e98af">  402</a></span>&#160;  <a class="code" href="class_c_m_s_1_1_profile.html#a7d5a80e1317d17dbfdf5ae69820ab08b">CMS::Profile::ptr</a> <a class="code" href="class_photo_finish_1_1_d__profile.html#a533a231331f5de3d834afd432f1e98af">D_profile::profile</a>(<span class="keywordtype">void</span>)<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;    <span class="keywordflow">if</span> (_filepath.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>())</div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;CMS::Profile&gt;(_filepath);</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;    <span class="keywordflow">if</span> (_data != NULL)</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;CMS::Profile&gt;(_data, _data_size);</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_uninitialised.html">Uninitialised</a>(<span class="stringliteral">&quot;D_profile&quot;</span>, <span class="stringliteral">&quot;filepath and data&quot;</span>);</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;  }</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;</div>
-<div class="line"><a name="l00412"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a47e507f6e2a4ec5a87ac6074bdc9d902">  412</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d__profile.html#a47e507f6e2a4ec5a87ac6074bdc9d902">D_profile::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;name&quot;</span>])</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      _name = node[<span class="stringliteral">&quot;name&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00390"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f">  390</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f">D_WebP::D_WebP</a>() :</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    _quality(75)</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;  {}</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;</div>
+<div class="line"><a name="l00394"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___web_p.html#a2e30cd1b962996b759cd72046347642b">  394</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___web_p.html#a2e30cd1b962996b759cd72046347642b">D_WebP::add_variables</a>(<a class="code" href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18">multihash</a>&amp; vars) {</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;  }</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;</div>
+<div class="line"><a name="l00397"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d___web_p.html#a813f83cc20ca13fc5301e5d5fde3ab54">  397</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d___web_p.html#a813f83cc20ca13fc5301e5d5fde3ab54">D_WebP::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;preset&quot;</span>])</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      _preset = node[<span class="stringliteral">&quot;preset&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;lossless&quot;</span>])</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      _lossless = node[<span class="stringliteral">&quot;lossless&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;();</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;quality&quot;</span>])</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      _quality = node[<span class="stringliteral">&quot;quality&quot;</span>].as&lt;<span class="keywordtype">float</span>&gt;();</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;method&quot;</span>])</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;      _method = node[<span class="stringliteral">&quot;method&quot;</span>].as&lt;<span class="keywordtype">int</span>&gt;();</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;    <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;  }</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;filename&quot;</span>])</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;      _filepath = node[<span class="stringliteral">&quot;filename&quot;</span>].as&lt;std::string&gt;();</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  }</div>
+<div class="line"><a name="l00416"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">  416</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>() :</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    _data(NULL), _data_size(0)</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;  {}</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;</div>
-<div class="line"><a name="l00421"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432">  421</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432">D_thumbnail::D_thumbnail</a>()</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;  {}</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;</div>
-<div class="line"><a name="l00425"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__thumbnail.html#a3e73494385dd7ff917a162461e7f2d73">  425</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d__thumbnail.html#a3e73494385dd7ff917a162461e7f2d73">D_thumbnail::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;generate&quot;</span>])</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      _generate = node[<span class="stringliteral">&quot;generate&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;();</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;maxwidth&quot;</span>])</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;      _maxwidth = node[<span class="stringliteral">&quot;maxwidth&quot;</span>].as&lt;<span class="keywordtype">double</span>&gt;();</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;maxheight&quot;</span>])</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      _maxheight = node[<span class="stringliteral">&quot;maxheight&quot;</span>].as&lt;<span class="keywordtype">double</span>&gt;();</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;  }</div>
+<div class="line"><a name="l00420"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#ab5b6dfde7c76fad1a4598a81800dc739">  420</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>(<span class="keyword">const</span> std::string&amp; name, fs::path filepath) :</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;    _name(name),</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    _filepath(filepath),</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    _data(NULL), _data_size(0)</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;  {}</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;</div>
+<div class="line"><a name="l00426"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#ac3e79f5dd8e7afd7f4678b289eb2e2b4">  426</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>(<span class="keyword">const</span> std::string&amp; name, <span class="keywordtype">void</span> *data, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> data_size) :</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    _name(name),</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    _data(data), _data_size(data_size)</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;  {}</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;</div>
+<div class="line"><a name="l00431"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a5b840e8fc4a0550a8c49e72e93e40463">  431</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">D_profile::D_profile</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__profile.html">D_profile</a>&amp; other) :</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    _name(other._name),</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;    _filepath(other._filepath),</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    _data(memcpy(malloc(other._data_size), other._data, other._data_size)),</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    _data_size(other._data_size)</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;  {}</div>
 <div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;}</div>
-<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_ae4a9dac272d2f89cd28326a78f79bad9"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#ae4a9dac272d2f89cd28326a78f79bad9">PhotoFinish::D_JP2::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_JP2 record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00287">Destination_items.cc:287</a></div></div>
+<div class="line"><a name="l00438"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a3d62633c6030dcae01e7a63760a83c77">  438</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html#a3d62633c6030dcae01e7a63760a83c77">D_profile::~D_profile</a>() {</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;    <span class="keywordflow">if</span> (_data != NULL) {</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;      free(_data);</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;      _data = NULL;</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;      _data_size = 0;</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    }</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;  }</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;</div>
+<div class="line"><a name="l00446"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a04192b431fefe553190e96e74fd00600">  446</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__profile.html">D_profile</a>&amp; <a class="code" href="class_photo_finish_1_1_d__profile.html#a04192b431fefe553190e96e74fd00600">D_profile::operator=</a>(<span class="keyword">const</span> <a class="code" href="class_photo_finish_1_1_d__profile.html">D_profile</a>&amp; b) {</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;b) {</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;      _name = b._name;</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      _filepath = b._filepath;</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      _data = malloc(b._data_size);</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      memcpy(_data, b._data, b._data_size);</div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;      _data_size = b._data_size;</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    }</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;  }</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;</div>
+<div class="line"><a name="l00458"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a533a231331f5de3d834afd432f1e98af">  458</a></span>&#160;  <a class="code" href="class_c_m_s_1_1_profile.html#a7d5a80e1317d17dbfdf5ae69820ab08b">CMS::Profile::ptr</a> <a class="code" href="class_photo_finish_1_1_d__profile.html#a533a231331f5de3d834afd432f1e98af">D_profile::profile</a>(<span class="keywordtype">void</span>)<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keywordflow">if</span> (_filepath.<a class="code" href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">defined</a>())</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;CMS::Profile&gt;(_filepath);</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    <span class="keywordflow">if</span> (_data != NULL)</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;      <span class="keywordflow">return</span> std::make_shared&lt;CMS::Profile&gt;(_data, _data_size);</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="class_photo_finish_1_1_uninitialised.html">Uninitialised</a>(<span class="stringliteral">&quot;D_profile&quot;</span>, <span class="stringliteral">&quot;filepath and data&quot;</span>);</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;  }</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;</div>
+<div class="line"><a name="l00468"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__profile.html#a47e507f6e2a4ec5a87ac6074bdc9d902">  468</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d__profile.html#a47e507f6e2a4ec5a87ac6074bdc9d902">D_profile::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;name&quot;</span>])</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;      _name = node[<span class="stringliteral">&quot;name&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;filename&quot;</span>])</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;      _filepath = node[<span class="stringliteral">&quot;filename&quot;</span>].as&lt;std::string&gt;();</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;  }</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;</div>
+<div class="line"><a name="l00477"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432">  477</a></span>&#160;  <a class="code" href="class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432">D_thumbnail::D_thumbnail</a>()</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;  {}</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;</div>
+<div class="line"><a name="l00481"></a><span class="lineno"><a class="line" href="class_photo_finish_1_1_d__thumbnail.html#a3e73494385dd7ff917a162461e7f2d73">  481</a></span>&#160;  <span class="keywordtype">void</span> <a class="code" href="class_photo_finish_1_1_d__thumbnail.html#a3e73494385dd7ff917a162461e7f2d73">D_thumbnail::read_config</a>(<span class="keyword">const</span> YAML::Node&amp; node) {</div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;generate&quot;</span>])</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;      _generate = node[<span class="stringliteral">&quot;generate&quot;</span>].as&lt;<span class="keywordtype">bool</span>&gt;();</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;maxwidth&quot;</span>])</div>
+<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;      _maxwidth = node[<span class="stringliteral">&quot;maxwidth&quot;</span>].as&lt;<span class="keywordtype">double</span>&gt;();</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    <span class="keywordflow">if</span> (node[<span class="stringliteral">&quot;maxheight&quot;</span>])</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;      _maxheight = node[<span class="stringliteral">&quot;maxheight&quot;</span>].as&lt;<span class="keywordtype">double</span>&gt;();</div>
+<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    <a class="code" href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">set_defined</a>();</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;  }</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;}</div>
+<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_ae4a9dac272d2f89cd28326a78f79bad9"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#ae4a9dac272d2f89cd28326a78f79bad9">PhotoFinish::D_JP2::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_JP2 record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00319">Destination_items.cc:319</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__target_html_ac27d46535ce4532ffba4851c1f7f553c"><div class="ttname"><a href="class_photo_finish_1_1_d__target.html#ac27d46535ce4532ffba4851c1f7f553c">PhotoFinish::D_target::_size</a></div><div class="ttdeci">definable&lt; double &gt; _size</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00088">Destination_items.hh:88</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d___web_p_html_a813f83cc20ca13fc5301e5d5fde3ab54"><div class="ttname"><a href="class_photo_finish_1_1_d___web_p.html#a813f83cc20ca13fc5301e5d5fde3ab54">PhotoFinish::D_WebP::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00341">Destination_items.cc:341</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___web_p_html_a813f83cc20ca13fc5301e5d5fde3ab54"><div class="ttname"><a href="class_photo_finish_1_1_d___web_p.html#a813f83cc20ca13fc5301e5d5fde3ab54">PhotoFinish::D_WebP::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00397">Destination_items.cc:397</a></div></div>
 <div class="ttc" id="_destination_8hh_html"><div class="ttname"><a href="_destination_8hh.html">Destination.hh</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__sharpen_html_a625cbe961ba438104d80d18779abc964"><div class="ttname"><a href="class_photo_finish_1_1_d__sharpen.html#a625cbe961ba438104d80d18779abc964">PhotoFinish::D_sharpen::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_sharpen record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00036">Destination_items.cc:36</a></div></div>
 <div class="ttc" id="_exception_8hh_html"><div class="ttname"><a href="_exception_8hh.html">Exception.hh</a></div></div>
@@ -547,45 +603,46 @@ $(document).ready(function(){initNavTree('_destination__items_8cc_source.html','
 <div class="ttc" id="_crop_solution_8hh_html"><div class="ttname"><a href="_crop_solution_8hh.html">CropSolution.hh</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__target_html_a37ea9e183740b61400700800fd021486"><div class="ttname"><a href="class_photo_finish_1_1_d__target.html#a37ea9e183740b61400700800fd021486">PhotoFinish::D_target::_width</a></div><div class="ttdeci">definable&lt; double &gt; _width</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00087">Destination_items.hh:87</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___t_i_f_f_html_adc4f367566d37ab98ee231914892293e"><div class="ttname"><a href="class_photo_finish_1_1_d___t_i_f_f.html#adc4f367566d37ab98ee231914892293e">PhotoFinish::D_TIFF::D_TIFF</a></div><div class="ttdeci">D_TIFF()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00167">Destination_items.cc:167</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a365c9c700d58a5175dd01939e36b5422"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a365c9c700d58a5175dd01939e36b5422">PhotoFinish::D_JP2::rate</a></div><div class="ttdeci">float rate(int n) const </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00201">Destination_items.hh:201</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a365c9c700d58a5175dd01939e36b5422"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a365c9c700d58a5175dd01939e36b5422">PhotoFinish::D_JP2::rate</a></div><div class="ttdeci">float rate(int n) const </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00202">Destination_items.hh:202</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__resize_html_a57239d56c851a844ba7266d39b81eefc"><div class="ttname"><a href="class_photo_finish_1_1_d__resize.html#a57239d56c851a844ba7266d39b81eefc">PhotoFinish::D_resize::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_resize record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00056">Destination_items.cc:56</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__thumbnail_html_a3e73494385dd7ff917a162461e7f2d73"><div class="ttname"><a href="class_photo_finish_1_1_d__thumbnail.html#a3e73494385dd7ff917a162461e7f2d73">PhotoFinish::D_thumbnail::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_thumbnail record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00425">Destination_items.cc:425</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a2581e35f5a625ce3cc956a403715a5fd"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a2581e35f5a625ce3cc956a403715a5fd">PhotoFinish::D_JP2::quality</a></div><div class="ttdeci">float quality(int n) const </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00207">Destination_items.hh:207</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__thumbnail_html_a3e73494385dd7ff917a162461e7f2d73"><div class="ttname"><a href="class_photo_finish_1_1_d__thumbnail.html#a3e73494385dd7ff917a162461e7f2d73">PhotoFinish::D_thumbnail::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_thumbnail record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00481">Destination_items.cc:481</a></div></div>
 <div class="ttc" id="_destination__items_8hh_html"><div class="ttname"><a href="_destination__items_8hh.html">Destination_items.hh</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___j_p_e_g_html_ad86821d2da1e25621fb3d21f2ced45be"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p_e_g.html#ad86821d2da1e25621fb3d21f2ced45be">PhotoFinish::D_JPEG::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_JPEG record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00131">Destination_items.cc:131</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__target_html_aa83bf826478d54de26ca1abad6988a7c"><div class="ttname"><a href="class_photo_finish_1_1_d__target.html#aa83bf826478d54de26ca1abad6988a7c">PhotoFinish::D_target::D_target</a></div><div class="ttdeci">D_target(const std::string &amp;n, double w, double h)</div><div class="ttdoc">A target-specific size (in inches) to override the one in the destination. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00068">Destination_items.cc:68</a></div></div>
 <div class="ttc" id="namespace_photo_finish_html_a6f41796f162687538b7da5c7a95e2d18"><div class="ttname"><a href="namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18">PhotoFinish::multihash</a></div><div class="ttdeci">std::map&lt; std::string, stringlist &gt; multihash</div><div class="ttdoc">A hash of string lists. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00042">Destination_items.hh:42</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___p_n_g_html_ad1db13836f032b95d5b0a3d63aa95d81"><div class="ttname"><a href="class_photo_finish_1_1_d___p_n_g.html#ad1db13836f032b95d5b0a3d63aa95d81">PhotoFinish::D_PNG::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_PNG record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00162">Destination_items.cc:162</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a3d62633c6030dcae01e7a63760a83c77"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a3d62633c6030dcae01e7a63760a83c77">PhotoFinish::D_profile::~D_profile</a></div><div class="ttdeci">~D_profile()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00382">Destination_items.cc:382</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a3d62633c6030dcae01e7a63760a83c77"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a3d62633c6030dcae01e7a63760a83c77">PhotoFinish::D_profile::~D_profile</a></div><div class="ttdeci">~D_profile()</div><div class="ttdoc">Destructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00438">Destination_items.cc:438</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__target_html_a7a5dce723f5908c120134bf95f2d252d"><div class="ttname"><a href="class_photo_finish_1_1_d__target.html#a7a5dce723f5908c120134bf95f2d252d">PhotoFinish::D_target::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_target record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00078">Destination_items.cc:78</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__target_html_a2699d451750f763590b77babec759d2b"><div class="ttname"><a href="class_photo_finish_1_1_d__target.html#a2699d451750f763590b77babec759d2b">PhotoFinish::D_target::_height</a></div><div class="ttdeci">definable&lt; double &gt; _height</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00087">Destination_items.hh:87</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__sharpen_html_a2b51c49b0deff669e873d4871173fa45"><div class="ttname"><a href="class_photo_finish_1_1_d__sharpen.html#a2b51c49b0deff669e873d4871173fa45">PhotoFinish::D_sharpen::D_sharpen</a></div><div class="ttdeci">D_sharpen()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00032">Destination_items.cc:32</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a5d2c843605849d4fe1a7e142bec84016"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">PhotoFinish::D_profile::D_profile</a></div><div class="ttdeci">D_profile()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00360">Destination_items.cc:360</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a193a8087221647734efb84f5642af9c5"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a193a8087221647734efb84f5642af9c5">PhotoFinish::D_JP2::add_variables</a></div><div class="ttdeci">void add_variables(multihash &amp;vars)</div><div class="ttdoc">Set values from a map of &amp;quot;variables&amp;quot;. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00222">Destination_items.cc:222</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a5d2c843605849d4fe1a7e142bec84016"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016">PhotoFinish::D_profile::D_profile</a></div><div class="ttdeci">D_profile()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00416">Destination_items.cc:416</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a193a8087221647734efb84f5642af9c5"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a193a8087221647734efb84f5642af9c5">PhotoFinish::D_JP2::add_variables</a></div><div class="ttdeci">void add_variables(multihash &amp;vars)</div><div class="ttdoc">Set values from a map of &amp;quot;variables&amp;quot;. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00223">Destination_items.cc:223</a></div></div>
 <div class="ttc" id="class_c_m_s_1_1_profile_html_a7d5a80e1317d17dbfdf5ae69820ab08b"><div class="ttname"><a href="class_c_m_s_1_1_profile.html#a7d5a80e1317d17dbfdf5ae69820ab08b">CMS::Profile::ptr</a></div><div class="ttdeci">std::shared_ptr&lt; Profile &gt; ptr</div><div class="ttdoc">Shared pointer typedef. </div><div class="ttdef"><b>Definition:</b> <a href="_c_m_s_8hh_source.html#l00071">CMS.hh:71</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a04192b431fefe553190e96e74fd00600"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a04192b431fefe553190e96e74fd00600">PhotoFinish::D_profile::operator=</a></div><div class="ttdeci">D_profile &amp; operator=(const D_profile &amp;b)</div><div class="ttdoc">Assignment operator. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00390">Destination_items.cc:390</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a04192b431fefe553190e96e74fd00600"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a04192b431fefe553190e96e74fd00600">PhotoFinish::D_profile::operator=</a></div><div class="ttdeci">D_profile &amp; operator=(const D_profile &amp;b)</div><div class="ttdoc">Assignment operator. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00446">Destination_items.cc:446</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___j_p_e_g_html_ae7ac38195ed1d2f1c6eea7f5ec78736f"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p_e_g.html#ae7ac38195ed1d2f1c6eea7f5ec78736f">PhotoFinish::D_JPEG::sample</a></div><div class="ttdeci">definable&lt; std::pair&lt; int, int &gt; &gt; sample(void) const </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00129">Destination_items.hh:129</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___p_n_g_html_acaefeb530af1932e10a17f99de4f3091"><div class="ttname"><a href="class_photo_finish_1_1_d___p_n_g.html#acaefeb530af1932e10a17f99de4f3091">PhotoFinish::D_PNG::D_PNG</a></div><div class="ttdeci">D_PNG()</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00158">Destination_items.cc:158</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a533a231331f5de3d834afd432f1e98af"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a533a231331f5de3d834afd432f1e98af">PhotoFinish::D_profile::profile</a></div><div class="ttdeci">CMS::Profile::ptr profile(void) const </div><div class="ttdoc">The profile data for LCMS2. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00402">Destination_items.cc:402</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a533a231331f5de3d834afd432f1e98af"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a533a231331f5de3d834afd432f1e98af">PhotoFinish::D_profile::profile</a></div><div class="ttdeci">CMS::Profile::ptr profile(void) const </div><div class="ttdoc">The profile data for LCMS2. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00458">Destination_items.cc:458</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d__resize_html_a105b90f42117f04e6ad834efb1530516"><div class="ttname"><a href="class_photo_finish_1_1_d__resize.html#a105b90f42117f04e6ad834efb1530516">PhotoFinish::D_resize::D_resize</a></div><div class="ttdeci">D_resize()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00048">Destination_items.cc:48</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a6d72a9eb9393447c707eb80e7fe2a834"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a6d72a9eb9393447c707eb80e7fe2a834">PhotoFinish::D_JP2::D_JP2</a></div><div class="ttdeci">D_JP2()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00218">Destination_items.cc:218</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__profile_html"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html">PhotoFinish::D_profile</a></div><div class="ttdoc">ICC profile parameters for destination. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00244">Destination_items.hh:244</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a47e507f6e2a4ec5a87ac6074bdc9d902"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a47e507f6e2a4ec5a87ac6074bdc9d902">PhotoFinish::D_profile::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_profile record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00412">Destination_items.cc:412</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__profile_html"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html">PhotoFinish::D_profile</a></div><div class="ttdoc">ICC profile parameters for destination. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00254">Destination_items.hh:254</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__profile_html_a47e507f6e2a4ec5a87ac6074bdc9d902"><div class="ttname"><a href="class_photo_finish_1_1_d__profile.html#a47e507f6e2a4ec5a87ac6074bdc9d902">PhotoFinish::D_profile::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_profile record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00468">Destination_items.cc:468</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___t_i_f_f_html_af3532152cdad7861ec932185255d5756"><div class="ttname"><a href="class_photo_finish_1_1_d___t_i_f_f.html#af3532152cdad7861ec932185255d5756">PhotoFinish::D_TIFF::add_variables</a></div><div class="ttdeci">void add_variables(multihash &amp;vars)</div><div class="ttdoc">Set values from a map of &amp;quot;variables&amp;quot;. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00174">Destination_items.cc:174</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___t_i_f_f_html_a3b6e555de8e82db02a5c791d8ffa519d"><div class="ttname"><a href="class_photo_finish_1_1_d___t_i_f_f.html#a3b6e555de8e82db02a5c791d8ffa519d">PhotoFinish::D_TIFF::read_config</a></div><div class="ttdeci">void read_config(const YAML::Node &amp;node)</div><div class="ttdoc">Read a D_TIFF record from a YAML file. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00202">Destination_items.cc:202</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d___web_p_html_a2e30cd1b962996b759cd72046347642b"><div class="ttname"><a href="class_photo_finish_1_1_d___web_p.html#a2e30cd1b962996b759cd72046347642b">PhotoFinish::D_WebP::add_variables</a></div><div class="ttdeci">void add_variables(multihash &amp;vars)</div><div class="ttdoc">Set values from a map of &amp;quot;variables&amp;quot;. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00338">Destination_items.cc:338</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d___web_p_html_a843064e953a4d950d9197b6cc597113f"><div class="ttname"><a href="class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f">PhotoFinish::D_WebP::D_WebP</a></div><div class="ttdeci">D_WebP()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00334">Destination_items.cc:334</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___web_p_html_a2e30cd1b962996b759cd72046347642b"><div class="ttname"><a href="class_photo_finish_1_1_d___web_p.html#a2e30cd1b962996b759cd72046347642b">PhotoFinish::D_WebP::add_variables</a></div><div class="ttdeci">void add_variables(multihash &amp;vars)</div><div class="ttdoc">Set values from a map of &amp;quot;variables&amp;quot;. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00394">Destination_items.cc:394</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___web_p_html_a843064e953a4d950d9197b6cc597113f"><div class="ttname"><a href="class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f">PhotoFinish::D_WebP::D_WebP</a></div><div class="ttdeci">D_WebP()</div><div class="ttdoc">Empty constructor. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00390">Destination_items.cc:390</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_role___definable_html_a46b347b0aa7883db6fa3b96eefb5851e"><div class="ttname"><a href="class_photo_finish_1_1_role___definable.html#a46b347b0aa7883db6fa3b96eefb5851e">PhotoFinish::Role_Definable::set_defined</a></div><div class="ttdeci">void set_defined(bool v=true)</div><div class="ttdoc">Set this object as &amp;#39;defined&amp;#39; (or not) </div><div class="ttdef"><b>Definition:</b> <a href="_definable_8hh_source.html#l00104">Definable.hh:104</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1definable_html_a09b3180b4c99b6afe4de015727d34765"><div class="ttname"><a href="class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765">PhotoFinish::definable::defined</a></div><div class="ttdeci">const bool defined(void) const </div><div class="ttdoc">Is this object defined? </div><div class="ttdef"><b>Definition:</b> <a href="_definable_8hh_source.html#l00054">Definable.hh:54</a></div></div>
 <div class="ttc" id="class_photo_finish_1_1_d___j_p_e_g_html_abdbaf2881b0b7824ac5d30a48d50dee7"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p_e_g.html#abdbaf2881b0b7824ac5d30a48d50dee7">PhotoFinish::D_JPEG::add_variables</a></div><div class="ttdeci">void add_variables(multihash &amp;vars)</div><div class="ttdoc">Set values from a map of &amp;quot;variables&amp;quot;. </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00100">Destination_items.cc:100</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d__thumbnail_html_a3656b828df1e7e6b31f1b6714f1c6432"><div class="ttname"><a href="class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432">PhotoFinish::D_thumbnail::D_thumbnail</a></div><div class="ttdeci">D_thumbnail()</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00421">Destination_items.cc:421</a></div></div>
-<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a24df2945f93448ff93192e786fee4dbe"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a24df2945f93448ff93192e786fee4dbe">PhotoFinish::D_JP2::tile_size</a></div><div class="ttdeci">definable&lt; std::pair&lt; int, int &gt; &gt; tile_size(void) const </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00205">Destination_items.hh:205</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d__thumbnail_html_a3656b828df1e7e6b31f1b6714f1c6432"><div class="ttname"><a href="class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432">PhotoFinish::D_thumbnail::D_thumbnail</a></div><div class="ttdeci">D_thumbnail()</div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8cc_source.html#l00477">Destination_items.cc:477</a></div></div>
+<div class="ttc" id="class_photo_finish_1_1_d___j_p2_html_a24df2945f93448ff93192e786fee4dbe"><div class="ttname"><a href="class_photo_finish_1_1_d___j_p2.html#a24df2945f93448ff93192e786fee4dbe">PhotoFinish::D_JP2::tile_size</a></div><div class="ttdeci">definable&lt; std::pair&lt; int, int &gt; &gt; tile_size(void) const </div><div class="ttdef"><b>Definition:</b> <a href="_destination__items_8hh_source.html#l00211">Destination_items.hh:211</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="_destination__items_8cc.html">Destination_items.cc</a></li>
-    <li class="footer">Generated on Sun Nov 17 2013 16:31:20 for Photo Finish by
+    <li class="footer">Generated on Sun Nov 17 2013 22:50:02 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

@@ -49,7 +49,6 @@ var files =
     [ "JP2writer.cc", "_j_p2writer_8cc.html", null ],
     [ "JPEG.hh", "_j_p_e_g_8hh.html", "_j_p_e_g_8hh" ],
     [ "JPEG_iostream.cc", "_j_p_e_g__iostream_8cc.html", "_j_p_e_g__iostream_8cc" ],
-    [ "JPEG_metadata.cc", "_j_p_e_g__metadata_8cc.html", "_j_p_e_g__metadata_8cc" ],
     [ "JPEG_profiles.cc", "_j_p_e_g__profiles_8cc.html", "_j_p_e_g__profiles_8cc" ],
     [ "JPEG_scans.cc", "_j_p_e_g__scans_8cc.html", "_j_p_e_g__scans_8cc" ],
     [ "JPEGreader.cc", "_j_p_e_greader_8cc.html", null ],
@@ -64,15 +63,8 @@ var files =
       [ "Kernel2D", "class_photo_finish_1_1_kernel2_d.html", "class_photo_finish_1_1_kernel2_d" ],
       [ "GaussianSharpen", "class_photo_finish_1_1_gaussian_sharpen.html", "class_photo_finish_1_1_gaussian_sharpen" ]
     ] ],
-    [ "Kernel2Dvar.cc", "_kernel2_dvar_8cc.html", "_kernel2_dvar_8cc" ],
-    [ "Kernel2Dvar.hh", "_kernel2_dvar_8hh.html", [
-      [ "Kernel2Dvar", "class_photo_finish_1_1_kernel2_dvar.html", "class_photo_finish_1_1_kernel2_dvar" ],
-      [ "Lanczos2D", "class_photo_finish_1_1_lanczos2_d.html", "class_photo_finish_1_1_lanczos2_d" ]
-    ] ],
     [ "LCMS2ErrorHandler.cc", "_l_c_m_s2_error_handler_8cc.html", "_l_c_m_s2_error_handler_8cc" ],
     [ "photofinish.cc", "photofinish_8cc.html", "photofinish_8cc" ],
-    [ "PNG_metadata.cc", "_p_n_g__metadata_8cc.html", "_p_n_g__metadata_8cc" ],
-    [ "PNG_metadata.hh", "_p_n_g__metadata_8hh.html", "_p_n_g__metadata_8hh" ],
     [ "PNGreader.cc", "_p_n_greader_8cc.html", null ],
     [ "PNGreader_cb.cc", "_p_n_greader__cb_8cc.html", "_p_n_greader__cb_8cc" ],
     [ "PNGreader_cb.hh", "_p_n_greader__cb_8hh.html", "_p_n_greader__cb_8hh" ],
@@ -80,10 +72,6 @@ var files =
     [ "process_scans.cc", "process__scans_8cc.html", "process__scans_8cc" ],
     [ "sample.h", "sample_8h.html", "sample_8h" ],
     [ "SOLwriter.cc", "_s_o_lwriter_8cc.html", "_s_o_lwriter_8cc" ],
-    [ "StreamIO.cc", "_stream_i_o_8cc.html", null ],
-    [ "StreamIO.hh", "_stream_i_o_8hh.html", [
-      [ "StreamIO", "class_photo_finish_1_1_stream_i_o.html", "class_photo_finish_1_1_stream_i_o" ]
-    ] ],
     [ "Tags.cc", "_tags_8cc.html", "_tags_8cc" ],
     [ "Tags.hh", "_tags_8hh.html", "_tags_8hh" ],
     [ "Tags_EXIF_subst.cc", "_tags___e_x_i_f__subst_8cc.html", "_tags___e_x_i_f__subst_8cc" ],
@@ -91,7 +79,6 @@ var files =
     [ "Tags_XMP_subst.cc", "_tags___x_m_p__subst_8cc.html", "_tags___x_m_p__subst_8cc" ],
     [ "TIFFreader.cc", "_t_i_f_freader_8cc.html", "_t_i_f_freader_8cc" ],
     [ "TIFFwriter.cc", "_t_i_f_fwriter_8cc.html", "_t_i_f_fwriter_8cc" ],
-    [ "vector.h", "vector_8h.html", "vector_8h" ],
     [ "WebP_ostream.cc", "_web_p__ostream_8cc.html", "_web_p__ostream_8cc" ],
     [ "WebP_ostream.hh", "_web_p__ostream_8hh.html", "_web_p__ostream_8hh" ],
     [ "WebPreader.cc", "_web_preader_8cc.html", null ],

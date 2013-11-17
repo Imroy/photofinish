@@ -11,7 +11,6 @@ var searchData=
   ['jpeg_5fistream_5fterm_5fsource',['jpeg_istream_term_source',['../namespace_photo_finish.html#a3e8433bb81cdaea426e1c9dcf492277f',1,'PhotoFinish']]],
   ['jpeg_5fostream_5fdest',['jpeg_ostream_dest',['../namespace_photo_finish.html#a8d7e2916997da593705b47a56cf33ea2',1,'PhotoFinish']]],
   ['jpeg_5fostream_5fdest_5ffree',['jpeg_ostream_dest_free',['../namespace_photo_finish.html#a83c709bef3546d9271d51694a7bdbbab',1,'PhotoFinish']]],
-  ['jpeg_5fread_5fmetadata',['jpeg_read_metadata',['../namespace_photo_finish.html#a6da8fb6067b589ca6bb1615093cd2618',1,'PhotoFinish']]],
   ['jpeg_5fread_5fprofile',['jpeg_read_profile',['../namespace_photo_finish.html#a646def5a531d0c79b58c5a8ca485837b',1,'PhotoFinish']]],
   ['jpeg_5fwrite_5fprofile',['jpeg_write_profile',['../namespace_photo_finish.html#a0437f142c40159470e827e79c20f6d59',1,'PhotoFinish']]],
   ['jpegfile_5fscan_5fgreyscale',['jpegfile_scan_greyscale',['../namespace_photo_finish.html#aeb3ed185a3672cf727f112889c7320d5',1,'PhotoFinish']]],

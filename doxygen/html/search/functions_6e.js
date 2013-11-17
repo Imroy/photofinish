@@ -4,6 +4,7 @@ var searchData=
   ['noresize',['noresize',['../class_photo_finish_1_1_destination.html#a06ea144037e9fbfc18109482fc78edbb',1,'PhotoFinish::Destination']]],
   ['noresults',['NoResults',['../class_photo_finish_1_1_no_results.html#ac6abdb646f26fd45755bbf2e75a9136d',1,'PhotoFinish::NoResults']]],
   ['notargets',['NoTargets',['../class_photo_finish_1_1_no_targets.html#ab8e2b13061522bfa468d8df4dec41bf5',1,'PhotoFinish::NoTargets']]],
+  ['num_5fqualities',['num_qualities',['../class_photo_finish_1_1_d___j_p2.html#ab0be24d9c838a995de685c635b92815b',1,'PhotoFinish::D_JP2']]],
   ['num_5frates',['num_rates',['../class_photo_finish_1_1_d___j_p2.html#a79d7f4ca55bd10ce49f92ca2678d9797',1,'PhotoFinish::D_JP2']]],
   ['num_5ftargets',['num_targets',['../class_photo_finish_1_1_destination.html#a8021f151a7f57a73479dfc0e26bb1f6d',1,'PhotoFinish::Destination']]],
   ['numresolutions',['numresolutions',['../class_photo_finish_1_1_d___j_p2.html#a901559c9e6e2544bf1faec90a9643439',1,'PhotoFinish::D_JP2']]]

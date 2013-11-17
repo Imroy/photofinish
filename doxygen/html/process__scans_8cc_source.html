@@ -327,62 +327,63 @@ $(document).ready(function(){initNavTree('process__scans_8cc_source.html','');})
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            converted_dest-&gt;jp2().set_rates({ 1000, 100, 10, 1 });</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;            converted_dest-&gt;jp2().set_tile_size(2048, 2048);</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            converted_dest-&gt;jp2().set_numresolutions(7);</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            converted_dest-&gt;tiff().set_compression(<span class="stringliteral">&quot;deflate&quot;</span>);</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            converted_dest-&gt;webp().set_preset(<span class="stringliteral">&quot;photo&quot;</span>);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            converted_dest-&gt;webp().set_lossless();</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            converted_dest-&gt;webp().set_method(6);</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            <span class="keyword">auto</span> converted_file = <a class="code" href="class_photo_finish_1_1_image_writer.html#acc62967632f4e78f2c356842fbd3edb4">ImageWriter::open</a>(converted_filepath);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <a class="code" href="class_c_m_s_1_1_format.html">CMS::Format</a> orig_format = orig_image-&gt;format();</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <a class="code" href="class_c_m_s_1_1_format.html">CMS::Format</a> converted_format = converted_file-&gt;preferred_format(converted_dest-&gt;modify_format(orig_format));</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> converted_image;</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <span class="keywordflow">if</span> (orig_format == converted_format)</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;              converted_image = orig_image;</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;              converted_image = orig_image-&gt;transform_colour(NULL, converted_format);</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            filetags-&gt;copy_to(converted_image);</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;            converted_file-&gt;write(converted_image, converted_dest, !do_preview);</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;          }</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;        } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;          std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        }</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;        <span class="keywordflow">try</span> {</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;          <a class="code" href="class_photo_finish_1_1_image_filepath.html">ImageFilepath</a> preview_filepath(di.path().filename(), preview_format);</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;          <span class="keywordflow">if</span> (do_preview &amp;&amp; (!<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">exists</a>(preview_filepath) || (<a class="code" href="namespace_photo_finish.html#a125acf6d378db915789ac48a723be3a3">last_write_time</a>(preview_filepath) &lt; <a class="code" href="namespace_photo_finish.html#a125acf6d378db915789ac48a723be3a3">last_write_time</a>(infilepath))))</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            <a class="code" href="process__scans_8cc.html#a695b7a4aa3643facc39016dd529701a2">make_preview</a>(orig_image, orig_dest, filetags, <a class="code" href="class_photo_finish_1_1_image_writer.html#acc62967632f4e78f2c356842fbd3edb4">ImageWriter::open</a>(preview_filepath), <span class="keyword">true</span>);</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;          std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        }</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;        <span class="keywordflow">if</span> (do_conversion || do_move_originals) {</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;          <span class="keywordflow">if</span> (!<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">fs::exists</a>(convert_dir)) {</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            std::cerr &lt;&lt; <span class="stringliteral">&quot;Creating directory &quot;</span> &lt;&lt; convert_dir &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            fs::create_directory(convert_dir);</div>
-<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;          }</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;Moving &quot;</span> &lt;&lt; di.path() &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; convert_dir / di.path().filename().native() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;          rename(di.path().c_str(), (convert_dir / di.path().filename()).c_str());</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;        }</div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;      } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;      }</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    }</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  }</div>
-<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;</div>
-<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;  <span class="keywordflow">if</span> (do_preview) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">exists</a>(convert_dir))</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;      <a class="code" href="process__scans_8cc.html#a5b949448942e878b3ddf4f26d2321604">preview_dir</a>(convert_dir, preview_format, defaulttags);</div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">exists</a>(works_dir))</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;      <a class="code" href="process__scans_8cc.html#a5b949448942e878b3ddf4f26d2321604">preview_dir</a>(works_dir, preview_format, defaulttags);</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;Creating directory &quot;</span> &lt;&lt; works_dir &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      create_directory(works_dir);</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;    }</div>
-<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;  }</div>
-<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;}</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;            converted_dest-&gt;jp2().set_reversible();</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;            converted_dest-&gt;tiff().set_compression(<span class="stringliteral">&quot;deflate&quot;</span>);</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            converted_dest-&gt;webp().set_preset(<span class="stringliteral">&quot;photo&quot;</span>);</div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            converted_dest-&gt;webp().set_lossless();</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            converted_dest-&gt;webp().set_method(6);</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            <span class="keyword">auto</span> converted_file = <a class="code" href="class_photo_finish_1_1_image_writer.html#acc62967632f4e78f2c356842fbd3edb4">ImageWriter::open</a>(converted_filepath);</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;            <a class="code" href="class_c_m_s_1_1_format.html">CMS::Format</a> orig_format = orig_image-&gt;format();</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            <a class="code" href="class_c_m_s_1_1_format.html">CMS::Format</a> converted_format = converted_file-&gt;preferred_format(converted_dest-&gt;modify_format(orig_format));</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <a class="code" href="class_photo_finish_1_1_image.html#ab336203305ed3a1397d7245063353b5a">Image::ptr</a> converted_image;</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            <span class="keywordflow">if</span> (orig_format == converted_format)</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;              converted_image = orig_image;</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;              converted_image = orig_image-&gt;transform_colour(NULL, converted_format);</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;            filetags-&gt;copy_to(converted_image);</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;            converted_file-&gt;write(converted_image, converted_dest, !do_preview);</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;          }</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;          std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        }</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keywordflow">try</span> {</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;          <a class="code" href="class_photo_finish_1_1_image_filepath.html">ImageFilepath</a> preview_filepath(di.path().filename(), preview_format);</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;          <span class="keywordflow">if</span> (do_preview &amp;&amp; (!<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">exists</a>(preview_filepath) || (<a class="code" href="namespace_photo_finish.html#a125acf6d378db915789ac48a723be3a3">last_write_time</a>(preview_filepath) &lt; <a class="code" href="namespace_photo_finish.html#a125acf6d378db915789ac48a723be3a3">last_write_time</a>(infilepath))))</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            <a class="code" href="process__scans_8cc.html#a695b7a4aa3643facc39016dd529701a2">make_preview</a>(orig_image, orig_dest, filetags, <a class="code" href="class_photo_finish_1_1_image_writer.html#acc62967632f4e78f2c356842fbd3edb4">ImageWriter::open</a>(preview_filepath), <span class="keyword">true</span>);</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;          std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;        }</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        <span class="keywordflow">if</span> (do_conversion || do_move_originals) {</div>
+<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;          <span class="keywordflow">if</span> (!<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">fs::exists</a>(convert_dir)) {</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            std::cerr &lt;&lt; <span class="stringliteral">&quot;Creating directory &quot;</span> &lt;&lt; convert_dir &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;            fs::create_directory(convert_dir);</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;          }</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;          std::cerr &lt;&lt; <span class="stringliteral">&quot;Moving &quot;</span> &lt;&lt; di.path() &lt;&lt; <span class="stringliteral">&quot; to &quot;</span> &lt;&lt; convert_dir / di.path().filename().native() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;          rename(di.path().c_str(), (convert_dir / di.path().filename()).c_str());</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;        }</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;      } <span class="keywordflow">catch</span> (std::exception&amp; ex) {</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        std::cerr &lt;&lt; ex.what() &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;      }</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    }</div>
+<div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  }</div>
+<div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;  <span class="keywordflow">if</span> (do_preview) {</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">exists</a>(convert_dir))</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;      <a class="code" href="process__scans_8cc.html#a5b949448942e878b3ddf4f26d2321604">preview_dir</a>(convert_dir, preview_format, defaulttags);</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;</div>
+<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespace_photo_finish.html#aabc75ddd4dcb561448e15c30b0efa906">exists</a>(works_dir))</div>
+<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;      <a class="code" href="process__scans_8cc.html#a5b949448942e878b3ddf4f26d2321604">preview_dir</a>(works_dir, preview_format, defaulttags);</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;      std::cerr &lt;&lt; <span class="stringliteral">&quot;Creating directory &quot;</span> &lt;&lt; works_dir &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      create_directory(works_dir);</div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    }</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;  }</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;}</div>
 <div class="ttc" id="class_c_m_s_1_1_format_html"><div class="ttname"><a href="class_c_m_s_1_1_format.html">CMS::Format</a></div><div class="ttdoc">Wrap LCMS2&amp;#39;s pixel format. </div><div class="ttdef"><b>Definition:</b> <a href="_c_m_s_8hh_source.html#l00131">CMS.hh:131</a></div></div>
 <div class="ttc" id="_destination_8hh_html"><div class="ttname"><a href="_destination_8hh.html">Destination.hh</a></div></div>
 <div class="ttc" id="_kernel2_d_8hh_html"><div class="ttname"><a href="_kernel2_d_8hh.html">Kernel2D.hh</a></div></div>
@@ -419,7 +420,7 @@ $(document).ready(function(){initNavTree('process__scans_8cc_source.html','');})
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="process__scans_8cc.html">process_scans.cc</a></li>
-    <li class="footer">Generated on Sun Nov 17 2013 16:31:20 for Photo Finish by
+    <li class="footer">Generated on Sun Nov 17 2013 22:50:02 for Photo Finish by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.5 </li>
   </ul>

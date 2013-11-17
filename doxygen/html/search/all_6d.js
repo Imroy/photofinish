@@ -24,11 +24,9 @@ var searchData=
   ['memallocerror',['MemAllocError',['../class_photo_finish_1_1_mem_alloc_error.html',1,'PhotoFinish']]],
   ['memallocerror',['MemAllocError',['../class_photo_finish_1_1_mem_alloc_error.html#ad9c18ee333d465217ced55e75500e210',1,'PhotoFinish::MemAllocError']]],
   ['method',['method',['../class_photo_finish_1_1_d___web_p.html#a1c1364e513f244b2d0edd0a87fcf81f5',1,'PhotoFinish::D_WebP']]],
-  ['min',['min',['../_crop_solution_8cc.html#ac6afabdc09a49a433ee19d8a9486056d',1,'min():&#160;CropSolution.cc'],['../_web_p__ostream_8cc.html#ac6afabdc09a49a433ee19d8a9486056d',1,'min():&#160;WebP_ostream.cc'],['../_kernel1_dvar_8cc.html#abb702d8b501669a23aa0ab3b281b9384',1,'min():&#160;Kernel1Dvar.cc'],['../_kernel2_dvar_8cc.html#abb702d8b501669a23aa0ab3b281b9384',1,'min():&#160;Kernel2Dvar.cc']]],
-  ['mmap',['mmap',['../class_photo_finish_1_1_stream_i_o.html#a582d64da80b6228a7c12d6541c1ca590',1,'PhotoFinish::StreamIO']]],
+  ['min',['min',['../_crop_solution_8cc.html#ac6afabdc09a49a433ee19d8a9486056d',1,'min():&#160;CropSolution.cc'],['../_web_p__ostream_8cc.html#ac6afabdc09a49a433ee19d8a9486056d',1,'min():&#160;WebP_ostream.cc'],['../_kernel1_dvar_8cc.html#abb702d8b501669a23aa0ab3b281b9384',1,'min():&#160;Kernel1Dvar.cc']]],
   ['modify_5fchunk',['modify_chunk',['../class_photo_finish_1_1webp__stream__writer.html#a2c820fe74573fec2da615c31d93d495e',1,'PhotoFinish::webp_stream_writer']]],
   ['modify_5fformat',['modify_format',['../class_photo_finish_1_1_destination.html#a374870bcd20dc05ec7dec1e1f2cfb4cc',1,'PhotoFinish::Destination']]],
   ['modify_5fvp8x',['modify_vp8x',['../class_photo_finish_1_1webp__stream__writer.html#ac31f3881d6e8ce55d58aa0259ab1ac66',1,'PhotoFinish::webp_stream_writer']]],
-  ['multihash',['multihash',['../namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18',1,'PhotoFinish']]],
-  ['munmap',['munmap',['../class_photo_finish_1_1_stream_i_o.html#aaded4e00c62239da875a065012a07999',1,'PhotoFinish::StreamIO']]]
+  ['multihash',['multihash',['../namespace_photo_finish.html#a6f41796f162687538b7da5c7a95e2d18',1,'PhotoFinish']]]
 ];

@@ -1,11 +1,6 @@
 var hierarchy =
 [
-    [ "BasicIo", null, [
-      [ "PhotoFinish::StreamIO", "class_photo_finish_1_1_stream_i_o.html", null ]
-    ] ],
     [ "PhotoFinish::CropSolver", "class_photo_finish_1_1_crop_solver.html", null ],
-    [ "d2vector", "uniond2vector.html", null ],
-    [ "d4vector", "uniond4vector.html", null ],
     [ "PhotoFinish::D_profile", "class_photo_finish_1_1_d__profile.html", null ],
     [ "PhotoFinish::D_target", "class_photo_finish_1_1_d__target.html", [
       [ "PhotoFinish::Frame", "class_photo_finish_1_1_frame.html", null ]
@@ -40,8 +35,6 @@ var hierarchy =
       [ "PhotoFinish::Uninitialised", "class_photo_finish_1_1_uninitialised.html", null ],
       [ "PhotoFinish::WebPError", "class_photo_finish_1_1_web_p_error.html", null ]
     ] ],
-    [ "f2vector", "unionf2vector.html", null ],
-    [ "f4vector", "unionf4vector.html", null ],
     [ "CMS::Format", "class_c_m_s_1_1_format.html", null ],
     [ "PhotoFinish::Image", "class_photo_finish_1_1_image.html", null ],
     [ "PhotoFinish::ImageFilepath", "class_photo_finish_1_1_image_filepath.html", null ],
@@ -56,9 +49,6 @@ var hierarchy =
     ] ],
     [ "PhotoFinish::Kernel2D", "class_photo_finish_1_1_kernel2_d.html", [
       [ "PhotoFinish::GaussianSharpen", "class_photo_finish_1_1_gaussian_sharpen.html", null ]
-    ] ],
-    [ "PhotoFinish::Kernel2Dvar", "class_photo_finish_1_1_kernel2_dvar.html", [
-      [ "PhotoFinish::Lanczos2D", "class_photo_finish_1_1_lanczos2_d.html", null ]
     ] ],
     [ "PhotoFinish::PNGreader_cb", "struct_photo_finish_1_1_p_n_greader__cb.html", null ],
     [ "CMS::Profile", "class_c_m_s_1_1_profile.html", null ],

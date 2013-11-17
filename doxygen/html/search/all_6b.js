@@ -8,9 +8,5 @@ var searchData=
   ['kernel2d',['Kernel2D',['../class_photo_finish_1_1_kernel2_d.html#a43c7b680295addf6ec51d57be59af461',1,'PhotoFinish::Kernel2D::Kernel2D(short unsigned int w, short unsigned int h, short unsigned int cx, short unsigned int cy)'],['../class_photo_finish_1_1_kernel2_d.html#abaf8fb7dc013f446340bd920f18a9a0d',1,'PhotoFinish::Kernel2D::Kernel2D(short unsigned int size, short unsigned int centre)'],['../class_photo_finish_1_1_kernel2_d.html#a41562fb9c80ee1aed47879347df24b4f',1,'PhotoFinish::Kernel2D::Kernel2D()']]],
   ['kernel2d_2ecc',['Kernel2D.cc',['../_kernel2_d_8cc.html',1,'']]],
   ['kernel2d_2ehh',['Kernel2D.hh',['../_kernel2_d_8hh.html',1,'']]],
-  ['kernel2dvar',['Kernel2Dvar',['../class_photo_finish_1_1_kernel2_dvar.html#aa2a360573c1b017dc62cb2b64482c001',1,'PhotoFinish::Kernel2Dvar::Kernel2Dvar(double from_startx, double from_starty, double from_sizex, double from_sizey, unsigned int from_width, unsigned int from_height, double to_width, double to_height)'],['../class_photo_finish_1_1_kernel2_dvar.html#a5e10f4e43aba4c936d79d7b3c0a4da31',1,'PhotoFinish::Kernel2Dvar::Kernel2Dvar()']]],
-  ['kernel2dvar',['Kernel2Dvar',['../class_photo_finish_1_1_kernel2_dvar.html',1,'PhotoFinish']]],
-  ['kernel2dvar_2ecc',['Kernel2Dvar.cc',['../_kernel2_dvar_8cc.html',1,'']]],
-  ['kernel2dvar_2ehh',['Kernel2Dvar.hh',['../_kernel2_dvar_8hh.html',1,'']]],
   ['key',['Key',['../_tags___e_x_i_f__subst_8cc.html#a6d8b31e2e55a2aaad6f6a9e09cf25fd4',1,'Tags_EXIF_subst.cc']]]
 ];

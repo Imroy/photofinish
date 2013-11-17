@@ -40,12 +40,9 @@ var namespace_photo_finish =
     [ "Lanczos", "class_photo_finish_1_1_lanczos.html", "class_photo_finish_1_1_lanczos" ],
     [ "Kernel2D", "class_photo_finish_1_1_kernel2_d.html", "class_photo_finish_1_1_kernel2_d" ],
     [ "GaussianSharpen", "class_photo_finish_1_1_gaussian_sharpen.html", "class_photo_finish_1_1_gaussian_sharpen" ],
-    [ "Kernel2Dvar", "class_photo_finish_1_1_kernel2_dvar.html", "class_photo_finish_1_1_kernel2_dvar" ],
-    [ "Lanczos2D", "class_photo_finish_1_1_lanczos2_d.html", "class_photo_finish_1_1_lanczos2_d" ],
     [ "Tags", "class_photo_finish_1_1_tags.html", "class_photo_finish_1_1_tags" ],
     [ "jpeg_source_state_t", "struct_photo_finish_1_1jpeg__source__state__t.html", "struct_photo_finish_1_1jpeg__source__state__t" ],
     [ "jpeg_destination_state_t", "struct_photo_finish_1_1jpeg__destination__state__t.html", "struct_photo_finish_1_1jpeg__destination__state__t" ],
     [ "PNGreader_cb", "struct_photo_finish_1_1_p_n_greader__cb.html", "struct_photo_finish_1_1_p_n_greader__cb" ],
-    [ "StreamIO", "class_photo_finish_1_1_stream_i_o.html", "class_photo_finish_1_1_stream_i_o" ],
     [ "webp_stream_writer", "class_photo_finish_1_1webp__stream__writer.html", "class_photo_finish_1_1webp__stream__writer" ]
 ];

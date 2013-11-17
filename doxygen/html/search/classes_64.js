@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['d2vector',['d2vector',['../uniond2vector.html',1,'']]],
-  ['d4vector',['d4vector',['../uniond4vector.html',1,'']]],
   ['d_5fjp2',['D_JP2',['../class_photo_finish_1_1_d___j_p2.html',1,'PhotoFinish']]],
   ['d_5fjpeg',['D_JPEG',['../class_photo_finish_1_1_d___j_p_e_g.html',1,'PhotoFinish']]],
   ['d_5fpng',['D_PNG',['../class_photo_finish_1_1_d___p_n_g.html',1,'PhotoFinish']]],

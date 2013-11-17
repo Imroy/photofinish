@@ -6,7 +6,6 @@ var searchData=
   ['jp2writer_2ecc',['JP2writer.cc',['../_j_p2writer_8cc.html',1,'']]],
   ['jpeg_2ehh',['JPEG.hh',['../_j_p_e_g_8hh.html',1,'']]],
   ['jpeg_5fiostream_2ecc',['JPEG_iostream.cc',['../_j_p_e_g__iostream_8cc.html',1,'']]],
-  ['jpeg_5fmetadata_2ecc',['JPEG_metadata.cc',['../_j_p_e_g__metadata_8cc.html',1,'']]],
   ['jpeg_5fprofiles_2ecc',['JPEG_profiles.cc',['../_j_p_e_g__profiles_8cc.html',1,'']]],
   ['jpeg_5fscans_2ecc',['JPEG_scans.cc',['../_j_p_e_g__scans_8cc.html',1,'']]],
   ['jpegreader_2ecc',['JPEGreader.cc',['../_j_p_e_greader_8cc.html',1,'']]],

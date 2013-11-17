@@ -27,7 +27,6 @@ var searchData=
   ['is_5fswapped',['is_swapped',['../class_c_m_s_1_1_format.html#a356d90a9980edb918c520b8eaa7f04b4',1,'CMS::Format']]],
   ['is_5fswappedfirst',['is_swappedfirst',['../class_c_m_s_1_1_format.html#aed2f77111945eb7b1970383dfa728e1e',1,'CMS::Format']]],
   ['is_5fvanilla',['is_vanilla',['../class_c_m_s_1_1_format.html#a3dc5b868a022528ebae89823b9200ef3',1,'CMS::Format']]],
-  ['isopen',['isopen',['../class_photo_finish_1_1_stream_i_o.html#a4572cd1d70e8f2a21a56d763556009b2',1,'PhotoFinish::StreamIO']]],
   ['istream_5fclose',['istream_close',['../namespace_c_m_s.html#a60036a5e1db6c4320d3ce599758c9101',1,'CMS']]],
   ['istream_5fread',['istream_read',['../namespace_c_m_s.html#a88c40f3fde62e521d5f3b4055e6854e6',1,'CMS']]],
   ['istream_5fseek',['istream_seek',['../namespace_c_m_s.html#a55b53b00daedc8b76eba456e43713dd6',1,'CMS']]],
