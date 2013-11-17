@@ -216,7 +216,8 @@ namespace PhotoFinish {
 
 
   D_JP2::D_JP2() :
-    _rates()
+    _rates(),
+    _qualities()
   {}
 
   void D_JP2::add_variables(multihash& vars) {
@@ -262,6 +263,30 @@ namespace PhotoFinish {
       }
     }
 
+    if (_qualities.size() == 0) {
+      auto vi = vars.find("quality");
+      if (vi != vars.end()) {
+	std::string quality = vi->second[0];
+	size_t sep = quality.find_first_of(",/");
+	while (sep != std::string::npos) {
+	  try {
+	    _qualities.push_back(boost::lexical_cast<float>(quality.substr(0, sep)));
+	    vars.erase(vi);
+	    set_defined();
+	    quality = quality.substr(sep + 1, quality.length() - sep -1);
+	  } catch (boost::bad_lexical_cast &ex) {
+	    std::cerr << ex.what();
+	    break;
+	  }
+	  sep = quality.find_first_of(",/");
+	}
+	try {
+	  _qualities.push_back(boost::lexical_cast<float>(quality));
+	} catch (boost::bad_lexical_cast &ex) {
+	}
+      }
+    }
+
     if (!_tile_size.defined()) {
       auto vi = vars.find("tile");
       if (vi != vars.end()) {
@@ -280,6 +305,13 @@ namespace PhotoFinish {
 	} else
 	  std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
       }
+    }
+
+    if (!_reversible.defined()) {
+      if (vars.find("reversible") != vars.end())
+	_reversible = true;
+      else if (vars.find("irreversible") != vars.end())
+	_reversible = false;
     }
   }
 
@@ -310,6 +342,25 @@ namespace PhotoFinish {
       }
     }
 
+    if (node["quality"]) {
+      std::string quality = node["quality"].as<std::string>();
+      size_t sep = quality.find_first_of(",/");
+      while (sep != std::string::npos) {
+	try {
+	  _qualities.push_back(boost::lexical_cast<float>(quality.substr(0, sep)));
+	  quality = quality.substr(sep + 1, quality.length() - sep -1);
+	} catch (boost::bad_lexical_cast &ex) {
+	  std::cerr << ex.what();
+	  break;
+	}
+	sep = quality.find_first_of(",/");
+      }
+      try {
+	_qualities.push_back(boost::lexical_cast<float>(quality));
+      } catch (boost::bad_lexical_cast &ex) {
+      }
+    }
+
     if (node["tile"]) {
       std::string tile_size = node["tile"].as<std::string>();
       size_t sep = tile_size.find_first_of("x×/,");
@@ -324,6 +375,11 @@ namespace PhotoFinish {
       } else
 	std::cerr << "D_JP2: Failed to parse tile size \"" << tile_size << "\"." << std::endl;
     }
+
+    if (node["reversible"])
+      _reversible = node["reversible"].as<bool>();
+    else if (node["irreversible"])
+      _reversible = false;
 
     set_defined();
   }

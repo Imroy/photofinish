@@ -87,7 +87,8 @@ namespace PhotoFinish {
     opj_set_default_encoder_parameters(&parameters);
 
     parameters.tile_size_on = OPJ_FALSE;
-    parameters.irreversible = 1;
+    parameters.tcp_numlayers = 0;
+    parameters.irreversible = 1;	// Default to ICT
 
     if (dest->jp2().defined()) {
       D_JP2 d = dest->jp2();
@@ -123,20 +124,40 @@ namespace PhotoFinish {
 	  std::cerr << " " << d.rate(i);
 	}
 	std::cerr << "." << std::endl;
+	parameters.tcp_numlayers = d.num_rates();
 	parameters.cp_disto_alloc = 1;
+      } else if (d.num_qualities() > 0) {
+	std::cerr << "\tQuality:";
+	for (int i = 0; i < d.num_qualities(); i++) {
+	  parameters.tcp_distoratio[i] = d.quality(i);
+	  if (i > 0)
+	    std::cerr << ",";
+	  std::cerr << " " << d.rate(i);
+	}
+	std::cerr << "." << std::endl;
+	parameters.tcp_numlayers = d.num_rates();
+	parameters.cp_fixed_quality = 1;
       }
-      parameters.tcp_numlayers = d.num_rates();
       if (d.tile_size().defined()) {
 	std::cerr << "\tTile size of " << d.tile_size()->first << "×" << d.tile_size()->second << std::endl;
 	parameters.tile_size_on = OPJ_TRUE;
 	parameters.cp_tdx = d.tile_size()->first;
 	parameters.cp_tdy = d.tile_size()->second;
       }
+      if (d.reversible().defined()) {
+	if (d.reversible()) {
+	  std::cerr << "\tReversible." << std::endl;
+	  parameters.irreversible = 0;
+	} else {
+	  std::cerr << "\tIreversible." << std::endl;
+	  parameters.irreversible = 1;
+	}
+      }
     }
 
     if (parameters.tcp_numlayers == 0) {
       parameters.tcp_rates[0] = 0;
-      parameters.tcp_numlayers++;
+      parameters.tcp_numlayers = 1;
       parameters.cp_disto_alloc = 1;
     }
 

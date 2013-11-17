@@ -181,8 +181,9 @@ namespace PhotoFinish {
   private:
     definable<int> _numresolutions;
     definable<std::string> _prog_order;
-    std::vector<float> _rates;
+    std::vector<float> _rates, _qualities;
     definable< std::pair<int, int> > _tile_size;
+    definable<bool> _reversible;
 
   public:
     //! Empty constructor
@@ -202,8 +203,17 @@ namespace PhotoFinish {
     inline void set_rate(int n, float r) { _rates[n] = r; set_defined(); }
     inline void set_rates(std::vector<float> r) { _rates = r; set_defined(); }
 
+    inline int num_qualities(void) const { return _qualities.size(); }
+    inline float quality(int n) const { return _qualities[n]; }
+    inline void set_quality(int n, float r) { _qualities[n] = r; set_defined(); }
+    inline void set_qualities(std::vector<float> r) { _qualities = r; set_defined(); }
+
     inline definable< std::pair<int, int> > tile_size(void) const { return _tile_size; }
     inline void set_tile_size(int h, int v) { _tile_size = std::pair<int, int>(h, v); set_defined(); }
+
+    inline definable<bool> reversible(void) const { return _reversible; }
+    inline void set_reversible(bool r = true) { _reversible = r; }
+    inline void set_irreversible(void) { _reversible = false; }
 
     void read_config(const YAML::Node& node);
   };
