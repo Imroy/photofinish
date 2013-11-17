@@ -31,107 +31,123 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>Photo Finish is a set of command-line tools for automatically processing digital images, with a focus on film scans. The eponymous <code>photofinish</code> crops, scales, and converts images in the (presumably) last stage of publishing a photo. I run a "hybrid" work-flow that starts with film scans, but this could also be of use to digital photographers.</p>
+	<p>Photo Finish is a set of command-line tools for automatically processing digital images with a focus on film scans. The eponymous <tt>photofinish</tt> crops, scales, and converts images in the (presumably) last stage of publishing a photo. I run a "hybrid" work-flow that starts with film scans, but this could also be of use to digital photographers.
+	</p>
+	<p>A second tool, <tt>process_scans</tt> converts original TIFF scans into PNG or JP2 (JPEG 2000) files, in a sub-directory, and produces scaled previews. The conversion is useful because most software working with TIFF files does not use any compression. Saving 10~20&#160;MB might not sound like much, but after scanning a whole roll of film (36+ exposures) it quickly adds up. Producing scaled previews and moving the originals to a sub-directory is useful because many programs want to create thumbnails of image files and this can be a very slow process with large, high-resolution scans (e.g ~120&#160;MB each), especially over a network. So use the previews to identify a scan and open the original file manually.
+	</p>
+	<p>The rest of this page deals primarily with <tt>photofinish</tt>, although all tools use the same library of classes.
+	</p>
+	<p></p><table summary="Contents"><tr><td>
+	      <div>Table of Contents</div>
+	      <ul><ul>
+		  <li><a href="#Description">Description</a></li>
+		  <li>
+		    <a href="#Features">Features</a><ul>
+		      <li><a href="#Image_file_formats">Image file formats</a></li>
+		      <li><a href="#Data_structures_and_processing">Data structures and processing</a></li>
+		    </ul>
+		  </li>
+		  <li><a href="#Current_limitations">Current limitations</a></li>
+		  <li><a href="#Todo">Todo</a></li>
+		  <li><a href="#Libraries">Libraries</a></li>
+		  <li><a href="#License">License</a></li>
+		</ul></ul>
+	    </td></tr></table><h2>
+	  <a name="description" class="anchor" href="#description"><span class="octicon octicon-link"></span></a><a name="Description">Description</a>
+	</h2>
 
-<p>A second tool, <code>process_scans</code> converts original TIFF scans into PNG or JP2 (JPEG 2000) files, in a sub-directory, and produces scaled previews. The conversion is useful because most software working with TIFF files does not use any compression. Saving 10~20 MB might not sound like much, but after scanning a whole roll of film (36+ exposures) it quickly adds up. Producing scaled previews and moving the originals to a sub-directory is useful because many programs want to create thumbnails of image files and this can be a very slow process with large, high-resolution scans (e.g ~120 MB each), especially over a network. So use the previews to identify a scan and open the original file manually.</p>
+	<p>So what does Photo Finish do?
+	</p>
 
-<p>The rest of this page deals primarily with <code>photofinish</code>, although all tools use the same library of classes.</p>
+	<ol>
+	  <li>It decides on the correct cropping window for a specified "destination"</li>
+	  <li>Does the crop and rescaling</li>
+	  <li>Saves the result with custom EXIF/IPTC/XMP metadata</li>
+	</ol><h2>
+	  <a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a><a name="Features">Features</a>
+	</h2>
 
-<h1>Description</h1>
+	<p>My focus has been on image quality and correctness, so many computations are done in floating-point. The 1990's are long passed, so why limit ourselves to small integers? We have the computational power and memory storage to easily do this the right way.
+	</p>
 
-<p>So what does Photo Finish do?</p>
+	<ul>
+	  <li>The list of "destinations" is read from a YAML file<ul><li>Destinations describe the size, format, and other specifics of the output</li></ul>
+	  </li>
+	  <li>Each input file can have its own list of "tags" - EXIF/IPTC/XMP metadata, as well as "variables", some of which override destination parameters<ul><li>This is an artefact of my original shell script (which used exiftool) and expanded in my Perl version (using <a href="http://www.sno.phy.queensu.ca/~phil/exiftool/" target="_blank">Image::Exiftool</a>); perhaps this should be replaced by YAML?</li></ul>
+	  </li>
+	</ul><h3>
+	  <a name="image-file-formats" class="anchor" href="#image-file-formats"><span class="octicon octicon-link"></span></a><a name="Image_file_formats">Image file formats</a>
+	</h3>
 
-<ol>
-<li>It decides on the correct cropping window for a specified "destination"</li>
-<li>Does the crop and rescaling</li>
-<li>Saves the result with custom EXIF/IPTC/XMP metadata</li>
-</ol><h1>Features</h1>
+	<ul>
+	  <li>Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000), WebP files</li>
+	  <li>Supports having an alpha channel in PNG, TIFF, and WebP files</li>
+	  <li>Embedded ICC profiles are used when reading, and created when writing</li>
+	  <li>Falls back to sRGB or a similar greyscale profile</li>
+	  <li>Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)</li>
+	</ul><h3>
+	  <a name="data-structures-and-processing" class="anchor" href="#data-structures-and-processing"><span class="octicon octicon-link"></span></a><a name="Data_structures_and_processing">Data structures and processing</a>
+	</h3>
 
-<p>My focus has been on image quality and correctness, so many computations are done in floating-point. The 1990's are long passed, so why limit ourselves to small integers? We have the computational power and memory storage to easily do this the right way.</p>
+	<ul>
+	  <li>Before rescaling, image pixel data is transformed into the <a href="http://en.wikipedia.org/wiki/Lab_color_space" target="_blank">CIE L*a*b* colour space</a> using floating-point components<ul>
+	      <li>This colour space is perceptually uniform, so it is ideal for rescaling of images</li>
+	      <li>Even when the input and output(s) are greyscale, this colour space is used (partly for simplicity, but also because greyscale can have colour to it)</li>
+	      <li>Configurable as either single or double precision at compile-time (DP adds almost nothing in my limited tests)</li>
+	    </ul>
+	  </li>
+	  <li>Rescaling is done using a Lanczos filter</li>
+	  <li>OpenMP is used in several places to take advantage of SMP systems</li>
+	</ul><h2>
+	  <a name="current-limitations" class="anchor" href="#current-limitations"><span class="octicon octicon-link"></span></a><a name="Current_limitations">Current limitations</a>
+	</h2>
 
-<ul>
-<li>The list of "destinations" is read from a YAML file
+	<ul><li>Probably only compiles on Linux for now</li></ul><h2>
+	  <a name="todo" class="anchor" href="#todo"><span class="octicon octicon-link"></span></a><a name="Todo">Todo</a>
+	</h2>
 
-<ul>
-<li>Destinations describe the size, format, and other specifics of the output</li>
-</ul>
-</li>
-<li>Each input file can have its own list of "tags" - EXIF/IPTC/XMP metadata, as well as "variables", some of which override destination parameters
+	<p></p><ul>
+	  <li>Add other image formats e.g RAW formats (reading only)</li>
+	  <li>Use YAML (or something else?) for the "tags" format</li>
+	</ul>
+	Crazy idea:
+	<ul><li>An entirely workqueue-based version to keep multiple processors/cores busy at all time</li></ul><h2>
+	  <a name="libraries" class="anchor" href="#libraries"><span class="octicon octicon-link"></span></a><a name="Libraries">Libraries</a>
+	</h2>
 
-<ul>
-<li>This is an artefact of my original shell script (which used exiftool) and expanded in my Perl version (using <a href="http://www.sno.phy.queensu.ca/%7Ephil/exiftool/">Image::Exiftool</a>); perhaps this should be replaced by YAML?</li>
-</ul>
-</li>
-</ul><h2>Image file formats</h2>
+	<p>Photo Finish currently uses the following libraries:
 
-<ul>
-<li>Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000) files</li>
-<li>Embedded ICC profiles are used when reading, and created when writing</li>
-<li>Falls back to sRGB or a similar greyscale profile</li>
-<li>Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)</li>
-</ul><h2>Data structures and processing</h2>
+	</p><ul>
+	  <li>
+	    <a href="http://www.libpng.org/" target="_blank">LibPNG</a> for reading and writing PNG files</li>
+	  <li>
+	    <a href="http://www.ijg.org/" target="_blank">IJG</a>'s LibJPEG for reading and writing JPEG files</li>
+	  <li>
+	    <a href="http://www.remotesensing.org/libtiff/" target="_blank">libTIFF</a> for reading and writing PNG files</li>
+	  <li>
+	    <a href="http://www.openjpeg.org/" target="_blank">OpenJPEG</a> for reading and writing JPEG 2000 files</li>
+	  <li>
+	    <a href="https://developers.google.com/speed/webp/docs/api" target="_blank">libwebp</a> for reading and writing WebP files</li>
+	  <li>
+	    <a href="http://www.littlecms.com/" target="_blank">Little CMS</a> (LCMS) for transforming between colour profiles</li>
+	  <li>
+	    <a href="http://code.google.com/p/yaml-cpp/" target="_blank">libyaml</a> for reading YAML data files</li>
+	  <li>
+	    <a href="http://www.exiv2.org/" target="_blank">EXIV</a> for EXIF/IPTC/XMP metadata</li>
+	  <li>Several boost libraries:<ul>
+	      <li><a href="http://www.boost.org/doc/libs/1_50_0/libs/filesystem/doc/" target="_blank">Boost.Filesystem</a></li>
+	      <li><a href="http://www.boost.org/doc/libs/1_50_0/doc/html/program_options.html" target="_blank">Boost.Program_options</a></li>
+	      <li><a href="http://www.boost.org/doc/libs/1_50_0/doc/html/boost_lexical_cast.html" target="_blank">Boost.Lexical_Cast</a></li>
+	      <li>a bit of <a href="http://www.boost.org/doc/libs/1_50_0/libs/algorithm/doc/html/index.html" target="_blank">Boost.Algorithm</a> (iequals)</li>
+	    </ul>
+	  </li>
+	</ul><h2>
+	  <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a><a name="License">License</a>
+	</h2>
 
-<ul>
-<li>Image pixel data is stored internally in the <a href="http://en.wikipedia.org/wiki/Lab_color_space">CIE L* a* b* colour space</a> using floating-point components
-
-<ul>
-<li>This colour space is perceptually uniform, so it is ideal for rescaling of images</li>
-<li>Even when the input and output(s) are greyscale, this colour space is used (partly for simplicity, but also because greyscale can have colour to it)</li>
-<li>Configurable as either single or double precision at compile-time (DP adds almost nothing in my limited tests)</li>
-</ul>
-</li>
-<li>Rescaling is done using a Lanczos filter</li>
-<li>OpenMP is used in several places to take advantage of SMP systems</li>
-<li>Dithers using Floyd-Steinberg error diffusion when producing 8-bit component output
-
-<ul>
-<li>Not sure if this improves the output or not, it just seemed like the right thing to do</li>
-</ul>
-</li>
-</ul><h1>Current limitations</h1>
-
-<ul>
-<li>Probably only compiles on Linux for now</li>
-</ul><h1>Todo</h1>
-
-<ul>
-<li>Add other image formats e.g RAW formats (reading only)</li>
-<li>Use YAML (or something else?) for the "tags" format</li>
-</ul><p>Crazy idea:</p>
-
-<ul>
-<li>An entirely workqueue-based version to keep multiple processors/cores busy at all time</li>
-</ul><h1>Libraries</h1>
-
-<p>Photo Finish currently uses the following libraries:</p>
-
-<ul>
-<li>
-<a href="http://www.libpng.org/">LibPNG</a> for reading and writing PNG files</li>
-<li>
-<a href="http://www.ijg.org/">IJG</a>'s LibJPEG for writing JPEG's</li>
-<li>
-<a href="http://www.remotesensing.org/libtiff/">libTIFF</a> for reading and writing PNG files</li>
-<li>
-<a href="http://www.littlecms.com/">Little CMS</a> (LCMS) for transforming between colour profiles</li>
-<li>
-<a href="http://code.google.com/p/yaml-cpp/">libyaml-cpp</a> for reading YAML data files</li>
-<li>
-<a href="http://www.exiv2.org/">EXIV2</a> for EXIF/IPTC/XMP metadata</li>
-<li>Several boost libraries:
-
-<ul>
-<li><a href="http://www.boost.org/doc/libs/1_50_0/libs/filesystem/doc/">Boost.Filesystem</a></li>
-<li><a href="http://www.boost.org/doc/libs/1_50_0/doc/html/program_options.html">Boost.Program_options</a></li>
-<li><a href="http://www.boost.org/doc/libs/1_50_0/doc/html/boost_lexical_cast.html">Boost.Lexical_Cast</a></li>
-<li>a bit of <a href="http://www.boost.org/doc/libs/1_50_0/libs/algorithm/doc/html/index.html">Boost.Algorithm</a> (iequals)</li>
-</ul>
-</li>
-</ul><h1>License</h1>
-
-<p>Copyright 2012 Ian Tester &lt;imroykun@gmail.com&gt;</p>
-
-<p>Photo Finish is licensed under the GNU GPL version 3 or later.</p>
+	<p>Copyright 2012-2013 Ian Tester &lt;imroykun@gmail.com&gt;
+	</p>
+	<p>Photo Finish is licensed under the GNU GPL version 3 or later.</p>
       </section>
     </div>
 
