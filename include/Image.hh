@@ -178,7 +178,7 @@ namespace PhotoFinish {
 
   };
 
-  //! A template function that we specialise for each type a pixel component could be in
+  //! A template function that returns the 'scale' value of a type.
   template <typename T>
   T scaleval(void);
 
@@ -199,6 +199,57 @@ namespace PhotoFinish {
 
   template <>
   inline double scaleval<double>(void) { return 1.0; }
+
+
+  //! A template function that limits a floating-point value while converting to another type.
+  template <typename T>
+  T limitval(SAMPLE v);
+
+  template <>
+  inline unsigned char limitval<unsigned char>(SAMPLE v) {
+    if (v > 255.0)
+      return 255;
+    if (v < 0)
+      return 0;
+    return round(v);
+  }
+
+  template <>
+  inline unsigned short int limitval<unsigned short int>(SAMPLE v) {
+    if (v > 65535.0)
+      return 65535;
+    if (v < 0)
+      return 0;
+    return round(v);
+  }
+
+  template <>
+  inline unsigned int limitval<unsigned int>(SAMPLE v) {
+    if (v > 4294967295.0)
+      return 4294967295;
+    if (v < 0)
+      return 0;
+    return round(v);
+  }
+
+  template <>
+  inline unsigned long int limitval<unsigned long int>(SAMPLE v) {
+    if (v > 18446744073709551615.0)
+      return 18446744073709551615UL;
+    if (v < 0)
+      return 0;
+    return round(v);
+  }
+
+  template <>
+  inline float limitval<float>(SAMPLE v) {
+    return v;
+  }
+
+  template <>
+  inline double limitval<double>(SAMPLE v) {
+    return v;
+  }
 
 }
 

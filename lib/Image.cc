@@ -83,14 +83,8 @@ namespace PhotoFinish {
     double factor = (double)scaleval<B>() / scaleval<A>();
     A *inp = const_cast<A*>(src_row) + src_channels;
     B *outp = const_cast<B*>(dest_row) + dest_channels;
-    for (unsigned int x = width; x; x--, inp += 1 + src_channels, outp += 1 + dest_channels) {
-      if (*inp < 0)
-	*outp = 0;
-      else if (*inp > scaleval<A>())
-	*outp = scaleval<B>();
-      else
-	*outp = (*inp) * factor;
-    }
+    for (unsigned int x = width; x; x--, inp += 1 + src_channels, outp += 1 + dest_channels)
+      *outp = limitval<B>((*inp) * factor);
   }
 
   template <typename A>
@@ -276,15 +270,14 @@ namespace PhotoFinish {
     {
 #pragma omp master
       {
-	std::cerr << "Un-multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << (SAMPLE)scaleval<SAMPLE>() << "/" << (SAMPLE)scaleval<SRC>() << ") using " << omp_get_num_threads() << " threads..." << std::endl;
+	std::cerr << "Un-multiplying colour from the alpha channel and transforming into " << dest_format << " (scale=" << scaleval<SAMPLE>() << "/" << (SAMPLE)scaleval<SRC>() << ") using " << omp_get_num_threads() << " threads..." << std::endl;
       }
     }
 
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
     unsigned char alphachan = _format.channels();
-    SAMPLE scale = (SAMPLE)scaleval<SAMPLE>() / scaleval<SRC>();
-    SAMPLE src_scale = scale * (SAMPLE)scaleval<SRC>();
+    SAMPLE scale = scaleval<SAMPLE>() / scaleval<SRC>();
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
@@ -297,14 +290,14 @@ namespace PhotoFinish {
 	SRC alpha = in[alphachan];
 	unsigned char c;
 	if (alpha > 0) {
-	  SAMPLE recip_alpha = src_scale / alpha;
+	  SAMPLE recip_alpha = scaleval<SAMPLE>() / alpha;
 	  for (c = 0; c < alphachan; c++)
-	    out[c] = in[c] * recip_alpha;
+	    out[c] = limitval<SAMPLE>(in[c] * recip_alpha);
 	} else
 	  for (c = 0; c < alphachan; c++)
-	    out[c] = scaleval<SAMPLE>();
+	    out[c] = 0; // or scaleval<SAMPLE>() ?
 	for (; c < _format.total_channels(); c++)
-	  out[c] = in[c] * scale;
+	  out[c] = limitval<SAMPLE>(in[c] * scale);
       }
 
       _rowdata[y] = (unsigned char*)dest_rowdata;
@@ -364,16 +357,10 @@ namespace PhotoFinish {
 	SAMPLE alpha = in[alphachan] * src_scale;
 	unsigned char c;
 	for (c = 0; c < alphachan; c++) {
-	  SAMPLE temp = in[c] * alpha;
-	  if (temp > scaleval<DST>())
-	    out[c] = scaleval<DST>();
-	  else if (temp < 0)
-	    out[c] = 0;
-	  else
-	    out[c] = temp;
+	  out[c] = limitval<DST>(in[c] * alpha);
 	}
 	for (; c < dest_format.total_channels(); c++)
-	  out[c] = in[c] * scale;
+	  out[c] = limitval<DST>(in[c] * scale);
       }
 
       _rowdata[y] = (unsigned char*)dest_rowdata;
