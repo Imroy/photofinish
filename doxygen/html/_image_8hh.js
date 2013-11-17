@@ -1,16 +1,18 @@
 var _image_8hh =
 [
     [ "Image", "class_photo_finish_1_1_image.html", "class_photo_finish_1_1_image" ],
-    [ "BYTES_MASK", "_image_8hh.html#aae7f35437c97ebcc8ae00d3dd6aaf304", null ],
-    [ "CHANNELS_MASK", "_image_8hh.html#aa10353b5910b92df7722d1c9c09224b3", null ],
-    [ "COLORSPACE_MASK", "_image_8hh.html#a0c308a7242fc03bb1c27d3f372f27105", null ],
-    [ "DOSWAP_MASK", "_image_8hh.html#a120dd1897a3521c4da6b0574c1d86a65", null ],
-    [ "ENDIAN16_MASK", "_image_8hh.html#a37eb282a508c69a8172e7dbb5af20db2", null ],
-    [ "EXTRA_MASK", "_image_8hh.html#ad8b41b1870342dccbc89827b494403f7", null ],
-    [ "FLAVOR_MASK", "_image_8hh.html#aadddcc18a1f1f563d39fc9c251ab5247", null ],
-    [ "FLOAT_MASK", "_image_8hh.html#ac91cd061dbea1a6f3ffd8522a28c09e1", null ],
-    [ "OPTIMIZED_MASK", "_image_8hh.html#ac154439a6e96511641067fcbf59f2c7d", null ],
-    [ "PLANAR_MASK", "_image_8hh.html#a2641e8785104d466e76014005cc0110f", null ],
-    [ "SWAPFIRST_MASK", "_image_8hh.html#ac4768cff92cad5b49dafb50c42ca410b", null ],
-    [ "T_BYTES_REAL", "_image_8hh.html#a6f553159efdccbb6204ccc3e36b27779", null ]
+    [ "limitval", "_image_8hh.html#aa019419c2456e119283e24d6e6fa3cbb", null ],
+    [ "limitval< double >", "_image_8hh.html#a252538ec5e799456b41654d3f4431c5d", null ],
+    [ "limitval< float >", "_image_8hh.html#a56b580dadd8be41410c8722bc908a8fb", null ],
+    [ "limitval< unsigned char >", "_image_8hh.html#ac8676e30ad327c0a4efd5a88b25cb4a0", null ],
+    [ "limitval< unsigned int >", "_image_8hh.html#a0b7985a8f707df80ad005bccda7ddff3", null ],
+    [ "limitval< unsigned long int >", "_image_8hh.html#ac91d8bcc5cbb260b68456fa247063005", null ],
+    [ "limitval< unsigned short int >", "_image_8hh.html#ab0f7bd944750509695fbac805f21ed42", null ],
+    [ "scaleval", "_image_8hh.html#a1bfb8180736f3b2786f47361d7586f2c", null ],
+    [ "scaleval< double >", "_image_8hh.html#abfdbadb0978c56b817c27939adc53c23", null ],
+    [ "scaleval< float >", "_image_8hh.html#a5a36600ec83f00881b849f7fb26666dc", null ],
+    [ "scaleval< unsigned char >", "_image_8hh.html#a653d84177058782ef68b4c5f5c0c5acc", null ],
+    [ "scaleval< unsigned int >", "_image_8hh.html#a82d48fcde01b1e834f627a2f6ab6befc", null ],
+    [ "scaleval< unsigned long int >", "_image_8hh.html#a508e35d70c9d2fee4d8ea8c36367681a", null ],
+    [ "scaleval< unsigned short int >", "_image_8hh.html#adbb257b26d8f342162ba6dda2fc32601", null ]
 ];

@@ -1,0 +1,27 @@
+var searchData=
+[
+  ['d_5fjp2',['D_JP2',['../class_photo_finish_1_1_d___j_p2.html#a6d72a9eb9393447c707eb80e7fe2a834',1,'PhotoFinish::D_JP2']]],
+  ['d_5fjpeg',['D_JPEG',['../class_photo_finish_1_1_d___j_p_e_g.html#a7a8a47f864985558358aa9486af485ae',1,'PhotoFinish::D_JPEG::D_JPEG()'],['../class_photo_finish_1_1_d___j_p_e_g.html#a94e2ea63fa1e3fd9c6a696eb15f44bf8',1,'PhotoFinish::D_JPEG::D_JPEG(int q, char h, char v, bool p)']]],
+  ['d_5fpng',['D_PNG',['../class_photo_finish_1_1_d___p_n_g.html#acaefeb530af1932e10a17f99de4f3091',1,'PhotoFinish::D_PNG']]],
+  ['d_5fprofile',['D_profile',['../class_photo_finish_1_1_d__profile.html#a5d2c843605849d4fe1a7e142bec84016',1,'PhotoFinish::D_profile::D_profile()'],['../class_photo_finish_1_1_d__profile.html#ab5b6dfde7c76fad1a4598a81800dc739',1,'PhotoFinish::D_profile::D_profile(const std::string &amp;name, fs::path filepath)'],['../class_photo_finish_1_1_d__profile.html#ac3e79f5dd8e7afd7f4678b289eb2e2b4',1,'PhotoFinish::D_profile::D_profile(const std::string &amp;name, void *data, unsigned int data_size)'],['../class_photo_finish_1_1_d__profile.html#a5b840e8fc4a0550a8c49e72e93e40463',1,'PhotoFinish::D_profile::D_profile(const D_profile &amp;other)']]],
+  ['d_5fresize',['D_resize',['../class_photo_finish_1_1_d__resize.html#a105b90f42117f04e6ad834efb1530516',1,'PhotoFinish::D_resize']]],
+  ['d_5fsharpen',['D_sharpen',['../class_photo_finish_1_1_d__sharpen.html#a2b51c49b0deff669e873d4871173fa45',1,'PhotoFinish::D_sharpen']]],
+  ['d_5ftarget',['D_target',['../class_photo_finish_1_1_d__target.html#aa83bf826478d54de26ca1abad6988a7c',1,'PhotoFinish::D_target::D_target(const std::string &amp;n, double w, double h)'],['../class_photo_finish_1_1_d__target.html#a9aee6452b1a9bcc76b98b7a33bde4b06',1,'PhotoFinish::D_target::D_target(const std::string &amp;n)']]],
+  ['d_5fthumbnail',['D_thumbnail',['../class_photo_finish_1_1_d__thumbnail.html#a3656b828df1e7e6b31f1b6714f1c6432',1,'PhotoFinish::D_thumbnail']]],
+  ['d_5ftiff',['D_TIFF',['../class_photo_finish_1_1_d___t_i_f_f.html#adc4f367566d37ab98ee231914892293e',1,'PhotoFinish::D_TIFF::D_TIFF()'],['../class_photo_finish_1_1_d___t_i_f_f.html#a9e693e5c8fd373710a1d84f8c930f8b5',1,'PhotoFinish::D_TIFF::D_TIFF(const std::string &amp;c)']]],
+  ['d_5fwebp',['D_WebP',['../class_photo_finish_1_1_d___web_p.html#a843064e953a4d950d9197b6cc597113f',1,'PhotoFinish::D_WebP']]],
+  ['data',['data',['../class_photo_finish_1_1_d__profile.html#a000c4d782fcc6bed58b53f5bbc7e06b8',1,'PhotoFinish::D_profile']]],
+  ['data_5fsize',['data_size',['../class_photo_finish_1_1_d__profile.html#a6d4bbe0a26dd115d7a97f5e701d7be22',1,'PhotoFinish::D_profile']]],
+  ['default_5fprofile',['default_profile',['../class_photo_finish_1_1_image.html#a0c0d0a10aaa05beca416be3b9e75810a',1,'PhotoFinish::Image::default_profile(CMS::ColourModel default_colourmodel, std::string for_desc)'],['../class_photo_finish_1_1_image.html#a07287a4910a554444f3d637a82c7fa7e',1,'PhotoFinish::Image::default_profile(CMS::Format format, std::string for_desc)']]],
+  ['definable',['definable',['../class_photo_finish_1_1definable.html#ac1efd98687fba9bb936b66fc050fedc1',1,'PhotoFinish::definable::definable()'],['../class_photo_finish_1_1definable.html#ac101abb7feaf8b5c6477c4f396ed7240',1,'PhotoFinish::definable::definable(const T &amp;i)']]],
+  ['defined',['defined',['../class_photo_finish_1_1definable.html#a09b3180b4c99b6afe4de015727d34765',1,'PhotoFinish::definable::defined()'],['../class_photo_finish_1_1_role___definable.html#a3fd21d29d6101b662263ab89c4102bf8',1,'PhotoFinish::Role_Definable::defined()']]],
+  ['depth',['depth',['../class_photo_finish_1_1_destination.html#aa342132249aec715eeed9045a16e37ae',1,'PhotoFinish::Destination']]],
+  ['destination',['Destination',['../class_photo_finish_1_1_destination.html#ada09c94b6f5f555bb3163bf1d28f0d69',1,'PhotoFinish::Destination::Destination()'],['../class_photo_finish_1_1_destination.html#acfa92e5c9d061871a842371fb04e5a3e',1,'PhotoFinish::Destination::Destination(const Destination &amp;other)']]],
+  ['destinationerror',['DestinationError',['../class_photo_finish_1_1_destination_error.html#a64bc7a5b20974a90fa479c0f2142977f',1,'PhotoFinish::DestinationError']]],
+  ['destinations',['Destinations',['../class_photo_finish_1_1_destinations.html#a454613582d7aea38d96b835a1550e597',1,'PhotoFinish::Destinations::Destinations(fs::path filepath)'],['../class_photo_finish_1_1_destinations.html#a313eba1f3fb9da1c9fff50b255d5f00a',1,'PhotoFinish::Destinations::Destinations(const Destinations &amp;other)']]],
+  ['device_5flink',['device_link',['../class_c_m_s_1_1_transform.html#aee4fa8bbec9b83d9b58a5644496ac15d',1,'CMS::Transform']]],
+  ['dir',['dir',['../class_photo_finish_1_1_destination.html#ac0a9ae67982a2aaad642d128ff8869be',1,'PhotoFinish::Destination']]],
+  ['dither',['dither',['../class_photo_finish_1_1_ditherer.html#aa58e2a61dc5354ae5a3affafd97f7b06',1,'PhotoFinish::Ditherer']]],
+  ['ditherer',['Ditherer',['../class_photo_finish_1_1_ditherer.html#a93033e318576331f46640f46fa05c99d',1,'PhotoFinish::Ditherer']]],
+  ['dupe',['dupe',['../class_photo_finish_1_1_destination.html#a78d6a23570b288c6bc2bd4bd38798695',1,'PhotoFinish::Destination::dupe()'],['../class_photo_finish_1_1_tags.html#a1ce8bd5466f2ed7d8e95bce65e01e420',1,'PhotoFinish::Tags::dupe()']]]
+];

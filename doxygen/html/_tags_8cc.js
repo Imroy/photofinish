@@ -1,10 +1,7 @@
 var _tags_8cc =
 [
-    [ "closest_Rational", "_tags_8cc.html#a98b60c918b52a1306cc629a94104ff73", null ],
-    [ "closest_URational", "_tags_8cc.html#a67a9f589efd1799d370a94f1b29feb13", null ],
-    [ "parse_Rational", "_tags_8cc.html#ae3cb5531b575f4ad5211df755d1f291e", null ],
-    [ "parse_URational", "_tags_8cc.html#a0138aa5495e2e5d5cd4949e6a81bad80", null ],
-    [ "populate_EXIF_subst", "_tags_8cc.html#ab5e71b5396ec4d9867e2f391cea7f7f6", null ],
-    [ "populate_IPTC_subst", "_tags_8cc.html#a0e6f64dcc129249af66a1c0dcaa5acf2", null ],
-    [ "populate_XMP_subst", "_tags_8cc.html#adc77e673753217af26b8101c1b263119", null ]
+    [ "exif_key_read", "_tags_8cc.html#a0b89b01a1b60b5e7c02fa92d001d9872", null ],
+    [ "exif_value_read", "_tags_8cc.html#a26b48907e51881629189963d62678563", null ],
+    [ "iptc_key_read", "_tags_8cc.html#ace8601eea326d5b9f2f5af7b1aa10253", null ],
+    [ "xmp_key_read", "_tags_8cc.html#a54ed3d9f6f4c8014b374ef85f29182d0", null ]
 ];
