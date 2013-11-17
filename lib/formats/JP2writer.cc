@@ -162,11 +162,15 @@ namespace PhotoFinish {
     }
 
     if (parameters.tile_size_on == OPJ_TRUE) {
-      int size = parameters.cp_tdx < parameters.cp_tdy ? parameters.cp_tdx : parameters.cp_tdy;
-      double maxres = log(size) / log(2);
+      unsigned int minsize = parameters.cp_tdx < parameters.cp_tdy ? parameters.cp_tdx : parameters.cp_tdy;
+      if (img->width() < minsize)
+	minsize = img->width();
+      if (img->height() < minsize)
+	minsize = img->height();
+      double maxres = log(minsize) / log(2);
       if (parameters.numresolution > maxres) {
 	parameters.numresolution = floor(maxres);
-	std::cerr << "\tDropping number of resolutions to " << parameters.numresolution << " to fit tile size." << std::endl;
+	std::cerr << "\tDropping number of resolutions to " << parameters.numresolution << " to fit tile or image size." << std::endl;
       }
     }
 
