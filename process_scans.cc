@@ -218,6 +218,7 @@ int main(int argc, char* argv[]) {
 	    converted_dest->jp2().set_rates({ 1000, 100, 10, 1 });
 	    converted_dest->jp2().set_tile_size(2048, 2048);
 	    converted_dest->jp2().set_numresolutions(7);
+	    converted_dest->jp2().set_reversible();
 	    converted_dest->tiff().set_compression("deflate");
 	    converted_dest->webp().set_preset("photo");
 	    converted_dest->webp().set_lossless();
