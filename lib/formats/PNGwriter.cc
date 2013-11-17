@@ -135,19 +135,18 @@ namespace PhotoFinish {
 	intent = dest->intent();
 
       std::string profile_name = img->profile()->read_info(cmsInfoDescription, "en", cmsNoCountry);
-      if (profile_name.length() > 0) {
-	if (boost::iequals(profile_name, "sGrey built-in"))
-	  png_set_sRGB_gAMA_and_cHRM(_png, _info, (int)intent);
-	else if (boost::iequals(profile_name, "sRGB built-in"))
-	  png_set_sRGB_gAMA_and_cHRM(_png, _info, (int)intent);
-      }
-
-      void *profile_data;
-      unsigned int profile_len;
-      img->profile()->save_to_mem(profile_data, profile_len);
-      if (profile_len > 0) {
-	std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << profile_len << " bytes)." << std::endl;
-	png_set_iCCP(_png, _info, profile_name.c_str(), 0, (unsigned char*)profile_data, profile_len);
+      if ((profile_name.length() > 0) &&
+	  (boost::iequals(profile_name, "sGrey built-in") ||
+	   boost::iequals(profile_name, "sRGB built-in")))
+	png_set_sRGB_gAMA_and_cHRM(_png, _info, (int)intent);
+      else {
+	void *profile_data;
+	unsigned int profile_len;
+	img->profile()->save_to_mem(profile_data, profile_len);
+	if (profile_len > 0) {
+	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << profile_len << " bytes)." << std::endl;
+	  png_set_iCCP(_png, _info, profile_name.c_str(), 0, (unsigned char*)profile_data, profile_len);
+	}
       }
     }
 
