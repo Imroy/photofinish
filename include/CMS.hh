@@ -41,8 +41,18 @@ namespace CMS {
     //! Private constructor for use by named constructors
     inline Profile(cmsHPROFILE p) { _profile = p; }
 
+    //! Private method for writing a string tag
+    void write_MLU(cmsTagSignature sig, std::string language, std::string country, std::string text);
+    //! Private method for writing a wide string tag
+    void write_MLU(cmsTagSignature sig, std::string language, std::string country, std::wstring text);
+
+    //! Private method for reading a string tag via the simplified cmsGetProfileInfoASCII function
+    std::string read_info(cmsInfoType type, std::string language, std::string country) const;
+    //! Private method for reading a string tag via the simplified cmsGetProfileInfo function
+    std::wstring read_info_wide(cmsInfoType type, std::string language, std::string country) const;
+
     // To allow the static constructors (and anyone else?!?) to use make_shared on the private constructor
-    // TODO: Since this is specific to GNU libstdc++, #ifdef's should be used to pull in each platform's versionx
+    // TODO: Since this is specific to GNU libstdc++, #ifdef's should be used to pull in each platform's version.
     friend class __gnu_cxx::new_allocator<Profile>;
 
   public:
@@ -79,11 +89,45 @@ namespace CMS {
     //! Named constructor
     static ptr sGrey(void);
 
-    void write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::string text);
-    void write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::wstring text);
+    //! Set the description tag
+    void set_description(std::string language, std::string country, std::string text);
+    //! Set the description tag with a wide string
+    void set_description(std::string language, std::string country, std::wstring text);
 
-    std::string read_info(cmsInfoType type, std::string lang, std::string cc) const;
-    std::wstring read_info_wide(cmsInfoType type, std::string lang, std::string cc) const;
+    //! Get the description tag
+    std::string description(std::string language, std::string country) const;
+    //! Get the description tag in a wide string
+    std::wstring description_wide(std::string language, std::string country) const;
+
+    //! Set the manufacturer tag
+    void set_manufacturer(std::string language, std::string country, std::string text);
+    //! Set the manufacturer tag with a wide string
+    void set_manufacturer(std::string language, std::string country, std::wstring text);
+
+    //! Get the manufacturer tag
+    std::string manufacturer(std::string language, std::string country) const;
+    //! Get the manufacturer tag in a wide string
+    std::wstring manufacturer_wide(std::string language, std::string country) const;
+
+    //! Set the model tag
+    void set_model(std::string language, std::string country, std::string text);
+    //! Set the model tag with a wide string
+    void set_model(std::string language, std::string country, std::wstring text);
+
+    //! Get the model tag
+    std::string model(std::string language, std::string country) const;
+    //! Get the model tag in a wide string
+    std::wstring model_wide(std::string language, std::string country) const;
+
+    //! Set the copyright tag
+    void set_copyright(std::string language, std::string country, std::string text);
+    //! Set the copyright tag with a wide string
+    void set_copyright(std::string language, std::string country, std::wstring text);
+
+    //! Get the copyright tag
+    std::string copyright(std::string language, std::string country) const;
+    //! Get the copyright tag in a wide string
+    std::wstring copyright_wide(std::string language, std::string country) const;
 
     void save_to_mem(void* &dest, unsigned int &size) const;
       

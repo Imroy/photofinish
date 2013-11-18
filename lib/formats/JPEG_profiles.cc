@@ -64,7 +64,7 @@ namespace PhotoFinish {
 
     CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
     if (profile != NULL) {
-      std::string profile_name = profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+      std::string profile_name = profile->description("en", "");
       if (profile_name.length() > 0)
 	dest->set_profile(profile_name, profile_data, profile_size);
       else

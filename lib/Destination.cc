@@ -193,7 +193,7 @@ namespace PhotoFinish {
 
       std::string profile_name = this->profile()->name();
       std::cerr << "Adding name \"" << profile_name << "\" to profile..." << std::endl;
-      profile->write_tag(cmsSigProfileDescriptionTag, "en", "AU", profile_name);
+      profile->set_description("en", "AU", profile_name);
     } else {
       profile = Image::default_profile(default_colourmodel, for_desc);
     }

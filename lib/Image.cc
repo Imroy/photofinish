@@ -140,7 +140,7 @@ namespace PhotoFinish {
 
 
   std::string profile_name(CMS::Profile::ptr profile) {
-    return profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+    return profile->description("en", "");
   }
 
   Image::ptr Image::transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent, bool can_free) {

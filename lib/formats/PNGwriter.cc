@@ -134,7 +134,7 @@ namespace PhotoFinish {
       if (dest->intent().defined())
 	intent = dest->intent();
 
-      std::string profile_name = img->profile()->read_info(cmsInfoDescription, "en", cmsNoCountry);
+      std::string profile_name = img->profile()->description("en", "");
       if ((profile_name.length() > 0) &&
 	  (boost::iequals(profile_name, "sGrey built-in") ||
 	   boost::iequals(profile_name, "sRGB built-in")))

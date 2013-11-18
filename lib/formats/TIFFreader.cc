@@ -151,7 +151,7 @@ namespace PhotoFinish {
 	void *data_copy = malloc(profile_len);
 	memcpy(data_copy, profile_data, profile_len);
 
-	std::string profile_name = profile->read_info(cmsInfoDescription, "en", cmsNoCountry);
+	std::string profile_name = profile->description("en", "");
 	if (profile_name.length() > 0)
 	  dest->set_profile(profile_name, data_copy, profile_len);
 	else

@@ -92,34 +92,37 @@ namespace CMS {
     Profile::ptr profile = std::make_shared<Profile>(cmsCreateGrayProfile(&D65, gamma));
     cmsFreeToneCurve(gamma);
 
-    profile->write_tag(cmsSigProfileDescriptionTag, "en", "AU", "sGrey built-in");
+    profile->write_MLU(cmsSigProfileDescriptionTag, "en", "AU", "sGrey built-in");
+    profile->write_MLU(cmsSigCopyrightTag, "en", "AU", "No copyright, use freely");
 
     return profile;
   }
 
-  void Profile::write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::string text) {
+  void Profile::write_MLU(cmsTagSignature sig, std::string language, std::string country, std::string text) {
     cmsMLU *MLU = cmsMLUalloc(NULL, 1);
     if (MLU != NULL) {
-      if (cmsMLUsetASCII(MLU, lang.c_str(), cc.c_str(), text.c_str()))
+      if (cmsMLUsetASCII(MLU, language.c_str(), country.c_str(), text.c_str()))
 	cmsWriteTag(_profile, sig, MLU);
       cmsMLUfree(MLU);
     }
   }
 
-  void Profile::write_tag(cmsTagSignature sig, std::string lang, std::string cc, std::wstring text) {
+  void Profile::write_MLU(cmsTagSignature sig, std::string language, std::string country, std::wstring text) {
     cmsMLU *MLU = cmsMLUalloc(NULL, 1);
     if (MLU != NULL) {
-      if (cmsMLUsetWide(MLU, lang.c_str(), cc.c_str(), text.c_str()))
+      if (cmsMLUsetWide(MLU, language.c_str(), country.c_str(), text.c_str()))
 	cmsWriteTag(_profile, sig, MLU);
       cmsMLUfree(MLU);
     }
   }
 
-  std::string Profile::read_info(cmsInfoType type, std::string lang, std::string cc) const {
+  std::string Profile::read_info(cmsInfoType type, std::string language, std::string country) const {
+    const char *lc = language.length() > 0 ? language.c_str() : cmsNoLanguage;
+    const char *cc = country.length() > 0 ? country.c_str() : cmsNoCountry;
     unsigned int text_len;
-    if ((text_len = cmsGetProfileInfoASCII(_profile, type, lang.c_str(), cc.c_str(), NULL, 0)) > 0) {
+    if ((text_len = cmsGetProfileInfoASCII(_profile, type, lc, cc, NULL, 0)) > 0) {
       char *text = (char*)malloc(text_len);
-      cmsGetProfileInfoASCII(_profile, type, lang.c_str(), cc.c_str(), text, text_len);
+      cmsGetProfileInfoASCII(_profile, type, lc, cc, text, text_len);
 
       std::string s(text);
       free(text);
@@ -128,17 +131,83 @@ namespace CMS {
     return "";
   }
 
-  std::wstring Profile::read_info_wide(cmsInfoType type, std::string lang, std::string cc) const {
+  std::wstring Profile::read_info_wide(cmsInfoType type, std::string language, std::string country) const {
+    const char *lc = language.length() > 0 ? language.c_str() : cmsNoLanguage;
+    const char *cc = country.length() > 0 ? country.c_str() : cmsNoCountry;
     unsigned int text_len;
-    if ((text_len = cmsGetProfileInfo(_profile, type, lang.c_str(), cc.c_str(), NULL, 0)) > 0) {
+    if ((text_len = cmsGetProfileInfo(_profile, type, lc, cc, NULL, 0)) > 0) {
       wchar_t *text = (wchar_t*)malloc(text_len * sizeof(wchar_t));
-      cmsGetProfileInfo(_profile, type, lang.c_str(), cc.c_str(), text, text_len);
+      cmsGetProfileInfo(_profile, type, lc, cc, text, text_len);
 
       std::wstring ws(text);
       free(text);
       return ws;
     }
     return (wchar_t*)"";
+  }
+
+  void Profile::set_description(std::string language, std::string country, std::string text) {
+    this->write_MLU(cmsSigProfileDescriptionTag, language, country, text);
+  }
+
+  void Profile::set_description(std::string language, std::string country, std::wstring text) {
+    this->write_MLU(cmsSigProfileDescriptionTag, language, country, text);
+  }
+
+  std::string Profile::description(std::string language, std::string country) const {
+    return this->read_info(cmsInfoDescription, language, country);
+  }
+
+  std::wstring Profile::description_wide(std::string language, std::string country) const {
+    return this->read_info_wide(cmsInfoDescription, language, country);
+  }
+
+  void Profile::set_manufacturer(std::string language, std::string country, std::string text) {
+    this->write_MLU(cmsSigDeviceMfgDescTag, language, country, text);
+  }
+
+  void Profile::set_manufacturer(std::string language, std::string country, std::wstring text) {
+    this->write_MLU(cmsSigDeviceMfgDescTag, language, country, text);
+  }
+
+  std::string Profile::manufacturer(std::string language, std::string country) const {
+    return this->read_info(cmsInfoManufacturer, language, country);
+  }
+
+  std::wstring Profile::manufacturer_wide(std::string language, std::string country) const {
+    return this->read_info_wide(cmsInfoManufacturer, language, country);
+  }
+
+  void Profile::set_model(std::string language, std::string country, std::string text) {
+    this->write_MLU(cmsSigDeviceModelDescTag, language, country, text);
+  }
+
+  void Profile::set_model(std::string language, std::string country, std::wstring text) {
+    this->write_MLU(cmsSigDeviceModelDescTag, language, country, text);
+  }
+
+  std::string Profile::model(std::string language, std::string country) const {
+    return this->read_info(cmsInfoModel, language, country);
+  }
+
+  std::wstring Profile::model_wide(std::string language, std::string country) const {
+    return this->read_info_wide(cmsInfoModel, language, country);
+  }
+
+  void Profile::set_copyright(std::string language, std::string country, std::string text) {
+    this->write_MLU(cmsSigCopyrightTag, language, country, text);
+  }
+
+  void Profile::set_copyright(std::string language, std::string country, std::wstring text) {
+    this->write_MLU(cmsSigCopyrightTag, language, country, text);
+  }
+
+  std::string Profile::copyright(std::string language, std::string country) const {
+    return this->read_info(cmsInfoCopyright, language, country);
+  }
+
+  std::wstring Profile::copyright_wide(std::string language, std::string country) const {
+    return this->read_info_wide(cmsInfoCopyright, language, country);
   }
 
   void Profile::save_to_mem(void* &dest, unsigned int &size) const {
