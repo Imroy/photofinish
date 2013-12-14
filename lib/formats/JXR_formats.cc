@@ -48,14 +48,6 @@ namespace PhotoFinish {
   }
 
   CMS::Format jxr_cms_format(const PKPixelFormatGUID &g) {
-    /*
-    for (auto i : JXR_format_table)
-      if (IsEqualGUID(*i.second, g))
-	return i.first;
-
-    throw cmsTypeError("Unhandled JPEG XR pixel format", 0);
-    */
-
     long rc;
 
     PKPixelInfo pi;
