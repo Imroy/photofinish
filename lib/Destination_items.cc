@@ -414,9 +414,9 @@ namespace PhotoFinish {
 
 
   D_JXR::D_JXR() :
-    _imageq(90),
+    _imageq(60),
     _alphaq(100),
-    _subsampling("444")
+    _subsampling("420")
   {}
 
   void D_JXR::add_variables(multihash& vars) {
@@ -429,8 +429,8 @@ namespace PhotoFinish {
     if (node["alphaq"])
       _alphaq = node["alphaq"].as<int>();
 
-    if (node["overlaping"])
-      _overlaping = node["overlaping"].as<std::string>();
+    if (node["overlap"])
+      _overlap = node["overlap"].as<std::string>();
 
     if (node["subsampling"])
       _subsampling = node["subsampling"].as<std::string>();

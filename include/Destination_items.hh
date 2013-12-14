@@ -254,7 +254,7 @@ namespace PhotoFinish {
   class D_JXR : public Role_Definable {
   private:
     int _imageq, _alphaq;
-    definable<std::string> _overlaping;
+    definable<std::string> _overlap;
     std::string _subsampling;
     definable<int> _tilesize;
 
@@ -265,14 +265,14 @@ namespace PhotoFinish {
     //! Set values from a map of "variables"
     void add_variables(multihash& vars);
 
-    inline int imageq(void) const { return _imageq; }
-    inline void set_imageq(int iq) { _imageq = iq; }
+    inline int quality(void) const { return _imageq; }
+    inline void set_quality(int iq) { _imageq = iq; }
 
     inline int alphaq(void) const { return _alphaq; }
     inline void set_alphaq(int aq) { _alphaq = aq; }
 
-    inline definable<std::string> overlaping(void) const { return _overlaping; }
-    inline void set_overlaping(const std::string &o) { _overlaping = o; }
+    inline definable<std::string> overlap(void) const { return _overlap; }
+    inline void set_overlap(const std::string &o) { _overlap = o; }
 
     inline std::string subsampling(void) const { return _subsampling; }
     inline void set_subsampling(const std::string &s) { _subsampling = s; }

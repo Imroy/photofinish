@@ -104,19 +104,19 @@ namespace PhotoFinish {
       }
     }
        
-    float iq_float = (dest->jxr().defined() ? dest->jxr().imageq() : 100) / 100.0f;
+    float iq_float = (dest->jxr().defined() ? dest->jxr().quality() : 100) / 100.0f;
    
     if (iq_float == 1.0f)    
       wmiSCP.olOverlap = OL_NONE;
     else {
       wmiSCP.olOverlap = iq_float > 0.4f ? OL_ONE : OL_TWO;
-      if (dest->jxr().defined() && dest->jxr().overlaping().defined()) {
-	std::string ol = dest->jxr().overlaping();
+      if (dest->jxr().defined() && dest->jxr().overlap().defined()) {
+	std::string ol = dest->jxr().overlap();
 	if (boost::iequals(ol, "none"))
 	  wmiSCP.olOverlap = OL_NONE;
-	else if (boost::iequals(ol, "one"))
+	else if (boost::iequals(ol, "one") || (ol == "1"))
 	  wmiSCP.olOverlap = OL_ONE;
-	else if (boost::iequals(ol, "two"))
+	else if (boost::iequals(ol, "two") || (ol == "2"))
 	  wmiSCP.olOverlap = OL_TWO;
       }
     }
