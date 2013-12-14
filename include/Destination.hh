@@ -57,6 +57,7 @@ namespace PhotoFinish {
     D_TIFF _tiff;
     D_JP2 _jp2;
     D_WebP _webp;
+    D_JXR _jxr;
 
     definable<CMS::Intent> _intent;	//! CMS rendering intent
 
@@ -129,6 +130,9 @@ namespace PhotoFinish {
 
     inline D_WebP& webp(void) { return _webp; }
     inline void set_webp(const D_WebP& w) { _webp = w; }
+
+    inline D_JXR& jxr(void) { return _jxr; }
+    inline void set_jxr(const D_JXR& j) { _jxr = j; }
 
     inline definable<CMS::Intent> intent(void) const { return _intent; }
 

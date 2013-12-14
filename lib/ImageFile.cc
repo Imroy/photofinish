@@ -70,6 +70,13 @@ namespace PhotoFinish {
     }
 #endif
 
+#ifdef HAZ_JXR
+    if (boost::iequals(ext, "jxr")) {
+      _format = "jxr";
+      unknown = false;
+    }
+#endif
+
     if (unknown)
       throw UnknownFileType(filepath.generic_string());
   }
@@ -101,6 +108,11 @@ namespace PhotoFinish {
 #ifdef HAZ_WEBP
     if (boost::iequals(_format, "webp"))
       return fp.replace_extension(".webp");
+#endif
+
+#ifdef HAZ_JXR
+    if (boost::iequals(_format, "jxr"))
+      return fp.replace_extension(".jxr");
 #endif
 
     if (boost::iequals(_format, "sol"))
@@ -159,6 +171,11 @@ namespace PhotoFinish {
 #ifdef HAZ_WEBP
     if (boost::iequals(ifp.format(), "webp"))
       ir = new WebPreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_JXR
+    if (boost::iequals(ifp.format(), "jxr"))
+      ir = new JXRreader(ifp.filepath());
 #endif
 
     if (ir == NULL)
@@ -220,6 +237,11 @@ namespace PhotoFinish {
       iw = new WebPwriter(ifp.fixed_filepath());
 #endif
 
+#ifdef HAZ_JXR
+    if (boost::iequals(ifp.format(), "jxr"))
+      iw = new JXRwriter(ifp.fixed_filepath());
+#endif
+
     if (boost::iequals(ifp.format(), "sol"))
       iw = new SOLwriter(ifp.fixed_filepath());
 
@@ -244,6 +266,9 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "webp"))
       const_cast<D_WebP&>(dest->webp()).add_variables(vars);
+
+    if (boost::iequals(format, "jxr"))
+      const_cast<D_JXR&>(dest->jxr()).add_variables(vars);
   }
 
 }

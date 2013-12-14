@@ -3,6 +3,7 @@ HAZ_JPEG = 1
 HAZ_TIFF = 1
 HAZ_JP2 = 1
 HAZ_WEBP = 1
+HAZ_JXR = 1
 
 PROGRAMS = photofinish process_scans
 
@@ -41,6 +42,11 @@ ifeq ($(HAZ_WEBP), 1)
 COMMON_FLAGS += -DHAZ_WEBP
 PKGS += libwebp
 LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/WebP*.cc))
+endif
+ifeq ($(HAZ_JXR), 1)
+COMMON_FLAGS += -DHAZ_JXR -I/usr/include/jxrlib -D__ANSI__
+LIBS += -ljpegxr -ljxrglue
+LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JXR*.cc))
 endif
 
 COMMON_FLAGS += `pkg-config --cflags $(PKGS)`

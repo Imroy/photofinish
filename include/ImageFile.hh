@@ -196,7 +196,7 @@ namespace PhotoFinish {
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class PNGwriter
-#endif
+#endif // HAZ_PNG
 
 #ifdef HAZ_JPEG
   //! JPEG file reader
@@ -222,7 +222,7 @@ namespace PhotoFinish {
     void write(std::ostream& ofs, Image::ptr img, Destination::ptr dest, bool can_free = false);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class JPEGwriter
-#endif
+#endif // HAZ_JPEG
 
 #ifdef HAZ_TIFF
   //! TIFF file reader
@@ -246,7 +246,7 @@ namespace PhotoFinish {
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class TIFFwriter
-#endif
+#endif // HAZ_TIFF
 
 #ifdef HAZ_JP2
   //! JPEG 2000 file reader
@@ -270,7 +270,7 @@ namespace PhotoFinish {
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class JP2writer
-#endif
+#endif // HAZ_JP2
 
 #ifdef HAZ_WEBP
   //! WebP file reader
@@ -294,7 +294,32 @@ namespace PhotoFinish {
     CMS::Format preferred_format(CMS::Format format);
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class WebPwriter
-#endif
+#endif // HAZ_WEBP
+
+#ifdef HAZ_JXR
+  //! JPEG XR reader
+  class JXRreader : public ImageReader {
+  private:
+
+  public:
+    JXRreader(const fs::path filepath);
+
+    Image::ptr read(Destination::ptr dest);
+  }; // class JXRreader
+
+
+  //! JPEG XR writer
+  class JXRwriter : public ImageWriter {
+  private:
+
+  public:
+    JXRwriter(const fs::path filepath);
+
+    CMS::Format preferred_format(CMS::Format format);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  }; // class JXRwriter
+
+#endif // HAZ_JXR
 
   //! Write the boot logo files for use on Motorola Atrix 4G and possibly other phones
   /*!

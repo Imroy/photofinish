@@ -250,6 +250,39 @@ namespace PhotoFinish {
     void read_config(const YAML::Node& node);
   };
 
+  //! JPEG XR parameters for destination
+  class D_JXR : public Role_Definable {
+  private:
+    int _imageq, _alphaq;
+    definable<std::string> _overlaping;
+    std::string _subsampling;
+    definable<int> _tilesize;
+
+  public:
+    //! Empty constructor
+    D_JXR();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    inline int imageq(void) const { return _imageq; }
+    inline void set_imageq(int iq) { _imageq = iq; }
+
+    inline int alphaq(void) const { return _alphaq; }
+    inline void set_alphaq(int aq) { _alphaq = aq; }
+
+    inline definable<std::string> overlaping(void) const { return _overlaping; }
+    inline void set_overlaping(const std::string &o) { _overlaping = o; }
+
+    inline std::string subsampling(void) const { return _subsampling; }
+    inline void set_subsampling(const std::string &s) { _subsampling = s; }
+
+    inline definable<int> tilesize(void) const { return _tilesize; }
+    inline void set_tilesize(int ts) { _tilesize = ts; }
+
+    void read_config(const YAML::Node& node);
+  };
+
   //! ICC profile parameters for destination
   class D_profile {
   private:

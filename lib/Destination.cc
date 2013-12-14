@@ -42,7 +42,8 @@ namespace PhotoFinish {
     _depth(other._depth),
     _noresize(other._noresize),
     _jpeg(other._jpeg), _png(other._png),
-    _tiff(other._tiff), _jp2(other._jp2), _webp(other._webp),
+    _tiff(other._tiff), _jp2(other._jp2),
+    _webp(other._webp), _jxr(other._jxr),
     _intent(other._intent),
     _profile(other._profile),
     _forcergb(other._forcergb),
@@ -72,6 +73,7 @@ namespace PhotoFinish {
       _tiff = b._tiff;
       _jp2 = b._jp2;
       _webp = b._webp;
+      _jxr = b._jxr;
       _intent = b._intent;
       _profile = b._profile;
       _forcergb = b._forcergb;
@@ -262,6 +264,9 @@ namespace PhotoFinish {
 
     if (node["webp"])
       _webp.read_config(node["webp"]);
+
+    if (node["jxr"])
+      _jxr.read_config(node["jxr"]);
 
     if (node["profile"]) {
       _profile = std::make_shared<D_profile>();

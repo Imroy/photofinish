@@ -413,6 +413,37 @@ namespace PhotoFinish {
 
 
 
+  D_JXR::D_JXR() :
+    _imageq(90),
+    _alphaq(100),
+    _subsampling("444")
+  {}
+
+  void D_JXR::add_variables(multihash& vars) {
+  }
+
+  void D_JXR::read_config(const YAML::Node& node) {
+    if (node["quality"])
+      _imageq = node["quality"].as<int>();
+
+    if (node["alphaq"])
+      _alphaq = node["alphaq"].as<int>();
+
+    if (node["overlaping"])
+      _overlaping = node["overlaping"].as<std::string>();
+
+    if (node["subsampling"])
+      _subsampling = node["subsampling"].as<std::string>();
+
+    if (node["tilesize"])
+      _tilesize = node["tilesize"].as<int>();
+
+    set_defined();
+  }
+
+
+
+
   D_profile::D_profile() :
     _data(NULL), _data_size(0)
   {}
