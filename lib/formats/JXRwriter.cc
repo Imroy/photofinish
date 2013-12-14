@@ -78,7 +78,7 @@ namespace PhotoFinish {
 
     PKImageEncode *encoder = NULL;
     JXRcheck(codec_factory->CreateCodec(&IID_PKImageWmpEncode, (void**)&encoder));
-   
+
     CWMIStrCodecParam wmiSCP;
     memset(&wmiSCP, 0, sizeof(wmiSCP));
     wmiSCP.bVerbose = FALSE;
@@ -103,9 +103,9 @@ namespace PhotoFinish {
 	  wmiSCP.cfColorFormat = CMYK;
       }
     }
-       
+
     float iq_float = (dest->jxr().defined() ? dest->jxr().quality() : 100) / 100.0f;
-   
+
     if (iq_float == 1.0f)    
       wmiSCP.olOverlap = OL_NONE;
     else {
@@ -120,7 +120,7 @@ namespace PhotoFinish {
 	  wmiSCP.olOverlap = OL_TWO;
       }
     }
-   
+
     if (iq_float == 1.0f)
       wmiSCP.uiDefaultQPIndex = 1;
     else {
@@ -132,7 +132,7 @@ namespace PhotoFinish {
 
       int qi = 10.0f * iq;
       float qf = 10.0f * iq - (float)qi;
-           
+
       int *qp_row = jxr_qp_table[qi];
 
       wmiSCP.uiDefaultQPIndex    = (U8)(0.5f + qp_row[0] * (1.0f - qf) + (qp_row + 6)[0] * qf);
@@ -172,20 +172,40 @@ namespace PhotoFinish {
    
     JXRcheck(encoder->Initialize(encoder, stream, &wmiSCP, sizeof(wmiSCP)));
    
-    std::cerr << "JXRwriter::write: format=" << img->format() << " (" << (unsigned int)img->format() << ")" << std::endl;
     PKPixelFormatGUID pixel_format = jxr_pixel_format(img->format());
     JXRcheck(encoder->SetPixelFormat(encoder, pixel_format));
 
     JXRcheck(encoder->SetSize(encoder, img->width(), img->height()));
     JXRcheck(encoder->SetResolution(encoder, img->xres(), img->yres()));
 
+    if (img->XMPtags().count() > 0) {
+      std::string xml;
+      Exiv2::XmpParser::encode(xml, img->XMPtags());
+      std::cerr << "\tAdding " << (xml.length() + 1) << " bytes of XMP data." << std::endl;
+      JXRcheck(PKImageEncode_SetXMPMetadata_WMP(encoder, (const unsigned char*)xml.c_str(), xml.length() + 1));
+    }
+    /*
+    if (img->EXIFtags().count() > 0) {
+      Exiv2::Blob blob;
+      Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, img->EXIFtags());
+      std::cerr << "\tAdding " << blob.size() << " bytes of EXIF data." << std::endl;
+      JXRcheck(PKImageEncode_SetEXIFMetadata_WMP(encoder, blob.data(), blob.size()));
+    }
+    */
+    if (img->IPTCtags().count() > 0) {
+      Exiv2::DataBuf buf = Exiv2::IptcParser::encode(img->IPTCtags());
+      std::cerr << "\tAdding " << buf.size_ << " bytes of IPTC data." << std::endl;
+      JXRcheck(PKImageEncode_SetIPTCNAAMetadata_WMP(encoder, buf.pData_, buf.size_));
+    }
+
     unsigned char *pixels;
     JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
     for (unsigned int y = 0; y < img->height(); y++) {
       memcpy(pixels + (y * img->row_size()), img->row(y), img->row_size());
-      std::cerr << "\r\tWritten " << y + 1 << " of " << img->height() << " rows";
+      std::cerr << "\r\tCopied " << y + 1 << " of " << img->height() << " rows";
     }
-    std::cerr << "\r\tWritten " << img->height() << " of " << img->height() << " rows" << std::endl;
+    std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows" << std::endl;
+    std::cerr << "\tWriting JPEG XR file..." << std::endl;
     JXRcheck(encoder->WritePixels(encoder, img->height(), pixels, img->row_size()));
     PKFreeAligned((void**)&pixels);
 

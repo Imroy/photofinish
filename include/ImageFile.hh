@@ -102,7 +102,7 @@ namespace PhotoFinish {
     ImageReader(const fs::path fp);
 
     //! Extract tags from file
-    void extract_tags(Image::ptr img);
+    virtual void extract_tags(Image::ptr img);
 
   public:
     //! Shared pointer for an ImageReader
@@ -140,7 +140,7 @@ namespace PhotoFinish {
     //! Private constructor
     ImageWriter(const fs::path fp);
 
-    void embed_tags(Image::ptr img) const;
+    virtual void embed_tags(Image::ptr img) const;
 
   public:
     //! Shared pointer for an ImageWriter
@@ -300,6 +300,8 @@ namespace PhotoFinish {
   //! JPEG XR reader
   class JXRreader : public ImageReader {
   private:
+    //! Empty method since Exiv2 does not support JXR
+    inline void extract_tags(Image::ptr img) {}
 
   public:
     JXRreader(const fs::path filepath);
@@ -311,6 +313,8 @@ namespace PhotoFinish {
   //! JPEG XR writer
   class JXRwriter : public ImageWriter {
   private:
+    //! Empty method since Exiv2 does not support JXR
+    inline void embed_tags(Image::ptr img) const {}
 
   public:
     JXRwriter(const fs::path filepath);
