@@ -30,6 +30,18 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  // jxrlib doesn't provide many functions/methods for getting metadata from a file.
+  // So copy some code and make it into a generic macro
+#define jxr_metadata_size(decoder, name) decoder->WMP.wmiDEMisc.u##name##ByteCount
+#define jxr_metadata_data(decoder, name, data) \
+    struct WMPStream* s = decoder->pStream;		\
+    size_t curr_pos;							\
+    JXRcheck(s->GetPos(s, &curr_pos));				\
+    JXRcheck(s->SetPos(s, decoder->WMP.wmiDEMisc.u##name##Offset));	\
+    JXRcheck(s->Read(s, data, decoder->WMP.wmiDEMisc.u##name##ByteCount)); \
+    JXRcheck(s->SetPos(s, curr_pos));
+
+
   JXRreader::JXRreader(const fs::path filepath) :
     ImageReader(filepath)
   {}
@@ -70,13 +82,46 @@ namespace PhotoFinish {
 	}
 
 	{
-	  unsigned int profile_size;
-	  JXRcheck(decoder->GetColorContext(decoder, NULL, &profile_size));
+	  unsigned int profile_size = jxr_metadata_size(decoder, ColorProfile);
 	  if (profile_size > 0) {
 	    unsigned char *profile_data = (unsigned char*)malloc(profile_size);
-	    std::cerr << "\tReading " << profile_size << " bytes of ICC profile..." << std::endl;
-	    JXRcheck(decoder->GetColorContext(decoder, profile_data, &profile_size));
+	    std::cerr << "\tLoading ICC profile (" << profile_size << " bytes)..." << std::endl;
+	    jxr_metadata_data(decoder, ColorProfile, profile_data);
 	    img->set_profile(std::make_shared<CMS::Profile>(profile_data, profile_size));
+	    free(profile_data);
+	  }
+	}
+
+	{
+	  unsigned int xmp_size = jxr_metadata_size(decoder, XMPMetadata);
+	  if (xmp_size > 0) {
+	    unsigned char *xmp_data = (unsigned char*)malloc(xmp_size);
+	    std::cerr << "\tLoading XMP metadata (" << xmp_size << " bytes)..." << std::endl;
+	    jxr_metadata_data(decoder, XMPMetadata, xmp_data);
+	    Exiv2::XmpParser::decode(img->XMPtags(), std::string((char*)xmp_data));
+	    free(xmp_data);
+	  }
+	}
+
+	{
+	  unsigned int exif_size = jxr_metadata_size(decoder, EXIFMetadata);
+	  if (exif_size > 0) {
+	    unsigned char *exif_data = (unsigned char*)malloc(exif_size);
+	    std::cerr << "\tLoading EXIF metadata (" << exif_size << " bytes)..." << std::endl;
+	    jxr_metadata_data(decoder, EXIFMetadata, exif_data);
+	    Exiv2::ExifParser::decode(img->EXIFtags(), exif_data, exif_size);
+	    free(exif_data);
+	  }
+	}
+
+	{
+	  unsigned int iptc_size = jxr_metadata_size(decoder, IPTCNAAMetadata);
+	  if (iptc_size > 0) {
+	    unsigned char *iptc_data = (unsigned char*)malloc(iptc_size);
+	    std::cerr << "\tLoading IPTC metadata (" << iptc_size << " bytes)..." << std::endl;
+	    jxr_metadata_data(decoder, IPTCNAAMetadata, iptc_data);
+	    Exiv2::IptcParser::decode(img->IPTCtags(), iptc_data, iptc_size);
+	    free(iptc_data);
 	  }
 	}
 
