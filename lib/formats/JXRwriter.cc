@@ -68,164 +68,195 @@ namespace PhotoFinish {
     long rc;
 
     PKFactory *factory = NULL;
-    JXRcheck(PKCreateFactory(&factory, PK_SDK_VERSION));
+    try {
+      JXRcheck(PKCreateFactory(&factory, PK_SDK_VERSION));
 
-    PKCodecFactory *codec_factory = NULL;
-    JXRcheck(PKCreateCodecFactory(&codec_factory, WMP_SDK_VERSION));
+      PKCodecFactory *codec_factory = NULL;
+      try {
+	JXRcheck(PKCreateCodecFactory(&codec_factory, WMP_SDK_VERSION));
 
-    struct WMPStream *stream;
-    JXRcheck(factory->CreateStreamFromFilename(&stream, _filepath.c_str(), "wb"));
+	struct WMPStream *stream;
+	JXRcheck(factory->CreateStreamFromFilename(&stream, _filepath.c_str(), "wb"));
 
-    PKImageEncode *encoder = NULL;
-    JXRcheck(codec_factory->CreateCodec(&IID_PKImageWmpEncode, (void**)&encoder));
+	PKImageEncode *encoder = NULL;
+	try {
+	  JXRcheck(codec_factory->CreateCodec(&IID_PKImageWmpEncode, (void**)&encoder));
 
-    CWMIStrCodecParam wmiSCP;
-    memset(&wmiSCP, 0, sizeof(wmiSCP));
-    wmiSCP.bVerbose = FALSE;
-    wmiSCP.bdBitDepth = BD_LONG;
-    wmiSCP.bfBitstreamFormat = FREQUENCY;
-    wmiSCP.bProgressiveMode = TRUE;    
-    wmiSCP.sbSubband = SB_ALL;
-    wmiSCP.uAlphaMode = img->format().extra_channels();
-    wmiSCP.bBlackWhite = FALSE;
+	  CWMIStrCodecParam wmiSCP;
+	  memset(&wmiSCP, 0, sizeof(wmiSCP));
+	  wmiSCP.bVerbose = FALSE;
+	  wmiSCP.bdBitDepth = BD_LONG;
+	  wmiSCP.bfBitstreamFormat = FREQUENCY;
+	  wmiSCP.bProgressiveMode = TRUE;
+	  wmiSCP.sbSubband = SB_ALL;
+	  wmiSCP.uAlphaMode = img->format().extra_channels();
+	  wmiSCP.bBlackWhite = FALSE;
 
-    if (img->format().colour_model() == CMS::ColourModel::Greyscale)
-      wmiSCP.cfColorFormat = Y_ONLY;
-    else {
-      wmiSCP.cfColorFormat = YUV_444;
-      if (dest->jxr().defined()) {
-	std::string sub = dest->jxr().subsampling();
-	if (boost::iequals(sub, "420"))
-	  wmiSCP.cfColorFormat = YUV_420;
-	else if (boost::iequals(sub, "422"))
-	  wmiSCP.cfColorFormat = YUV_422;
-	else if (boost::iequals(sub, "CMYK"))
-	  wmiSCP.cfColorFormat = CMYK;
-      }
-    }
+	  if (img->format().colour_model() == CMS::ColourModel::Greyscale)
+	    wmiSCP.cfColorFormat = Y_ONLY;
+	  else {
+	    wmiSCP.cfColorFormat = YUV_444;
+	    if (dest->jxr().defined()) {
+	      std::string sub = dest->jxr().subsampling();
+	      if (boost::iequals(sub, "420"))
+		wmiSCP.cfColorFormat = YUV_420;
+	      else if (boost::iequals(sub, "422"))
+		wmiSCP.cfColorFormat = YUV_422;
+	      else if (boost::iequals(sub, "CMYK"))
+		wmiSCP.cfColorFormat = CMYK;
+	    }
+	  }
 
-    float iq_float = (dest->jxr().defined() ? dest->jxr().quality() : 100) / 100.0f;
+	  float iq_float = (dest->jxr().defined() ? dest->jxr().quality() : 100) / 100.0f;
 
-    if (iq_float == 1.0f)    
-      wmiSCP.olOverlap = OL_NONE;
-    else {
-      wmiSCP.olOverlap = iq_float > 0.4f ? OL_ONE : OL_TWO;
-      if (dest->jxr().defined() && dest->jxr().overlap().defined()) {
-	std::string ol = dest->jxr().overlap();
-	if (boost::iequals(ol, "none"))
-	  wmiSCP.olOverlap = OL_NONE;
-	else if (boost::iequals(ol, "one") || (ol == "1"))
-	  wmiSCP.olOverlap = OL_ONE;
-	else if (boost::iequals(ol, "two") || (ol == "2"))
-	  wmiSCP.olOverlap = OL_TWO;
-      }
-    }
+	  if (iq_float == 1.0f)
+	    wmiSCP.olOverlap = OL_NONE;
+	  else {
+	    wmiSCP.olOverlap = iq_float > 0.4f ? OL_ONE : OL_TWO;
+	    if (dest->jxr().defined() && dest->jxr().overlap().defined()) {
+	      std::string ol = dest->jxr().overlap();
+	      if (boost::iequals(ol, "none"))
+		wmiSCP.olOverlap = OL_NONE;
+	      else if (boost::iequals(ol, "one") || (ol == "1"))
+		wmiSCP.olOverlap = OL_ONE;
+	      else if (boost::iequals(ol, "two") || (ol == "2"))
+		wmiSCP.olOverlap = OL_TWO;
+	    }
+	  }
 
-    if (iq_float == 1.0f)
-      wmiSCP.uiDefaultQPIndex = 1;
-    else {
-      float iq;
-      if (iq_float > 0.8f)
-	iq = 0.8f + (iq_float - 0.8f) * 1.5f;
-      else
-	iq = iq_float;
+	  if (iq_float == 1.0f)
+	    wmiSCP.uiDefaultQPIndex = 1;
+	  else {
+	    float iq;
+	    if (iq_float > 0.8f)
+	      iq = 0.8f + (iq_float - 0.8f) * 1.5f;
+	    else
+	      iq = iq_float;
 
-      int qi = 10.0f * iq;
-      float qf = 10.0f * iq - (float)qi;
+	    int qi = 10.0f * iq;
+	    float qf = 10.0f * iq - (float)qi;
 
-      int *qp_row = jxr_qp_table[qi];
+	    int *qp_row = jxr_qp_table[qi];
 
-      wmiSCP.uiDefaultQPIndex    = (U8)(0.5f + qp_row[0] * (1.0f - qf) + (qp_row + 6)[0] * qf);
-      wmiSCP.uiDefaultQPIndexU   = (U8)(0.5f + qp_row[1] * (1.0f - qf) + (qp_row + 6)[1] * qf);
-      wmiSCP.uiDefaultQPIndexV   = (U8)(0.5f + qp_row[2] * (1.0f - qf) + (qp_row + 6)[2] * qf);
-      wmiSCP.uiDefaultQPIndexYHP = (U8)(0.5f + qp_row[3] * (1.0f - qf) + (qp_row + 6)[3] * qf);
-      wmiSCP.uiDefaultQPIndexUHP = (U8)(0.5f + qp_row[4] * (1.0f - qf) + (qp_row + 6)[4] * qf);
-      wmiSCP.uiDefaultQPIndexVHP = (U8)(0.5f + qp_row[5] * (1.0f - qf) + (qp_row + 6)[5] * qf);
-    }
+	    wmiSCP.uiDefaultQPIndex    = (U8)(0.5f + qp_row[0] * (1.0f - qf) + (qp_row + 6)[0] * qf);
+	    wmiSCP.uiDefaultQPIndexU   = (U8)(0.5f + qp_row[1] * (1.0f - qf) + (qp_row + 6)[1] * qf);
+	    wmiSCP.uiDefaultQPIndexV   = (U8)(0.5f + qp_row[2] * (1.0f - qf) + (qp_row + 6)[2] * qf);
+	    wmiSCP.uiDefaultQPIndexYHP = (U8)(0.5f + qp_row[3] * (1.0f - qf) + (qp_row + 6)[3] * qf);
+	    wmiSCP.uiDefaultQPIndexUHP = (U8)(0.5f + qp_row[4] * (1.0f - qf) + (qp_row + 6)[4] * qf);
+	    wmiSCP.uiDefaultQPIndexVHP = (U8)(0.5f + qp_row[5] * (1.0f - qf) + (qp_row + 6)[5] * qf);
+	  }
 
-    wmiSCP.cNumOfSliceMinus1H = wmiSCP.cNumOfSliceMinus1V = 0;
-    if (dest->jxr().defined() && dest->jxr().tilesize().defined()) {
-      int tile_size = dest->jxr().tilesize();
-       
-      int i = 0;
-      unsigned int p = 0;
-      for (i = 0; i < MAX_TILES; i++) {
-	wmiSCP.uiTileY[i] = tile_size / 16;
-	p += tile_size;
-	if (p >= img->height())
-	  break;
-      }
-      
-      wmiSCP.cNumOfSliceMinus1H = i;
-       
-      p = 0;
-       
-      for (i = 0; i < MAX_TILES; i++) {
-	wmiSCP.uiTileX[i] = tile_size / 16;
-	p += tile_size;
-	if (p >= img->width())
-	  break;
-      }
-       
-      wmiSCP.cNumOfSliceMinus1V = i;
-    }
+	  wmiSCP.cNumOfSliceMinus1H = wmiSCP.cNumOfSliceMinus1V = 0;
+	  if (dest->jxr().defined() && dest->jxr().tilesize().defined()) {
+	    int tile_size = dest->jxr().tilesize();
+
+	    // Strip all but the MSB
+	    for (int i = 1; i < tile_size; i <<= 1)
+	      tile_size &= (i ^ 0x7fffffffL);
+
+	    if (tile_size >= 256) {
+	      if (tile_size > 1024)
+		tile_size = 1024;
+	      std::cerr << "\tTile size = " << tile_size << std::endl;
+
+	      int i = 0;
+	      unsigned int p = 0;
+	      for (i = 0; i < MAX_TILES; i++) {
+		wmiSCP.uiTileY[i] = tile_size << 4;
+		p += tile_size;
+		if (p >= img->height())
+		  break;
+	      }
+
+	      wmiSCP.cNumOfSliceMinus1H = i;
+
+	      p = 0;
+	      for (i = 0; i < MAX_TILES; i++) {
+		wmiSCP.uiTileX[i] = tile_size << 4;
+		p += tile_size;
+		if (p >= img->width())
+		  break;
+	      }
+
+	      wmiSCP.cNumOfSliceMinus1V = i;
+	    }
+	  }
    
-    JXRcheck(encoder->Initialize(encoder, stream, &wmiSCP, sizeof(wmiSCP)));
+	  JXRcheck(encoder->Initialize(encoder, stream, &wmiSCP, sizeof(wmiSCP)));
    
-    PKPixelFormatGUID pixel_format = jxr_pixel_format(img->format());
-    JXRcheck(encoder->SetPixelFormat(encoder, pixel_format));
+	  PKPixelFormatGUID pixel_format = jxr_pixel_format(img->format());
+	  JXRcheck(encoder->SetPixelFormat(encoder, pixel_format));
 
-    JXRcheck(encoder->SetSize(encoder, img->width(), img->height()));
-    JXRcheck(encoder->SetResolution(encoder, img->xres(), img->yres()));
+	  JXRcheck(encoder->SetSize(encoder, img->width(), img->height()));
+	  JXRcheck(encoder->SetResolution(encoder, img->xres(), img->yres()));
 
-    if (img->XMPtags().count() > 0) {
-      std::string xml;
-      Exiv2::XmpParser::encode(xml, img->XMPtags());
-      std::cerr << "\tAdding " << (xml.length() + 1) << " bytes of XMP data." << std::endl;
-      JXRcheck(PKImageEncode_SetXMPMetadata_WMP(encoder, (const unsigned char*)xml.c_str(), xml.length() + 1));
-    }
-    /*
-    if (img->EXIFtags().count() > 0) {
-      Exiv2::Blob blob;
-      Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, img->EXIFtags());
-      std::cerr << "\tAdding " << blob.size() << " bytes of EXIF data." << std::endl;
-      JXRcheck(PKImageEncode_SetEXIFMetadata_WMP(encoder, blob.data(), blob.size()));
-    }
-    */
-    if (img->IPTCtags().count() > 0) {
-      Exiv2::DataBuf buf = Exiv2::IptcParser::encode(img->IPTCtags());
-      std::cerr << "\tAdding " << buf.size_ << " bytes of IPTC data." << std::endl;
-      JXRcheck(PKImageEncode_SetIPTCNAAMetadata_WMP(encoder, buf.pData_, buf.size_));
-    }
+	  if (img->XMPtags().count() > 0) {
+	    std::string xml;
+	    Exiv2::XmpParser::encode(xml, img->XMPtags());
+	    std::cerr << "\tAdding " << (xml.length() + 1) << " bytes of XMP data." << std::endl;
+	    JXRcheck(PKImageEncode_SetXMPMetadata_WMP(encoder, (const unsigned char*)xml.c_str(), xml.length() + 1));
+	  }
+	  /*
+	  if (img->EXIFtags().count() > 0) {
+	    Exiv2::Blob blob;
+	    Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, img->EXIFtags());
+	    std::cerr << "\tAdding " << blob.size() << " bytes of EXIF data." << std::endl;
+	    JXRcheck(PKImageEncode_SetEXIFMetadata_WMP(encoder, blob.data(), blob.size()));
+	  }
+	  */
+	  if (img->IPTCtags().count() > 0) {
+	    Exiv2::DataBuf buf = Exiv2::IptcParser::encode(img->IPTCtags());
+	    std::cerr << "\tAdding " << buf.size_ << " bytes of IPTC data." << std::endl;
+	    JXRcheck(PKImageEncode_SetIPTCNAAMetadata_WMP(encoder, buf.pData_, buf.size_));
+	  }
 
-    if (img->has_profile()) {
-      void *profile_data;
-      unsigned int profile_len;
-      img->profile()->save_to_mem(profile_data, profile_len);
+	  if (img->has_profile()) {
+	    void *profile_data;
+	    unsigned int profile_len;
+	    img->profile()->save_to_mem(profile_data, profile_len);
 
-      if (profile_len > 0) {
-	std::cerr << "\tAdding " << profile_len << " bytes of ICC colour profile data." << std::endl;
-	JXRcheck(encoder->SetColorContext(encoder, (unsigned char*)profile_data, profile_len));
+	    if (profile_len > 0) {
+	      std::cerr << "\tAdding " << profile_len << " bytes of ICC colour profile data." << std::endl;
+	      JXRcheck(encoder->SetColorContext(encoder, (unsigned char*)profile_data, profile_len));
+	    }
+	  }
+
+	  unsigned char *pixels = NULL;
+	  try {
+	    JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
+	    for (unsigned int y = 0; y < img->height(); y++) {
+	      memcpy(pixels + (y * img->row_size()), img->row(y), img->row_size());
+	      std::cerr << "\r\tCopied " << y + 1 << " of " << img->height() << " rows";
+	    }
+	    std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows" << std::endl;
+	    std::cerr << "\tWriting JPEG XR file..." << std::endl;
+	    JXRcheck(encoder->WritePixels(encoder, img->height(), pixels, img->row_size()));
+
+	  } catch (std::exception& ex) {
+	    std::cout << ex.what() << std::endl;
+	  }
+
+	  if (pixels)
+	    PKFreeAligned((void**)&pixels);
+
+	} catch (std::exception& ex) {
+	  std::cout << ex.what() << std::endl;
+	}
+
+	if (encoder)
+	  encoder->Release(&encoder);
+
+      } catch (std::exception& ex) {
+	std::cout << ex.what() << std::endl;
       }
+
+      if (codec_factory)
+	codec_factory->Release(&codec_factory);
+
+    } catch (std::exception& ex) {
+      std::cout << ex.what() << std::endl;
     }
 
-    unsigned char *pixels;
-    JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
-    for (unsigned int y = 0; y < img->height(); y++) {
-      memcpy(pixels + (y * img->row_size()), img->row(y), img->row_size());
-      std::cerr << "\r\tCopied " << y + 1 << " of " << img->height() << " rows";
-    }
-    std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows" << std::endl;
-    std::cerr << "\tWriting JPEG XR file..." << std::endl;
-    JXRcheck(encoder->WritePixels(encoder, img->height(), pixels, img->row_size()));
-    PKFreeAligned((void**)&pixels);
-
-    if (encoder)
-      encoder->Release(&encoder);
-   
-    if (codec_factory)
-      codec_factory->Release(&codec_factory);
-   
     if (factory)
       factory->Release(&factory);
   }
