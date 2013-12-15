@@ -27,7 +27,7 @@
 #include <lcms2.h>
 #include "CMS.hh"
 
-#define JXRcheck(exp) if ((rc = (exp)) < 0) throw LibraryError("jxrlib", #exp " returned " + rc)
+#define JXRcheck(exp) if ((rc = (exp)) < 0) throw LibraryError("jxrlib", std::string(#exp) + " returned " + std::to_string(rc))
 
 namespace PhotoFinish {
 
