@@ -435,8 +435,8 @@ namespace PhotoFinish {
     if (node["subsampling"])
       _subsampling = node["subsampling"].as<std::string>();
 
-    if (node["tilesize"])
-      _tilesize = node["tilesize"].as<int>();
+    if (node["tile"])
+      _tilesize = node["tile"].as<int>();
 
     set_defined();
   }
