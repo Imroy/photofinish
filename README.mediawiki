@@ -26,8 +26,8 @@ My focus has been on image quality and correctness, so many computations are don
 
 === Image file formats ===
 
-* Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000), WebP files
-* Supports having an alpha channel in PNG, TIFF, and WebP files
+* Reads and writes JPEG, PNG, TIFF, JP2 (JPEG 2000), WebP, JPEG XR (JXR) files
+* Supports having an alpha channel in PNG, TIFF, WebP, JPEG XR files
 * Embedded ICC profiles are used when reading, and created when writing
 * Falls back to sRGB or a similar greyscale profile
 * Reads CMYK image data from JPEG and TIFF files (requires an embedded ICC profile)
@@ -65,6 +65,7 @@ Photo Finish currently uses the following libraries:
 * [http://www.remotesensing.org/libtiff/ libTIFF] for reading and writing PNG files
 * [http://www.openjpeg.org/ OpenJPEG] for reading and writing JPEG 2000 files
 * [https://developers.google.com/speed/webp/docs/api libwebp] for reading and writing WebP files
+* [https://jxrlib.codeplex.com/ jxrlib] for reading and writing JPEG XR files
 * [http://www.littlecms.com/ Little CMS] (LCMS) for transforming between colour profiles
 * [http://code.google.com/p/yaml-cpp/ libyaml] for reading YAML data files
 * [http://www.exiv2.org/ EXIV] for EXIF/IPTC/XMP metadata
