@@ -71,7 +71,7 @@ namespace PhotoFinish {
 #endif
 
 #ifdef HAZ_JXR
-    if (boost::iequals(ext, "jxr")) {
+    if (boost::iequals(ext, "jxr") || boost::iequals(ext, "wdp") || boost::iequals(ext, "hdp")) {
       _format = "jxr";
       unknown = false;
     }
