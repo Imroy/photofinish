@@ -257,6 +257,7 @@ namespace PhotoFinish {
     definable<std::string> _overlap;
     std::string _subsampling;
     definable<int> _tilesize;
+    definable<bool> _progressive;
 
   public:
     //! Empty constructor
@@ -279,6 +280,10 @@ namespace PhotoFinish {
 
     inline definable<int> tilesize(void) const { return _tilesize; }
     inline void set_tilesize(int ts) { _tilesize = ts; }
+
+    inline definable<bool> progressive(void) const { return _progressive; }
+    inline void set_progressive(bool p = true) { _progressive = p; }
+    inline void set_sequential(bool s = true) { _progressive = !s; }
 
     void read_config(const YAML::Node& node);
   };

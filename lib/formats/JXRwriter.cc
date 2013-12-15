@@ -92,6 +92,9 @@ namespace PhotoFinish {
 	  wmiSCP.uAlphaMode = img->format().extra_channels();
 	  wmiSCP.bBlackWhite = FALSE;
 
+	  if (dest->jxr().defined() && dest->jxr().progressive().defined())
+	    wmiSCP.bProgressiveMode = dest->jxr().progressive();
+
 	  if (img->format().colour_model() == CMS::ColourModel::Greyscale)
 	    wmiSCP.cfColorFormat = Y_ONLY;
 	  else {

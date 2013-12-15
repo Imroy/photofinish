@@ -438,6 +438,9 @@ namespace PhotoFinish {
     if (node["tile"])
       _tilesize = node["tile"].as<int>();
 
+    if (node["progressive"])
+      _progressive = node["progressive"].as<bool>();
+
     set_defined();
   }
 
