@@ -61,6 +61,17 @@ namespace PhotoFinish {
     JXRcheck(decoder->GetResolution(decoder, &res_x, &res_y));
     img->set_resolution(res_x, res_y);
 
+    {
+      unsigned int profile_size;
+      JXRcheck(decoder->GetColorContext(decoder, NULL, &profile_size));
+      if (profile_size > 0) {
+	unsigned char *profile_data = (unsigned char*)malloc(profile_size);
+	std::cerr << "\tReading " << profile_size << " bytes of ICC profile..." << std::endl;
+	JXRcheck(decoder->GetColorContext(decoder, profile_data, &profile_size));
+	img->set_profile(std::make_shared<CMS::Profile>(profile_data, profile_size));
+      }
+    }
+
     decoder->WMP.wmiSCP.uAlphaMode = img->format().extra_channels();
 
     unsigned char *pixels;

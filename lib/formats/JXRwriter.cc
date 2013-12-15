@@ -198,6 +198,17 @@ namespace PhotoFinish {
       JXRcheck(PKImageEncode_SetIPTCNAAMetadata_WMP(encoder, buf.pData_, buf.size_));
     }
 
+    if (img->has_profile()) {
+      void *profile_data;
+      unsigned int profile_len;
+      img->profile()->save_to_mem(profile_data, profile_len);
+
+      if (profile_len > 0) {
+	std::cerr << "\tAdding " << profile_len << " bytes of ICC colour profile data." << std::endl;
+	JXRcheck(encoder->SetColorContext(encoder, (unsigned char*)profile_data, profile_len));
+      }
+    }
+
     unsigned char *pixels;
     JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
     for (unsigned int y = 0; y < img->height(); y++) {
