@@ -192,7 +192,7 @@ namespace PhotoFinish {
   inline unsigned int scaleval<unsigned int>(void) { return 0xffffffff; }
 
   template <>
-  inline unsigned long int scaleval<unsigned long int>(void) { return 0xffffffffffffffff; }
+  inline unsigned long long scaleval<unsigned long long>(void) { return 0xffffffffffffffff; }
 
   template <>
   inline float scaleval<float>(void) { return 1.0; }
@@ -233,7 +233,7 @@ namespace PhotoFinish {
   }
 
   template <>
-  inline unsigned long int limitval<unsigned long int>(SAMPLE v) {
+  inline unsigned long long limitval<unsigned long long>(SAMPLE v) {
     if (v > 18446744073709551615.0)
       return 18446744073709551615UL;
     if (v < 0)

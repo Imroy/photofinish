@@ -234,7 +234,7 @@ namespace PhotoFinish {
       if (img->format().is_fp())
 	convolve_type<double>(img, out, can_free);
       else
-	convolve_type<unsigned long>(img, out, can_free);
+	convolve_type<unsigned long long>(img, out, can_free);
       break;
 
     }
