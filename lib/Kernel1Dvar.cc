@@ -1,5 +1,5 @@
 /*
-	Copyright 2012 Ian Tester
+	Copyright 2014 Ian Tester
 
 	This file is part of Photo Finish.
 
@@ -169,7 +169,7 @@ namespace PhotoFinish {
 
     if (benchmark_mode) {
       std::cerr << std::setprecision(2) << std::fixed;
-      std::cerr << "Benchmark: " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+      std::cerr << "Benchmark: Horizontally convolved " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
     }
 
   }
@@ -347,7 +347,7 @@ namespace PhotoFinish {
 
     if (benchmark_mode) {
       std::cerr << std::setprecision(2) << std::fixed;
-      std::cerr << "Benchmark: " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+      std::cerr << "Benchmark: Vertically convolved " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
     }
 
     if (can_free) {
