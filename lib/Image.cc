@@ -22,6 +22,7 @@
 #include <omp.h>
 #include "Image.hh"
 #include "ImageFile.hh"
+#include "Benchmark.hh"
 
 namespace PhotoFinish {
 
@@ -180,6 +181,9 @@ namespace PhotoFinish {
     dest->set_profile(dest_profile);
     dest->set_resolution(_xres, _yres);
 
+    Timer timer;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
       dest->check_rowdata_alloc(y);
@@ -192,8 +196,14 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
     }
+    timer.stop();
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
 
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      long long pixel_count = _width * _height;
+      std::cerr << "Benchmark: Transformed colourspace of " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
 
     if (need_alpha_mult)
       dest->alpha_mult(orig_dest_format);
@@ -236,6 +246,9 @@ namespace PhotoFinish {
     size_t dest_pixel_size = dest_format.bytes_per_pixel();
     size_t dest_row_size = _width * dest_pixel_size;
 
+    Timer timer;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
       void *src_rowdata = row(y);
@@ -250,7 +263,14 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
     }
+    timer.stop();
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
+
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      long long pixel_count = _width * _height;
+      std::cerr << "Benchmark: Transformed colourspace of " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
 
     _profile = dest_profile;
     _format = dest_format;
@@ -279,6 +299,9 @@ namespace PhotoFinish {
     unsigned char alphachan = _format.channels();
     SAMPLE scale = scaleval<SAMPLE>() / scaleval<SRC>();
 
+    Timer timer;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
       void *src_rowdata = row(y);
@@ -306,7 +329,14 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
     }
+    timer.stop();
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
+
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      long long pixel_count = _width * _height;
+      std::cerr << "Benchmark: Un-multiplied alpha of " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
 
     _format = dest_format;
     _format.unset_premult_alpha();
@@ -346,6 +376,9 @@ namespace PhotoFinish {
     SAMPLE scale = (SAMPLE)scaleval<DST>() / scaleval<SRC>();
     SAMPLE src_scale = scale / scaleval<SRC>();
 
+    Timer timer;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
       void *src_rowdata = row(y);
@@ -369,7 +402,14 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
     }
+    timer.stop();
     std::cerr << "\r\tTransformed " << _height << " of " << _height << " rows." << std::endl;
+
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      long long pixel_count = _width * _height;
+      std::cerr << "Benchmark: Multiplied alpha of " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
 
     _format.set_channel_type(dest_format);
     _format.set_premult_alpha();
