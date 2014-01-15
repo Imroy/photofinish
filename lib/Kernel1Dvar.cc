@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
+#include "Benchmark.hh"
 #include "Kernel1Dvar.hh"
 
 #define sqr(x) ((x) * (x))
@@ -83,7 +84,6 @@ namespace PhotoFinish {
 	  _weights[i][k] *= tot;
       }
     }
-
   }
 
   Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) throw(DestinationError) {
@@ -134,6 +134,10 @@ namespace PhotoFinish {
       }
     }
 
+    Timer timer;
+    long long pixel_count = 0;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
       dest->check_rowdata_alloc(y);
@@ -148,6 +152,7 @@ namespace PhotoFinish {
 	for (unsigned int j = _size[nx]; j; j--, weight++) {
 	  for (unsigned char c = 0; c < channels; c++, in++)
 	    temp[c] += (*in) * (*weight);
+	  pixel_count++;
 	}
 	for (unsigned char c = 0; c < channels; c++, out++)
 	  *out = limitval<T>(temp[c]);
@@ -158,7 +163,15 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << y + 1 << " of " << src->height() << " rows";
     }
+    timer.stop();
+
     std::cerr << "\r\tConvolved " << src->height() << " of " << src->height() << " rows." << std::endl;
+
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      std::cerr << "Benchmark: " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
+
   }
 
   // Template method that handles each type for horizontal convolving
@@ -289,6 +302,11 @@ namespace PhotoFinish {
     unsigned int next_freed = 0;
     omp_lock_t freed_lock;
     omp_init_lock(&freed_lock);
+
+    Timer timer;
+    long long pixel_count = 0;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int ny = 0; ny < dest->height(); ny++) {
       unsigned int max = _size[ny];
@@ -306,6 +324,7 @@ namespace PhotoFinish {
 	  T *in = src->at<T>(x, ystart + j);
 	  for (unsigned char c = 0; c < channels; c++, in++)
 	    temp[c] += (*in) * (*weight);
+	  pixel_count++;
 	}
 
 	for (unsigned char c = 0; c < channels; c++, out++)
@@ -322,13 +341,22 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << ny + 1 << " of " << _to_size_i << " rows";
     }
+    timer.stop();
+
     std::cerr << "\r\tConvolved " << _to_size_i << " of " << _to_size_i << " rows." << std::endl;
+
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      std::cerr << "Benchmark: " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
+
     if (can_free) {
       free(row_needs);
       for (; next_freed < src->height(); next_freed++)
 	src->free_row(next_freed);
     }
     omp_destroy_lock(&freed_lock);
+
   }
 
   // Template method that handles each type for vertical convolving

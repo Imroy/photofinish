@@ -20,6 +20,7 @@
 #include <omp.h>
 #include "Kernel2D.hh"
 #include "Destination_items.hh"
+#include "Benchmark.hh"
 
 #define sqr(x) ((x) * (x))
 
@@ -76,6 +77,11 @@ namespace PhotoFinish {
     unsigned int next_freed = 0;
     omp_lock_t freed_lock;
     omp_init_lock(&freed_lock);
+
+    Timer timer;
+    long long pixel_count = 0;
+    timer.start();
+
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < src->height(); y++) {
       dest->check_rowdata_alloc(y);
@@ -98,6 +104,7 @@ namespace PhotoFinish {
 	    weight += *kp;
 	    for (unsigned char c = 0; c < channels; c++, inp++)
 	      temp[c] += (*inp) * (*kp);
+	    pixel_count++;
 	  }
 	}
 	if (fabs(weight) > 1e-5) {
@@ -119,7 +126,15 @@ namespace PhotoFinish {
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << y + 1 << " of " << src->height() << " rows";
     }
+    timer.stop();
+
     std::cerr << "\r\tConvolved " << src->height() << " of " << src->height() << " rows." << std::endl;
+
+    if (benchmark_mode) {
+      std::cerr << std::setprecision(2) << std::fixed;
+      std::cerr << "Benchmark: " << pixel_count << " pixels in " << timer << " = " << (pixel_count / timer.elapsed() / 1e+6) << " Mpixels/second" << std::endl;
+    }
+
     if (can_free) {
       free(row_needs);
       for (; next_freed < src->height(); next_freed++)

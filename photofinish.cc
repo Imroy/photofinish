@@ -29,6 +29,7 @@
 #include "Tags.hh"
 #include "Kernel2D.hh"
 #include "Exception.hh"
+#include "Benchmark.hh"
 
 namespace fs = boost::filesystem;
 
@@ -47,6 +48,11 @@ int main(int argc, char* argv[]) {
   std::deque<std::string> arg_destinations;
   std::deque<fs::path> arg_filenames;
   for (int i = 1; i < argc; i++) {
+    if (std::string(argv[i]) == "-b") {
+      benchmark_mode = true;
+      continue;
+    }
+
     struct stat s;
     if (destinations.count(argv[i]))
       arg_destinations.push_back(argv[i]);

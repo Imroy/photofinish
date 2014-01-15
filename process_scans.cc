@@ -37,6 +37,7 @@
 #include "Tags.hh"
 #include "Kernel2D.hh"
 #include "Exception.hh"
+#include "Benchmark.hh"
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -132,6 +133,7 @@ int main(int argc, char* argv[]) {
       ("convert,C", po::bool_switch(&do_conversion), "Convert files")
       ("preview,P", po::bool_switch(&do_preview), "Scale the image to a preview")
       ("move-originals,M", po::bool_switch(&do_move_originals), "Move originals (done automatically when converting)")
+      ("benchmark,b", po::bool_switch(&benchmark_mode), "Show performance information after certain operations")
       ;
 
     po::options_description config_options("Configuration");
