@@ -44,7 +44,7 @@ PKGS += libwebp
 LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/WebP*.cc))
 endif
 ifeq ($(HAZ_JXR), 1)
-COMMON_FLAGS += -DHAZ_JXR -I/usr/include/jxrlib -D__ANSI__
+COMMON_FLAGS += -DHAZ_JXR
 LIBS += -ljpegxr -ljxrglue
 LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JXR*.cc))
 endif
@@ -68,6 +68,12 @@ install: $(PROGRAMS)
 
 $(PROGRAMS): %: $(LIB_OBJS) %.o
 	$(CXX) $(LDFLAGS) $^ $(LIBS) -o $@
+
+# A special case for compiling with jxrlib
+ifeq ($(HAZ_JXR), 1)
+$(patsubst %.cc,%.o, $(wildcard lib/formats/JXR*.cc)): %.o: %.cc
+	$(CXX) $(CXXFLAGS) -I/usr/include/jxrlib -D__ANSI__ -c $< -o $@
+endif
 
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
