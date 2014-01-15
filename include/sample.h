@@ -16,6 +16,9 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+// Use this to set the precision of many internal operations.
+// Either 'float' (single precision) or 'double' (double precision)
 #ifndef SAMPLE
 #define SAMPLE float
 #endif
