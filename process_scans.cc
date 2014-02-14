@@ -96,6 +96,7 @@ void preview_dir(fs::path dir, std::string format, std::shared_ptr<Tags> tags) {
     try {
       ImageFilepath infilepath(di.path());
       ImageFilepath preview_filepath(di.path().filename(), format);
+      preview_filepath.fix_filepath();
 
       if (exists(preview_filepath)
         && (last_write_time(preview_filepath) > last_write_time(infilepath)))
