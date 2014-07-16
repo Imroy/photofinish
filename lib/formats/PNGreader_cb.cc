@@ -31,7 +31,7 @@ namespace PhotoFinish {
     png_set_swap(png);
     png_read_update_info(png, info);
 
-    unsigned int width, height;
+    png_uint_32 width, height;
     int bit_depth, colour_type;
     png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
     std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
@@ -76,7 +76,7 @@ namespace PhotoFinish {
     _image = std::make_shared<Image>(width, height, format);
 
     {
-      unsigned int xres, yres;
+      png_uint_32 xres, yres;
       int unit_type;
       if (png_get_pHYs(png, info, &xres, &yres, &unit_type)) {
 	switch (unit_type) {
@@ -97,10 +97,10 @@ namespace PhotoFinish {
 
     if (png_get_valid(png, info, PNG_INFO_iCCP)) {
       std::cerr << "\tImage has iCCP chunk." << std::endl;
-      char *profile_name;
+      png_charp profile_name;
       int compression_type;
       png_bytep profile_data;
-      unsigned int profile_len;
+      png_uint_32 profile_len;
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
