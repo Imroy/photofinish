@@ -103,7 +103,11 @@ namespace PhotoFinish {
       int compression_type;
       png_bytep profile_data;
       png_uint_32 profile_len;
+#if PNG_LIBPNG_VER < 10500
+      if (png_get_iCCP(png, info, &profile_name, &compression_type, (png_charpp)&profile_data, &profile_len) == PNG_INFO_iCCP) {
+#else
       if (png_get_iCCP(png, info, &profile_name, &compression_type, &profile_data, &profile_len) == PNG_INFO_iCCP) {
+#endif
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
 	void *data_copy = malloc(profile_len);
