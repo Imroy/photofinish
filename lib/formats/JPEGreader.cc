@@ -24,7 +24,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <jpeglib.h>
-#include <setjmp.h>
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Image.hh"
