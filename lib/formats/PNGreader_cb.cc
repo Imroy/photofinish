@@ -26,7 +26,9 @@ namespace PhotoFinish {
 
   void PNGreader_cb::info(png_structp png, png_infop info) {
     png_set_gamma(png, 1.0, 1.0);
+#ifdef PNG_READ_ALPHA_MODE_SUPPORTED
     png_set_alpha_mode(png, PNG_ALPHA_PNG, 1.0);
+#endif
     png_set_packing(png);
     png_set_swap(png);
     png_read_update_info(png, info);
