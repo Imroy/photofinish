@@ -294,7 +294,7 @@ namespace PhotoFinish {
 
     int *row_needs = NULL;
     if (can_free) {
-      row_needs = (int*)malloc(src->height() * sizeof(int));
+      row_needs = new int[src->height()];
       int num_threads = omp_get_num_threads();
       for (unsigned int y = 0; y < src->height(); y++)
 	row_needs[y] = num_threads;
@@ -351,7 +351,7 @@ namespace PhotoFinish {
     }
 
     if (can_free) {
-      free(row_needs);
+      delete [] row_needs;
       for (; next_freed < src->height(); next_freed++)
 	src->free_row(next_freed);
     }
