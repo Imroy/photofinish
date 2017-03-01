@@ -46,7 +46,7 @@ namespace PhotoFinish {
       _class(c)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       std::string w = _class;
       if (_attribute.length() > 0)
 	w += "::" + _attribute;
@@ -69,7 +69,7 @@ namespace PhotoFinish {
       _class(c), _method(m)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       return (_class + "::" + _method + " is unimplemented.").c_str();
     }
   };
@@ -89,7 +89,7 @@ namespace PhotoFinish {
       _class(c), _method(m)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       return (_class + "::" + _method + " has no results.").c_str();
     }
   };
@@ -108,7 +108,7 @@ namespace PhotoFinish {
       _destination(d)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       return ("Destination \"" + _destination + "\" has no targets.").c_str();
     }
   };
@@ -127,7 +127,7 @@ namespace PhotoFinish {
       _msg(m)
     {}
 
-    virtual const char* what() const throw() = 0;
+    virtual const char* what() const noexcept = 0;
   };
 
   //! Memory allocation exception
@@ -141,7 +141,7 @@ namespace PhotoFinish {
       ErrorMsg(m)
     {}
 
-    const char* what() const throw() {
+    const char* what() const noexcept {
       return _msg.c_str();
     }
   };
@@ -169,7 +169,7 @@ namespace PhotoFinish {
       ErrorMsg(""), _filepath(fp)
     {}
 
-    virtual const char* what() const throw() = 0;
+    virtual const char* what() const noexcept = 0;
   };
 
   //! Unknown file type exception
@@ -192,7 +192,7 @@ namespace PhotoFinish {
       FileError(fp)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       std::string w = "Could not determine type for \"" + _filepath + "\"";
       if (_msg.length() > 0)
 	w += ": " + _msg;
@@ -221,7 +221,7 @@ namespace PhotoFinish {
       FileError(fp)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       std::string w = "Could not open filepath \"" + _filepath + "\"";
       if (_msg.length() > 0)
 	w += ": " + _msg;
@@ -250,7 +250,7 @@ namespace PhotoFinish {
       FileError(fp)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       std::string w = "Something is wrong with the contents of filepath \"" + _filepath + "\"";
       if (_msg.length() > 0)
 	w += ": " + _msg;
@@ -274,7 +274,7 @@ namespace PhotoFinish {
       ErrorMsg(""), _path(p), _value(v)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       return ("Error with value of destination field \"" + _path + "\" (\"" + _value + "\").").c_str();
     }
   };
@@ -294,7 +294,7 @@ namespace PhotoFinish {
       ErrorMsg(m), _lib(l)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       return ("Error in " + _lib + ": " + _msg + ".").c_str();
     }
   };
@@ -313,7 +313,7 @@ namespace PhotoFinish {
       ErrorMsg(m), _type(t)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       return ("Error with value of cmsType: " + _msg + ".").c_str();
     }
   };
@@ -332,7 +332,7 @@ namespace PhotoFinish {
       _code(c)
     {}
 
-    virtual const char* what() const throw() {
+    virtual const char* what() const noexcept {
       switch (_code) {
       case 0:
 	return std::string("No error").c_str();

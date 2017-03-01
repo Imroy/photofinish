@@ -46,7 +46,7 @@ namespace PhotoFinish {
     _weights = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
   }
 
-  void Kernel1Dvar::build(double from_start, double from_size, unsigned int from_max) throw(DestinationError) {
+  void Kernel1Dvar::build(double from_start, double from_size, unsigned int from_max) {
     _scale = from_size / _to_size;
     double range, norm_fact;
     if (_scale < 1.0) {
@@ -86,7 +86,7 @@ namespace PhotoFinish {
     }
   }
 
-  Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) throw(DestinationError) {
+  Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) {
     Kernel1Dvar::ptr ret;
     if (!dr.filter().defined()) {
       ret = std::make_shared<Lanczos>(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size);
@@ -482,7 +482,7 @@ namespace PhotoFinish {
     return _radius;
   }
 
-  SAMPLE Lanczos::eval(double x) const throw(Uninitialised) {
+  SAMPLE Lanczos::eval(double x) const {
     if (!_radius.defined())
       throw Uninitialised("Lanczos", "resize.radius");
 

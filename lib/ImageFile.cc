@@ -30,7 +30,7 @@ namespace PhotoFinish {
     _format(format)
   {}
 
-  ImageFilepath::ImageFilepath(const fs::path filepath) throw(UnknownFileType) :
+  ImageFilepath::ImageFilepath(const fs::path filepath) :
     _filepath(filepath)
   {
     std::string ext = filepath.extension().generic_string().substr(1);
@@ -81,7 +81,7 @@ namespace PhotoFinish {
       throw UnknownFileType(filepath.generic_string());
   }
 
-  fs::path ImageFilepath::fixed_filepath(void) const throw(UnknownFileType) {
+  fs::path ImageFilepath::fixed_filepath(void) const {
     fs::path fp(_filepath);
 #ifdef HAZ_PNG
     if (boost::iequals(_format, "png"))
@@ -146,7 +146,7 @@ namespace PhotoFinish {
       img->XMPtags().add(xi);
   }
 
-  ImageReader::ptr ImageReader::open(const ImageFilepath& ifp) throw(UnknownFileType) {
+  ImageReader::ptr ImageReader::open(const ImageFilepath& ifp) {
     ImageReader *ir = NULL;
 #ifdef HAZ_PNG
     if (boost::iequals(ifp.format(), "png"))
@@ -208,7 +208,7 @@ namespace PhotoFinish {
     imagefile->writeMetadata();
   }
 
-  ImageWriter::ptr ImageWriter::open(const ImageFilepath& ifp) throw(UnknownFileType) {
+  ImageWriter::ptr ImageWriter::open(const ImageFilepath& ifp) {
     ImageWriter *iw = NULL;
 #ifdef HAZ_PNG
     if (boost::iequals(ifp.format(), "png"))

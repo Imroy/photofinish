@@ -52,7 +52,7 @@ namespace PhotoFinish {
       _values[y] = (SAMPLE*)malloc(_width * sizeof(SAMPLE));
   }
 
-  Kernel2D::ptr Kernel2D::create(const D_sharpen& ds) throw(DestinationError) {
+  Kernel2D::ptr Kernel2D::create(const D_sharpen& ds) {
     return std::make_shared<GaussianSharpen>(ds);
   }
 

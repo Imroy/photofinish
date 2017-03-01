@@ -70,11 +70,11 @@ namespace PhotoFinish {
       Guess the format from the file extension.
       \param filepath The path of the image file
     */
-    ImageFilepath(const fs::path filepath) throw(UnknownFileType);
+    ImageFilepath(const fs::path filepath);
 
-    fs::path fixed_filepath(void) const throw(UnknownFileType);
+    fs::path fixed_filepath(void) const;
 
-    inline void fix_filepath(void) throw(UnknownFileType) { _filepath = fixed_filepath(); }
+    inline void fix_filepath(void) { _filepath = fixed_filepath(); }
 
     //! File path of this image file
     inline virtual const fs::path filepath(void) const { return _filepath; }
@@ -112,7 +112,7 @@ namespace PhotoFinish {
     /*! Use the extension of the file path to decide what class to use
       \param filepath File path
     */
-    static ImageReader::ptr open(const ImageFilepath& ifp) throw(UnknownFileType);
+    static ImageReader::ptr open(const ImageFilepath& ifp);
 
     //! Read the file into an image
     /*!
@@ -150,7 +150,7 @@ namespace PhotoFinish {
     /*! Use the extension of the file path to decide what class to use
       \param filepath File path
     */
-    static ImageWriter::ptr open(const ImageFilepath& ifp) throw(UnknownFileType);
+    static ImageWriter::ptr open(const ImageFilepath& ifp);
 
     //! Add variables to one of the configuration objects based on destination format
     static void add_variables(Destination::ptr dest, multihash& vars);

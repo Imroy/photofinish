@@ -39,13 +39,13 @@ namespace PhotoFinish {
     Kernel1Dvar(double to_size);
 
     //! Build the kernel; used by derived classes
-    void build(double from_start, double from_size, unsigned int from_max) throw(DestinationError);
+    void build(double from_start, double from_size, unsigned int from_max);
 
     //! The size of this filter
     virtual double range(void) const = 0;
 
     //! Evaluate the filter at a given point
-    virtual SAMPLE eval(double x) const throw(Uninitialised) = 0;
+    virtual SAMPLE eval(double x) const = 0;
 
     template <typename T, int channels>
     void convolve_h_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
@@ -74,7 +74,7 @@ namespace PhotoFinish {
       \param from_max The size (maximum dimenstion) of the input
       \param to_size The size of the output
     */
-    static ptr create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) throw(DestinationError);
+    static ptr create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size);
 
     //! Destructor
     ~Kernel1Dvar();
@@ -104,7 +104,7 @@ namespace PhotoFinish {
     double _r_radius;		//! Reciprocal of the radius
 
     double range(void) const;
-    SAMPLE eval(double x) const throw(Uninitialised);
+    SAMPLE eval(double x) const;
 
   public:
     //! Empty constructor

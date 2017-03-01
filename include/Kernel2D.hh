@@ -58,7 +58,7 @@ namespace PhotoFinish {
     /*! Create a Kernel2D object using the parameters in the D_sharpen object.
       \param ds A D_sharpen object which will supply our parameters.
     */
-    static ptr create(const D_sharpen& ds) throw(DestinationError);
+    static ptr create(const D_sharpen& ds);
 
     //! Destructor
     ~Kernel2D();
