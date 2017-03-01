@@ -33,6 +33,13 @@ namespace fs = boost::filesystem;
 
 namespace PhotoFinish {
 
+  void jpeg_error_exit(j_common_ptr cinfo) {
+    char buffer[JMSG_LENGTH_MAX];
+    (*cinfo->err->format_message)(cinfo, buffer);
+    jpeg_destroy(cinfo);
+    throw LibraryError("libjpeg", buffer);
+  }
+
   JPEGwriter::JPEGwriter(const fs::path filepath) :
     ImageWriter(filepath)
   {}
@@ -58,6 +65,7 @@ namespace PhotoFinish {
     jpeg_create_compress(cinfo);
     jpeg_error_mgr jerr;
     cinfo->err = jpeg_std_error(&jerr);
+    jerr.error_exit = jpeg_error_exit;
 
     jpeg_ostream_dest(cinfo, &os);
 
