@@ -50,10 +50,19 @@ LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JXR*.cc))
 endif
 
 COMMON_FLAGS += `pkg-config --cflags $(PKGS)`
+LIBS += `pkg-config --libs $(PKGS)`
+
+## non-LTO
 CFLAGS += $(COMMON_FLAGS)
 CXXFLAGS += -std=c++11 $(COMMON_FLAGS)
 LDFLAGS += -Wl,-z,relro -Wl,-z,now -fPIE -pie
-LIBS += `pkg-config --libs $(PKGS)`
+
+## LTO
+#LDFLAGS += $(CFLAGS) -Wl,-z,relro -Wl,-z,now -fPIE -pie -flto
+#COMMON_FLAGS += -flto -fuse-linker-plugin
+#CFLAGS = $(COMMON_FLAGS)
+#CXXFLAGS = -std=c++11 $(COMMON_FLAGS)
+
 
 PROG_OBJS = $(patsubst %.cc,%.o,$(wildcard *.cc))
 
