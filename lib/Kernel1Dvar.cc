@@ -292,7 +292,7 @@ namespace PhotoFinish {
       }
     }
 
-    int *row_needs;
+    int *row_needs = NULL;
     if (can_free) {
       row_needs = (int*)malloc(src->height() * sizeof(int));
       int num_threads = omp_get_num_threads();
