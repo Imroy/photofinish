@@ -19,7 +19,7 @@ LIB_OBJS = $(patsubst %.cc,%.o, $(wildcard lib/*.cc)) lib/formats/SOLwriter.o
 
 ifeq ($(HAZ_PNG), 1)
 COMMON_FLAGS += -DHAZ_PNG
-PKGS += libpng
+PKGS += libpng16
 LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/PNG*.cc))
 endif
 ifeq ($(HAZ_JPEG), 1)
