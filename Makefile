@@ -64,7 +64,7 @@ clean:
 	@rm -fv .depend *.o lib/*.o lib/formats/*.o $(PROGRAMS)
 
 install: $(PROGRAMS)
-	install -t $(BINDIR) $(PROGRAMS)
+	install -s -t $(BINDIR) $(PROGRAMS)
 
 $(PROGRAMS): %: $(LIB_OBJS) %.o
 	$(CXX) $(LDFLAGS) $^ $(LIBS) -o $@
