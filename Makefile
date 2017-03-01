@@ -24,7 +24,7 @@ LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/PNG*.cc))
 endif
 ifeq ($(HAZ_JPEG), 1)
 COMMON_FLAGS += -DHAZ_JPEG
-LIBS += -ljpeg
+PKGS += libjpeg
 LIB_OBJS += $(patsubst %.cc,%.o, $(wildcard lib/formats/JPEG*.cc))
 endif
 ifeq ($(HAZ_TIFF), 1)
