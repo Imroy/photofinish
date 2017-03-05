@@ -27,18 +27,16 @@ namespace PhotoFinish {
 
   Ditherer::Ditherer(unsigned int width, unsigned char channels, std::vector<unsigned char> maxvalues) :
     _width(width), _channels(channels),
-    _error_rows(NULL),
-    _curr_row(0), _next_row(1),
+    _error_row_curr(NULL), _error_row_next(NULL),
     _maxvalues(maxvalues),
     _scale(NULL), _unscale(NULL)
   {
-    _error_rows = (short int**)malloc(2 * sizeof(short int*));
-    for (unsigned int y = 0; y < 2; y++)
-      _error_rows[y] = (short int*)malloc(_width * _channels * sizeof(short int));
-    memset(_error_rows[_next_row], 0, _width * _channels * sizeof(short int));
+    _error_row_curr = new short int[_width * _channels];
+    _error_row_next = new short int[_width * _channels];
+    memset(_error_row_next, 0, _width * _channels * sizeof(short int));
 
-    _scale = (SAMPLE*)malloc(_channels * sizeof(SAMPLE));
-    _unscale = (SAMPLE*)malloc(_channels * sizeof(SAMPLE));
+    _scale = new SAMPLE[_channels];
+    _unscale = new SAMPLE[_channels];
     _maxvalues.reserve(_channels);
     for (unsigned char c = 0; c < _channels; c++) {
       if (c >= _maxvalues.size())
@@ -49,15 +47,23 @@ namespace PhotoFinish {
   }
 
   Ditherer::~Ditherer() {
-    if (_error_rows != NULL) {
-      for (int y = 0; y < 2; y++)
-	free(_error_rows[y]);
-      free(_error_rows);
-      _error_rows = NULL;
+    if (_error_row_curr != NULL) {
+      delete [] _error_row_curr;
+      _error_row_curr = NULL;
+    }
 
-      free(_scale);
+    if (_error_row_next != NULL) {
+      delete [] _error_row_next;
+      _error_row_next = NULL;
+    }
+
+    if (_scale != NULL) {
+      delete [] _scale;
       _scale = NULL;
-      free(_unscale);
+    }
+
+    if (_unscale != NULL) {
+      delete [] _unscale;
       _unscale = NULL;
     }
   }
@@ -79,9 +85,12 @@ namespace PhotoFinish {
 #define nextpos (((x + 1) * _channels) + c)
 
   void Ditherer::dither(short unsigned int *inrow, unsigned char *outrow, bool lastrow) {
-    _curr_row = _next_row;
-    _next_row = 1 - _curr_row;
-    memset(_error_rows[_next_row], 0, _width * _channels * sizeof(short int));
+    {
+      short int *temp = _error_row_curr;
+      _error_row_curr = _error_row_next;
+      _error_row_next = temp;
+    }
+    memset(_error_row_next, 0, _width * _channels * sizeof(short int));
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned char c = 0; c < _channels; c++) {
       short unsigned int *in = &inrow[c];
@@ -91,27 +100,27 @@ namespace PhotoFinish {
       if (lastrow) {
 	// All but last pixel
 	for (; x < _width - 1; x++, in += _channels, out += _channels) {
-	  int target = *in + (_error_rows[_curr_row][pos] >> 4);
+	  int target = *in + (_error_row_curr[pos] >> 4);
 	  *out = attemptvalue(target, c);
 	  int error = target - actualvalue(*out, c);
 
-	  _error_rows[_curr_row][nextpos] += error * 7;
+	  _error_row_curr[nextpos] += error * 7;
 	}
 	// Last pixel
 	if (x < _width) {
-	  int target = *in + (_error_rows[_curr_row][pos] >> 4);
+	  int target = *in + (_error_row_curr[pos] >> 4);
 	  *out = attemptvalue(target, c);
 	}
       } else {
 	// First pixel
-	int target = *in + (_error_rows[_curr_row][pos] >> 4);
+	int target = *in + (_error_row_curr[pos] >> 4);
 	*out = attemptvalue(target, c);
 	int error = target - actualvalue(*out, c);
 
-	_error_rows[_next_row][pos] += error * 5;
+	_error_row_next[pos] += error * 5;
 	if (x < _width - 1) {
-	  _error_rows[_next_row][nextpos] += error;
-	  _error_rows[_curr_row][nextpos] += error * 7;
+	  _error_row_next[nextpos] += error;
+	  _error_row_curr[nextpos] += error * 7;
 	}
 
 	x++;
@@ -119,22 +128,22 @@ namespace PhotoFinish {
 	out += _channels;
 	// Most pixels
 	while (x < _width - 1) {
-	  target = *in + (_error_rows[_curr_row][pos] >> 4);
+	  target = *in + (_error_row_curr[pos] >> 4);
 	  *out = attemptvalue(target, c);
 	  error = target - actualvalue(*out, c);
-	  _error_rows[_next_row][prevpos] += error * 3;
-	  _error_rows[_next_row][nextpos] += error;
-	  _error_rows[_curr_row][nextpos] += error * 7;
+	  _error_row_next[prevpos] += error * 3;
+	  _error_row_next[nextpos] += error;
+	  _error_row_curr[nextpos] += error * 7;
 	  x++;
 	  in += _channels;
 	  out += _channels;
 	}
 	// Last pixel
 	if (x < _width) {
-	  target = *in + (_error_rows[_curr_row][pos] >> 4);
+	  target = *in + (_error_row_curr[pos] >> 4);
 	  *out = attemptvalue(target, c);
 	  error = target - actualvalue(*out, c);
-	  _error_rows[_next_row][prevpos] += error * 3;
+	  _error_row_next[prevpos] += error * 3;
 	}
       }
     }

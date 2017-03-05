@@ -28,8 +28,7 @@ namespace PhotoFinish {
   private:
     unsigned int _width;
     unsigned char _channels;
-    short int **_error_rows;
-    unsigned char _curr_row, _next_row;
+    short int *_error_row_curr, *_error_row_next;
     std::vector<unsigned char> _maxvalues;
     SAMPLE *_scale, *_unscale;
 
