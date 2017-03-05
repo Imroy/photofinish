@@ -176,7 +176,7 @@ namespace PhotoFinish {
 
     unsigned char channels = format.channels();
     int depth = format.bytes_per_channel();
-    opj_image_cmptparm_t *components = (opj_image_cmptparm_t*)malloc(channels * sizeof(opj_image_cmptparm_t));
+    opj_image_cmptparm_t *components = new opj_image_cmptparm_t[channels];
     memset(components, 0, channels * sizeof(opj_image_cmptparm_t));
     for (unsigned char i = 0; i < channels; i++) {
       components[i].dx = parameters.subsampling_dx;
@@ -189,8 +189,10 @@ namespace PhotoFinish {
     }
     opj_image_t *jp2_image = opj_image_create(channels, components, colour_space);
 
-    if (jp2_image == NULL)
+    if (jp2_image == NULL) {
+      delete [] components;
       return;
+    }
 
     if (img->has_profile()) {
       unsigned char *profile_data;

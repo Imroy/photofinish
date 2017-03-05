@@ -47,7 +47,7 @@ namespace PhotoFinish {
     if (ifs.fail())
       throw FileOpenError(_filepath.native());
 
-    jpeg_decompress_struct *dinfo = (jpeg_decompress_struct*)malloc(sizeof(jpeg_decompress_struct));
+    jpeg_decompress_struct *dinfo = new jpeg_decompress_struct;
     jpeg_create_decompress(dinfo);
     struct jpeg_error_mgr jerr;
     dinfo->err = jpeg_std_error(&jerr);
@@ -122,7 +122,7 @@ namespace PhotoFinish {
     jpeg_finish_decompress(dinfo);
     jpeg_istream_src_free(dinfo);
     jpeg_destroy_decompress(dinfo);
-    free(dinfo);
+    delete dinfo;
     _is_open = false;
 
     std::cerr << "\tExtracting tags..." << std::endl;

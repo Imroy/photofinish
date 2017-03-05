@@ -61,7 +61,7 @@ namespace PhotoFinish {
   }
 
   void JPEGwriter::write(std::ostream& os, Image::ptr img, Destination::ptr dest, bool can_free) {
-    jpeg_compress_struct *cinfo = (jpeg_compress_struct*)malloc(sizeof(jpeg_compress_struct));
+    jpeg_compress_struct *cinfo = new jpeg_compress_struct;
     jpeg_create_compress(cinfo);
     jpeg_error_mgr jerr;
     cinfo->err = jpeg_std_error(&jerr);
@@ -183,7 +183,7 @@ namespace PhotoFinish {
     jpeg_finish_compress(cinfo);
     jpeg_ostream_dest_free(cinfo);
     jpeg_destroy_compress(cinfo);
-    free(cinfo);
+    delete cinfo;
   }
 
   void JPEGwriter::write(Image::ptr img, Destination::ptr dest, bool can_free) {

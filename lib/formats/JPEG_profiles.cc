@@ -82,7 +82,7 @@ namespace PhotoFinish {
     unsigned int data_left = size;
     for (unsigned char i = 0; i < num_markers; i++) {
       int marker_data_size = data_left > 65519 ? 65519 : data_left;
-      JOCTET *APP2 = (JOCTET*)malloc(marker_data_size + 14);
+      JOCTET *APP2 = new JOCTET[marker_data_size + 14];
       memcpy(APP2, "ICC_PROFILE\0", 12);
       APP2[12] = i + 1;
       APP2[13] = num_markers;

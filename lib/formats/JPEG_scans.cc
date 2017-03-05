@@ -24,7 +24,7 @@ namespace PhotoFinish {
 
   //! Create a scan script for encoding a colour progressive JPEG
   void jpegfile_scan_RGB(jpeg_compress_struct* cinfo) {
-    jpeg_scan_info *my_scan_info = (jpeg_scan_info*)malloc(11 * sizeof(jpeg_scan_info));
+    jpeg_scan_info *my_scan_info = new jpeg_scan_info[11];
 
     // Luma DC
     my_scan_info[0] = {
@@ -112,7 +112,7 @@ namespace PhotoFinish {
 
   //! Create a scan script for encoding a greyscale progressive JPEG
   void jpegfile_scan_greyscale(jpeg_compress_struct* cinfo) {
-    jpeg_scan_info *my_scan_info = (jpeg_scan_info*)malloc(5 * sizeof(jpeg_scan_info));
+    jpeg_scan_info *my_scan_info = new jpeg_scan_info[5];
       // Y DC
       my_scan_info[0] = {
 	comps_in_scan: 1,

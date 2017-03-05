@@ -73,7 +73,7 @@ namespace PhotoFinish {
       throw cmsTypeError("Not 16-bit", format);
 
     Ditherer ditherer(img->width(), 3, { 31, 63, 31 });
-    unsigned char *temprow = (unsigned char*)malloc(img->width() * 3);
+    unsigned char *temprow = new unsigned char[img->width() * 3];
 
     for (unsigned int y = 0; y < img->height(); y++) {
       ditherer.dither(img->row<short unsigned int>(y), temprow, y == img->height() - 1);
@@ -91,6 +91,8 @@ namespace PhotoFinish {
       std::cerr << "\r\tWrote " << y + 1 << " of " << img->height() << " rows";
     }
     std::cerr << "\r\tWrote " << img->height() << " of " << img->height() << " rows." << std::endl;
+
+    delete [] temprow;
 
     ofs.close();
     _is_open = false;

@@ -93,19 +93,19 @@ namespace PhotoFinish {
 	  }
 	}
 	if (memcmp(fourcc, "EXIF", 4) == 0) {
-	  unsigned char *data = (unsigned char*)malloc(chunk_size);
+	  unsigned char *data = new unsigned char[chunk_size];
 	  ifs.read((char*)data, chunk_size);
 	  std::cerr << "\tReading EXIF tags..." << std::endl;
 	  Exiv2::ExifParser::decode(EXIFtags, data, chunk_size);
-	  free(data);
+	  delete [] data;
 	}
 	if (memcmp(fourcc, "XMP ", 4) == 0) {
-	  char *data = (char*)malloc(chunk_size);
+	  char *data = new char[chunk_size];
 	  ifs.read(data, chunk_size);
 	  std::string s(data, chunk_size);
 	  std::cerr << "\tReading XMP tags..." << std::endl;
 	  Exiv2::XmpParser::decode(XMPtags, s);
-	  free(data);
+	  delete [] data;
 	}
 
 	ifs.seekg(next_chunk + 12, std::ios_base::beg);

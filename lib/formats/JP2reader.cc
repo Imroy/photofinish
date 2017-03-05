@@ -49,7 +49,7 @@ namespace PhotoFinish {
       throw FileOpenError(_filepath.native());
 
     unsigned int file_size = fs::file_size(_filepath);
-    unsigned char *src = (unsigned char *)malloc(file_size);
+    unsigned char *src = new unsigned char[file_size];
     ifs.read((char*)src, file_size);
 
     opj_dinfo_t *dinfo = opj_create_decompress(CODEC_JP2);
@@ -61,7 +61,7 @@ namespace PhotoFinish {
       throw LibraryError("OpenJPEG", "Could not decode file");
 
     opj_cio_close(cio);
-    free(src);
+    delete [] src;
 
     // Is this necessary?
     if (jp2_image->numcomps > 1)

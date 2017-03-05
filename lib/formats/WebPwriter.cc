@@ -111,7 +111,7 @@ namespace PhotoFinish {
     // libwebp takes its image data in one big chunk
     {
       std::cerr << "\tCopying image data to blob..." << std::endl;
-      unsigned char *rgb = (unsigned char*)malloc(img->row_size() * img->height());
+      unsigned char *rgb = new unsigned char[img->row_size() * img->height()];
       for (unsigned int y = 0; y < img->height(); y++) {
 	memcpy(rgb + (y * img->row_size()), img->row(y), img->row_size());
 	if (can_free)
@@ -125,7 +125,7 @@ namespace PhotoFinish {
 	std::cerr << "\tImporting RGB image data..." << std::endl;
 	WebPPictureImportRGB(&pic, rgb, img->row_size());
       }
-      free(rgb);
+      delete [] rgb;
     }
 
     fs::ofstream ofs(_filepath, std::ios_base::out);

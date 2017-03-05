@@ -35,7 +35,7 @@ namespace PhotoFinish {
     jpeg_source_mgr *smgr = (jpeg_source_mgr*)(dinfo->src);
     jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
     ss->is->seekg(0, std::ios_base::beg);
-    ss->buffer = (JOCTET*)malloc(ss->buffer_size);
+    ss->buffer = new JOCTET[ss->buffer_size];
     if (ss->buffer == NULL)
       throw MemAllocError("Out of memory?");
     smgr->bytes_in_buffer = 0;
@@ -78,16 +78,16 @@ namespace PhotoFinish {
   //! Terminate the istream source manager
   void jpeg_istream_term_source(j_decompress_ptr dinfo) {
     jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
-    free(ss->buffer);
+    delete [] ss->buffer;
   }
 
   void jpeg_istream_src(j_decompress_ptr dinfo, std::istream* is) {
-    jpeg_source_state_t *ss = (jpeg_source_state_t*)malloc(sizeof(jpeg_source_state_t));
+    jpeg_source_state_t *ss = new jpeg_source_state_t;
     ss->is = is;
     ss->buffer_size = 1048576;
     dinfo->client_data = (void*)ss;
 
-    jpeg_source_mgr *smgr = (jpeg_source_mgr*)malloc(sizeof(jpeg_source_mgr));
+    jpeg_source_mgr *smgr = new jpeg_source_mgr;
     smgr->init_source = jpeg_istream_init_source;
     smgr->fill_input_buffer = jpeg_istream_fill_input_buffer;
     smgr->skip_input_data = jpeg_istream_skip_input_data;
@@ -97,8 +97,8 @@ namespace PhotoFinish {
   }
 
   void jpeg_istream_src_free(j_decompress_ptr dinfo) {
-    free((jpeg_source_state_t*)dinfo->client_data);
-    free(dinfo->src);
+    delete (jpeg_source_state_t*)dinfo->client_data;
+    delete (jpeg_source_mgr*)dinfo->src;
   }
 
 
@@ -113,7 +113,7 @@ namespace PhotoFinish {
   static void jpeg_ostream_init_destination(j_compress_ptr cinfo) {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     jpeg_destination_state_t *ds = (jpeg_destination_state_t*)(cinfo->client_data);
-    ds->buffer = (JOCTET*)malloc(ds->buffer_size);
+    ds->buffer = new JOCTET[ds->buffer_size];
     if (ds->buffer == NULL)
       throw MemAllocError("Out of memory?");
 
@@ -136,18 +136,18 @@ namespace PhotoFinish {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     jpeg_destination_state_t *ds = (jpeg_destination_state_t*)(cinfo->client_data);
     ds->os->write((char*)ds->buffer, ds->buffer_size - dmgr->free_in_buffer);
-    free(ds->buffer);
+    delete [] ds->buffer;
     ds->buffer = NULL;
     dmgr->free_in_buffer = 0;
   }
 
   void jpeg_ostream_dest(j_compress_ptr cinfo, std::ostream* os) {
-    jpeg_destination_state_t *ds = (jpeg_destination_state_t*)malloc(sizeof(jpeg_destination_state_t));
+    jpeg_destination_state_t *ds = new jpeg_destination_state_t;
     ds->os = os;
     ds->buffer_size = 1048576;
     cinfo->client_data = (void*)ds;
 
-    jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)malloc(sizeof(jpeg_destination_mgr));
+    jpeg_destination_mgr *dmgr = new jpeg_destination_mgr;
     dmgr->init_destination = jpeg_ostream_init_destination;
     dmgr->empty_output_buffer = jpeg_ostream_empty_output_buffer;
     dmgr->term_destination = jpeg_ostream_term_destination;
@@ -155,8 +155,8 @@ namespace PhotoFinish {
   }
 
   void jpeg_ostream_dest_free(j_compress_ptr cinfo) {
-    free((jpeg_destination_state_t*)cinfo->client_data);
-    free(cinfo->dest);
+    delete (jpeg_destination_state_t*)cinfo->client_data;
+    delete (jpeg_destination_mgr*)cinfo->dest;
   }
 
 }

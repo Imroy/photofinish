@@ -95,33 +95,33 @@ namespace PhotoFinish {
 	{
 	  unsigned int xmp_size = jxr_metadata_size(decoder, XMPMetadata);
 	  if (xmp_size > 0) {
-	    unsigned char *xmp_data = (unsigned char*)malloc(xmp_size);
+	    unsigned char *xmp_data = new unsigned char[xmp_size];
 	    std::cerr << "\tLoading XMP metadata (" << xmp_size << " bytes)..." << std::endl;
 	    jxr_metadata_data(decoder, XMPMetadata, xmp_data);
 	    Exiv2::XmpParser::decode(img->XMPtags(), std::string((char*)xmp_data));
-	    free(xmp_data);
+	    delete [] xmp_data;
 	  }
 	}
 
 	{
 	  unsigned int exif_size = jxr_metadata_size(decoder, EXIFMetadata);
 	  if (exif_size > 0) {
-	    unsigned char *exif_data = (unsigned char*)malloc(exif_size);
+	    unsigned char *exif_data = new unsigned char[exif_size];
 	    std::cerr << "\tLoading EXIF metadata (" << exif_size << " bytes)..." << std::endl;
 	    jxr_metadata_data(decoder, EXIFMetadata, exif_data);
 	    Exiv2::ExifParser::decode(img->EXIFtags(), exif_data, exif_size);
-	    free(exif_data);
+	    delete [] exif_data;
 	  }
 	}
 
 	{
 	  unsigned int iptc_size = jxr_metadata_size(decoder, IPTCNAAMetadata);
 	  if (iptc_size > 0) {
-	    unsigned char *iptc_data = (unsigned char*)malloc(iptc_size);
+	    unsigned char *iptc_data = new unsigned char[iptc_size];
 	    std::cerr << "\tLoading IPTC metadata (" << iptc_size << " bytes)..." << std::endl;
 	    jxr_metadata_data(decoder, IPTCNAAMetadata, iptc_data);
 	    Exiv2::IptcParser::decode(img->IPTCtags(), iptc_data, iptc_size);
-	    free(iptc_data);
+	    delete [] iptc_data;
 	  }
 	}
 
