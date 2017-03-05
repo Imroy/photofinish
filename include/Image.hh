@@ -110,11 +110,11 @@ namespace PhotoFinish {
 
     inline void check_rowdata_alloc(unsigned int y) {
       if (_rowdata[y] == NULL)
-	_rowdata[y] = (unsigned char*)malloc(_row_size);
+	_rowdata[y] = new unsigned char[_row_size];
     }
 
     //! Pointer to pixel data at start of row
-    template <typename T=void>
+    template <typename T=unsigned char>
     inline T* row(unsigned int y) const { return (T*)_rowdata[y]; }
 
     //! Pointer to pixel data at coordinates
@@ -127,7 +127,7 @@ namespace PhotoFinish {
     //! Free the memory storing row 'y'
     inline void free_row(unsigned int y) {
       if (_rowdata[y] != NULL) {
-	free(_rowdata[y]);
+	delete [] _rowdata[y];
 	_rowdata[y] = NULL;
       }
     }

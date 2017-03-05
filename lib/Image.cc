@@ -37,7 +37,7 @@ namespace PhotoFinish {
     _pixel_size = _format.bytes_per_pixel();
     _row_size = _width * _pixel_size;
 
-    _rowdata = (unsigned char**)malloc(_height * sizeof(unsigned char*));
+    _rowdata = new unsigned char*[_height];
     for (unsigned int y = 0; y < _height; y++)
       _rowdata[y] = NULL;
   }
@@ -46,10 +46,10 @@ namespace PhotoFinish {
     if (_rowdata != NULL) {
       for (unsigned int y = 0; y < _height; y++)
 	if (_rowdata[y] != NULL) {
-	  free(_rowdata[y]);
+	  delete [] _rowdata[y];
 	  _rowdata[y] = NULL;
 	}
-      free(_rowdata);
+      delete [] _rowdata;
       _rowdata = NULL;
     }
   }
@@ -89,7 +89,7 @@ namespace PhotoFinish {
   }
 
   template <typename A>
-  void transfer_alpha_typed(unsigned int width, unsigned char src_channels, const A* src_row, CMS::Format dest_format, const void* dest_row) {
+  void transfer_alpha_typed(unsigned int width, unsigned char src_channels, const A* src_row, CMS::Format dest_format, const unsigned char* dest_row) {
     unsigned char dest_channels = (unsigned char)dest_format.channels();
     switch (dest_format.bytes_per_channel()) {
     case 1:
@@ -115,7 +115,7 @@ namespace PhotoFinish {
 
   }
 
-  void transfer_alpha(unsigned int width, CMS::Format src_format, const void* src_row, CMS::Format dest_format, const void* dest_row) {
+  void transfer_alpha(unsigned int width, CMS::Format src_format, const unsigned char* src_row, CMS::Format dest_format, const unsigned char* dest_row) {
     unsigned char src_channels = (unsigned char)src_format.channels();
     switch (src_format.bytes_per_channel()) {
     case 1:
@@ -251,14 +251,14 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
-      void *src_rowdata = row(y);
-      void *dest_rowdata = malloc(dest_row_size);
+      unsigned char *src_rowdata = _rowdata[y];
+      unsigned char *dest_rowdata = new unsigned char[dest_row_size];
       transform.transform_buffer(src_rowdata, dest_rowdata, _width);
       if (dest_format.extra_channels())
 	transfer_alpha(_width, _format, src_rowdata, dest_format, dest_rowdata);
 
-      _rowdata[y] = (unsigned char*)dest_rowdata;
-      free(src_rowdata);
+      _rowdata[y] = dest_rowdata;
+      delete [] src_rowdata;
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
@@ -304,8 +304,8 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
-      void *src_rowdata = row(y);
-      void *dest_rowdata = malloc(dest_row_size);
+      unsigned char *src_rowdata = row(y);
+      unsigned char *dest_rowdata = new unsigned char [dest_row_size];
 
       SRC *in = (SRC*)src_rowdata;
       SAMPLE *out = (SAMPLE*)dest_rowdata;
@@ -323,8 +323,8 @@ namespace PhotoFinish {
 	  out[c] = limitval<SAMPLE>(in[c] * scale);
       }
 
-      _rowdata[y] = (unsigned char*)dest_rowdata;
-      free(src_rowdata);
+      _rowdata[y] = dest_rowdata;
+      delete [] src_rowdata;
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
@@ -381,8 +381,8 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
-      void *src_rowdata = row(y);
-      void *dest_rowdata = malloc(dest_row_size);
+      unsigned char *src_rowdata = row(y);
+      unsigned char *dest_rowdata = new unsigned char[dest_row_size];
 
       SRC *in = (SRC*)src_rowdata;
       DST *out = (DST*)dest_rowdata;
@@ -396,8 +396,8 @@ namespace PhotoFinish {
 	  out[c] = limitval<DST>(in[c] * scale);
       }
 
-      _rowdata[y] = (unsigned char*)dest_rowdata;
-      free(src_rowdata);
+      _rowdata[y] = dest_rowdata;
+      delete [] src_rowdata;
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";
