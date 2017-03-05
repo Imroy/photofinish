@@ -154,7 +154,7 @@ namespace PhotoFinish {
     TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, format.bytes_per_channel() << 3));
 
     if (img->has_profile()) {
-      void *profile_data = NULL;
+      unsigned char *profile_data = NULL;
       unsigned int profile_len = 0;
       img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {

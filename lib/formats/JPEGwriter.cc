@@ -152,7 +152,7 @@ namespace PhotoFinish {
     jpeg_start_compress(cinfo, TRUE);
 
     if (img->has_profile()) {
-      void *profile_data;
+      unsigned char *profile_data;
       unsigned int profile_len;
       img->profile()->save_to_mem(profile_data, profile_len);
 
@@ -161,7 +161,7 @@ namespace PhotoFinish {
 	  std::cerr << "** Profile is too big to fit in APP2 markers! **" << std::endl;
 	else {
 	  jpeg_write_profile(cinfo, (unsigned char*)profile_data, profile_len);
-	  free(profile_data);
+	  delete [] profile_data;
 	}
       }
     }

@@ -193,7 +193,7 @@ namespace PhotoFinish {
       return;
 
     if (img->has_profile()) {
-      void *profile_data;
+      unsigned char *profile_data;
       unsigned int profile_len;
       img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {

@@ -42,10 +42,10 @@ namespace CMS {
     cmsUInt32Number length;
     cmsSaveProfileToMem(other._profile, NULL, &length);
     if (length) {
-      void *data = (cmsHPROFILE)malloc(length);
+      unsigned char *data = new unsigned char [length];
       cmsSaveProfileToMem(other._profile, data, &length);
       _profile = cmsOpenProfileFromMem(data, length);
-      free(data);
+      delete [] data;
     }
   }
 
@@ -54,7 +54,7 @@ namespace CMS {
   {
   }
 
-  Profile::Profile(const void* data, cmsUInt32Number size)
+  Profile::Profile(const unsigned char* data, cmsUInt32Number size)
     : _profile(cmsOpenProfileFromMem(data, size))
   {
   }
@@ -121,11 +121,11 @@ namespace CMS {
     const char *cc = country.length() > 0 ? country.c_str() : cmsNoCountry;
     unsigned int text_len;
     if ((text_len = cmsGetProfileInfoASCII(_profile, type, lc, cc, NULL, 0)) > 0) {
-      char *text = (char*)malloc(text_len);
+      char *text = new char[text_len];
       cmsGetProfileInfoASCII(_profile, type, lc, cc, text, text_len);
 
       std::string s(text);
-      free(text);
+      delete [] text;
       return s;
     }
     return "";
@@ -136,11 +136,11 @@ namespace CMS {
     const char *cc = country.length() > 0 ? country.c_str() : cmsNoCountry;
     unsigned int text_len;
     if ((text_len = cmsGetProfileInfo(_profile, type, lc, cc, NULL, 0)) > 0) {
-      wchar_t *text = (wchar_t*)malloc(text_len * sizeof(wchar_t));
+      wchar_t *text = new wchar_t[text_len];
       cmsGetProfileInfo(_profile, type, lc, cc, text, text_len);
 
       std::wstring ws(text);
-      free(text);
+      delete[] text;
       return ws;
     }
     return (wchar_t*)"";
@@ -210,10 +210,10 @@ namespace CMS {
     return this->read_info_wide(cmsInfoCopyright, language, country);
   }
 
-  void Profile::save_to_mem(void* &dest, unsigned int &size) const {
+  void Profile::save_to_mem(unsigned char* &dest, unsigned int &size) const {
     cmsSaveProfileToMem(_profile, NULL, &size);
     if (size > 0) {
-      dest = malloc(size);
+      dest = new unsigned char[size];
       cmsSaveProfileToMem(_profile, dest, &size);
     } else
       dest = NULL;
@@ -589,7 +589,7 @@ namespace CMS {
     return std::make_shared<Profile>(cmsTransform2DeviceLink(_transform, version, flags));
   }
 
-  void Transform::transform_buffer(const void* input, void* output, cmsUInt32Number size) const {
+  void Transform::transform_buffer(const unsigned char* input, unsigned char* output, cmsUInt32Number size) const {
     cmsDoTransform(_transform, input, output, size);
   }
 
@@ -599,7 +599,7 @@ namespace CMS {
    */
 
   cmsIOHANDLER* OpenIOhandlerFromIStream(std::istream* is) {
-    cmsIOHANDLER *ioh = (cmsIOHANDLER*)malloc(sizeof(cmsIOHANDLER));
+    cmsIOHANDLER *ioh = new cmsIOHANDLER;
     ioh->stream = (void*)is;
     ioh->ContextID = 0;
     ioh->UsedSpace = 0;
@@ -629,7 +629,7 @@ namespace CMS {
     return ioh;
   }
 
-  cmsUInt32Number istream_read(cmsIOHANDLER* iohandler, void *buffer, cmsUInt32Number size, cmsUInt32Number count) {
+  cmsUInt32Number istream_read(cmsIOHANDLER* iohandler, void* buffer, cmsUInt32Number size, cmsUInt32Number count) {
     std::istream *is = (std::istream*)iohandler->stream;
     is->read((char*)buffer, size * count);
 
@@ -665,7 +665,7 @@ namespace CMS {
     return false;
   }
 
-  cmsUInt32Number ostream_read(cmsIOHANDLER* iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count) {
+  cmsUInt32Number ostream_read(cmsIOHANDLER* iohandler, void* Buffer, cmsUInt32Number size, cmsUInt32Number count) {
     // TODO: throw an exception!
     return 0;
   }

@@ -127,7 +127,7 @@ namespace PhotoFinish {
 
     if (jp2_image->icc_profile_buf != NULL) {
       CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
-      void *data_copy = malloc(jp2_image->icc_profile_len);
+      unsigned char *data_copy = new unsigned char[jp2_image->icc_profile_len];
       memcpy(data_copy, jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
 
       std::string profile_name = profile->description("en", "");

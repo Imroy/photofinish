@@ -50,7 +50,7 @@ namespace PhotoFinish {
     // Data for the VP8X chunk
     bool need_vp8x;
     unsigned int width, height;
-    void *icc_data, *exif_data, *xmp_data;	// no IPTC?
+    unsigned char *icc_data, *exif_data, *xmp_data;	// no IPTC?
     unsigned int icc_size, exif_size, xmp_size;
 
   public:
@@ -72,7 +72,7 @@ namespace PhotoFinish {
     void add_xmp(const Exiv2::XmpData& xmp);
 
     //! Write a RIFF chunk
-    void write_chunk(const char *fourcc, const void* data, unsigned int length);
+    void write_chunk(const char *fourcc, const unsigned char* data, unsigned int length);
 
     //! Write stuff before a chunk is written
     void before_chunk(void);

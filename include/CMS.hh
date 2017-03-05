@@ -66,7 +66,7 @@ namespace CMS {
     Profile(fs::path filepath);
 
     //! Constructor from memory
-    Profile(const void* data, cmsUInt32Number size);
+    Profile(const unsigned char* data, cmsUInt32Number size);
 
     //! Constructor from an istream
     Profile(std::istream stream);
@@ -129,7 +129,7 @@ namespace CMS {
     //! Get the copyright tag in a wide string
     std::wstring copyright_wide(std::string language, std::string country) const;
 
-    void save_to_mem(void* &dest, unsigned int &size) const;
+    void save_to_mem(unsigned char* &dest, unsigned int &size) const;
       
   }; // class Profile
 
@@ -439,7 +439,7 @@ namespace CMS {
     //! Create a device link profile from this transform
     Profile::ptr device_link(double version, cmsUInt32Number flags) const;
 
-    void transform_buffer(const void* input, void* output, cmsUInt32Number size) const;
+    void transform_buffer(const unsigned char* input, unsigned char* output, cmsUInt32Number size) const;
 
   }; // class Transform
 
@@ -447,14 +447,14 @@ namespace CMS {
   cmsIOHANDLER* OpenIOhandlerFromIStream(std::istream* is);
   cmsIOHANDLER* OpenIOhandlerFromIFStream(fs::path filepath);
 
-  cmsUInt32Number istream_read(cmsIOHANDLER* iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count);
+  cmsUInt32Number istream_read(cmsIOHANDLER* iohandler, void* Buffer, cmsUInt32Number size, cmsUInt32Number count);
   cmsBool istream_seek(cmsIOHANDLER* iohandler, cmsUInt32Number offset);
   cmsBool istream_close(cmsIOHANDLER* iohandler);
   cmsUInt32Number istream_tell(cmsIOHANDLER* iohandler);
   cmsBool istream_write(cmsIOHANDLER* iohandler, cmsUInt32Number size, const void* Buffer);
 
   // ostream IO handlers
-  cmsUInt32Number ostream_read(cmsIOHANDLER* iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count);
+  cmsUInt32Number ostream_read(cmsIOHANDLER* iohandler, void* Buffer, cmsUInt32Number size, cmsUInt32Number count);
   cmsBool ostream_seek(cmsIOHANDLER* iohandler, cmsUInt32Number offset);
   cmsBool ostream_close(cmsIOHANDLER* iohandler);
   cmsUInt32Number ostream_tell(cmsIOHANDLER* iohandler);

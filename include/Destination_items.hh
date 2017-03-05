@@ -293,7 +293,7 @@ namespace PhotoFinish {
   private:
     definable<std::string> _name;
     definable<fs::path> _filepath;
-    void *_data;
+    unsigned char *_data;
     unsigned int _data_size;
 
   public:
@@ -304,7 +304,7 @@ namespace PhotoFinish {
     D_profile(const std::string& name, fs::path filepath);
 
     //! Constructor
-    D_profile(const std::string& name, void *data, unsigned int data_size);
+    D_profile(const std::string& name, unsigned char* data, unsigned int data_size);
 
     //! Copy constructor
     D_profile(const D_profile& other);
@@ -328,7 +328,7 @@ namespace PhotoFinish {
     CMS::Profile::ptr profile(void) const;
 
     //! The profile data
-    inline void* data(void) const { return _data; }
+    inline unsigned char* data(void) const { return _data; }
 
     //! The size of the profile data
     inline unsigned int data_size(void) const { return _data_size; }

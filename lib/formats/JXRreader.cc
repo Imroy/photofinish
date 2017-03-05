@@ -84,11 +84,11 @@ namespace PhotoFinish {
 	{
 	  unsigned int profile_size = jxr_metadata_size(decoder, ColorProfile);
 	  if (profile_size > 0) {
-	    unsigned char *profile_data = (unsigned char*)malloc(profile_size);
+	    unsigned char *profile_data = new unsigned char[profile_size];
 	    std::cerr << "\tLoading ICC profile (" << profile_size << " bytes)..." << std::endl;
 	    jxr_metadata_data(decoder, ColorProfile, profile_data);
 	    img->set_profile(std::make_shared<CMS::Profile>(profile_data, profile_size));
-	    free(profile_data);
+	    delete [] profile_data;
 	  }
 	}
 

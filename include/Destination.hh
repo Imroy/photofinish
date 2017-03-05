@@ -144,7 +144,7 @@ namespace PhotoFinish {
 
     inline const D_profile::ptr profile(void) const { return _profile; }
     inline void set_profile(std::string name, fs::path filepath) { _profile = std::make_shared<D_profile>(name, filepath); }
-    inline void set_profile(std::string name, void *data, unsigned int data_size) { _profile = std::make_shared<D_profile>(name, data, data_size); }
+    inline void set_profile(std::string name, unsigned char* data, unsigned int data_size) { _profile = std::make_shared<D_profile>(name, data, data_size); }
     inline void clear_profile(void) { _profile = NULL; }
 
     inline definable<bool> forcergb(void) const { return _forcergb; }

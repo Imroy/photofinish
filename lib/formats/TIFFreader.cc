@@ -145,10 +145,10 @@ namespace PhotoFinish {
 
     {
       uint32 profile_len;
-      void *profile_data;
+      unsigned char *profile_data;
       if (TIFFGetField(tiff, TIFFTAG_ICCPROFILE, &profile_len, &profile_data) == 1) {
 	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
-	void *data_copy = malloc(profile_len);
+	unsigned char *data_copy = new unsigned char[profile_len];
 	memcpy(data_copy, profile_data, profile_len);
 
 	std::string profile_name = profile->description("en", "");

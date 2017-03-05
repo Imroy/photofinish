@@ -55,7 +55,7 @@ namespace PhotoFinish {
       return NULL;
     }
 
-    unsigned char *profile_data = (unsigned char*)malloc(profile_size);
+    unsigned char *profile_data = new unsigned char[profile_size];
     unsigned char *pos = profile_data;
     for (unsigned int i = 0; i < num_markers; i++) {
       memcpy(pos, icc_markers[i]->data + 14, icc_markers[i]->data_length - 14);

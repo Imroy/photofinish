@@ -79,7 +79,7 @@ namespace PhotoFinish {
 	  }
 	}
 	if (memcmp(fourcc, "ICCP", 4) == 0) {
-	  unsigned char *profile_data = (unsigned char*)malloc(chunk_size);
+	  unsigned char *profile_data = new unsigned char[chunk_size];
 	  ifs.read((char*)profile_data, chunk_size);
 	  profile = std::make_shared<CMS::Profile>(profile_data, chunk_size);
 	  if (profile != NULL) {

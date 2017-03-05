@@ -110,7 +110,7 @@ namespace PhotoFinish {
 #endif
 	std::cerr << "\tLoading ICC profile \"" << profile_name << "\" from file..." << std::endl;
 	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
-	void *data_copy = malloc(profile_len);
+	unsigned char *data_copy = new unsigned char[profile_len];
 	memcpy(data_copy, profile_data, profile_len);
 	_destination->set_profile(profile_name, data_copy, profile_len);
 	_image->set_profile(profile);

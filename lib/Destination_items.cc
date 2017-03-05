@@ -457,7 +457,7 @@ namespace PhotoFinish {
     _data(NULL), _data_size(0)
   {}
 
-  D_profile::D_profile(const std::string& name, void *data, unsigned int data_size) :
+  D_profile::D_profile(const std::string& name, unsigned char* data, unsigned int data_size) :
     _name(name),
     _data(data), _data_size(data_size)
   {}
@@ -465,13 +465,16 @@ namespace PhotoFinish {
   D_profile::D_profile(const D_profile& other) :
     _name(other._name),
     _filepath(other._filepath),
-    _data(memcpy(malloc(other._data_size), other._data, other._data_size)),
-    _data_size(other._data_size)
-  {}
+    _data(NULL),
+    _data_size(0)
+  {
+    _data = new unsigned char[other._data_size];
+    memcpy(_data, other._data, other._data_size);
+  }
 
   D_profile::~D_profile() {
     if (_data != NULL) {
-      free(_data);
+      delete [] _data;
       _data = NULL;
       _data_size = 0;
     }
@@ -481,7 +484,7 @@ namespace PhotoFinish {
     if (this != &b) {
       _name = b._name;
       _filepath = b._filepath;
-      _data = malloc(b._data_size);
+      _data = new unsigned char[b._data_size];
       memcpy(_data, b._data, b._data_size);
       _data_size = b._data_size;
     }
