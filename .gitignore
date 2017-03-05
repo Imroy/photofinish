@@ -1,6 +1,8 @@
 *~
 *.o
 *.s
+.depend
+.depend.bak
 photofinish
 process_scans
 *.png
