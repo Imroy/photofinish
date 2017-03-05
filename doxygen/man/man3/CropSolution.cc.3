@@ -1,0 +1,66 @@
+.TH "CropSolution.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CropSolution.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <boost/lexical_cast\&.hpp>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <omp\&.h>\fP
+.br
+\fC#include 'CropSolution\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBsqr\fP(x)   ((x) * (x))"
+.br
+.ti -1c
+.RI "#define \fBmin\fP(a,  b)   ((a) < (b) ? (a) : (b))"
+.br
+.ti -1c
+.RI "#define \fBmax\fP(a,  b)   ((a) > (b) ? (a) : (b))"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::add_rulers\fP (multihash &vars, std::string key, rulerlist &rulers)"
+.br
+.RI "Parse named variables into a list of rulers\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::add_ruler_pins\fP (rulerlist &rulers, unsigned int \fBmax\fP)"
+.br
+.RI "Add rulers to the either side of an image if there aren't enough\&. "
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define max(a, b)   ((a) > (b) ? (a) : (b))"
+
+.PP
+Definition at line 26 of file CropSolution\&.cc\&.
+.SS "#define min(a, b)   ((a) < (b) ? (a) : (b))"
+
+.PP
+Definition at line 25 of file CropSolution\&.cc\&.
+.SS "#define sqr(x)   ((x) * (x))"
+
+.PP
+Definition at line 24 of file CropSolution\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

@@ -1,0 +1,190 @@
+.TH "PhotoFinish::Kernel2D" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Kernel2D \- Creates and stores coefficients for convolving an image\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Kernel2D\&.hh>\fP
+.PP
+Inherited by \fBPhotoFinish::GaussianSharpen\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBKernel2D\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for a \fBKernel2D\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBKernel2D\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fB~Kernel2D\fP ()"
+.br
+.RI "Destructor\&. "
+.ti -1c
+.RI "\fBImage::ptr\fP \fBconvolve\fP (\fBImage::ptr\fP img, bool can_free=false)"
+.br
+.RI "Convolve and image with this kernel and produce a new image\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBptr\fP \fBcreate\fP (const \fBD_sharpen\fP &ds)"
+.br
+.RI "Named constructor\&. "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBKernel2D\fP (short unsigned int w, short unsigned int h, short unsigned int cx, short unsigned int cy)"
+.br
+.RI "Private constructor for derived classes\&. "
+.ti -1c
+.RI "\fBKernel2D\fP (short unsigned int size, short unsigned int centre)"
+.br
+.RI "Private constructor for square filters\&. "
+.ti -1c
+.RI "template<typename T > void \fBconvolve_type\fP (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free=false)"
+.br
+.ti -1c
+.RI "template<typename T , int channels> void \fBconvolve_type_channels\fP (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free=false)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "short unsigned int \fB_width\fP"
+.br
+.ti -1c
+.RI "short unsigned int \fB_height\fP"
+.br
+.ti -1c
+.RI "short unsigned int \fB_centrex\fP"
+.br
+.ti -1c
+.RI "short unsigned int \fB_centrey\fP"
+.br
+.ti -1c
+.RI "\fBSAMPLE\fP ** \fB_values\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Creates and stores coefficients for convolving an image\&. 
+.PP
+Definition at line 33 of file Kernel2D\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBKernel2D\fP> \fBPhotoFinish::Kernel2D::ptr\fP"
+
+.PP
+Shared pointer for a \fBKernel2D\fP\&. 
+.PP
+Definition at line 52 of file Kernel2D\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Kernel2D::Kernel2D (short unsigned int w, short unsigned int h, short unsigned int cx, short unsigned int cy)\fC [protected]\fP"
+
+.PP
+Private constructor for derived classes\&. 
+.PP
+Definition at line 35 of file Kernel2D\&.cc\&.
+.SS "PhotoFinish::Kernel2D::Kernel2D (short unsigned int size, short unsigned int centre)\fC [protected]\fP"
+
+.PP
+Private constructor for square filters\&. 
+.PP
+Definition at line 45 of file Kernel2D\&.cc\&.
+.SS "PhotoFinish::Kernel2D::Kernel2D ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 29 of file Kernel2D\&.cc\&.
+.SS "PhotoFinish::Kernel2D::~Kernel2D ()"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 59 of file Kernel2D\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBImage::ptr\fP PhotoFinish::Kernel2D::convolve (\fBImage::ptr\fP img, bool can_free = \fCfalse\fP)"
+
+.PP
+Convolve and image with this kernel and produce a new image\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimg\fP Source image 
+.br
+\fIcan_free\fP Can each row of the image be freed after it is convolved? 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+New image 
+.RE
+.PP
+
+.PP
+Definition at line 215 of file Kernel2D\&.cc\&.
+.SS "template<typename T > void PhotoFinish::Kernel2D::convolve_type (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 147 of file Kernel2D\&.cc\&.
+.SS "template<typename T , int channels> void PhotoFinish::Kernel2D::convolve_type_channels (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 69 of file Kernel2D\&.cc\&.
+.SS "\fBKernel2D::ptr\fP PhotoFinish::Kernel2D::create (const \fBD_sharpen\fP & ds)\fC [static]\fP"
+
+.PP
+Named constructor\&. Create a \fBKernel2D\fP object using the parameters in the \fBD_sharpen\fP object\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIds\fP A \fBD_sharpen\fP object which will supply our parameters\&. 
+.RE
+.PP
+
+.PP
+Definition at line 55 of file Kernel2D\&.cc\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "short unsigned int PhotoFinish::Kernel2D::_centrex\fC [protected]\fP"
+
+.PP
+Definition at line 35 of file Kernel2D\&.hh\&.
+.SS "short unsigned int PhotoFinish::Kernel2D::_centrey\fC [protected]\fP"
+
+.PP
+Definition at line 35 of file Kernel2D\&.hh\&.
+.SS "short unsigned int PhotoFinish::Kernel2D::_height\fC [protected]\fP"
+
+.PP
+Definition at line 35 of file Kernel2D\&.hh\&.
+.SS "\fBSAMPLE\fP** PhotoFinish::Kernel2D::_values\fC [protected]\fP"
+
+.PP
+Definition at line 36 of file Kernel2D\&.hh\&.
+.SS "short unsigned int PhotoFinish::Kernel2D::_width\fC [protected]\fP"
+
+.PP
+Definition at line 35 of file Kernel2D\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

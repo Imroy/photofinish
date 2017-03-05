@@ -1,0 +1,69 @@
+.TH "PhotoFinish::D_thumbnail" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_thumbnail \- Thumbnail parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_thumbnail\fP ()"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBgenerate\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< double > \fBmaxwidth\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< double > \fBmaxheight\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a \fBD_thumbnail\fP record from a YAML file\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Thumbnail parameters for destination\&. 
+.PP
+Definition at line 343 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_thumbnail::D_thumbnail ()"
+
+.PP
+Definition at line 514 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBdefinable\fP<bool> PhotoFinish::D_thumbnail::generate (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 351 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<double> PhotoFinish::D_thumbnail::maxheight (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 353 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<double> PhotoFinish::D_thumbnail::maxwidth (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 352 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_thumbnail::read_config (const YAML::Node & node)"
+
+.PP
+Read a \fBD_thumbnail\fP record from a YAML file\&. 
+.PP
+Definition at line 518 of file Destination_items\&.cc\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

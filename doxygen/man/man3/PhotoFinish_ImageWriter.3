@@ -1,0 +1,149 @@
+.TH "PhotoFinish::ImageWriter" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::ImageWriter \- Abstract base class for writing image files\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ImageFile\&.hh>\fP
+.PP
+Inherited by \fBPhotoFinish::SOLwriter\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBImageWriter\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for an \fBImageWriter\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBCMS::Format\fP \fBpreferred_format\fP (\fBCMS::Format\fP format)=0"
+.br
+.RI "Modify an LCMS2 pixel format into a 'type' that the file format can write\&. "
+.ti -1c
+.RI "virtual void \fBwrite\fP (\fBImage::ptr\fP img, \fBDestination::ptr\fP dest, bool can_free=false)=0"
+.br
+.RI "Write an image to the file\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBImageWriter::ptr\fP \fBopen\fP (const \fBImageFilepath\fP &ifp)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static void \fBadd_variables\fP (\fBDestination::ptr\fP dest, \fBmultihash\fP &vars)"
+.br
+.RI "Add variables to one of the configuration objects based on destination format\&. "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBImageWriter\fP (const fs::path fp)"
+.br
+.RI "Private constructor\&. "
+.ti -1c
+.RI "virtual void \fBembed_tags\fP (\fBImage::ptr\fP img) const"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "const fs::path \fB_filepath\fP"
+.br
+.ti -1c
+.RI "bool \fB_is_open\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Abstract base class for writing image files\&. 
+.PP
+Definition at line 135 of file ImageFile\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBImageWriter\fP> \fBPhotoFinish::ImageWriter::ptr\fP"
+
+.PP
+Shared pointer for an \fBImageWriter\fP\&. 
+.PP
+Definition at line 147 of file ImageFile\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::ImageWriter::ImageWriter (const fs::path fp)\fC [protected]\fP"
+
+.PP
+Private constructor\&. 
+.PP
+Definition at line 193 of file ImageFile\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::ImageWriter::add_variables (\fBDestination::ptr\fP dest, \fBmultihash\fP & vars)\fC [static]\fP"
+
+.PP
+Add variables to one of the configuration objects based on destination format\&. 
+.PP
+Definition at line 254 of file ImageFile\&.cc\&.
+.SS "void PhotoFinish::ImageWriter::embed_tags (\fBImage::ptr\fP img) const\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Definition at line 198 of file ImageFile\&.cc\&.
+.SS "\fBImageWriter::ptr\fP PhotoFinish::ImageWriter::open (const \fBImageFilepath\fP & ifp)\fC [static]\fP"
+
+.PP
+Named constructor\&. Use the extension of the file path to decide what class to use 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilepath\fP File path 
+.RE
+.PP
+
+.PP
+Definition at line 211 of file ImageFile\&.cc\&.
+.SS "virtual \fBCMS::Format\fP PhotoFinish::ImageWriter::preferred_format (\fBCMS::Format\fP format)\fC [pure virtual]\fP"
+
+.PP
+Modify an LCMS2 pixel format into a 'type' that the file format can write\&. 
+.PP
+Implemented in \fBPhotoFinish::SOLwriter\fP\&.
+.SS "virtual void PhotoFinish::ImageWriter::write (\fBImage::ptr\fP img, \fBDestination::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [pure virtual]\fP"
+
+.PP
+Write an image to the file\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimg\fP The \fBImage\fP object to write 
+.br
+\fIdest\fP A \fBDestination\fP object, used for the JPEG/PNG/etc parameters 
+.br
+\fIcan_free\fP Can each row of the image be freed after it is written? 
+.RE
+.PP
+
+.PP
+Implemented in \fBPhotoFinish::SOLwriter\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "const fs::path PhotoFinish::ImageWriter::_filepath\fC [protected]\fP"
+
+.PP
+Definition at line 137 of file ImageFile\&.hh\&.
+.SS "bool PhotoFinish::ImageWriter::_is_open\fC [protected]\fP"
+
+.PP
+Definition at line 138 of file ImageFile\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

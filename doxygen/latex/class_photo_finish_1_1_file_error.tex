@@ -1,0 +1,116 @@
+\hypertarget{class_photo_finish_1_1_file_error}{}\section{Photo\+Finish\+:\+:File\+Error Class Reference}
+\label{class_photo_finish_1_1_file_error}\index{Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}}
+
+
+File error abstract base exception.  
+
+
+
+
+{\ttfamily \#include $<$Exception.\+hh$>$}
+
+Inheritance diagram for Photo\+Finish\+:\+:File\+Error\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.888889cm]{class_photo_finish_1_1_file_error}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_file_error_a5c657587ebc9d3656318b6443359f3fd}{File\+Error} (const std\+::string \&fp, const std\+::string \&m)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_file_error_a4646f633f8b6383a52147cedacf3cf1d}{File\+Error} (const std\+::string \&fp)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+virtual const char $\ast$ \hyperlink{class_photo_finish_1_1_file_error_ac4da80387c770aa95858dae8aac9a81e}{what} () const noexcept=0
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const std\+::string \hyperlink{class_photo_finish_1_1_file_error_a15b57c5056cbcb44ae2a8338cb9b4c08}{\+\_\+filepath}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+File error abstract base exception. 
+
+Definition at line 150 of file Exception.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_file_error_a5c657587ebc9d3656318b6443359f3fd}\label{class_photo_finish_1_1_file_error_a5c657587ebc9d3656318b6443359f3fd}} 
+\index{Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}!File\+Error@{File\+Error}}
+\index{File\+Error@{File\+Error}!Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}}
+\subsubsection{\texorpdfstring{File\+Error()}{FileError()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+File\+Error\+::\+File\+Error (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fp,  }\item[{const std\+::string \&}]{m }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fp} & File path \\
+\hline
+{\em m} & Error message \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 160 of file Exception.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_file_error_a4646f633f8b6383a52147cedacf3cf1d}\label{class_photo_finish_1_1_file_error_a4646f633f8b6383a52147cedacf3cf1d}} 
+\index{Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}!File\+Error@{File\+Error}}
+\index{File\+Error@{File\+Error}!Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}}
+\subsubsection{\texorpdfstring{File\+Error()}{FileError()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+File\+Error\+::\+File\+Error (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fp} & File path \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 168 of file Exception.\+hh.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_file_error_ac4da80387c770aa95858dae8aac9a81e}\label{class_photo_finish_1_1_file_error_ac4da80387c770aa95858dae8aac9a81e}} 
+\index{Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}!what@{what}}
+\index{what@{what}!Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}}
+\subsubsection{\texorpdfstring{what()}{what()}}
+{\footnotesize\ttfamily virtual const char$\ast$ Photo\+Finish\+::\+File\+Error\+::what (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [pure virtual]}, {\ttfamily [noexcept]}}
+
+
+
+Implements \hyperlink{class_photo_finish_1_1_error_msg_ae84614a0c68520a7ad11e699c1504e82}{Photo\+Finish\+::\+Error\+Msg}.
+
+
+
+Implemented in \hyperlink{class_photo_finish_1_1_file_content_error_a20d98434ca93caa0350503e224d8675e}{Photo\+Finish\+::\+File\+Content\+Error}, \hyperlink{class_photo_finish_1_1_file_open_error_ab88924bbaf53b4ba6efda71d7a4d4baf}{Photo\+Finish\+::\+File\+Open\+Error}, and \hyperlink{class_photo_finish_1_1_unknown_file_type_a756a01080a750ff0c5bb6fa81e9a6b2a}{Photo\+Finish\+::\+Unknown\+File\+Type}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_file_error_a15b57c5056cbcb44ae2a8338cb9b4c08}\label{class_photo_finish_1_1_file_error_a15b57c5056cbcb44ae2a8338cb9b4c08}} 
+\index{Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}!\+\_\+filepath@{\+\_\+filepath}}
+\index{\+\_\+filepath@{\+\_\+filepath}!Photo\+Finish\+::\+File\+Error@{Photo\+Finish\+::\+File\+Error}}
+\subsubsection{\texorpdfstring{\+\_\+filepath}{\_filepath}}
+{\footnotesize\ttfamily const std\+::string Photo\+Finish\+::\+File\+Error\+::\+\_\+filepath\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 152 of file Exception.\+hh.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_exception_8hh}{Exception.\+hh}\end{DoxyCompactItemize}

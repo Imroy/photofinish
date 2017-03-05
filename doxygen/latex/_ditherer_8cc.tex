@@ -1,0 +1,55 @@
+\hypertarget{_ditherer_8cc}{}\section{Ditherer.\+cc File Reference}
+\label{_ditherer_8cc}\index{Ditherer.\+cc@{Ditherer.\+cc}}
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Ditherer.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}sample.\+h\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_ditherer_8cc_afd459fe4d808ab65f3c0db21a29c54a2}{pos}~((x $\ast$ \+\_\+channels) + c)
+\item 
+\#define \hyperlink{_ditherer_8cc_a9dce72a6a76118ed7d124e16b42f6026}{prevpos}~(((x -\/ 1) $\ast$ \+\_\+channels) + c)
+\item 
+\#define \hyperlink{_ditherer_8cc_a78280206e7c3c6b4673842d597f33280}{nextpos}~(((x + 1) $\ast$ \+\_\+channels) + c)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_ditherer_8cc_a78280206e7c3c6b4673842d597f33280}\label{_ditherer_8cc_a78280206e7c3c6b4673842d597f33280}} 
+\index{Ditherer.\+cc@{Ditherer.\+cc}!nextpos@{nextpos}}
+\index{nextpos@{nextpos}!Ditherer.\+cc@{Ditherer.\+cc}}
+\subsubsection{\texorpdfstring{nextpos}{nextpos}}
+{\footnotesize\ttfamily \#define nextpos~(((x + 1) $\ast$ \+\_\+channels) + c)}
+
+
+
+Definition at line 85 of file Ditherer.\+cc.
+
+\mbox{\Hypertarget{_ditherer_8cc_afd459fe4d808ab65f3c0db21a29c54a2}\label{_ditherer_8cc_afd459fe4d808ab65f3c0db21a29c54a2}} 
+\index{Ditherer.\+cc@{Ditherer.\+cc}!pos@{pos}}
+\index{pos@{pos}!Ditherer.\+cc@{Ditherer.\+cc}}
+\subsubsection{\texorpdfstring{pos}{pos}}
+{\footnotesize\ttfamily \#define pos~((x $\ast$ \+\_\+channels) + c)}
+
+
+
+Definition at line 83 of file Ditherer.\+cc.
+
+\mbox{\Hypertarget{_ditherer_8cc_a9dce72a6a76118ed7d124e16b42f6026}\label{_ditherer_8cc_a9dce72a6a76118ed7d124e16b42f6026}} 
+\index{Ditherer.\+cc@{Ditherer.\+cc}!prevpos@{prevpos}}
+\index{prevpos@{prevpos}!Ditherer.\+cc@{Ditherer.\+cc}}
+\subsubsection{\texorpdfstring{prevpos}{prevpos}}
+{\footnotesize\ttfamily \#define prevpos~(((x -\/ 1) $\ast$ \+\_\+channels) + c)}
+
+
+
+Definition at line 84 of file Ditherer.\+cc.
+

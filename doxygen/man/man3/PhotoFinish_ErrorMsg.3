@@ -1,0 +1,69 @@
+.TH "PhotoFinish::ErrorMsg" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::ErrorMsg \- Generic error message exception\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Exception\&.hh>\fP
+.PP
+Inherits exception\&.
+.PP
+Inherited by \fBPhotoFinish::cmsTypeError\fP, \fBPhotoFinish::DestinationError\fP, \fBPhotoFinish::FileError\fP, \fBPhotoFinish::LibraryError\fP, and \fBPhotoFinish::MemAllocError\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBErrorMsg\fP (const std::string &m)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "virtual const char * \fBwhat\fP () const noexcept=0"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "const std::string \fB_msg\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Generic error message exception\&. 
+.PP
+Definition at line 117 of file Exception\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::ErrorMsg::ErrorMsg (const std::string & m)\fC [inline]\fP"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIm\fP Error message 
+.RE
+.PP
+
+.PP
+Definition at line 126 of file Exception\&.hh\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual const char* PhotoFinish::ErrorMsg::what () const\fC [pure virtual]\fP, \fC [noexcept]\fP"
+
+.PP
+Implemented in \fBPhotoFinish::cmsTypeError\fP, \fBPhotoFinish::LibraryError\fP, \fBPhotoFinish::DestinationError\fP, \fBPhotoFinish::FileContentError\fP, \fBPhotoFinish::FileOpenError\fP, \fBPhotoFinish::UnknownFileType\fP, \fBPhotoFinish::FileError\fP, and \fBPhotoFinish::MemAllocError\fP\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "const std::string PhotoFinish::ErrorMsg::_msg\fC [protected]\fP"
+
+.PP
+Definition at line 119 of file Exception\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

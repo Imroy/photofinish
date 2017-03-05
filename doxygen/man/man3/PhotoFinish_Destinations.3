@@ -1,0 +1,151 @@
+.TH "PhotoFinish::Destinations" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Destinations \- A wrapper class for reading destinations from a YAML file and storing them in a map\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::map< std::string, \fBDestination::ptr\fP >::\fBiterator\fP \fBiterator\fP"
+.br
+.RI "Iterator for stepping through destinations\&. "
+.ti -1c
+.RI "typedef std::map< std::string, \fBDestination::ptr\fP >::\fBconst_iterator\fP \fBconst_iterator\fP"
+.br
+.RI "Constant iterator for stepping through destinations\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDestinations\fP (fs::path filepath)"
+.br
+.ti -1c
+.RI "\fBDestinations\fP (const \fBDestinations\fP &other)"
+.br
+.ti -1c
+.RI "\fB~Destinations\fP ()"
+.br
+.ti -1c
+.RI "\fBDestinations\fP & \fBoperator=\fP (const \fBDestinations\fP &b)"
+.br
+.ti -1c
+.RI "void \fBLoad\fP (fs::path filepath)"
+.br
+.ti -1c
+.RI "std::map< std::string, \fBDestination::ptr\fP >::size_type \fBcount\fP (const std::string &key) const"
+.br
+.ti -1c
+.RI "\fBiterator\fP \fBbegin\fP (void)"
+.br
+.ti -1c
+.RI "\fBconst_iterator\fP \fBbegin\fP (void) const"
+.br
+.ti -1c
+.RI "\fBiterator\fP \fBend\fP (void)"
+.br
+.ti -1c
+.RI "\fBconst_iterator\fP \fBend\fP (void) const"
+.br
+.ti -1c
+.RI "\fBDestination::ptr\fP \fBoperator[]\fP (const std::string &key)"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "\fBiterator\fP \fBbegin\fP (\fBDestinations\fP &d)"
+.br
+.ti -1c
+.RI "\fBiterator\fP \fBend\fP (\fBDestinations\fP &d)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+A wrapper class for reading destinations from a YAML file and storing them in a map\&. 
+.PP
+Definition at line 160 of file Destination\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::map<std::string, \fBDestination::ptr\fP>::\fBconst_iterator\fP \fBPhotoFinish::Destinations::const_iterator\fP"
+
+.PP
+Constant iterator for stepping through destinations\&. 
+.PP
+Definition at line 175 of file Destination\&.hh\&.
+.SS "typedef std::map<std::string, \fBDestination::ptr\fP>::\fBiterator\fP \fBPhotoFinish::Destinations::iterator\fP"
+
+.PP
+Iterator for stepping through destinations\&. 
+.PP
+Definition at line 172 of file Destination\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Destinations::Destinations (fs::path filepath)"
+
+.PP
+Definition at line 291 of file Destination\&.cc\&.
+.SS "PhotoFinish::Destinations::Destinations (const \fBDestinations\fP & other)"
+
+.PP
+Definition at line 295 of file Destination\&.cc\&.
+.SS "PhotoFinish::Destinations::~Destinations ()"
+
+.PP
+Definition at line 300 of file Destination\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBiterator\fP PhotoFinish::Destinations::begin (void)\fC [inline]\fP"
+
+.PP
+Definition at line 181 of file Destination\&.hh\&.
+.SS "\fBconst_iterator\fP PhotoFinish::Destinations::begin (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 182 of file Destination\&.hh\&.
+.SS "std::map<std::string, \fBDestination::ptr\fP>::size_type PhotoFinish::Destinations::count (const std::string & key) const\fC [inline]\fP"
+
+.PP
+Definition at line 179 of file Destination\&.hh\&.
+.SS "\fBiterator\fP PhotoFinish::Destinations::end (void)\fC [inline]\fP"
+
+.PP
+Definition at line 184 of file Destination\&.hh\&.
+.SS "\fBconst_iterator\fP PhotoFinish::Destinations::end (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 185 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destinations::Load (fs::path filepath)"
+
+.PP
+Definition at line 312 of file Destination\&.cc\&.
+.SS "\fBDestinations\fP & PhotoFinish::Destinations::operator= (const \fBDestinations\fP & b)"
+
+.PP
+Definition at line 303 of file Destination\&.cc\&.
+.SS "\fBDestination::ptr\fP PhotoFinish::Destinations::operator[] (const std::string & key)\fC [inline]\fP"
+
+.PP
+Definition at line 193 of file Destination\&.hh\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "\fBiterator\fP begin (\fBDestinations\fP & d)\fC [friend]\fP"
+
+.PP
+Definition at line 187 of file Destination\&.hh\&.
+.SS "\fBiterator\fP end (\fBDestinations\fP & d)\fC [friend]\fP"
+
+.PP
+Definition at line 190 of file Destination\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

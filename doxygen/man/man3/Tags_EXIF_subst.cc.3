@@ -1,0 +1,66 @@
+.TH "Tags_EXIF_subst.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Tags_EXIF_subst.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <string>\fP
+.br
+\fC#include <map>\fP
+.br
+\fC#include <boost/algorithm/string\&.hpp>\fP
+.br
+\fC#include 'Tags\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBKey\fP(k,  h)   std::make_pair<std::string, subst_table>(k, h)"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "Exiv2::ExifKey \fBPhotoFinish::exif_key_read\fP (std::string key_string)"
+.br
+.ti -1c
+.RI "template<typename Num_type , typename R_type > Exiv2::Value::AutoPtr \fBPhotoFinish::parse_Rational\fP (std::string s)"
+.br
+.RI "Parse a string into a rational fraction\&. "
+.ti -1c
+.RI "Exiv2::Value::AutoPtr \fBPhotoFinish::exif_value_read\fP (Exiv2::ExifKey key, std::string value_string)"
+.br
+.RI "Read an EXIF value from a string, with optional substitution for enum-style values\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "subst_table \fBPhotoFinish::EXIF_key_subst\fP"
+.br
+.RI "Map from Image::Exiftool tag names to Exiv2's tag names\&. "
+.ti -1c
+.RI "std::map< std::string, subst_table > \fBPhotoFinish::EXIF_value_subst\fP"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define Key(k, h)   std::make_pair<std::string, subst_table>(k, h)"
+
+.PP
+Definition at line 91 of file Tags_EXIF_subst\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

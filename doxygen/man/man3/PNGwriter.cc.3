@@ -1,0 +1,53 @@
+.TH "PNGwriter.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PNGwriter.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <errno\&.h>\fP
+.br
+\fC#include <png\&.h>\fP
+.br
+\fC#include <zlib\&.h>\fP
+.br
+\fC#include <time\&.h>\fP
+.br
+\fC#include <omp\&.h>\fP
+.br
+\fC#include <boost/algorithm/string\&.hpp>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/filesystem/fstream\&.hpp>\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include 'ImageFile\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::png_write_ostream_cb\fP (png_structp png, png_bytep buffer, png_size_t length)"
+.br
+.RI "libPNG callback for writing to an ostream "
+.ti -1c
+.RI "void \fBPhotoFinish::png_flush_ostream_cb\fP (png_structp png)"
+.br
+.RI "libPNG callback for flushing an ostream "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

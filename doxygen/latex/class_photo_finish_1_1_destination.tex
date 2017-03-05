@@ -1,0 +1,599 @@
+\hypertarget{class_photo_finish_1_1_destination}{}\section{Photo\+Finish\+:\+:Destination Class Reference}
+\label{class_photo_finish_1_1_destination}\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+
+
+Represents a destination, read from destinations.\+yml.  
+
+
+
+
+{\ttfamily \#include $<$Destination.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_destination}{Destination} $>$ \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for a \hyperlink{class_photo_finish_1_1_destination}{Destination}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_destination_ada09c94b6f5f555bb3163bf1d28f0d69}{Destination} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_destination_acfa92e5c9d061871a842371fb04e5a3e}{Destination} (const \hyperlink{class_photo_finish_1_1_destination}{Destination} \&other)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_destination_aa40a461fbb7dcf5a628967cfc647aeb2}{$\sim$\+Destination} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_destination}{Destination} \& \hyperlink{class_photo_finish_1_1_destination_a55a37b1751bb96051e81b7940aa9efb0}{operator=} (const \hyperlink{class_photo_finish_1_1_destination}{Destination} \&b)
+\begin{DoxyCompactList}\small\item\em Assignment operator. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{ptr} \hyperlink{class_photo_finish_1_1_destination_a78d6a23570b288c6bc2bd4bd38798695}{dupe} (void)
+\begin{DoxyCompactList}\small\item\em Duplicate. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{ptr} \hyperlink{class_photo_finish_1_1_destination_a1cb318744749f6c2e2919e61651345df}{add\+\_\+variables} (\hyperlink{namespace_photo_finish_a6f41796f162687538b7da5c7a95e2d18}{multihash} \&vars)
+\begin{DoxyCompactList}\small\item\em Duplicate the current object and incorporate variables. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_frame_aaf5eaa56b8096024c0d45ad9e7f5e6c1}{Frame\+::ptr} \hyperlink{class_photo_finish_1_1_destination_a43389654149563e9d50e1eeb85a8301a}{best\+\_\+frame} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img)
+\begin{DoxyCompactList}\small\item\em Find the best crop+rescaling frame for an image. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ std\+::string $>$ \hyperlink{class_photo_finish_1_1_destination_a96d21769385305f7b9168b43ba562019}{name} (void) const
+\item 
+const \hyperlink{class_photo_finish_1_1definable}{definable}$<$ fs\+::path $>$ \& \hyperlink{class_photo_finish_1_1_destination_aba22559bce295d7356ecd0c8ec0e4b61}{dir} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ double $>$ \hyperlink{class_photo_finish_1_1_destination_a8387f100c12f0cac437ca0bd6df22aa5}{size} (void) const
+\item 
+const \hyperlink{class_photo_finish_1_1_d__sharpen}{D\+\_\+sharpen} \& \hyperlink{class_photo_finish_1_1_destination_ad978b29930e366de32ff34e412ab935c}{sharpen} (void) const
+\item 
+const \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} \& \hyperlink{class_photo_finish_1_1_destination_af9af85210edbf3e6ddb7435f6880e980}{resize} (void) const
+\item 
+int \hyperlink{class_photo_finish_1_1_destination_a9b605477d0d0479c1dd8f897004e600b}{num\+\_\+targets} (void) const
+\item 
+bool \hyperlink{class_photo_finish_1_1_destination_a7a462f41086060cb10f01d4838f0a576}{has\+\_\+targets} (void) const
+\item 
+const std\+::map$<$ std\+::string, \hyperlink{class_photo_finish_1_1_d__target_a44befb9c758d25b0c765e97caa1caa39}{D\+\_\+target\+::ptr} $>$ \& \hyperlink{class_photo_finish_1_1_destination_a4c0d0bd1588471d13e0ab067ab129f7b}{targets} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ std\+::string $>$ \hyperlink{class_photo_finish_1_1_destination_ac3e539fafa18892508dfb98cf68f29db}{format} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ int $>$ \hyperlink{class_photo_finish_1_1_destination_ae0711c1707ae64456eea948090030639}{depth} (void) const
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_aeb48c03cc9c2054e4b8f0371ca552269}{set\+\_\+depth} (int d)
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ bool $>$ \hyperlink{class_photo_finish_1_1_destination_a3ce775300f3de5f1808c49ca751c8634}{noresize} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1_d___j_p_e_g}{D\+\_\+\+J\+P\+EG} \& \hyperlink{class_photo_finish_1_1_destination_a1e30d58e017120973de516de2336fe59}{jpeg} (void)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_a9192f76901154ac8c02c33b3906d9bcf}{set\+\_\+jpeg} (const \hyperlink{class_photo_finish_1_1_d___j_p_e_g}{D\+\_\+\+J\+P\+EG} \&j)
+\item 
+\hyperlink{class_photo_finish_1_1_d___p_n_g}{D\+\_\+\+P\+NG} \& \hyperlink{class_photo_finish_1_1_destination_a807b19552328aea3de3f882980dcdefb}{png} (void)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_a9411b9217ea9ad77dee22876da5dfa7d}{set\+\_\+png} (const \hyperlink{class_photo_finish_1_1_d___p_n_g}{D\+\_\+\+P\+NG} \&p)
+\item 
+\hyperlink{class_photo_finish_1_1_d___t_i_f_f}{D\+\_\+\+T\+I\+FF} \& \hyperlink{class_photo_finish_1_1_destination_a83342de96daf9534150e25200e8b79a9}{tiff} (void)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_ad594b4d9178266e83f1e189f24febe1f}{set\+\_\+tiff} (const \hyperlink{class_photo_finish_1_1_d___t_i_f_f}{D\+\_\+\+T\+I\+FF} \&t)
+\item 
+\hyperlink{class_photo_finish_1_1_d___j_p2}{D\+\_\+\+J\+P2} \& \hyperlink{class_photo_finish_1_1_destination_a79f99dbcb84412f861c8bc2bbf1e1c6d}{jp2} (void)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_af74d0894b5f287930f3d1fc274da87a3}{set\+\_\+jp2} (const \hyperlink{class_photo_finish_1_1_d___j_p2}{D\+\_\+\+J\+P2} \&j)
+\item 
+\hyperlink{class_photo_finish_1_1_d___web_p}{D\+\_\+\+WebP} \& \hyperlink{class_photo_finish_1_1_destination_a25ae0538f3848cc1398e8b2c319b32b4}{webp} (void)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_acbc12929ca361ed745f3dca3aad9d376}{set\+\_\+webp} (const \hyperlink{class_photo_finish_1_1_d___web_p}{D\+\_\+\+WebP} \&w)
+\item 
+\hyperlink{class_photo_finish_1_1_d___j_x_r}{D\+\_\+\+J\+XR} \& \hyperlink{class_photo_finish_1_1_destination_a90030e65830659b6da72d1d66370dfbc}{jxr} (void)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_ad57708cb2aee97eb32f82825c5427e40}{set\+\_\+jxr} (const \hyperlink{class_photo_finish_1_1_d___j_x_r}{D\+\_\+\+J\+XR} \&j)
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent} $>$ \hyperlink{class_photo_finish_1_1_destination_a034dceb77f7bf63edb1749da8ac88bcf}{intent} (void) const
+\item 
+\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{class_photo_finish_1_1_destination_a374870bcd20dc05ec7dec1e1f2cfb4cc}{modify\+\_\+format} (\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{class_photo_finish_1_1_destination_ac3e539fafa18892508dfb98cf68f29db}{format})
+\begin{DoxyCompactList}\small\item\em Modify an L\+C\+M\+S2 pixel format using some of the parameters in the destination. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} \hyperlink{class_photo_finish_1_1_destination_ae55bd5f0875ee3c7ce0bba1e5eb115b2}{get\+\_\+profile} (\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{C\+M\+S\+::\+Colour\+Model} default\+\_\+colourmodel, std\+::string for\+\_\+desc)
+\begin{DoxyCompactList}\small\item\em Return an L\+C\+M\+S2 profile object from the profile data. \end{DoxyCompactList}\item 
+const \hyperlink{class_photo_finish_1_1_d__profile_a9711c3571babd1b40709747a63866b38}{D\+\_\+profile\+::ptr} \hyperlink{class_photo_finish_1_1_destination_ae5ad7d46d7f7229fd58ac727afc25aad}{profile} (void) const
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_aa49fdb6a14357035eaefa7d37134a173}{set\+\_\+profile} (std\+::string \hyperlink{class_photo_finish_1_1_destination_a96d21769385305f7b9168b43ba562019}{name}, fs\+::path filepath)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_a05f4da975f2b1bc18eece0e50c01d45f}{set\+\_\+profile} (std\+::string \hyperlink{class_photo_finish_1_1_destination_a96d21769385305f7b9168b43ba562019}{name}, unsigned char $\ast$data, unsigned int data\+\_\+size)
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_a0981df4a77c78a0271c1ee3a7d155a56}{clear\+\_\+profile} (void)
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ bool $>$ \hyperlink{class_photo_finish_1_1_destination_a6a66e2c4a6009ae787dbabf0cca5f724}{forcergb} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ bool $>$ \hyperlink{class_photo_finish_1_1_destination_a8898f99d52ebd9d25c1b0f7662147a28}{forcegrey} (void) const
+\item 
+const \hyperlink{class_photo_finish_1_1_d__thumbnail}{D\+\_\+thumbnail} \& \hyperlink{class_photo_finish_1_1_destination_a085dbe26aade0eda5d6a889162ed7880}{thumbnail} (void) const
+\item 
+void \hyperlink{class_photo_finish_1_1_destination_aa841d37db33acf0b9b860d819a977267}{read\+\_\+config} (const Y\+A\+M\+L\+::\+Node \&node)
+\begin{DoxyCompactList}\small\item\em Read a destination record from a Y\+A\+ML document. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Represents a destination, read from destinations.\+yml. 
+
+Definition at line 37 of file Destination.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}\label{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_destination}{Destination}$>$ \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Photo\+Finish\+::\+Destination\+::ptr}}
+
+
+
+Shared pointer for a \hyperlink{class_photo_finish_1_1_destination}{Destination}. 
+
+
+
+Definition at line 87 of file Destination.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ada09c94b6f5f555bb3163bf1d28f0d69}\label{class_photo_finish_1_1_destination_ada09c94b6f5f555bb3163bf1d28f0d69}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!Destination@{Destination}}
+\index{Destination@{Destination}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{Destination()}{Destination()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Destination\+::\+Destination (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 34 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_acfa92e5c9d061871a842371fb04e5a3e}\label{class_photo_finish_1_1_destination_acfa92e5c9d061871a842371fb04e5a3e}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!Destination@{Destination}}
+\index{Destination@{Destination}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{Destination()}{Destination()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Destination\+::\+Destination (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_destination}{Destination} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Copy constructor. 
+
+
+
+Definition at line 37 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_aa40a461fbb7dcf5a628967cfc647aeb2}\label{class_photo_finish_1_1_destination_aa40a461fbb7dcf5a628967cfc647aeb2}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!````~Destination@{$\sim$\+Destination}}
+\index{````~Destination@{$\sim$\+Destination}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{$\sim$\+Destination()}{~Destination()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Destination\+::$\sim$\+Destination (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+
+
+Definition at line 58 of file Destination.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a1cb318744749f6c2e2919e61651345df}\label{class_photo_finish_1_1_destination_a1cb318744749f6c2e2919e61651345df}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!add\+\_\+variables@{add\+\_\+variables}}
+\index{add\+\_\+variables@{add\+\_\+variables}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{add\+\_\+variables()}{add\_variables()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} Photo\+Finish\+::\+Destination\+::add\+\_\+variables (\begin{DoxyParamCaption}\item[{\hyperlink{namespace_photo_finish_a6f41796f162687538b7da5c7a95e2d18}{multihash} \&}]{vars }\end{DoxyParamCaption})}
+
+
+
+Duplicate the current object and incorporate variables. 
+
+
+
+Definition at line 91 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a43389654149563e9d50e1eeb85a8301a}\label{class_photo_finish_1_1_destination_a43389654149563e9d50e1eeb85a8301a}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!best\+\_\+frame@{best\+\_\+frame}}
+\index{best\+\_\+frame@{best\+\_\+frame}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{best\+\_\+frame()}{best\_frame()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_frame_aaf5eaa56b8096024c0d45ad9e7f5e6c1}{Frame\+::ptr} Photo\+Finish\+::\+Destination\+::best\+\_\+frame (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption})}
+
+
+
+Find the best crop+rescaling frame for an image. 
+
+
+
+Definition at line 100 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a0981df4a77c78a0271c1ee3a7d155a56}\label{class_photo_finish_1_1_destination_a0981df4a77c78a0271c1ee3a7d155a56}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!clear\+\_\+profile@{clear\+\_\+profile}}
+\index{clear\+\_\+profile@{clear\+\_\+profile}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{clear\+\_\+profile()}{clear\_profile()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::clear\+\_\+profile (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 148 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ae0711c1707ae64456eea948090030639}\label{class_photo_finish_1_1_destination_ae0711c1707ae64456eea948090030639}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!depth@{depth}}
+\index{depth@{depth}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{depth()}{depth()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$int$>$ Photo\+Finish\+::\+Destination\+::depth (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 114 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_aba22559bce295d7356ecd0c8ec0e4b61}\label{class_photo_finish_1_1_destination_aba22559bce295d7356ecd0c8ec0e4b61}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!dir@{dir}}
+\index{dir@{dir}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{dir()}{dir()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1definable}{definable}$<$fs\+::path$>$\& Photo\+Finish\+::\+Destination\+::dir (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 100 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a78d6a23570b288c6bc2bd4bd38798695}\label{class_photo_finish_1_1_destination_a78d6a23570b288c6bc2bd4bd38798695}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!dupe@{dupe}}
+\index{dupe@{dupe}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{dupe()}{dupe()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{ptr} Photo\+Finish\+::\+Destination\+::dupe (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Duplicate. 
+
+
+
+Definition at line 90 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a8898f99d52ebd9d25c1b0f7662147a28}\label{class_photo_finish_1_1_destination_a8898f99d52ebd9d25c1b0f7662147a28}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!forcegrey@{forcegrey}}
+\index{forcegrey@{forcegrey}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{forcegrey()}{forcegrey()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$bool$>$ Photo\+Finish\+::\+Destination\+::forcegrey (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 151 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a6a66e2c4a6009ae787dbabf0cca5f724}\label{class_photo_finish_1_1_destination_a6a66e2c4a6009ae787dbabf0cca5f724}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!forcergb@{forcergb}}
+\index{forcergb@{forcergb}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{forcergb()}{forcergb()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$bool$>$ Photo\+Finish\+::\+Destination\+::forcergb (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 150 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ac3e539fafa18892508dfb98cf68f29db}\label{class_photo_finish_1_1_destination_ac3e539fafa18892508dfb98cf68f29db}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!format@{format}}
+\index{format@{format}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{format()}{format()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$std\+::string$>$ Photo\+Finish\+::\+Destination\+::format (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 112 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ae55bd5f0875ee3c7ce0bba1e5eb115b2}\label{class_photo_finish_1_1_destination_ae55bd5f0875ee3c7ce0bba1e5eb115b2}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!get\+\_\+profile@{get\+\_\+profile}}
+\index{get\+\_\+profile@{get\+\_\+profile}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{get\+\_\+profile()}{get\_profile()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} Photo\+Finish\+::\+Destination\+::get\+\_\+profile (\begin{DoxyParamCaption}\item[{\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{C\+M\+S\+::\+Colour\+Model}}]{default\+\_\+colourmodel,  }\item[{std\+::string}]{for\+\_\+desc }\end{DoxyParamCaption})}
+
+
+
+Return an L\+C\+M\+S2 profile object from the profile data. 
+
+
+
+Definition at line 190 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a7a462f41086060cb10f01d4838f0a576}\label{class_photo_finish_1_1_destination_a7a462f41086060cb10f01d4838f0a576}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!has\+\_\+targets@{has\+\_\+targets}}
+\index{has\+\_\+targets@{has\+\_\+targets}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{has\+\_\+targets()}{has\_targets()}}
+{\footnotesize\ttfamily bool Photo\+Finish\+::\+Destination\+::has\+\_\+targets (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 109 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a034dceb77f7bf63edb1749da8ac88bcf}\label{class_photo_finish_1_1_destination_a034dceb77f7bf63edb1749da8ac88bcf}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!intent@{intent}}
+\index{intent@{intent}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{intent()}{intent()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent}$>$ Photo\+Finish\+::\+Destination\+::intent (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 137 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a79f99dbcb84412f861c8bc2bbf1e1c6d}\label{class_photo_finish_1_1_destination_a79f99dbcb84412f861c8bc2bbf1e1c6d}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!jp2@{jp2}}
+\index{jp2@{jp2}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{jp2()}{jp2()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d___j_p2}{D\+\_\+\+J\+P2}\& Photo\+Finish\+::\+Destination\+::jp2 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 128 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a1e30d58e017120973de516de2336fe59}\label{class_photo_finish_1_1_destination_a1e30d58e017120973de516de2336fe59}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!jpeg@{jpeg}}
+\index{jpeg@{jpeg}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{jpeg()}{jpeg()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d___j_p_e_g}{D\+\_\+\+J\+P\+EG}\& Photo\+Finish\+::\+Destination\+::jpeg (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 119 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a90030e65830659b6da72d1d66370dfbc}\label{class_photo_finish_1_1_destination_a90030e65830659b6da72d1d66370dfbc}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!jxr@{jxr}}
+\index{jxr@{jxr}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{jxr()}{jxr()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d___j_x_r}{D\+\_\+\+J\+XR}\& Photo\+Finish\+::\+Destination\+::jxr (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 134 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a374870bcd20dc05ec7dec1e1f2cfb4cc}\label{class_photo_finish_1_1_destination_a374870bcd20dc05ec7dec1e1f2cfb4cc}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!modify\+\_\+format@{modify\+\_\+format}}
+\index{modify\+\_\+format@{modify\+\_\+format}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{modify\+\_\+format()}{modify\_format()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} Photo\+Finish\+::\+Destination\+::modify\+\_\+format (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{format }\end{DoxyParamCaption})}
+
+
+
+Modify an L\+C\+M\+S2 pixel format using some of the parameters in the destination. 
+
+
+
+Definition at line 154 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a96d21769385305f7b9168b43ba562019}\label{class_photo_finish_1_1_destination_a96d21769385305f7b9168b43ba562019}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!name@{name}}
+\index{name@{name}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$std\+::string$>$ Photo\+Finish\+::\+Destination\+::name (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 98 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a3ce775300f3de5f1808c49ca751c8634}\label{class_photo_finish_1_1_destination_a3ce775300f3de5f1808c49ca751c8634}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!noresize@{noresize}}
+\index{noresize@{noresize}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{noresize()}{noresize()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$bool$>$ Photo\+Finish\+::\+Destination\+::noresize (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 117 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a9b605477d0d0479c1dd8f897004e600b}\label{class_photo_finish_1_1_destination_a9b605477d0d0479c1dd8f897004e600b}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!num\+\_\+targets@{num\+\_\+targets}}
+\index{num\+\_\+targets@{num\+\_\+targets}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{num\+\_\+targets()}{num\_targets()}}
+{\footnotesize\ttfamily int Photo\+Finish\+::\+Destination\+::num\+\_\+targets (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 108 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a55a37b1751bb96051e81b7940aa9efb0}\label{class_photo_finish_1_1_destination_a55a37b1751bb96051e81b7940aa9efb0}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!operator=@{operator=}}
+\index{operator=@{operator=}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destination}{Destination} \& Photo\+Finish\+::\+Destination\+::operator= (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_destination}{Destination} \&}]{b }\end{DoxyParamCaption})}
+
+
+
+Assignment operator. 
+
+
+
+Definition at line 61 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a807b19552328aea3de3f882980dcdefb}\label{class_photo_finish_1_1_destination_a807b19552328aea3de3f882980dcdefb}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!png@{png}}
+\index{png@{png}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{png()}{png()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d___p_n_g}{D\+\_\+\+P\+NG}\& Photo\+Finish\+::\+Destination\+::png (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 122 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ae5ad7d46d7f7229fd58ac727afc25aad}\label{class_photo_finish_1_1_destination_ae5ad7d46d7f7229fd58ac727afc25aad}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!profile@{profile}}
+\index{profile@{profile}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{profile()}{profile()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1_d__profile_a9711c3571babd1b40709747a63866b38}{D\+\_\+profile\+::ptr} Photo\+Finish\+::\+Destination\+::profile (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 145 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_aa841d37db33acf0b9b860d819a977267}\label{class_photo_finish_1_1_destination_aa841d37db33acf0b9b860d819a977267}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!read\+\_\+config@{read\+\_\+config}}
+\index{read\+\_\+config@{read\+\_\+config}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{read\+\_\+config()}{read\_config()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::read\+\_\+config (\begin{DoxyParamCaption}\item[{const Y\+A\+M\+L\+::\+Node \&}]{node }\end{DoxyParamCaption})}
+
+
+
+Read a destination record from a Y\+A\+ML document. 
+
+Read a \hyperlink{class_photo_finish_1_1_destination}{Destination} record from a Y\+A\+ML file. 
+
+Definition at line 207 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_af9af85210edbf3e6ddb7435f6880e980}\label{class_photo_finish_1_1_destination_af9af85210edbf3e6ddb7435f6880e980}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!resize@{resize}}
+\index{resize@{resize}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize}\& Photo\+Finish\+::\+Destination\+::resize (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 106 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_aeb48c03cc9c2054e4b8f0371ca552269}\label{class_photo_finish_1_1_destination_aeb48c03cc9c2054e4b8f0371ca552269}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+depth@{set\+\_\+depth}}
+\index{set\+\_\+depth@{set\+\_\+depth}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+depth()}{set\_depth()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+depth (\begin{DoxyParamCaption}\item[{int}]{d }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 115 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_af74d0894b5f287930f3d1fc274da87a3}\label{class_photo_finish_1_1_destination_af74d0894b5f287930f3d1fc274da87a3}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+jp2@{set\+\_\+jp2}}
+\index{set\+\_\+jp2@{set\+\_\+jp2}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+jp2()}{set\_jp2()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+jp2 (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d___j_p2}{D\+\_\+\+J\+P2} \&}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 129 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a9192f76901154ac8c02c33b3906d9bcf}\label{class_photo_finish_1_1_destination_a9192f76901154ac8c02c33b3906d9bcf}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+jpeg@{set\+\_\+jpeg}}
+\index{set\+\_\+jpeg@{set\+\_\+jpeg}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+jpeg()}{set\_jpeg()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+jpeg (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d___j_p_e_g}{D\+\_\+\+J\+P\+EG} \&}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 120 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ad57708cb2aee97eb32f82825c5427e40}\label{class_photo_finish_1_1_destination_ad57708cb2aee97eb32f82825c5427e40}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+jxr@{set\+\_\+jxr}}
+\index{set\+\_\+jxr@{set\+\_\+jxr}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+jxr()}{set\_jxr()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+jxr (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d___j_x_r}{D\+\_\+\+J\+XR} \&}]{j }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 135 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a9411b9217ea9ad77dee22876da5dfa7d}\label{class_photo_finish_1_1_destination_a9411b9217ea9ad77dee22876da5dfa7d}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+png@{set\+\_\+png}}
+\index{set\+\_\+png@{set\+\_\+png}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+png()}{set\_png()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+png (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d___p_n_g}{D\+\_\+\+P\+NG} \&}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 123 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_aa49fdb6a14357035eaefa7d37134a173}\label{class_photo_finish_1_1_destination_aa49fdb6a14357035eaefa7d37134a173}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+profile@{set\+\_\+profile}}
+\index{set\+\_\+profile@{set\+\_\+profile}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+profile()}{set\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+profile (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 146 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a05f4da975f2b1bc18eece0e50c01d45f}\label{class_photo_finish_1_1_destination_a05f4da975f2b1bc18eece0e50c01d45f}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+profile@{set\+\_\+profile}}
+\index{set\+\_\+profile@{set\+\_\+profile}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+profile()}{set\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+profile (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{unsigned char $\ast$}]{data,  }\item[{unsigned int}]{data\+\_\+size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 147 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ad594b4d9178266e83f1e189f24febe1f}\label{class_photo_finish_1_1_destination_ad594b4d9178266e83f1e189f24febe1f}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+tiff@{set\+\_\+tiff}}
+\index{set\+\_\+tiff@{set\+\_\+tiff}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+tiff()}{set\_tiff()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+tiff (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d___t_i_f_f}{D\+\_\+\+T\+I\+FF} \&}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 126 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_acbc12929ca361ed745f3dca3aad9d376}\label{class_photo_finish_1_1_destination_acbc12929ca361ed745f3dca3aad9d376}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!set\+\_\+webp@{set\+\_\+webp}}
+\index{set\+\_\+webp@{set\+\_\+webp}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{set\+\_\+webp()}{set\_webp()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destination\+::set\+\_\+webp (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d___web_p}{D\+\_\+\+WebP} \&}]{w }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 132 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_ad978b29930e366de32ff34e412ab935c}\label{class_photo_finish_1_1_destination_ad978b29930e366de32ff34e412ab935c}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!sharpen@{sharpen}}
+\index{sharpen@{sharpen}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{sharpen()}{sharpen()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1_d__sharpen}{D\+\_\+sharpen}\& Photo\+Finish\+::\+Destination\+::sharpen (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 104 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a8387f100c12f0cac437ca0bd6df22aa5}\label{class_photo_finish_1_1_destination_a8387f100c12f0cac437ca0bd6df22aa5}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!size@{size}}
+\index{size@{size}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$double$>$ Photo\+Finish\+::\+Destination\+::size (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 102 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a4c0d0bd1588471d13e0ab067ab129f7b}\label{class_photo_finish_1_1_destination_a4c0d0bd1588471d13e0ab067ab129f7b}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!targets@{targets}}
+\index{targets@{targets}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{targets()}{targets()}}
+{\footnotesize\ttfamily const std\+::map$<$std\+::string, \hyperlink{class_photo_finish_1_1_d__target_a44befb9c758d25b0c765e97caa1caa39}{D\+\_\+target\+::ptr}$>$\& Photo\+Finish\+::\+Destination\+::targets (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 110 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a085dbe26aade0eda5d6a889162ed7880}\label{class_photo_finish_1_1_destination_a085dbe26aade0eda5d6a889162ed7880}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!thumbnail@{thumbnail}}
+\index{thumbnail@{thumbnail}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{thumbnail()}{thumbnail()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1_d__thumbnail}{D\+\_\+thumbnail}\& Photo\+Finish\+::\+Destination\+::thumbnail (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 153 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a83342de96daf9534150e25200e8b79a9}\label{class_photo_finish_1_1_destination_a83342de96daf9534150e25200e8b79a9}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!tiff@{tiff}}
+\index{tiff@{tiff}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{tiff()}{tiff()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d___t_i_f_f}{D\+\_\+\+T\+I\+FF}\& Photo\+Finish\+::\+Destination\+::tiff (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 125 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destination_a25ae0538f3848cc1398e8b2c319b32b4}\label{class_photo_finish_1_1_destination_a25ae0538f3848cc1398e8b2c319b32b4}} 
+\index{Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}!webp@{webp}}
+\index{webp@{webp}!Photo\+Finish\+::\+Destination@{Photo\+Finish\+::\+Destination}}
+\subsubsection{\texorpdfstring{webp()}{webp()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d___web_p}{D\+\_\+\+WebP}\& Photo\+Finish\+::\+Destination\+::webp (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 131 of file Destination.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_destination_8hh}{Destination.\+hh}\item 
+\hyperlink{_destination_8cc}{Destination.\+cc}\end{DoxyCompactItemize}

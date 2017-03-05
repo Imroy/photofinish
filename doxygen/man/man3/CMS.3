@@ -1,0 +1,245 @@
+.TH "CMS" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CMS
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBFormat\fP"
+.br
+.RI "Wrap LCMS2's pixel format\&. "
+.ti -1c
+.RI "class \fBProfile\fP"
+.br
+.RI "Wrap LCMS2's cmsHPROFILE\&. "
+.ti -1c
+.RI "class \fBTransform\fP"
+.br
+.RI "Wrap LCMS2's transform object\&. "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBColourModel\fP { \fBColourModel::Any\fP = 0, \fBColourModel::Greyscale\fP = 3, \fBColourModel::RGB\fP, \fBColourModel::CMY\fP, \fBColourModel::CMYK\fP, \fBColourModel::YCbCr\fP, \fBColourModel::YUV\fP, \fBColourModel::XYZ\fP, \fBColourModel::Lab\fP, \fBColourModel::YUVK\fP, \fBColourModel::HSV\fP, \fBColourModel::HLS\fP, \fBColourModel::Yxy\fP, \fBColourModel::MCH1\fP, \fBColourModel::MCH2\fP, \fBColourModel::MCH3\fP, \fBColourModel::MCH4\fP, \fBColourModel::MCH5\fP, \fBColourModel::MCH6\fP, \fBColourModel::MCH7\fP, \fBColourModel::MCH8\fP, \fBColourModel::MCH9\fP, \fBColourModel::MCH10\fP, \fBColourModel::MCH11\fP, \fBColourModel::MCH12\fP, \fBColourModel::MCH13\fP, \fBColourModel::MCH14\fP, \fBColourModel::MCH15\fP, \fBColourModel::LabV2\fP }
+.RI "An enum class of LCMS2's colour models\&. ""
+.br
+.ti -1c
+.RI "enum \fBIntent\fP { \fBIntent::Perceptual\fP, \fBIntent::Relative_colormetric\fP, \fBIntent::Saturation\fP, \fBIntent::Absolute_colormetric\fP, \fBIntent::Preserve_k_only_perceptual\fP = 10, \fBIntent::Preserve_k_only_relative_colormetric\fP, \fBIntent::Preserve_k_only_saturation\fP, \fBIntent::Preserve_k_only_absolute_colormetric\fP, \fBIntent::Preserve_k_plane_perceptual\fP, \fBIntent::Preserve_k_plane_relative_colormetric\fP, \fBIntent::Preserve_k_plane_saturation\fP, \fBIntent::Preserve_k_plane_absolute_colormetric\fP }
+.RI "Wrap LCMS2's intents\&. ""
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "std::ostream & \fBoperator<<\fP (std::ostream &out, \fBColourModel\fP model)"
+.br
+.ti -1c
+.RI "std::ostream & \fBoperator<<\fP (std::ostream &out, \fBFormat\fP f)"
+.br
+.ti -1c
+.RI "cmsIOHANDLER * \fBOpenIOhandlerFromIStream\fP (std::istream *is)"
+.br
+.ti -1c
+.RI "cmsIOHANDLER * \fBOpenIOhandlerFromIFStream\fP (fs::path filepath)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBistream_read\fP (cmsIOHANDLER *iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+.br
+.ti -1c
+.RI "cmsBool \fBistream_seek\fP (cmsIOHANDLER *iohandler, cmsUInt32Number offset)"
+.br
+.ti -1c
+.RI "cmsBool \fBistream_close\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBistream_tell\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsBool \fBistream_write\fP (cmsIOHANDLER *iohandler, cmsUInt32Number size, const void *Buffer)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBostream_read\fP (cmsIOHANDLER *iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+.br
+.ti -1c
+.RI "cmsBool \fBostream_seek\fP (cmsIOHANDLER *iohandler, cmsUInt32Number offset)"
+.br
+.ti -1c
+.RI "cmsBool \fBostream_close\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBostream_tell\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsBool \fBostream_write\fP (cmsIOHANDLER *iohandler, cmsUInt32Number size, const void *Buffer)"
+.br
+.in -1c
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBCMS::ColourModel\fP\fC [strong]\fP"
+
+.PP
+An enum class of LCMS2's colour models\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIAny \fP\fP
+.TP
+\fB\fIGreyscale \fP\fP
+.TP
+\fB\fIRGB \fP\fP
+.TP
+\fB\fICMY \fP\fP
+.TP
+\fB\fICMYK \fP\fP
+.TP
+\fB\fIYCbCr \fP\fP
+.TP
+\fB\fIYUV \fP\fP
+.TP
+\fB\fIXYZ \fP\fP
+.TP
+\fB\fILab \fP\fP
+.TP
+\fB\fIYUVK \fP\fP
+.TP
+\fB\fIHSV \fP\fP
+.TP
+\fB\fIHLS \fP\fP
+.TP
+\fB\fIYxy \fP\fP
+.TP
+\fB\fIMCH1 \fP\fP
+.TP
+\fB\fIMCH2 \fP\fP
+.TP
+\fB\fIMCH3 \fP\fP
+.TP
+\fB\fIMCH4 \fP\fP
+.TP
+\fB\fIMCH5 \fP\fP
+.TP
+\fB\fIMCH6 \fP\fP
+.TP
+\fB\fIMCH7 \fP\fP
+.TP
+\fB\fIMCH8 \fP\fP
+.TP
+\fB\fIMCH9 \fP\fP
+.TP
+\fB\fIMCH10 \fP\fP
+.TP
+\fB\fIMCH11 \fP\fP
+.TP
+\fB\fIMCH12 \fP\fP
+.TP
+\fB\fIMCH13 \fP\fP
+.TP
+\fB\fIMCH14 \fP\fP
+.TP
+\fB\fIMCH15 \fP\fP
+.TP
+\fB\fILabV2 \fP\fP
+.PP
+Definition at line 137 of file CMS\&.hh\&.
+.SS "enum \fBCMS::Intent\fP\fC [strong]\fP"
+
+.PP
+Wrap LCMS2's intents\&. 
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\fB\fIPerceptual \fP\fP
+.TP
+\fB\fIRelative_colormetric \fP\fP
+.TP
+\fB\fISaturation \fP\fP
+.TP
+\fB\fIAbsolute_colormetric \fP\fP
+.TP
+\fB\fIPreserve_k_only_perceptual \fP\fP
+.TP
+\fB\fIPreserve_k_only_relative_colormetric \fP\fP
+.TP
+\fB\fIPreserve_k_only_saturation \fP\fP
+.TP
+\fB\fIPreserve_k_only_absolute_colormetric \fP\fP
+.TP
+\fB\fIPreserve_k_plane_perceptual \fP\fP
+.TP
+\fB\fIPreserve_k_plane_relative_colormetric \fP\fP
+.TP
+\fB\fIPreserve_k_plane_saturation \fP\fP
+.TP
+\fB\fIPreserve_k_plane_absolute_colormetric \fP\fP
+.PP
+Definition at line 378 of file CMS\&.hh\&.
+.SH "Function Documentation"
+.PP 
+.SS "cmsBool CMS::istream_close (cmsIOHANDLER * iohandler)"
+
+.PP
+Definition at line 646 of file CMS\&.cc\&.
+.SS "cmsUInt32Number CMS::istream_read (cmsIOHANDLER * iohandler, void * Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+
+.PP
+Definition at line 632 of file CMS\&.cc\&.
+.SS "cmsBool CMS::istream_seek (cmsIOHANDLER * iohandler, cmsUInt32Number offset)"
+
+.PP
+Definition at line 639 of file CMS\&.cc\&.
+.SS "cmsUInt32Number CMS::istream_tell (cmsIOHANDLER * iohandler)"
+
+.PP
+Definition at line 658 of file CMS\&.cc\&.
+.SS "cmsBool CMS::istream_write (cmsIOHANDLER * iohandler, cmsUInt32Number size, const void * Buffer)"
+
+.PP
+Definition at line 663 of file CMS\&.cc\&.
+.SS "cmsIOHANDLER * CMS::OpenIOhandlerFromIFStream (fs::path filepath)"
+
+.PP
+Definition at line 623 of file CMS\&.cc\&.
+.SS "cmsIOHANDLER * CMS::OpenIOhandlerFromIStream (std::istream * is)"
+
+.PP
+Definition at line 601 of file CMS\&.cc\&.
+.SS "std::ostream & CMS::operator<< (std::ostream & out, \fBColourModel\fP model)"
+
+.PP
+Definition at line 228 of file CMS\&.cc\&.
+.SS "std::ostream & CMS::operator<< (std::ostream & out, \fBFormat\fP f)"
+
+.PP
+Definition at line 497 of file CMS\&.cc\&.
+.SS "cmsBool CMS::ostream_close (cmsIOHANDLER * iohandler)"
+
+.PP
+Definition at line 680 of file CMS\&.cc\&.
+.SS "cmsUInt32Number CMS::ostream_read (cmsIOHANDLER * iohandler, void * Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+
+.PP
+Definition at line 668 of file CMS\&.cc\&.
+.SS "cmsBool CMS::ostream_seek (cmsIOHANDLER * iohandler, cmsUInt32Number offset)"
+
+.PP
+Definition at line 673 of file CMS\&.cc\&.
+.SS "cmsUInt32Number CMS::ostream_tell (cmsIOHANDLER * iohandler)"
+
+.PP
+Definition at line 692 of file CMS\&.cc\&.
+.SS "cmsBool CMS::ostream_write (cmsIOHANDLER * iohandler, cmsUInt32Number size, const void * Buffer)"
+
+.PP
+Definition at line 697 of file CMS\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

@@ -1,0 +1,286 @@
+\hypertarget{class_photo_finish_1_1_tags}{}\section{Photo\+Finish\+:\+:Tags Class Reference}
+\label{class_photo_finish_1_1_tags}\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+
+
+Reads and holds tag information.  
+
+
+
+
+{\ttfamily \#include $<$Tags.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_tags}{Tags} $>$ \hyperlink{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for a \hyperlink{class_photo_finish_1_1_tags}{Tags} object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_tags_a3f2c0bcd42972aa25fed0e04d89493f1}{Tags} ()
+\begin{DoxyCompactList}\small\item\em Empty Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_tags_a9db994b3c40c2e4e1a92b0e7ca97ea18}{Tags} (const \hyperlink{class_photo_finish_1_1_tags}{Tags} \&other)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_tags_ae65e11953c2edea6dd987f476ee50f76}{Tags} (const fs\+::path \&filepath)
+\begin{DoxyCompactList}\small\item\em Constructor with a filepath from which to load tags (calls Load) \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}{ptr} \hyperlink{class_photo_finish_1_1_tags_a6e3beb9b058d670e1fda67ebc4181d05}{dupe} (void) const
+\begin{DoxyCompactList}\small\item\em Duplicate the tags. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_tags_a643e1af1ed57a5cd8ad483ccbed1c190}{add\+\_\+searchpath} (fs\+::path path)
+\item 
+\hyperlink{namespace_photo_finish_a6f41796f162687538b7da5c7a95e2d18}{multihash} \& \hyperlink{class_photo_finish_1_1_tags_a22f5d1f5401c064f8a0ba3a41cd5c1d0}{variables} (void)
+\begin{DoxyCompactList}\small\item\em The map of variables. \end{DoxyCompactList}\item 
+Exiv2\+::\+Exif\+Data \& \hyperlink{class_photo_finish_1_1_tags_a27c18af86d774db3c8f741e2f6db380b}{E\+X\+I\+Ftags} (void)
+\begin{DoxyCompactList}\small\item\em The Exiv2\+::\+Exif\+Data object. \end{DoxyCompactList}\item 
+Exiv2\+::\+Iptc\+Data \& \hyperlink{class_photo_finish_1_1_tags_aafa729966f296935a69951e094ee7668}{I\+P\+T\+Ctags} (void)
+\begin{DoxyCompactList}\small\item\em The Exiv2\+::\+Iptc\+Data object. \end{DoxyCompactList}\item 
+Exiv2\+::\+Xmp\+Data \& \hyperlink{class_photo_finish_1_1_tags_a59d39abc7bc6fd55e14aa9e17a07f220}{X\+M\+Ptags} (void)
+\begin{DoxyCompactList}\small\item\em The Exiv2\+::\+Xmp\+Data object. \end{DoxyCompactList}\item 
+bool \hyperlink{class_photo_finish_1_1_tags_ab798e399cc1588fa010c6e64c060c9f1}{try\+\_\+load} (fs\+::path filepath)
+\item 
+void \hyperlink{class_photo_finish_1_1_tags_a0587ca696bee570efb8cb799a6126b76}{load} (fs\+::path filepath)
+\begin{DoxyCompactList}\small\item\em Load tags from supplied file path. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_tags_a55793c73da1d7c982bf8285f829bc80f}{copy\+\_\+from} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img)
+\begin{DoxyCompactList}\small\item\em Copy E\+X\+I\+F/\+I\+P\+T\+C/\+X\+MP tags from an image. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_tags_ad13fda695ce72a1059f2797ef2968a9e}{make\+\_\+thumbnail} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img, const \hyperlink{class_photo_finish_1_1_d__thumbnail}{D\+\_\+thumbnail} \&dt)
+\begin{DoxyCompactList}\small\item\em Create a thumbnail from the supplied image. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_tags_aae062461270678541595404f0d277ef0}{add\+\_\+resolution} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img)
+\item 
+void \hyperlink{class_photo_finish_1_1_tags_afd3ddbd68aae48ff6ae9d71896e4ccc4}{copy\+\_\+to} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img) const
+\begin{DoxyCompactList}\small\item\em Copy E\+X\+I\+F/\+I\+P\+T\+C/\+X\+MP tags to an image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Reads and holds tag information. 
+
+Definition at line 41 of file Tags.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}\label{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_tags}{Tags}$>$ \hyperlink{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}{Photo\+Finish\+::\+Tags\+::ptr}}
+
+
+
+Shared pointer for a \hyperlink{class_photo_finish_1_1_tags}{Tags} object. 
+
+
+
+Definition at line 60 of file Tags.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a3f2c0bcd42972aa25fed0e04d89493f1}\label{class_photo_finish_1_1_tags_a3f2c0bcd42972aa25fed0e04d89493f1}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!Tags@{Tags}}
+\index{Tags@{Tags}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{Tags()}{Tags()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Tags\+::\+Tags (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty Constructor. 
+
+
+
+Definition at line 33 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a9db994b3c40c2e4e1a92b0e7ca97ea18}\label{class_photo_finish_1_1_tags_a9db994b3c40c2e4e1a92b0e7ca97ea18}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!Tags@{Tags}}
+\index{Tags@{Tags}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{Tags()}{Tags()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Tags\+::\+Tags (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_tags}{Tags} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Copy constructor. 
+
+
+
+Definition at line 36 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_ae65e11953c2edea6dd987f476ee50f76}\label{class_photo_finish_1_1_tags_ae65e11953c2edea6dd987f476ee50f76}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!Tags@{Tags}}
+\index{Tags@{Tags}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{Tags()}{Tags()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Tags\+::\+Tags (\begin{DoxyParamCaption}\item[{const fs\+::path \&}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Constructor with a filepath from which to load tags (calls Load) 
+
+
+
+Definition at line 44 of file Tags.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_aae062461270678541595404f0d277ef0}\label{class_photo_finish_1_1_tags_aae062461270678541595404f0d277ef0}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!add\+\_\+resolution@{add\+\_\+resolution}}
+\index{add\+\_\+resolution@{add\+\_\+resolution}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{add\+\_\+resolution()}{add\_resolution()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Tags\+::add\+\_\+resolution (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption})}
+
+
+
+Definition at line 219 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a643e1af1ed57a5cd8ad483ccbed1c190}\label{class_photo_finish_1_1_tags_a643e1af1ed57a5cd8ad483ccbed1c190}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!add\+\_\+searchpath@{add\+\_\+searchpath}}
+\index{add\+\_\+searchpath@{add\+\_\+searchpath}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{add\+\_\+searchpath()}{add\_searchpath()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Tags\+::add\+\_\+searchpath (\begin{DoxyParamCaption}\item[{fs\+::path}]{path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 65 of file Tags.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a55793c73da1d7c982bf8285f829bc80f}\label{class_photo_finish_1_1_tags_a55793c73da1d7c982bf8285f829bc80f}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!copy\+\_\+from@{copy\+\_\+from}}
+\index{copy\+\_\+from@{copy\+\_\+from}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{copy\+\_\+from()}{copy\_from()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Tags\+::copy\+\_\+from (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption})}
+
+
+
+Copy E\+X\+I\+F/\+I\+P\+T\+C/\+X\+MP tags from an image. 
+
+
+
+Definition at line 171 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_afd3ddbd68aae48ff6ae9d71896e4ccc4}\label{class_photo_finish_1_1_tags_afd3ddbd68aae48ff6ae9d71896e4ccc4}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!copy\+\_\+to@{copy\+\_\+to}}
+\index{copy\+\_\+to@{copy\+\_\+to}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{copy\+\_\+to()}{copy\_to()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Tags\+::copy\+\_\+to (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption}) const}
+
+
+
+Copy E\+X\+I\+F/\+I\+P\+T\+C/\+X\+MP tags to an image. 
+
+
+
+Definition at line 242 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a6e3beb9b058d670e1fda67ebc4181d05}\label{class_photo_finish_1_1_tags_a6e3beb9b058d670e1fda67ebc4181d05}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!dupe@{dupe}}
+\index{dupe@{dupe}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{dupe()}{dupe()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}{Tags\+::ptr} Photo\+Finish\+::\+Tags\+::dupe (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Duplicate the tags. 
+
+
+
+Definition at line 48 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a27c18af86d774db3c8f741e2f6db380b}\label{class_photo_finish_1_1_tags_a27c18af86d774db3c8f741e2f6db380b}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!E\+X\+I\+Ftags@{E\+X\+I\+Ftags}}
+\index{E\+X\+I\+Ftags@{E\+X\+I\+Ftags}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{E\+X\+I\+Ftags()}{EXIFtags()}}
+{\footnotesize\ttfamily Exiv2\+::\+Exif\+Data\& Photo\+Finish\+::\+Tags\+::\+E\+X\+I\+Ftags (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Exiv2\+::\+Exif\+Data object. 
+
+
+
+Definition at line 71 of file Tags.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_aafa729966f296935a69951e094ee7668}\label{class_photo_finish_1_1_tags_aafa729966f296935a69951e094ee7668}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!I\+P\+T\+Ctags@{I\+P\+T\+Ctags}}
+\index{I\+P\+T\+Ctags@{I\+P\+T\+Ctags}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{I\+P\+T\+Ctags()}{IPTCtags()}}
+{\footnotesize\ttfamily Exiv2\+::\+Iptc\+Data\& Photo\+Finish\+::\+Tags\+::\+I\+P\+T\+Ctags (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Exiv2\+::\+Iptc\+Data object. 
+
+
+
+Definition at line 74 of file Tags.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a0587ca696bee570efb8cb799a6126b76}\label{class_photo_finish_1_1_tags_a0587ca696bee570efb8cb799a6126b76}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!load@{load}}
+\index{load@{load}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{load()}{load()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Tags\+::load (\begin{DoxyParamCaption}\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Load tags from supplied file path. 
+
+
+
+Definition at line 68 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_ad13fda695ce72a1059f2797ef2968a9e}\label{class_photo_finish_1_1_tags_ad13fda695ce72a1059f2797ef2968a9e}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!make\+\_\+thumbnail@{make\+\_\+thumbnail}}
+\index{make\+\_\+thumbnail@{make\+\_\+thumbnail}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{make\+\_\+thumbnail()}{make\_thumbnail()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Tags\+::make\+\_\+thumbnail (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img,  }\item[{const \hyperlink{class_photo_finish_1_1_d__thumbnail}{D\+\_\+thumbnail} \&}]{dt }\end{DoxyParamCaption})}
+
+
+
+Create a thumbnail from the supplied image. 
+
+
+
+Definition at line 182 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_ab798e399cc1588fa010c6e64c060c9f1}\label{class_photo_finish_1_1_tags_ab798e399cc1588fa010c6e64c060c9f1}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!try\+\_\+load@{try\+\_\+load}}
+\index{try\+\_\+load@{try\+\_\+load}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{try\+\_\+load()}{try\_load()}}
+{\footnotesize\ttfamily bool Photo\+Finish\+::\+Tags\+::try\+\_\+load (\begin{DoxyParamCaption}\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+Try to load tags from a file, looking in the search paths \begin{DoxyReturn}{Returns}
+if the file was found and loaded 
+\end{DoxyReturn}
+
+
+Definition at line 57 of file Tags.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a22f5d1f5401c064f8a0ba3a41cd5c1d0}\label{class_photo_finish_1_1_tags_a22f5d1f5401c064f8a0ba3a41cd5c1d0}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!variables@{variables}}
+\index{variables@{variables}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{variables()}{variables()}}
+{\footnotesize\ttfamily \hyperlink{namespace_photo_finish_a6f41796f162687538b7da5c7a95e2d18}{multihash}\& Photo\+Finish\+::\+Tags\+::variables (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The map of variables. 
+
+
+
+Definition at line 68 of file Tags.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_tags_a59d39abc7bc6fd55e14aa9e17a07f220}\label{class_photo_finish_1_1_tags_a59d39abc7bc6fd55e14aa9e17a07f220}} 
+\index{Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}!X\+M\+Ptags@{X\+M\+Ptags}}
+\index{X\+M\+Ptags@{X\+M\+Ptags}!Photo\+Finish\+::\+Tags@{Photo\+Finish\+::\+Tags}}
+\subsubsection{\texorpdfstring{X\+M\+Ptags()}{XMPtags()}}
+{\footnotesize\ttfamily Exiv2\+::\+Xmp\+Data\& Photo\+Finish\+::\+Tags\+::\+X\+M\+Ptags (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Exiv2\+::\+Xmp\+Data object. 
+
+
+
+Definition at line 77 of file Tags.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_tags_8hh}{Tags.\+hh}\item 
+\hyperlink{_tags_8cc}{Tags.\+cc}\end{DoxyCompactItemize}

@@ -1,0 +1,203 @@
+\hypertarget{class_photo_finish_1_1_image_writer}{}\section{Photo\+Finish\+:\+:Image\+Writer Class Reference}
+\label{class_photo_finish_1_1_image_writer}\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+
+
+Abstract base class for writing image files.  
+
+
+
+
+{\ttfamily \#include $<$Image\+File.\+hh$>$}
+
+Inheritance diagram for Photo\+Finish\+:\+:Image\+Writer\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_photo_finish_1_1_image_writer}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_image_writer}{Image\+Writer} $>$ \hyperlink{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for an \hyperlink{class_photo_finish_1_1_image_writer}{Image\+Writer}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{class_photo_finish_1_1_image_writer_a83441e9a01ad47b3bb0e5efb1c751770}{preferred\+\_\+format} (\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} format)=0
+\begin{DoxyCompactList}\small\item\em Modify an L\+C\+M\+S2 pixel format into a \char`\"{}type\char`\"{} that the file format can write. \end{DoxyCompactList}\item 
+virtual void \hyperlink{class_photo_finish_1_1_image_writer_acb90040d3f1dfa166fbad32a9434ef38}{write} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} dest, bool can\+\_\+free=false)=0
+\begin{DoxyCompactList}\small\item\em Write an image to the file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}{Image\+Writer\+::ptr} \hyperlink{class_photo_finish_1_1_image_writer_acc62967632f4e78f2c356842fbd3edb4}{open} (const \hyperlink{class_photo_finish_1_1_image_filepath}{Image\+Filepath} \&ifp)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static void \hyperlink{class_photo_finish_1_1_image_writer_aabd983d34a04798323685e2514ff532d}{add\+\_\+variables} (\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} dest, \hyperlink{namespace_photo_finish_a6f41796f162687538b7da5c7a95e2d18}{multihash} \&vars)
+\begin{DoxyCompactList}\small\item\em Add variables to one of the configuration objects based on destination format. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_image_writer_aa20f3f269819030b312ffd2a48591bb0}{Image\+Writer} (const fs\+::path fp)
+\begin{DoxyCompactList}\small\item\em Private constructor. \end{DoxyCompactList}\item 
+virtual void \hyperlink{class_photo_finish_1_1_image_writer_ab53f665863c877fc5066eb3227a06294}{embed\+\_\+tags} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img) const
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const fs\+::path \hyperlink{class_photo_finish_1_1_image_writer_ad756db40f06cc2d53ee8f91cf5999bd2}{\+\_\+filepath}
+\item 
+bool \hyperlink{class_photo_finish_1_1_image_writer_a5ccd6aefd5f71b9e204e2b4094d10d4f}{\+\_\+is\+\_\+open}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract base class for writing image files. 
+
+Definition at line 135 of file Image\+File.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}\label{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_image_writer}{Image\+Writer}$>$ \hyperlink{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}{Photo\+Finish\+::\+Image\+Writer\+::ptr}}
+
+
+
+Shared pointer for an \hyperlink{class_photo_finish_1_1_image_writer}{Image\+Writer}. 
+
+
+
+Definition at line 147 of file Image\+File.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_aa20f3f269819030b312ffd2a48591bb0}\label{class_photo_finish_1_1_image_writer_aa20f3f269819030b312ffd2a48591bb0}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!Image\+Writer@{Image\+Writer}}
+\index{Image\+Writer@{Image\+Writer}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{Image\+Writer()}{ImageWriter()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Image\+Writer\+::\+Image\+Writer (\begin{DoxyParamCaption}\item[{const fs\+::path}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Private constructor. 
+
+
+
+Definition at line 193 of file Image\+File.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_aabd983d34a04798323685e2514ff532d}\label{class_photo_finish_1_1_image_writer_aabd983d34a04798323685e2514ff532d}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!add\+\_\+variables@{add\+\_\+variables}}
+\index{add\+\_\+variables@{add\+\_\+variables}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{add\+\_\+variables()}{add\_variables()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+Writer\+::add\+\_\+variables (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}}]{dest,  }\item[{\hyperlink{namespace_photo_finish_a6f41796f162687538b7da5c7a95e2d18}{multihash} \&}]{vars }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Add variables to one of the configuration objects based on destination format. 
+
+
+
+Definition at line 254 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_ab53f665863c877fc5066eb3227a06294}\label{class_photo_finish_1_1_image_writer_ab53f665863c877fc5066eb3227a06294}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!embed\+\_\+tags@{embed\+\_\+tags}}
+\index{embed\+\_\+tags@{embed\+\_\+tags}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{embed\+\_\+tags()}{embed\_tags()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+Writer\+::embed\+\_\+tags (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Definition at line 198 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_acc62967632f4e78f2c356842fbd3edb4}\label{class_photo_finish_1_1_image_writer_acc62967632f4e78f2c356842fbd3edb4}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!open@{open}}
+\index{open@{open}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{open()}{open()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}{Image\+Writer\+::ptr} Photo\+Finish\+::\+Image\+Writer\+::open (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_image_filepath}{Image\+Filepath} \&}]{ifp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+Use the extension of the file path to decide what class to use 
+\begin{DoxyParams}{Parameters}
+{\em filepath} & File path \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 211 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_a83441e9a01ad47b3bb0e5efb1c751770}\label{class_photo_finish_1_1_image_writer_a83441e9a01ad47b3bb0e5efb1c751770}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!preferred\+\_\+format@{preferred\+\_\+format}}
+\index{preferred\+\_\+format@{preferred\+\_\+format}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{preferred\+\_\+format()}{preferred\_format()}}
+{\footnotesize\ttfamily virtual \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} Photo\+Finish\+::\+Image\+Writer\+::preferred\+\_\+format (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{format }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Modify an L\+C\+M\+S2 pixel format into a \char`\"{}type\char`\"{} that the file format can write. 
+
+
+
+Implemented in \hyperlink{class_photo_finish_1_1_s_o_lwriter_a5d3c9c3b3e289bc3cf5360b3bf2c2837}{Photo\+Finish\+::\+S\+O\+Lwriter}.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_acb90040d3f1dfa166fbad32a9434ef38}\label{class_photo_finish_1_1_image_writer_acb90040d3f1dfa166fbad32a9434ef38}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!write@{write}}
+\index{write@{write}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily virtual void Photo\+Finish\+::\+Image\+Writer\+::write (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img,  }\item[{\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}}]{dest,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Write an image to the file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & The \hyperlink{class_photo_finish_1_1_image}{Image} object to write \\
+\hline
+{\em dest} & A \hyperlink{class_photo_finish_1_1_destination}{Destination} object, used for the J\+P\+E\+G/\+P\+N\+G/etc parameters \\
+\hline
+{\em can\+\_\+free} & Can each row of the image be freed after it is written? \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \hyperlink{class_photo_finish_1_1_s_o_lwriter_a5e77af019b22c00ed97e42f531932677}{Photo\+Finish\+::\+S\+O\+Lwriter}.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_ad756db40f06cc2d53ee8f91cf5999bd2}\label{class_photo_finish_1_1_image_writer_ad756db40f06cc2d53ee8f91cf5999bd2}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!\+\_\+filepath@{\+\_\+filepath}}
+\index{\+\_\+filepath@{\+\_\+filepath}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{\+\_\+filepath}{\_filepath}}
+{\footnotesize\ttfamily const fs\+::path Photo\+Finish\+::\+Image\+Writer\+::\+\_\+filepath\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 137 of file Image\+File.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_writer_a5ccd6aefd5f71b9e204e2b4094d10d4f}\label{class_photo_finish_1_1_image_writer_a5ccd6aefd5f71b9e204e2b4094d10d4f}} 
+\index{Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}!\+\_\+is\+\_\+open@{\+\_\+is\+\_\+open}}
+\index{\+\_\+is\+\_\+open@{\+\_\+is\+\_\+open}!Photo\+Finish\+::\+Image\+Writer@{Photo\+Finish\+::\+Image\+Writer}}
+\subsubsection{\texorpdfstring{\+\_\+is\+\_\+open}{\_is\_open}}
+{\footnotesize\ttfamily bool Photo\+Finish\+::\+Image\+Writer\+::\+\_\+is\+\_\+open\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 138 of file Image\+File.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_image_file_8hh}{Image\+File.\+hh}\item 
+\hyperlink{_image_file_8cc}{Image\+File.\+cc}\end{DoxyCompactItemize}

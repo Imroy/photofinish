@@ -1,0 +1,49 @@
+.TH "JPEG_profiles.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+JPEG_profiles.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <map>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include <jpeglib\&.h>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+\fC#include 'Destination\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBCMS::Profile::ptr\fP \fBPhotoFinish::jpeg_read_profile\fP (jpeg_decompress_struct *dinfo, Destination::ptr dest)"
+.br
+.RI "Read an ICC profile from APP2 markers in a JPEG file\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_write_profile\fP (jpeg_compress_struct *cinfo, unsigned char *data, unsigned int size)"
+.br
+.RI "Write an ICC profile into APP2 markers in a JPEG file\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

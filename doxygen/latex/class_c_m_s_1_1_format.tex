@@ -1,0 +1,961 @@
+\hypertarget{class_c_m_s_1_1_format}{}\section{C\+MS\+:\+:Format Class Reference}
+\label{class_c_m_s_1_1_format}\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+
+
+Wrap L\+C\+M\+S2\textquotesingle{}s pixel format.  
+
+
+
+
+{\ttfamily \#include $<$C\+M\+S.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_m_s_1_1_format_a36de6a3fc7a1eab08332ae5211c9c279}{Format} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format_a85f7ad0c38e3b46e55e541c7233edbf2}{operator cms\+U\+Int32\+Number} () const
+\begin{DoxyCompactList}\small\item\em Cast to an unsigned int for direct use with L\+C\+M\+S2. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_ae2da002111dc9de26377bce8abb29aac}{set\+\_\+8bit} (void)
+\begin{DoxyCompactList}\small\item\em Set to 8 bit bytes per channel. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_ab7ba1269929ef7c119f541d75e68d569}{is\+\_\+8bit} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format 8-\/bits per channel? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a1e5135ecdedf8832ed905a91c5c185b9}{set\+\_\+16bit} (void)
+\begin{DoxyCompactList}\small\item\em Set to 16 bits per channel. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a67bef287285ae9a4d24d0e27ff5724e4}{is\+\_\+16bit} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format 16-\/bits (integer) per channel? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a8f3b1fedf1936518da6d9f2d33ff33be}{set\+\_\+32bit} (void)
+\begin{DoxyCompactList}\small\item\em Set to 32 bits per channel. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_af049f60718fb989459f8f6831a6b7213}{is\+\_\+32bit} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format 32-\/bits (integer) per channel? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_ad1cb544068caa54e3bcec68aa2854917}{set\+\_\+half} (void)
+\begin{DoxyCompactList}\small\item\em Set to 16 bit half-\/precision floating point values per channel. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a5152df021f1e44e61c396e8463a94d16}{is\+\_\+half} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format a half-\/precision floating point value(s) per channel? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a22296c4caae182bf7a83e313e5665cab}{set\+\_\+float} (void)
+\begin{DoxyCompactList}\small\item\em Set to 32 bit single-\/precision floating point values per channel. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_afac9e92aa35a0f3e6cbaf88a42c15227}{is\+\_\+float} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format a single-\/precision floating point value(s) per channel? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a36fd3017b0985604b06fa40931f7c8cc}{set\+\_\+double} (void)
+\begin{DoxyCompactList}\small\item\em Set to 64 bit double-\/precision floating point value(s) per channel. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_aca27059973d6a9aba10b2d061f758d74}{is\+\_\+double} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format a double-\/precision floating point value(s) per channel? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a9ef5f81a9303fd9626fc0b4004d7a01f}{set\+\_\+channel\+\_\+type} (unsigned char bytes, bool fp=false)
+\begin{DoxyCompactList}\small\item\em Set the channel type (bytes and float flag) \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_ae1e1a3d0c6bf76dab339c7b9e103b7c0}{set\+\_\+channel\+\_\+type} (const \hyperlink{class_c_m_s_1_1_format}{Format} \&other)
+\begin{DoxyCompactList}\small\item\em Set the channel type (bytes and float flag) from another \hyperlink{class_c_m_s_1_1_format}{Format} object. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename P $>$ }\\\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_aaf4e13c47420efcef6a70e0a5045d708}{set\+\_\+channel\+\_\+type} (void)
+\begin{DoxyCompactList}\small\item\em Set the channel type (bytes and float flag) from the template type. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_ab3e8a623c435f878411175d6331e9e6e}{is\+\_\+integer} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format integer? \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a33483e2dede190c65351d43a9488abe4}{is\+\_\+fp} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format floating point? \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a096fe4b5f4e2973d96b8899922d7dc37}{is\+\_\+optimised} (void) const
+\item 
+unsigned int \hyperlink{class_c_m_s_1_1_format_a3c58f7bf8ac3d880c0610672e2c2c4de}{channels} (void) const
+\begin{DoxyCompactList}\small\item\em Get the number of channels. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_aa69b3e70d5dd930cae560d9fc316147c}{set\+\_\+extra\+\_\+channels} (unsigned int e)
+\begin{DoxyCompactList}\small\item\em Set the number of \textquotesingle{}extra\textquotesingle{} channels e.\+g alpha. \end{DoxyCompactList}\item 
+unsigned int \hyperlink{class_c_m_s_1_1_format_acd22c5e9c4a61b954b98fced0d7d1874}{extra\+\_\+channels} (void) const
+\begin{DoxyCompactList}\small\item\em Get the number of \textquotesingle{}extra\textquotesingle{} channels e.\+g alpha. \end{DoxyCompactList}\item 
+unsigned int \hyperlink{class_c_m_s_1_1_format_a2e8ef114e278753a2c3a609ce3e4ce67}{total\+\_\+channels} (void) const
+\begin{DoxyCompactList}\small\item\em Get the total number of channels i.\+e \hyperlink{class_c_m_s_1_1_format_a3c58f7bf8ac3d880c0610672e2c2c4de}{channels()} + \hyperlink{class_c_m_s_1_1_format_acd22c5e9c4a61b954b98fced0d7d1874}{extra\+\_\+channels()} \end{DoxyCompactList}\item 
+unsigned int \hyperlink{class_c_m_s_1_1_format_ad38cf173ef7aeaf2d9b624fe6b6db796}{bytes\+\_\+per\+\_\+channel} (void) const
+\item 
+unsigned int \hyperlink{class_c_m_s_1_1_format_a9079b22fbbf174c43f395f290ed4cd71}{bytes\+\_\+per\+\_\+pixel} (void) const
+\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a5438f6336d252ddbbb973739d121f593}{set\+\_\+swap} (bool s=true)
+\begin{DoxyCompactList}\small\item\em Set the format as being swapped e.\+g B\+GR. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a3dc342e4e9b121ae8344a50eb53de093}{unset\+\_\+swap} (void)
+\begin{DoxyCompactList}\small\item\em Set the format as not being swapped e.\+g R\+GB. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a8f92904c0d69c17cc978abf3cd6c22fb}{is\+\_\+swapped} (void) const
+\begin{DoxyCompactList}\small\item\em Is the channel order swapped? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a65bf5b0b92c59a67bb8bf2b6578a4ec0}{set\+\_\+endianswap} (bool e=true)
+\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_abb7b1e1f28cb8ca2b259ec7cb8ad1d56}{unset\+\_\+endianswap} (void)
+\item 
+bool \hyperlink{class_c_m_s_1_1_format_a738bc50d2f6d18bca81708d3832dba97}{is\+\_\+endianswapped} (void) const
+\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_af2e7142d868f25be862cbb38f3132fb1}{set\+\_\+swapfirst} (bool f=true)
+\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_acd34b91ec29eb33b725007990f2b30d3}{unset\+\_\+swapfirst} (void)
+\item 
+bool \hyperlink{class_c_m_s_1_1_format_a4e551b1ac30e7149d5bb7de19b80832e}{is\+\_\+swappedfirst} (void) const
+\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a08b6f3cfa807eeacd4b15d1d315577a5}{set\+\_\+planar} (bool p=true)
+\begin{DoxyCompactList}\small\item\em Set the format to be planar. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_ac084e9e34867955fe2d72d28f88a13fd}{set\+\_\+packed} (void)
+\begin{DoxyCompactList}\small\item\em Set the format to be packed. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a5a68cabcf9383bdf6a7e2a301f1f9312}{is\+\_\+planar} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format planar? \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a6db3cf6bd48d72134e2bfaa6c9c73138}{is\+\_\+packed} (void) const
+\begin{DoxyCompactList}\small\item\em Is the format packed? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_ae70a145a08b762c1d15cffe4eb09444b}{set\+\_\+vanilla} (bool v=true)
+\begin{DoxyCompactList}\small\item\em Set the flavour to \textquotesingle{}vanilla\textquotesingle{} i.\+e minimum value is white. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_aae8f3fe22d8a9c70c4f5e69137b7331f}{set\+\_\+chocolate} (void)
+\begin{DoxyCompactList}\small\item\em Set the flavour to \textquotesingle{}chocolate\textquotesingle{} i.\+e minimum value is black. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a86988f817294b0efdcd7efd76f57e87a}{is\+\_\+vanilla} (void) const
+\begin{DoxyCompactList}\small\item\em Is the flavour \textquotesingle{}vanilla\textquotesingle{}? i.\+e minimum value is white. \end{DoxyCompactList}\item 
+bool \hyperlink{class_c_m_s_1_1_format_a3f4c0306ed08352ae89df359427be794}{is\+\_\+chocolate} (void) const
+\begin{DoxyCompactList}\small\item\em Is the flavour \textquotesingle{}chocolate\textquotesingle{}? i.\+e minimum value is black. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a741f035f99ca8787ab47a1d4446de083}{set\+\_\+colour\+\_\+model} (const \hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{Colour\+Model} cm, unsigned int \hyperlink{class_c_m_s_1_1_format_a3c58f7bf8ac3d880c0610672e2c2c4de}{channels}=0)
+\item 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{Colour\+Model} \hyperlink{class_c_m_s_1_1_format_a74fddbb27e7cf4046af0326f6a886f83}{colour\+\_\+model} (void) const
+\begin{DoxyCompactList}\small\item\em Get the colour model of the pixel format. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a59efd2fff84010ad80602892a4e71a67}{set\+\_\+premult\+\_\+alpha} (bool pa=true)
+\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a2075b55ec46e6f7cfa2900e5b137e2e8}{unset\+\_\+premult\+\_\+alpha} ()
+\item 
+bool \hyperlink{class_c_m_s_1_1_format_a61dddc7b2e1ef8a45153db56c9178455}{is\+\_\+premult\+\_\+alpha} (void) const
+\item 
+{\footnotesize template$<$typename T $>$ }\\T \hyperlink{class_c_m_s_1_1_format_a289beec4f2ae6b88c198c4d96364d6c3}{scaleval} (void)
+\begin{DoxyCompactList}\small\item\em Get the maximum value used/supported by this format. \end{DoxyCompactList}\item 
+{\footnotesize template$<$$>$ }\\\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}{set\+\_\+channel\+\_\+type} (void)
+\item 
+{\footnotesize template$<$$>$ }\\\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}{set\+\_\+channel\+\_\+type} (void)
+\item 
+{\footnotesize template$<$$>$ }\\\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}{set\+\_\+channel\+\_\+type} (void)
+\item 
+{\footnotesize template$<$$>$ }\\\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}{set\+\_\+channel\+\_\+type} (void)
+\item 
+{\footnotesize template$<$$>$ }\\\hyperlink{class_c_m_s_1_1_format}{Format} \& \hyperlink{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}{set\+\_\+channel\+\_\+type} (void)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_ad48e99a1681174df84401f86506e7f15}{Grey8} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_a6df52d558cb752a1126f19d075fecb2f}{Grey16} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_a1f6bc07fa0229b02f25ec98b72c92ea1}{R\+G\+B8} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_aca9c530080478b9cc9807d987b036ad4}{R\+G\+B16} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_ab14bca2feccc809320606e05e7a19e94}{C\+M\+Y\+K8} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_aeecc7328f77c9233c0b163f12974bdbd}{Lab\+Float} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_format_a18273f509a1a56a7783a7cbdddac4f4f}{Lab\+Double} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_c_m_s_1_1_format_af851b4d9aacd1a871da33592334b8d72}{Transform}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Wrap L\+C\+M\+S2\textquotesingle{}s pixel format. 
+
+Definition at line 175 of file C\+M\+S.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a36de6a3fc7a1eab08332ae5211c9c279}\label{class_c_m_s_1_1_format_a36de6a3fc7a1eab08332ae5211c9c279}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!Format@{Format}}
+\index{Format@{Format}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{Format()}{Format()}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Format\+::\+Format (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 274 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ad38cf173ef7aeaf2d9b624fe6b6db796}\label{class_c_m_s_1_1_format_ad38cf173ef7aeaf2d9b624fe6b6db796}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!bytes\+\_\+per\+\_\+channel@{bytes\+\_\+per\+\_\+channel}}
+\index{bytes\+\_\+per\+\_\+channel@{bytes\+\_\+per\+\_\+channel}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{bytes\+\_\+per\+\_\+channel()}{bytes\_per\_channel()}}
+{\footnotesize\ttfamily unsigned int C\+M\+S\+::\+Format\+::bytes\+\_\+per\+\_\+channel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 279 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a9079b22fbbf174c43f395f290ed4cd71}\label{class_c_m_s_1_1_format_a9079b22fbbf174c43f395f290ed4cd71}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!bytes\+\_\+per\+\_\+pixel@{bytes\+\_\+per\+\_\+pixel}}
+\index{bytes\+\_\+per\+\_\+pixel@{bytes\+\_\+per\+\_\+pixel}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{bytes\+\_\+per\+\_\+pixel()}{bytes\_per\_pixel()}}
+{\footnotesize\ttfamily unsigned int C\+M\+S\+::\+Format\+::bytes\+\_\+per\+\_\+pixel (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 281 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a3c58f7bf8ac3d880c0610672e2c2c4de}\label{class_c_m_s_1_1_format_a3c58f7bf8ac3d880c0610672e2c2c4de}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!channels@{channels}}
+\index{channels@{channels}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{channels()}{channels()}}
+{\footnotesize\ttfamily unsigned int C\+M\+S\+::\+Format\+::channels (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the number of channels. 
+
+
+
+Definition at line 268 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ab14bca2feccc809320606e05e7a19e94}\label{class_c_m_s_1_1_format_ab14bca2feccc809320606e05e7a19e94}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!C\+M\+Y\+K8@{C\+M\+Y\+K8}}
+\index{C\+M\+Y\+K8@{C\+M\+Y\+K8}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{C\+M\+Y\+K8()}{CMYK8()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+C\+M\+Y\+K8 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 296 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a74fddbb27e7cf4046af0326f6a886f83}\label{class_c_m_s_1_1_format_a74fddbb27e7cf4046af0326f6a886f83}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!colour\+\_\+model@{colour\+\_\+model}}
+\index{colour\+\_\+model@{colour\+\_\+model}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{colour\+\_\+model()}{colour\_model()}}
+{\footnotesize\ttfamily \hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{Colour\+Model} C\+M\+S\+::\+Format\+::colour\+\_\+model (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the colour model of the pixel format. 
+
+
+
+Definition at line 334 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_acd22c5e9c4a61b954b98fced0d7d1874}\label{class_c_m_s_1_1_format_acd22c5e9c4a61b954b98fced0d7d1874}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!extra\+\_\+channels@{extra\+\_\+channels}}
+\index{extra\+\_\+channels@{extra\+\_\+channels}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{extra\+\_\+channels()}{extra\_channels()}}
+{\footnotesize\ttfamily unsigned int C\+M\+S\+::\+Format\+::extra\+\_\+channels (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the number of \textquotesingle{}extra\textquotesingle{} channels e.\+g alpha. 
+
+
+
+Definition at line 274 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a6df52d558cb752a1126f19d075fecb2f}\label{class_c_m_s_1_1_format_a6df52d558cb752a1126f19d075fecb2f}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!Grey16@{Grey16}}
+\index{Grey16@{Grey16}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{Grey16()}{Grey16()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+Grey16 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 284 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ad48e99a1681174df84401f86506e7f15}\label{class_c_m_s_1_1_format_ad48e99a1681174df84401f86506e7f15}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!Grey8@{Grey8}}
+\index{Grey8@{Grey8}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{Grey8()}{Grey8()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+Grey8 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 280 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a67bef287285ae9a4d24d0e27ff5724e4}\label{class_c_m_s_1_1_format_a67bef287285ae9a4d24d0e27ff5724e4}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+16bit@{is\+\_\+16bit}}
+\index{is\+\_\+16bit@{is\+\_\+16bit}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+16bit()}{is\_16bit()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+16bit (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format 16-\/bits (integer) per channel? 
+
+
+
+Definition at line 223 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_af049f60718fb989459f8f6831a6b7213}\label{class_c_m_s_1_1_format_af049f60718fb989459f8f6831a6b7213}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+32bit@{is\+\_\+32bit}}
+\index{is\+\_\+32bit@{is\+\_\+32bit}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+32bit()}{is\_32bit()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+32bit (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format 32-\/bits (integer) per channel? 
+
+
+
+Definition at line 229 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ab7ba1269929ef7c119f541d75e68d569}\label{class_c_m_s_1_1_format_ab7ba1269929ef7c119f541d75e68d569}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+8bit@{is\+\_\+8bit}}
+\index{is\+\_\+8bit@{is\+\_\+8bit}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+8bit()}{is\_8bit()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+8bit (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format 8-\/bits per channel? 
+
+
+
+Definition at line 217 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a3f4c0306ed08352ae89df359427be794}\label{class_c_m_s_1_1_format_a3f4c0306ed08352ae89df359427be794}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+chocolate@{is\+\_\+chocolate}}
+\index{is\+\_\+chocolate@{is\+\_\+chocolate}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+chocolate()}{is\_chocolate()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+chocolate (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the flavour \textquotesingle{}chocolate\textquotesingle{}? i.\+e minimum value is black. 
+
+
+
+Definition at line 327 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_aca27059973d6a9aba10b2d061f758d74}\label{class_c_m_s_1_1_format_aca27059973d6a9aba10b2d061f758d74}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+double@{is\+\_\+double}}
+\index{is\+\_\+double@{is\+\_\+double}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+double()}{is\_double()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+double (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format a double-\/precision floating point value(s) per channel? 
+
+
+
+Definition at line 247 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a738bc50d2f6d18bca81708d3832dba97}\label{class_c_m_s_1_1_format_a738bc50d2f6d18bca81708d3832dba97}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+endianswapped@{is\+\_\+endianswapped}}
+\index{is\+\_\+endianswapped@{is\+\_\+endianswapped}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+endianswapped()}{is\_endianswapped()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+endianswapped (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 297 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_afac9e92aa35a0f3e6cbaf88a42c15227}\label{class_c_m_s_1_1_format_afac9e92aa35a0f3e6cbaf88a42c15227}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+float@{is\+\_\+float}}
+\index{is\+\_\+float@{is\+\_\+float}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+float()}{is\_float()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+float (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format a single-\/precision floating point value(s) per channel? 
+
+
+
+Definition at line 241 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a33483e2dede190c65351d43a9488abe4}\label{class_c_m_s_1_1_format_a33483e2dede190c65351d43a9488abe4}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+fp@{is\+\_\+fp}}
+\index{is\+\_\+fp@{is\+\_\+fp}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+fp()}{is\_fp()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+fp (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format floating point? 
+
+
+
+Definition at line 263 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a5152df021f1e44e61c396e8463a94d16}\label{class_c_m_s_1_1_format_a5152df021f1e44e61c396e8463a94d16}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+half@{is\+\_\+half}}
+\index{is\+\_\+half@{is\+\_\+half}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+half()}{is\_half()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+half (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format a half-\/precision floating point value(s) per channel? 
+
+
+
+Definition at line 235 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ab3e8a623c435f878411175d6331e9e6e}\label{class_c_m_s_1_1_format_ab3e8a623c435f878411175d6331e9e6e}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+integer@{is\+\_\+integer}}
+\index{is\+\_\+integer@{is\+\_\+integer}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+integer()}{is\_integer()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+integer (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format integer? 
+
+
+
+Definition at line 260 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a096fe4b5f4e2973d96b8899922d7dc37}\label{class_c_m_s_1_1_format_a096fe4b5f4e2973d96b8899922d7dc37}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+optimised@{is\+\_\+optimised}}
+\index{is\+\_\+optimised@{is\+\_\+optimised}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+optimised()}{is\_optimised()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+optimised (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 265 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a6db3cf6bd48d72134e2bfaa6c9c73138}\label{class_c_m_s_1_1_format_a6db3cf6bd48d72134e2bfaa6c9c73138}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+packed@{is\+\_\+packed}}
+\index{is\+\_\+packed@{is\+\_\+packed}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+packed()}{is\_packed()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+packed (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format packed? 
+
+
+
+Definition at line 315 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a5a68cabcf9383bdf6a7e2a301f1f9312}\label{class_c_m_s_1_1_format_a5a68cabcf9383bdf6a7e2a301f1f9312}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+planar@{is\+\_\+planar}}
+\index{is\+\_\+planar@{is\+\_\+planar}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+planar()}{is\_planar()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+planar (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the format planar? 
+
+
+
+Definition at line 312 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a61dddc7b2e1ef8a45153db56c9178455}\label{class_c_m_s_1_1_format_a61dddc7b2e1ef8a45153db56c9178455}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+premult\+\_\+alpha@{is\+\_\+premult\+\_\+alpha}}
+\index{is\+\_\+premult\+\_\+alpha@{is\+\_\+premult\+\_\+alpha}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+premult\+\_\+alpha()}{is\_premult\_alpha()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+premult\+\_\+alpha (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 340 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a8f92904c0d69c17cc978abf3cd6c22fb}\label{class_c_m_s_1_1_format_a8f92904c0d69c17cc978abf3cd6c22fb}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+swapped@{is\+\_\+swapped}}
+\index{is\+\_\+swapped@{is\+\_\+swapped}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+swapped()}{is\_swapped()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+swapped (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the channel order swapped? 
+
+
+
+Definition at line 290 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a4e551b1ac30e7149d5bb7de19b80832e}\label{class_c_m_s_1_1_format_a4e551b1ac30e7149d5bb7de19b80832e}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+swappedfirst@{is\+\_\+swappedfirst}}
+\index{is\+\_\+swappedfirst@{is\+\_\+swappedfirst}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+swappedfirst()}{is\_swappedfirst()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+swappedfirst (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 303 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a86988f817294b0efdcd7efd76f57e87a}\label{class_c_m_s_1_1_format_a86988f817294b0efdcd7efd76f57e87a}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!is\+\_\+vanilla@{is\+\_\+vanilla}}
+\index{is\+\_\+vanilla@{is\+\_\+vanilla}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{is\+\_\+vanilla()}{is\_vanilla()}}
+{\footnotesize\ttfamily bool C\+M\+S\+::\+Format\+::is\+\_\+vanilla (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is the flavour \textquotesingle{}vanilla\textquotesingle{}? i.\+e minimum value is white. 
+
+
+
+Definition at line 324 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a18273f509a1a56a7783a7cbdddac4f4f}\label{class_c_m_s_1_1_format_a18273f509a1a56a7783a7cbdddac4f4f}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!Lab\+Double@{Lab\+Double}}
+\index{Lab\+Double@{Lab\+Double}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{Lab\+Double()}{LabDouble()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+Lab\+Double (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 304 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_aeecc7328f77c9233c0b163f12974bdbd}\label{class_c_m_s_1_1_format_aeecc7328f77c9233c0b163f12974bdbd}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!Lab\+Float@{Lab\+Float}}
+\index{Lab\+Float@{Lab\+Float}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{Lab\+Float()}{LabFloat()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+Lab\+Float (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 300 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a85f7ad0c38e3b46e55e541c7233edbf2}\label{class_c_m_s_1_1_format_a85f7ad0c38e3b46e55e541c7233edbf2}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!operator cms\+U\+Int32\+Number@{operator cms\+U\+Int32\+Number}}
+\index{operator cms\+U\+Int32\+Number@{operator cms\+U\+Int32\+Number}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{operator cms\+U\+Int32\+Number()}{operator cmsUInt32Number()}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Format\+::operator cms\+U\+Int32\+Number (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Cast to an unsigned int for direct use with L\+C\+M\+S2. 
+
+
+
+Definition at line 190 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_aca9c530080478b9cc9807d987b036ad4}\label{class_c_m_s_1_1_format_aca9c530080478b9cc9807d987b036ad4}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!R\+G\+B16@{R\+G\+B16}}
+\index{R\+G\+B16@{R\+G\+B16}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{R\+G\+B16()}{RGB16()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+R\+G\+B16 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 292 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a1f6bc07fa0229b02f25ec98b72c92ea1}\label{class_c_m_s_1_1_format_a1f6bc07fa0229b02f25ec98b72c92ea1}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!R\+G\+B8@{R\+G\+B8}}
+\index{R\+G\+B8@{R\+G\+B8}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{R\+G\+B8()}{RGB8()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Format\+::\+R\+G\+B8 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 288 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a289beec4f2ae6b88c198c4d96364d6c3}\label{class_c_m_s_1_1_format_a289beec4f2ae6b88c198c4d96364d6c3}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!scaleval@{scaleval}}
+\index{scaleval@{scaleval}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{scaleval()}{scaleval()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T C\+M\+S\+::\+Format\+::scaleval (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the maximum value used/supported by this format. 
+
+
+
+Definition at line 344 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a1e5135ecdedf8832ed905a91c5c185b9}\label{class_c_m_s_1_1_format_a1e5135ecdedf8832ed905a91c5c185b9}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+16bit@{set\+\_\+16bit}}
+\index{set\+\_\+16bit@{set\+\_\+16bit}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+16bit()}{set\_16bit()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+16bit (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set to 16 bits per channel. 
+
+
+
+Definition at line 328 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a8f3b1fedf1936518da6d9f2d33ff33be}\label{class_c_m_s_1_1_format_a8f3b1fedf1936518da6d9f2d33ff33be}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+32bit@{set\+\_\+32bit}}
+\index{set\+\_\+32bit@{set\+\_\+32bit}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+32bit()}{set\_32bit()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+32bit (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set to 32 bits per channel. 
+
+
+
+Definition at line 335 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ae2da002111dc9de26377bce8abb29aac}\label{class_c_m_s_1_1_format_ae2da002111dc9de26377bce8abb29aac}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+8bit@{set\+\_\+8bit}}
+\index{set\+\_\+8bit@{set\+\_\+8bit}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+8bit()}{set\_8bit()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+8bit (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set to 8 bit bytes per channel. 
+
+
+
+Definition at line 321 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a9ef5f81a9303fd9626fc0b4004d7a01f}\label{class_c_m_s_1_1_format_a9ef5f81a9303fd9626fc0b4004d7a01f}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [1/8]}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{unsigned char}]{bytes,  }\item[{bool}]{fp = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Set the channel type (bytes and float flag) 
+
+
+
+Definition at line 366 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ae1e1a3d0c6bf76dab339c7b9e103b7c0}\label{class_c_m_s_1_1_format_ae1e1a3d0c6bf76dab339c7b9e103b7c0}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [2/8]}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Set the channel type (bytes and float flag) from another \hyperlink{class_c_m_s_1_1_format}{Format} object. 
+
+
+
+Definition at line 374 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_aaf4e13c47420efcef6a70e0a5045d708}\label{class_c_m_s_1_1_format_aaf4e13c47420efcef6a70e0a5045d708}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [3/8]}}
+{\footnotesize\ttfamily template$<$typename P $>$ \\
+\hyperlink{class_c_m_s_1_1_format}{Format}\& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set the channel type (bytes and float flag) from the template type. 
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}\label{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [4/8]}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\hyperlink{class_c_m_s_1_1_format}{Format}\& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 360 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}\label{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [5/8]}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\hyperlink{class_c_m_s_1_1_format}{Format}\& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 363 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}\label{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [6/8]}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\hyperlink{class_c_m_s_1_1_format}{Format}\& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 366 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}\label{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [7/8]}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\hyperlink{class_c_m_s_1_1_format}{Format}\& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 369 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}\label{class_c_m_s_1_1_format_a04bd5a40c45aca469875c3eb1f72eff8}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}}
+\index{set\+\_\+channel\+\_\+type@{set\+\_\+channel\+\_\+type}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+channel\+\_\+type()}{set\_channel\_type()}\hspace{0.1cm}{\footnotesize\ttfamily [8/8]}}
+{\footnotesize\ttfamily template$<$$>$ \\
+\hyperlink{class_c_m_s_1_1_format}{Format}\& C\+M\+S\+::\+Format\+::set\+\_\+channel\+\_\+type (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 372 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_aae8f3fe22d8a9c70c4f5e69137b7331f}\label{class_c_m_s_1_1_format_aae8f3fe22d8a9c70c4f5e69137b7331f}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+chocolate@{set\+\_\+chocolate}}
+\index{set\+\_\+chocolate@{set\+\_\+chocolate}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+chocolate()}{set\_chocolate()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+chocolate (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set the flavour to \textquotesingle{}chocolate\textquotesingle{} i.\+e minimum value is black. 
+
+
+
+Definition at line 438 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a741f035f99ca8787ab47a1d4446de083}\label{class_c_m_s_1_1_format_a741f035f99ca8787ab47a1d4446de083}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+colour\+\_\+model@{set\+\_\+colour\+\_\+model}}
+\index{set\+\_\+colour\+\_\+model@{set\+\_\+colour\+\_\+model}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+colour\+\_\+model()}{set\_colour\_model()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+colour\+\_\+model (\begin{DoxyParamCaption}\item[{const \hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{Colour\+Model}}]{cm,  }\item[{unsigned int}]{channels = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+Set the colour model and number of channels \textquotesingle{}channels\textquotesingle{} is only used if the colour model is unknown 
+
+Definition at line 443 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a36fd3017b0985604b06fa40931f7c8cc}\label{class_c_m_s_1_1_format_a36fd3017b0985604b06fa40931f7c8cc}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+double@{set\+\_\+double}}
+\index{set\+\_\+double@{set\+\_\+double}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+double()}{set\_double()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+double (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set to 64 bit double-\/precision floating point value(s) per channel. 
+
+
+
+Definition at line 358 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a65bf5b0b92c59a67bb8bf2b6578a4ec0}\label{class_c_m_s_1_1_format_a65bf5b0b92c59a67bb8bf2b6578a4ec0}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+endianswap@{set\+\_\+endianswap}}
+\index{set\+\_\+endianswap@{set\+\_\+endianswap}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+endianswap()}{set\_endianswap()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+endianswap (\begin{DoxyParamCaption}\item[{bool}]{e = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 399 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_aa69b3e70d5dd930cae560d9fc316147c}\label{class_c_m_s_1_1_format_aa69b3e70d5dd930cae560d9fc316147c}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+extra\+\_\+channels@{set\+\_\+extra\+\_\+channels}}
+\index{set\+\_\+extra\+\_\+channels@{set\+\_\+extra\+\_\+channels}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+extra\+\_\+channels()}{set\_extra\_channels()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+extra\+\_\+channels (\begin{DoxyParamCaption}\item[{unsigned int}]{e }\end{DoxyParamCaption})}
+
+
+
+Set the number of \textquotesingle{}extra\textquotesingle{} channels e.\+g alpha. 
+
+
+
+Definition at line 382 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a22296c4caae182bf7a83e313e5665cab}\label{class_c_m_s_1_1_format_a22296c4caae182bf7a83e313e5665cab}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+float@{set\+\_\+float}}
+\index{set\+\_\+float@{set\+\_\+float}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+float()}{set\_float()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+float (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set to 32 bit single-\/precision floating point values per channel. 
+
+
+
+Definition at line 350 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ad1cb544068caa54e3bcec68aa2854917}\label{class_c_m_s_1_1_format_ad1cb544068caa54e3bcec68aa2854917}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+half@{set\+\_\+half}}
+\index{set\+\_\+half@{set\+\_\+half}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+half()}{set\_half()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+half (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set to 16 bit half-\/precision floating point values per channel. 
+
+
+
+Definition at line 342 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ac084e9e34867955fe2d72d28f88a13fd}\label{class_c_m_s_1_1_format_ac084e9e34867955fe2d72d28f88a13fd}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+packed@{set\+\_\+packed}}
+\index{set\+\_\+packed@{set\+\_\+packed}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+packed()}{set\_packed()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+packed (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set the format to be packed. 
+
+
+
+Definition at line 427 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a08b6f3cfa807eeacd4b15d1d315577a5}\label{class_c_m_s_1_1_format_a08b6f3cfa807eeacd4b15d1d315577a5}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+planar@{set\+\_\+planar}}
+\index{set\+\_\+planar@{set\+\_\+planar}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+planar()}{set\_planar()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+planar (\begin{DoxyParamCaption}\item[{bool}]{p = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Set the format to be planar. 
+
+
+
+Definition at line 421 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a59efd2fff84010ad80602892a4e71a67}\label{class_c_m_s_1_1_format_a59efd2fff84010ad80602892a4e71a67}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+premult\+\_\+alpha@{set\+\_\+premult\+\_\+alpha}}
+\index{set\+\_\+premult\+\_\+alpha@{set\+\_\+premult\+\_\+alpha}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+premult\+\_\+alpha()}{set\_premult\_alpha()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+premult\+\_\+alpha (\begin{DoxyParamCaption}\item[{bool}]{pa = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 486 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a5438f6336d252ddbbb973739d121f593}\label{class_c_m_s_1_1_format_a5438f6336d252ddbbb973739d121f593}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+swap@{set\+\_\+swap}}
+\index{set\+\_\+swap@{set\+\_\+swap}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+swap()}{set\_swap()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+swap (\begin{DoxyParamCaption}\item[{bool}]{s = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Set the format as being swapped e.\+g B\+GR. 
+
+
+
+Definition at line 388 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_af2e7142d868f25be862cbb38f3132fb1}\label{class_c_m_s_1_1_format_af2e7142d868f25be862cbb38f3132fb1}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+swapfirst@{set\+\_\+swapfirst}}
+\index{set\+\_\+swapfirst@{set\+\_\+swapfirst}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+swapfirst()}{set\_swapfirst()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+swapfirst (\begin{DoxyParamCaption}\item[{bool}]{f = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 410 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_ae70a145a08b762c1d15cffe4eb09444b}\label{class_c_m_s_1_1_format_ae70a145a08b762c1d15cffe4eb09444b}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!set\+\_\+vanilla@{set\+\_\+vanilla}}
+\index{set\+\_\+vanilla@{set\+\_\+vanilla}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{set\+\_\+vanilla()}{set\_vanilla()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::set\+\_\+vanilla (\begin{DoxyParamCaption}\item[{bool}]{v = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Set the flavour to \textquotesingle{}vanilla\textquotesingle{} i.\+e minimum value is white. 
+
+
+
+Definition at line 432 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a2e8ef114e278753a2c3a609ce3e4ce67}\label{class_c_m_s_1_1_format_a2e8ef114e278753a2c3a609ce3e4ce67}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!total\+\_\+channels@{total\+\_\+channels}}
+\index{total\+\_\+channels@{total\+\_\+channels}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{total\+\_\+channels()}{total\_channels()}}
+{\footnotesize\ttfamily unsigned int C\+M\+S\+::\+Format\+::total\+\_\+channels (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the total number of channels i.\+e \hyperlink{class_c_m_s_1_1_format_a3c58f7bf8ac3d880c0610672e2c2c4de}{channels()} + \hyperlink{class_c_m_s_1_1_format_acd22c5e9c4a61b954b98fced0d7d1874}{extra\+\_\+channels()} 
+
+
+
+Definition at line 277 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_abb7b1e1f28cb8ca2b259ec7cb8ad1d56}\label{class_c_m_s_1_1_format_abb7b1e1f28cb8ca2b259ec7cb8ad1d56}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!unset\+\_\+endianswap@{unset\+\_\+endianswap}}
+\index{unset\+\_\+endianswap@{unset\+\_\+endianswap}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{unset\+\_\+endianswap()}{unset\_endianswap()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::unset\+\_\+endianswap (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 405 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a2075b55ec46e6f7cfa2900e5b137e2e8}\label{class_c_m_s_1_1_format_a2075b55ec46e6f7cfa2900e5b137e2e8}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!unset\+\_\+premult\+\_\+alpha@{unset\+\_\+premult\+\_\+alpha}}
+\index{unset\+\_\+premult\+\_\+alpha@{unset\+\_\+premult\+\_\+alpha}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{unset\+\_\+premult\+\_\+alpha()}{unset\_premult\_alpha()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::unset\+\_\+premult\+\_\+alpha (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 491 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_a3dc342e4e9b121ae8344a50eb53de093}\label{class_c_m_s_1_1_format_a3dc342e4e9b121ae8344a50eb53de093}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!unset\+\_\+swap@{unset\+\_\+swap}}
+\index{unset\+\_\+swap@{unset\+\_\+swap}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{unset\+\_\+swap()}{unset\_swap()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::unset\+\_\+swap (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set the format as not being swapped e.\+g R\+GB. 
+
+
+
+Definition at line 394 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_format_acd34b91ec29eb33b725007990f2b30d3}\label{class_c_m_s_1_1_format_acd34b91ec29eb33b725007990f2b30d3}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!unset\+\_\+swapfirst@{unset\+\_\+swapfirst}}
+\index{unset\+\_\+swapfirst@{unset\+\_\+swapfirst}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{unset\+\_\+swapfirst()}{unset\_swapfirst()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} \& C\+M\+S\+::\+Format\+::unset\+\_\+swapfirst (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 416 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_format_af851b4d9aacd1a871da33592334b8d72}\label{class_c_m_s_1_1_format_af851b4d9aacd1a871da33592334b8d72}} 
+\index{C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}!Transform@{Transform}}
+\index{Transform@{Transform}!C\+M\+S\+::\+Format@{C\+M\+S\+::\+Format}}
+\subsubsection{\texorpdfstring{Transform}{Transform}}
+{\footnotesize\ttfamily friend class \hyperlink{class_c_m_s_1_1_transform}{Transform}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 183 of file C\+M\+S.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_c_m_s_8hh}{C\+M\+S.\+hh}\item 
+\hyperlink{_c_m_s_8cc}{C\+M\+S.\+cc}\end{DoxyCompactItemize}

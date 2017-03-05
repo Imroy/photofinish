@@ -1,0 +1,67 @@
+.TH "ImageFile.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+ImageFile.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <string>\fP
+.br
+\fC#include <memory>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/filesystem/fstream\&.hpp>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'Destination\&.hh'\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+\fC#include 'sample\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhotoFinish::ImageFilepath\fP"
+.br
+.RI "Class for holding filename and the image format\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::ImageReader\fP"
+.br
+.RI "Abstract base class for reading image files\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::ImageWriter\fP"
+.br
+.RI "Abstract base class for writing image files\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::SOLwriter\fP"
+.br
+.RI "Write the boot logo files for use on Motorola Atrix 4G and possibly other phones\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBPhotoFinish::exists\fP (const ImageFilepath &fp)"
+.br
+.ti -1c
+.RI "std::time_t \fBPhotoFinish::last_write_time\fP (const ImageFilepath &fp)"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

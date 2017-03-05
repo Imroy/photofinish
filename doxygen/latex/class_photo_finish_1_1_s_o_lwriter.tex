@@ -1,0 +1,103 @@
+\hypertarget{class_photo_finish_1_1_s_o_lwriter}{}\section{Photo\+Finish\+:\+:S\+O\+Lwriter Class Reference}
+\label{class_photo_finish_1_1_s_o_lwriter}\index{Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}}
+
+
+Write the boot logo files for use on Motorola Atrix 4G and possibly other phones.  
+
+
+
+
+{\ttfamily \#include $<$Image\+File.\+hh$>$}
+
+Inheritance diagram for Photo\+Finish\+:\+:S\+O\+Lwriter\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_photo_finish_1_1_s_o_lwriter}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_s_o_lwriter_aac400059e73657e362495d15725f8b9f}{S\+O\+Lwriter} (const fs\+::path filepath)
+\item 
+\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{class_photo_finish_1_1_s_o_lwriter_a5d3c9c3b3e289bc3cf5360b3bf2c2837}{preferred\+\_\+format} (\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} format)
+\begin{DoxyCompactList}\small\item\em Modify an L\+C\+M\+S2 pixel format into a \char`\"{}type\char`\"{} that the file format can write. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_s_o_lwriter_a5e77af019b22c00ed97e42f531932677}{write} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} dest, bool can\+\_\+free=false)
+\begin{DoxyCompactList}\small\item\em Write an image to the file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Write the boot logo files for use on Motorola Atrix 4G and possibly other phones. 
+
+I haven\textquotesingle{}t been able to find any documentation about this format. It starts with the A\+S\+C\+II string \char`\"{}\+S\+O\+L\+:\char`\"{} followed by eight null bytes. Then comes the width and height as big-\/endian 32-\/bit values. The image data is as uncompressed 5-\/6-\/5 bit pixels i.\+e 16 bits per pixel. No footer. 
+
+Definition at line 336 of file Image\+File.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_s_o_lwriter_aac400059e73657e362495d15725f8b9f}\label{class_photo_finish_1_1_s_o_lwriter_aac400059e73657e362495d15725f8b9f}} 
+\index{Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}!S\+O\+Lwriter@{S\+O\+Lwriter}}
+\index{S\+O\+Lwriter@{S\+O\+Lwriter}!Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}}
+\subsubsection{\texorpdfstring{S\+O\+Lwriter()}{SOLwriter()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+S\+O\+Lwriter\+::\+S\+O\+Lwriter (\begin{DoxyParamCaption}\item[{const fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Definition at line 26 of file S\+O\+Lwriter.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_s_o_lwriter_a5d3c9c3b3e289bc3cf5360b3bf2c2837}\label{class_photo_finish_1_1_s_o_lwriter_a5d3c9c3b3e289bc3cf5360b3bf2c2837}} 
+\index{Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}!preferred\+\_\+format@{preferred\+\_\+format}}
+\index{preferred\+\_\+format@{preferred\+\_\+format}!Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}}
+\subsubsection{\texorpdfstring{preferred\+\_\+format()}{preferred\_format()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} Photo\+Finish\+::\+S\+O\+Lwriter\+::preferred\+\_\+format (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{format }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Modify an L\+C\+M\+S2 pixel format into a \char`\"{}type\char`\"{} that the file format can write. 
+
+
+
+Implements \hyperlink{class_photo_finish_1_1_image_writer_a83441e9a01ad47b3bb0e5efb1c751770}{Photo\+Finish\+::\+Image\+Writer}.
+
+
+
+Definition at line 30 of file S\+O\+Lwriter.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_s_o_lwriter_a5e77af019b22c00ed97e42f531932677}\label{class_photo_finish_1_1_s_o_lwriter_a5e77af019b22c00ed97e42f531932677}} 
+\index{Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}!write@{write}}
+\index{write@{write}!Photo\+Finish\+::\+S\+O\+Lwriter@{Photo\+Finish\+::\+S\+O\+Lwriter}}
+\subsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+S\+O\+Lwriter\+::write (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img,  }\item[{\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}}]{dest,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Write an image to the file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & The \hyperlink{class_photo_finish_1_1_image}{Image} object to write \\
+\hline
+{\em dest} & A \hyperlink{class_photo_finish_1_1_destination}{Destination} object, used for the J\+P\+E\+G/\+P\+N\+G/etc parameters \\
+\hline
+{\em can\+\_\+free} & Can each row of the image be freed after it is written? \\
+\hline
+\end{DoxyParams}
+
+
+Implements \hyperlink{class_photo_finish_1_1_image_writer_acb90040d3f1dfa166fbad32a9434ef38}{Photo\+Finish\+::\+Image\+Writer}.
+
+
+
+Definition at line 53 of file S\+O\+Lwriter.\+cc.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_image_file_8hh}{Image\+File.\+hh}\item 
+\hyperlink{_s_o_lwriter_8cc}{S\+O\+Lwriter.\+cc}\end{DoxyCompactItemize}

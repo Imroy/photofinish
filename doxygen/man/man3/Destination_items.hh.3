@@ -1,0 +1,99 @@
+.TH "Destination_items.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Destination_items.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <string>\fP
+.br
+\fC#include <memory>\fP
+.br
+\fC#include <vector>\fP
+.br
+\fC#include 'yaml\-cpp/yaml\&.h'\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'Definable\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhotoFinish::D_sharpen\fP"
+.br
+.RI "Sharpen parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_resize\fP"
+.br
+.RI "Resize parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_target\fP"
+.br
+.RI "Target parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_JPEG\fP"
+.br
+.RI "JPEG parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_PNG\fP"
+.br
+.RI "PNG parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_TIFF\fP"
+.br
+.RI "TIFF parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_JP2\fP"
+.br
+.RI "JP2 parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_WebP\fP"
+.br
+.RI "WebP parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_JXR\fP"
+.br
+.RI "JPEG XR parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_profile\fP"
+.br
+.RI "ICC profile parameters for destination\&. "
+.ti -1c
+.RI "class \fBPhotoFinish::D_thumbnail\fP"
+.br
+.RI "Thumbnail parameters for destination\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef std::map< std::string, std::string > \fBPhotoFinish::hash\fP"
+.br
+.RI "A simple hash\&. "
+.ti -1c
+.RI "typedef std::vector< std::string > \fBPhotoFinish::stringlist\fP"
+.br
+.RI "A list of strings\&. "
+.ti -1c
+.RI "typedef std::map< std::string, stringlist > \fBPhotoFinish::multihash\fP"
+.br
+.RI "A hash of string lists\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

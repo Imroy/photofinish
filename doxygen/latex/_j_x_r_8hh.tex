@@ -1,0 +1,53 @@
+\hypertarget{_j_x_r_8hh}{}\section{J\+X\+R.\+hh File Reference}
+\label{_j_x_r_8hh}\index{J\+X\+R.\+hh@{J\+X\+R.\+hh}}
+{\ttfamily \#include $<$J\+X\+R\+Glue.\+h$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$lcms2.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}C\+M\+S.\+hh\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_j_x_r_8hh_a405f7ccac8ce23f68c4294a39f8fe0f5}{J\+X\+Rcheck}(exp)~if ((rc = (exp)) $<$ 0) throw Library\+Error(\char`\"{}jxrlib\char`\"{}, std\+::string(\#exp) + \char`\"{} returned \char`\"{} + std\+::to\+\_\+string(rc))
+\item 
+\#define \hyperlink{_j_x_r_8hh_a7977c90173d0c13e4d47326e9075f79e}{Fmt\+Pair}(n,  g)~std\+::make\+\_\+pair$<$unsigned int, const P\+K\+Pixel\+Format\+G\+U\+ID$\ast$$>$(n, g)
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::vector$<$ std\+::pair$<$ unsigned int, const P\+K\+Pixel\+Format\+G\+U\+ID $\ast$ $>$ $>$ \hyperlink{namespace_photo_finish_a230739f3d4e738115f80e9a77e225959}{Photo\+Finish\+::jxr\+\_\+format\+\_\+subst}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+const P\+K\+Pixel\+Format\+G\+U\+ID \& \hyperlink{namespace_photo_finish_ac746e7156705edaa931c9a5bbabbc4c9}{Photo\+Finish\+::jxr\+\_\+pixel\+\_\+format} (unsigned int n)
+\item 
+\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{namespace_photo_finish_ab4dd2e8b3cbf045782a20aba8c11486a}{Photo\+Finish\+::jxr\+\_\+cms\+\_\+format} (const P\+K\+Pixel\+Format\+G\+U\+ID \&g)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_j_x_r_8hh_a7977c90173d0c13e4d47326e9075f79e}\label{_j_x_r_8hh_a7977c90173d0c13e4d47326e9075f79e}} 
+\index{J\+X\+R.\+hh@{J\+X\+R.\+hh}!Fmt\+Pair@{Fmt\+Pair}}
+\index{Fmt\+Pair@{Fmt\+Pair}!J\+X\+R.\+hh@{J\+X\+R.\+hh}}
+\subsubsection{\texorpdfstring{Fmt\+Pair}{FmtPair}}
+{\footnotesize\ttfamily \#define Fmt\+Pair(\begin{DoxyParamCaption}\item[{}]{n,  }\item[{}]{g }\end{DoxyParamCaption})~std\+::make\+\_\+pair$<$unsigned int, const P\+K\+Pixel\+Format\+G\+U\+ID$\ast$$>$(n, g)}
+
+
+
+Definition at line 36 of file J\+X\+R.\+hh.
+
+\mbox{\Hypertarget{_j_x_r_8hh_a405f7ccac8ce23f68c4294a39f8fe0f5}\label{_j_x_r_8hh_a405f7ccac8ce23f68c4294a39f8fe0f5}} 
+\index{J\+X\+R.\+hh@{J\+X\+R.\+hh}!J\+X\+Rcheck@{J\+X\+Rcheck}}
+\index{J\+X\+Rcheck@{J\+X\+Rcheck}!J\+X\+R.\+hh@{J\+X\+R.\+hh}}
+\subsubsection{\texorpdfstring{J\+X\+Rcheck}{JXRcheck}}
+{\footnotesize\ttfamily \#define J\+X\+Rcheck(\begin{DoxyParamCaption}\item[{}]{exp }\end{DoxyParamCaption})~if ((rc = (exp)) $<$ 0) throw Library\+Error(\char`\"{}jxrlib\char`\"{}, std\+::string(\#exp) + \char`\"{} returned \char`\"{} + std\+::to\+\_\+string(rc))}
+
+
+
+Definition at line 30 of file J\+X\+R.\+hh.
+

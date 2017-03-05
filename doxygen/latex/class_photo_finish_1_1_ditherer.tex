@@ -1,0 +1,123 @@
+\hypertarget{class_photo_finish_1_1_ditherer}{}\section{Photo\+Finish\+:\+:Ditherer Class Reference}
+\label{class_photo_finish_1_1_ditherer}\index{Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}}
+
+
+Class for dithering images down to 8-\/bit components.  
+
+
+
+
+{\ttfamily \#include $<$Ditherer.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_ditherer_a93033e318576331f46640f46fa05c99d}{Ditherer} (unsigned int width, unsigned char channels, std\+::vector$<$ unsigned char $>$ maxvalues=\{\})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_ditherer_ac2c083ce81d17bcad626c19ffdae1c63}{$\sim$\+Ditherer} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_ditherer_aa58e2a61dc5354ae5a3affafd97f7b06}{dither} (short unsigned int $\ast$inrow, unsigned char $\ast$outrow, bool lastrow=false)
+\begin{DoxyCompactList}\small\item\em Dither a row of image data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static const cms\+U\+Int32\+Number \hyperlink{class_photo_finish_1_1_ditherer_a413cdf102c3544bb9535cfa6fe058a63}{cms\+Base\+Type} = B\+Y\+T\+E\+S\+\_\+\+SH(2)
+\begin{DoxyCompactList}\small\item\em Base L\+C\+M\+S2 base type the ditherer expects the pixels to be in. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for dithering images down to 8-\/bit components. 
+
+Definition at line 27 of file Ditherer.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_ditherer_a93033e318576331f46640f46fa05c99d}\label{class_photo_finish_1_1_ditherer_a93033e318576331f46640f46fa05c99d}} 
+\index{Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}!Ditherer@{Ditherer}}
+\index{Ditherer@{Ditherer}!Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}}
+\subsubsection{\texorpdfstring{Ditherer()}{Ditherer()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Ditherer\+::\+Ditherer (\begin{DoxyParamCaption}\item[{unsigned int}]{width,  }\item[{unsigned char}]{channels,  }\item[{std\+::vector$<$ unsigned char $>$}]{maxvalues = {\ttfamily \{\}} }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em width} & Width of the image \\
+\hline
+{\em channels} & Number of channels of the image \\
+\hline
+{\em maxvalues} & The maximum values for each channel, defaults to 255 for each \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 28 of file Ditherer.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_ditherer_ac2c083ce81d17bcad626c19ffdae1c63}\label{class_photo_finish_1_1_ditherer_ac2c083ce81d17bcad626c19ffdae1c63}} 
+\index{Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}!````~Ditherer@{$\sim$\+Ditherer}}
+\index{````~Ditherer@{$\sim$\+Ditherer}!Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}}
+\subsubsection{\texorpdfstring{$\sim$\+Ditherer()}{~Ditherer()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Ditherer\+::$\sim$\+Ditherer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+
+
+Definition at line 49 of file Ditherer.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_ditherer_aa58e2a61dc5354ae5a3affafd97f7b06}\label{class_photo_finish_1_1_ditherer_aa58e2a61dc5354ae5a3affafd97f7b06}} 
+\index{Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}!dither@{dither}}
+\index{dither@{dither}!Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}}
+\subsubsection{\texorpdfstring{dither()}{dither()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Ditherer\+::dither (\begin{DoxyParamCaption}\item[{short unsigned int $\ast$}]{inrow,  }\item[{unsigned char $\ast$}]{outrow,  }\item[{bool}]{lastrow = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Dither a row of image data. 
+
+Performs a Floyd-\/\+Steinberg error diffusion dither
+
+
+\begin{DoxyParams}{Parameters}
+{\em inrow} & Pointer to a row of 16-\/bit image data \\
+\hline
+{\em outrow} & Pointer to a row 8-\/bit image data that will be produced \\
+\hline
+{\em lastrow} & Whether this is the last row of the image. Less has to be done. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 87 of file Ditherer.\+cc.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_ditherer_a413cdf102c3544bb9535cfa6fe058a63}\label{class_photo_finish_1_1_ditherer_a413cdf102c3544bb9535cfa6fe058a63}} 
+\index{Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}!cms\+Base\+Type@{cms\+Base\+Type}}
+\index{cms\+Base\+Type@{cms\+Base\+Type}!Photo\+Finish\+::\+Ditherer@{Photo\+Finish\+::\+Ditherer}}
+\subsubsection{\texorpdfstring{cms\+Base\+Type}{cmsBaseType}}
+{\footnotesize\ttfamily const cms\+U\+Int32\+Number Photo\+Finish\+::\+Ditherer\+::cms\+Base\+Type = B\+Y\+T\+E\+S\+\_\+\+SH(2)\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Base L\+C\+M\+S2 base type the ditherer expects the pixels to be in. 
+
+Users of this class need to add the colour space and number of channels to this base type to be useable. 
+
+Definition at line 54 of file Ditherer.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_ditherer_8hh}{Ditherer.\+hh}\item 
+\hyperlink{_ditherer_8cc}{Ditherer.\+cc}\end{DoxyCompactItemize}

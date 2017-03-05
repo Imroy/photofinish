@@ -1,0 +1,120 @@
+\hypertarget{class_photo_finish_1_1_d__resize}{}\section{Photo\+Finish\+:\+:D\+\_\+resize Class Reference}
+\label{class_photo_finish_1_1_d__resize}\index{Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}}
+
+
+Resize parameters for destination.  
+
+
+
+
+{\ttfamily \#include $<$Destination\+\_\+items.\+hh$>$}
+
+Inheritance diagram for Photo\+Finish\+:\+:D\+\_\+resize\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_photo_finish_1_1_d__resize}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_d__resize_a105b90f42117f04e6ad834efb1530516}{D\+\_\+resize} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ std\+::string $>$ \hyperlink{class_photo_finish_1_1_d__resize_ae4ecb8ee5c62ea3d4170283a2e874faf}{filter} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ double $>$ \hyperlink{class_photo_finish_1_1_d__resize_a26e24da15f4e3a0b79117f54e0bc2983}{support} (void) const
+\item 
+void \hyperlink{class_photo_finish_1_1_d__resize_a57239d56c851a844ba7266d39b81eefc}{read\+\_\+config} (const Y\+A\+M\+L\+::\+Node \&node)
+\begin{DoxyCompactList}\small\item\em Read a \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} record from a Y\+A\+ML file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} \hyperlink{class_photo_finish_1_1_d__resize_ac0476a607137a6a608c856f8393bd9bb}{lanczos} (double r)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Resize parameters for destination. 
+
+Definition at line 60 of file Destination\+\_\+items.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_d__resize_a105b90f42117f04e6ad834efb1530516}\label{class_photo_finish_1_1_d__resize_a105b90f42117f04e6ad834efb1530516}} 
+\index{Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}!D\+\_\+resize@{D\+\_\+resize}}
+\index{D\+\_\+resize@{D\+\_\+resize}!Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}}
+\subsubsection{\texorpdfstring{D\+\_\+resize()}{D\_resize()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+D\+\_\+resize\+::\+D\+\_\+resize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 48 of file Destination\+\_\+items.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_d__resize_ae4ecb8ee5c62ea3d4170283a2e874faf}\label{class_photo_finish_1_1_d__resize_ae4ecb8ee5c62ea3d4170283a2e874faf}} 
+\index{Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}!filter@{filter}}
+\index{filter@{filter}!Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}}
+\subsubsection{\texorpdfstring{filter()}{filter()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$std\+::string$>$ Photo\+Finish\+::\+D\+\_\+resize\+::filter (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 77 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__resize_ac0476a607137a6a608c856f8393bd9bb}\label{class_photo_finish_1_1_d__resize_ac0476a607137a6a608c856f8393bd9bb}} 
+\index{Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}!lanczos@{lanczos}}
+\index{lanczos@{lanczos}!Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}}
+\subsubsection{\texorpdfstring{lanczos()}{lanczos()}}
+{\footnotesize\ttfamily static \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} Photo\+Finish\+::\+D\+\_\+resize\+::lanczos (\begin{DoxyParamCaption}\item[{double}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+Constructs a \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} object with filter=\char`\"{}lanczos\char`\"{} and the supplied radius 
+\begin{DoxyParams}{Parameters}
+{\em r} & Radius of \hyperlink{class_photo_finish_1_1_lanczos}{Lanczos} filter \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 75 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__resize_a57239d56c851a844ba7266d39b81eefc}\label{class_photo_finish_1_1_d__resize_a57239d56c851a844ba7266d39b81eefc}} 
+\index{Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}!read\+\_\+config@{read\+\_\+config}}
+\index{read\+\_\+config@{read\+\_\+config}!Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}}
+\subsubsection{\texorpdfstring{read\+\_\+config()}{read\_config()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+D\+\_\+resize\+::read\+\_\+config (\begin{DoxyParamCaption}\item[{const Y\+A\+M\+L\+::\+Node \&}]{node }\end{DoxyParamCaption})}
+
+
+
+Read a \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} record from a Y\+A\+ML file. 
+
+
+
+Definition at line 56 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__resize_a26e24da15f4e3a0b79117f54e0bc2983}\label{class_photo_finish_1_1_d__resize_a26e24da15f4e3a0b79117f54e0bc2983}} 
+\index{Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}!support@{support}}
+\index{support@{support}!Photo\+Finish\+::\+D\+\_\+resize@{Photo\+Finish\+::\+D\+\_\+resize}}
+\subsubsection{\texorpdfstring{support()}{support()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$double$>$ Photo\+Finish\+::\+D\+\_\+resize\+::support (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 78 of file Destination\+\_\+items.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_destination__items_8hh}{Destination\+\_\+items.\+hh}\item 
+\hyperlink{_destination__items_8cc}{Destination\+\_\+items.\+cc}\end{DoxyCompactItemize}

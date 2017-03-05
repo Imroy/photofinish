@@ -1,0 +1,119 @@
+.TH "CMS.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CMS.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <istream>\fP
+.br
+\fC#include <ostream>\fP
+.br
+\fC#include <memory>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <lcms2\&.h>\fP
+.br
+\fC#include <lcms2_plugin\&.h>\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBCMS::Profile\fP"
+.br
+.RI "Wrap LCMS2's cmsHPROFILE\&. "
+.ti -1c
+.RI "class \fBCMS::Format\fP"
+.br
+.RI "Wrap LCMS2's pixel format\&. "
+.ti -1c
+.RI "class \fBCMS::Transform\fP"
+.br
+.RI "Wrap LCMS2's transform object\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBCMS\fP"
+.br
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBCMS::ColourModel\fP { \fBCMS::ColourModel::Any\fP = 0, \fBCMS::ColourModel::Greyscale\fP = 3, \fBCMS::ColourModel::RGB\fP, \fBCMS::ColourModel::CMY\fP, \fBCMS::ColourModel::CMYK\fP, \fBCMS::ColourModel::YCbCr\fP, \fBCMS::ColourModel::YUV\fP, \fBCMS::ColourModel::XYZ\fP, \fBCMS::ColourModel::Lab\fP, \fBCMS::ColourModel::YUVK\fP, \fBCMS::ColourModel::HSV\fP, \fBCMS::ColourModel::HLS\fP, \fBCMS::ColourModel::Yxy\fP, \fBCMS::ColourModel::MCH1\fP, \fBCMS::ColourModel::MCH2\fP, \fBCMS::ColourModel::MCH3\fP, \fBCMS::ColourModel::MCH4\fP, \fBCMS::ColourModel::MCH5\fP, \fBCMS::ColourModel::MCH6\fP, \fBCMS::ColourModel::MCH7\fP, \fBCMS::ColourModel::MCH8\fP, \fBCMS::ColourModel::MCH9\fP, \fBCMS::ColourModel::MCH10\fP, \fBCMS::ColourModel::MCH11\fP, \fBCMS::ColourModel::MCH12\fP, \fBCMS::ColourModel::MCH13\fP, \fBCMS::ColourModel::MCH14\fP, \fBCMS::ColourModel::MCH15\fP, \fBCMS::ColourModel::LabV2\fP }
+.RI "An enum class of LCMS2's colour models\&. ""
+.br
+.ti -1c
+.RI "enum \fBCMS::Intent\fP { \fBCMS::Intent::Perceptual\fP, \fBCMS::Intent::Relative_colormetric\fP, \fBCMS::Intent::Saturation\fP, \fBCMS::Intent::Absolute_colormetric\fP, \fBCMS::Intent::Preserve_k_only_perceptual\fP = 10, \fBCMS::Intent::Preserve_k_only_relative_colormetric\fP, \fBCMS::Intent::Preserve_k_only_saturation\fP, \fBCMS::Intent::Preserve_k_only_absolute_colormetric\fP, \fBCMS::Intent::Preserve_k_plane_perceptual\fP, \fBCMS::Intent::Preserve_k_plane_relative_colormetric\fP, \fBCMS::Intent::Preserve_k_plane_saturation\fP, \fBCMS::Intent::Preserve_k_plane_absolute_colormetric\fP }
+.RI "Wrap LCMS2's intents\&. ""
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "std::ostream & \fBCMS::operator<<\fP (std::ostream &out, ColourModel model)"
+.br
+.ti -1c
+.RI "std::ostream & \fBCMS::operator<<\fP (std::ostream &out, Format f)"
+.br
+.ti -1c
+.RI "cmsIOHANDLER * \fBCMS::OpenIOhandlerFromIStream\fP (std::istream *is)"
+.br
+.ti -1c
+.RI "cmsIOHANDLER * \fBCMS::OpenIOhandlerFromIFStream\fP (fs::path filepath)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::istream_read\fP (cmsIOHANDLER *iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::istream_seek\fP (cmsIOHANDLER *iohandler, cmsUInt32Number offset)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::istream_close\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::istream_tell\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::istream_write\fP (cmsIOHANDLER *iohandler, cmsUInt32Number size, const void *Buffer)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::ostream_read\fP (cmsIOHANDLER *iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::ostream_seek\fP (cmsIOHANDLER *iohandler, cmsUInt32Number offset)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::ostream_close\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::ostream_tell\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::ostream_write\fP (cmsIOHANDLER *iohandler, cmsUInt32Number size, const void *Buffer)"
+.br
+.ti -1c
+.RI "void \fBlcms2_error_adaptor\fP (void)"
+.br
+.RI "Set up an error handler with LCMS2 that will throw a LibraryError exception\&. "
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "void lcms2_error_adaptor (void)"
+
+.PP
+Set up an error handler with LCMS2 that will throw a LibraryError exception\&. 
+.PP
+Definition at line 710 of file CMS\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

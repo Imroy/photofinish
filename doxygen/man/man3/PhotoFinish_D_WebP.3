@@ -1,0 +1,128 @@
+.TH "PhotoFinish::D_WebP" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_WebP \- WebP parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_WebP\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "void \fBadd_variables\fP (\fBmultihash\fP &vars)"
+.br
+.RI "Set values from a map of 'variables'\&. "
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBpreset\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_preset\fP (const std::string &p)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBlossless\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBlossy\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_lossless\fP (bool l=true)"
+.br
+.ti -1c
+.RI "void \fBset_lossy\fP (bool l=true)"
+.br
+.ti -1c
+.RI "float \fBquality\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_quality\fP (float q)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< unsigned char > \fBmethod\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_method\fP (unsigned char m)"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+WebP parameters for destination\&. 
+.PP
+Definition at line 222 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_WebP::D_WebP ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 390 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::D_WebP::add_variables (\fBmultihash\fP & vars)"
+
+.PP
+Set values from a map of 'variables'\&. 
+.PP
+Definition at line 394 of file Destination_items\&.cc\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::D_WebP::lossless (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 239 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::D_WebP::lossy (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 240 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<unsigned char> PhotoFinish::D_WebP::method (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 247 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_WebP::preset (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 236 of file Destination_items\&.hh\&.
+.SS "float PhotoFinish::D_WebP::quality (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 244 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_WebP::read_config (const YAML::Node & node)"
+
+.PP
+Definition at line 397 of file Destination_items\&.cc\&.
+.SS "void PhotoFinish::D_WebP::set_lossless (bool l = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 241 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_WebP::set_lossy (bool l = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 242 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_WebP::set_method (unsigned char m)\fC [inline]\fP"
+
+.PP
+Definition at line 248 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_WebP::set_preset (const std::string & p)\fC [inline]\fP"
+
+.PP
+Definition at line 237 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_WebP::set_quality (float q)\fC [inline]\fP"
+
+.PP
+Definition at line 245 of file Destination_items\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

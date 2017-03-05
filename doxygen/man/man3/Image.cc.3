@@ -1,0 +1,49 @@
+.TH "Image.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Image.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <omp\&.h>\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'ImageFile\&.hh'\fP
+.br
+\fC#include 'Benchmark\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<typename A , typename B > void \fBPhotoFinish::transfer_alpha_typed2\fP (unsigned int width, unsigned char src_channels, const A *src_row, unsigned char dest_channels, const B *dest_row)"
+.br
+.ti -1c
+.RI "template<typename A > void \fBPhotoFinish::transfer_alpha_typed\fP (unsigned int width, unsigned char src_channels, const A *src_row, \fBCMS::Format\fP dest_format, const unsigned char *dest_row)"
+.br
+.ti -1c
+.RI "void \fBPhotoFinish::transfer_alpha\fP (unsigned int width, \fBCMS::Format\fP src_format, const unsigned char *src_row, \fBCMS::Format\fP dest_format, const unsigned char *dest_row)"
+.br
+.ti -1c
+.RI "std::string \fBPhotoFinish::profile_name\fP (\fBCMS::Profile::ptr\fP profile)"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

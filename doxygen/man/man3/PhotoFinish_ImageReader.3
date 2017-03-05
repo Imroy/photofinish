@@ -1,0 +1,146 @@
+.TH "PhotoFinish::ImageReader" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::ImageReader \- Abstract base class for reading image files\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ImageFile\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBImageReader\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for an \fBImageReader\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "virtual \fBImage::ptr\fP \fBread\fP (void)"
+.br
+.RI "Read the file into an image\&. "
+.ti -1c
+.RI "virtual \fBImage::ptr\fP \fBread\fP (\fBDestination::ptr\fP dest)=0"
+.br
+.RI "Read the file into an image\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBImageReader::ptr\fP \fBopen\fP (const \fBImageFilepath\fP &ifp)"
+.br
+.RI "Named constructor\&. "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBImageReader\fP (const fs::path fp)"
+.br
+.RI "Private constructor\&. "
+.ti -1c
+.RI "virtual void \fBextract_tags\fP (\fBImage::ptr\fP img)"
+.br
+.RI "Extract tags from file\&. "
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "const fs::path \fB_filepath\fP"
+.br
+.ti -1c
+.RI "bool \fB_is_open\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Abstract base class for reading image files\&. 
+.PP
+Definition at line 96 of file ImageFile\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBImageReader\fP> \fBPhotoFinish::ImageReader::ptr\fP"
+
+.PP
+Shared pointer for an \fBImageReader\fP\&. 
+.PP
+Definition at line 109 of file ImageFile\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::ImageReader::ImageReader (const fs::path fp)\fC [protected]\fP"
+
+.PP
+Private constructor\&. 
+.PP
+Definition at line 126 of file ImageFile\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::ImageReader::extract_tags (\fBImage::ptr\fP img)\fC [protected]\fP, \fC [virtual]\fP"
+
+.PP
+Extract tags from file\&. 
+.PP
+Definition at line 131 of file ImageFile\&.cc\&.
+.SS "\fBImageReader::ptr\fP PhotoFinish::ImageReader::open (const \fBImageFilepath\fP & ifp)\fC [static]\fP"
+
+.PP
+Named constructor\&. Use the extension of the file path to decide what class to use 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilepath\fP File path 
+.RE
+.PP
+
+.PP
+Definition at line 149 of file ImageFile\&.cc\&.
+.SS "\fBImage::ptr\fP PhotoFinish::ImageReader::read (void)\fC [virtual]\fP"
+
+.PP
+Read the file into an image\&. 
+.PP
+\fBReturns:\fP
+.RS 4
+A new \fBImage\fP object 
+.RE
+.PP
+
+.PP
+Definition at line 187 of file ImageFile\&.cc\&.
+.SS "virtual \fBImage::ptr\fP PhotoFinish::ImageReader::read (\fBDestination::ptr\fP dest)\fC [pure virtual]\fP"
+
+.PP
+Read the file into an image\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest\fP A \fBDestination\fP object where some information from the file will be placed 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A new \fBImage\fP object 
+.RE
+.PP
+
+.SH "Member Data Documentation"
+.PP 
+.SS "const fs::path PhotoFinish::ImageReader::_filepath\fC [protected]\fP"
+
+.PP
+Definition at line 98 of file ImageFile\&.hh\&.
+.SS "bool PhotoFinish::ImageReader::_is_open\fC [protected]\fP"
+
+.PP
+Definition at line 99 of file ImageFile\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

@@ -1,0 +1,143 @@
+.TH "PhotoFinish::webp_stream_writer" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::webp_stream_writer \- A custom writer for libwebp that writes using a std::ostream object\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <WebP_ostream\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBwebp_stream_writer\fP (std::ostream *s, unsigned int w, unsigned int h)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fB~webp_stream_writer\fP ()"
+.br
+.ti -1c
+.RI "void \fBadd_icc\fP (\fBCMS::Profile::ptr\fP profile)"
+.br
+.RI "Add an LCMS2 profile to be written\&. "
+.ti -1c
+.RI "void \fBadd_exif\fP (const Exiv2::ExifData &exif)"
+.br
+.RI "Add a set of EXIF tags to be written\&. "
+.ti -1c
+.RI "void \fBadd_xmp\fP (const Exiv2::XmpData &xmp)"
+.br
+.RI "Add a set of XMP tags to be written\&. "
+.ti -1c
+.RI "void \fBwrite_chunk\fP (const char *fourcc, const unsigned char *data, unsigned int length)"
+.br
+.RI "Write a RIFF chunk\&. "
+.ti -1c
+.RI "void \fBbefore_chunk\fP (void)"
+.br
+.RI "Write stuff before a chunk is written\&. "
+.ti -1c
+.RI "void \fBmodify_chunk\fP (unsigned char *data)"
+.br
+.RI "Modify the current chunk\&. "
+.ti -1c
+.RI "void \fBafter_chunk\fP (void)"
+.br
+.RI "Write stuff after a chunk has been written\&. "
+.ti -1c
+.RI "void \fBmodify_vp8x\fP (unsigned char *data)"
+.br
+.ti -1c
+.RI "int \fBwrite\fP (unsigned char *data, size_t data_size)"
+.br
+.RI "Write a block of data from the encoder\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+A custom writer for libwebp that writes using a std::ostream object\&. 
+
+This class is so large because libwebp does not handle metadata \fIat all\fP\&. So we have to keep track of RIFF chunks as the encoder emits them and insert our own, even modifying one of the chunks (VP8X)\&. 
+.PP
+Definition at line 34 of file WebP_ostream\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::webp_stream_writer::webp_stream_writer (std::ostream * s, unsigned int w, unsigned int h)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIs\fP Pointer to a std::ostream derivative\&. 
+.br
+\fIw,h\fP Width and height of the image 
+.RE
+.PP
+
+.PP
+Definition at line 24 of file WebP_ostream\&.cc\&.
+.SS "PhotoFinish::webp_stream_writer::~webp_stream_writer ()"
+
+.PP
+Definition at line 32 of file WebP_ostream\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::webp_stream_writer::add_exif (const Exiv2::ExifData & exif)"
+
+.PP
+Add a set of EXIF tags to be written\&. 
+.PP
+Definition at line 48 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::add_icc (\fBCMS::Profile::ptr\fP profile)"
+
+.PP
+Add an LCMS2 profile to be written\&. 
+.PP
+Definition at line 42 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::add_xmp (const Exiv2::XmpData & xmp)"
+
+.PP
+Add a set of XMP tags to be written\&. 
+.PP
+Definition at line 60 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::after_chunk (void)"
+
+.PP
+Write stuff after a chunk has been written\&. 
+.PP
+Definition at line 107 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::before_chunk (void)"
+
+.PP
+Write stuff before a chunk is written\&. 
+.PP
+Definition at line 81 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::modify_chunk (unsigned char * data)"
+
+.PP
+Modify the current chunk\&. 
+.PP
+Definition at line 99 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::modify_vp8x (unsigned char * data)"
+
+.PP
+Definition at line 124 of file WebP_ostream\&.cc\&.
+.SS "int PhotoFinish::webp_stream_writer::write (unsigned char * data, size_t data_size)"
+
+.PP
+Write a block of data from the encoder\&. 
+.PP
+Definition at line 136 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::webp_stream_writer::write_chunk (const char * fourcc, const unsigned char * data, unsigned int length)"
+
+.PP
+Write a RIFF chunk\&. 
+.PP
+Definition at line 71 of file WebP_ostream\&.cc\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

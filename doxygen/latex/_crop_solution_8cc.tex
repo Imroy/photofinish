@@ -1,0 +1,60 @@
+\hypertarget{_crop_solution_8cc}{}\section{Crop\+Solution.\+cc File Reference}
+\label{_crop_solution_8cc}\index{Crop\+Solution.\+cc@{Crop\+Solution.\+cc}}
+{\ttfamily \#include $<$boost/lexical\+\_\+cast.\+hpp$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$omp.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Crop\+Solution.\+hh\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_crop_solution_8cc_adee8c6d2fc20a1194cf64c481e7b6353}{sqr}(x)~((x) $\ast$ (x))
+\item 
+\#define \hyperlink{_crop_solution_8cc_ac6afabdc09a49a433ee19d8a9486056d}{min}(a,  b)~((a) $<$ (b) ? (a) \+: (b))
+\item 
+\#define \hyperlink{_crop_solution_8cc_affe776513b24d84b39af8ab0930fef7f}{max}(a,  b)~((a) $>$ (b) ? (a) \+: (b))
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespace_photo_finish_ab4da74b24d961ccdc8a10f357d6554f1}{Photo\+Finish\+::add\+\_\+rulers} (multihash \&vars, std\+::string key, rulerlist \&rulers)
+\begin{DoxyCompactList}\small\item\em Parse named variables into a list of rulers. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_aac9bbe14ef01bbb3692dfeba330c77b9}{Photo\+Finish\+::add\+\_\+ruler\+\_\+pins} (rulerlist \&rulers, unsigned int \hyperlink{_crop_solution_8cc_affe776513b24d84b39af8ab0930fef7f}{max})
+\begin{DoxyCompactList}\small\item\em Add rulers to the either side of an image if there aren\textquotesingle{}t enough. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_crop_solution_8cc_affe776513b24d84b39af8ab0930fef7f}\label{_crop_solution_8cc_affe776513b24d84b39af8ab0930fef7f}} 
+\index{Crop\+Solution.\+cc@{Crop\+Solution.\+cc}!max@{max}}
+\index{max@{max}!Crop\+Solution.\+cc@{Crop\+Solution.\+cc}}
+\subsubsection{\texorpdfstring{max}{max}}
+{\footnotesize\ttfamily \#define max(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~((a) $>$ (b) ? (a) \+: (b))}
+
+
+
+Definition at line 26 of file Crop\+Solution.\+cc.
+
+\mbox{\Hypertarget{_crop_solution_8cc_ac6afabdc09a49a433ee19d8a9486056d}\label{_crop_solution_8cc_ac6afabdc09a49a433ee19d8a9486056d}} 
+\index{Crop\+Solution.\+cc@{Crop\+Solution.\+cc}!min@{min}}
+\index{min@{min}!Crop\+Solution.\+cc@{Crop\+Solution.\+cc}}
+\subsubsection{\texorpdfstring{min}{min}}
+{\footnotesize\ttfamily \#define min(\begin{DoxyParamCaption}\item[{}]{a,  }\item[{}]{b }\end{DoxyParamCaption})~((a) $<$ (b) ? (a) \+: (b))}
+
+
+
+Definition at line 25 of file Crop\+Solution.\+cc.
+
+\mbox{\Hypertarget{_crop_solution_8cc_adee8c6d2fc20a1194cf64c481e7b6353}\label{_crop_solution_8cc_adee8c6d2fc20a1194cf64c481e7b6353}} 
+\index{Crop\+Solution.\+cc@{Crop\+Solution.\+cc}!sqr@{sqr}}
+\index{sqr@{sqr}!Crop\+Solution.\+cc@{Crop\+Solution.\+cc}}
+\subsubsection{\texorpdfstring{sqr}{sqr}}
+{\footnotesize\ttfamily \#define sqr(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~((x) $\ast$ (x))}
+
+
+
+Definition at line 24 of file Crop\+Solution.\+cc.
+

@@ -1,0 +1,85 @@
+.TH "Image.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Image.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <memory>\fP
+.br
+\fC#include <exiv2/exiv2\&.hpp>\fP
+.br
+\fC#include 'Definable\&.hh'\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+\fC#include 'sample\&.h'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhotoFinish::Image\fP"
+.br
+.RI "An image class\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<typename T > T \fBPhotoFinish::scaleval\fP (void)"
+.br
+.RI "A template function that returns the 'scale' value of a type\&. "
+.ti -1c
+.RI "template<> unsigned char \fBPhotoFinish::scaleval< unsigned char >\fP (void)"
+.br
+.ti -1c
+.RI "template<> unsigned short int \fBPhotoFinish::scaleval< unsigned short int >\fP (void)"
+.br
+.ti -1c
+.RI "template<> unsigned int \fBPhotoFinish::scaleval< unsigned int >\fP (void)"
+.br
+.ti -1c
+.RI "template<> unsigned long long \fBPhotoFinish::scaleval< unsigned long long >\fP (void)"
+.br
+.ti -1c
+.RI "template<> float \fBPhotoFinish::scaleval< float >\fP (void)"
+.br
+.ti -1c
+.RI "template<> double \fBPhotoFinish::scaleval< double >\fP (void)"
+.br
+.ti -1c
+.RI "template<typename T > T \fBPhotoFinish::limitval\fP (\fBSAMPLE\fP v)"
+.br
+.RI "A template function that limits a floating-point value while converting to another type\&. "
+.ti -1c
+.RI "template<> unsigned char \fBPhotoFinish::limitval< unsigned char >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> unsigned short int \fBPhotoFinish::limitval< unsigned short int >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> unsigned int \fBPhotoFinish::limitval< unsigned int >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> unsigned long long \fBPhotoFinish::limitval< unsigned long long >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> float \fBPhotoFinish::limitval< float >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> double \fBPhotoFinish::limitval< double >\fP (\fBSAMPLE\fP v)"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

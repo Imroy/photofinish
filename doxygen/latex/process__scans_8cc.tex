@@ -1,0 +1,66 @@
+\hypertarget{process__scans_8cc}{}\section{process\+\_\+scans.\+cc File Reference}
+\label{process__scans_8cc}\index{process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}}
+{\ttfamily \#include $<$boost/program\+\_\+options/options\+\_\+description.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/program\+\_\+options/variables\+\_\+map.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/program\+\_\+options/parsers.\+hpp$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$algorithm$>$}\newline
+{\ttfamily \#include $<$boost/filesystem.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/algorithm/string.\+hpp$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}C\+M\+S.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Image.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Image\+File.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Destination.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Tags.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Kernel2\+D.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Exception.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Benchmark.\+hh\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{process__scans_8cc_a695b7a4aa3643facc39016dd529701a2}{make\+\_\+preview} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} orig\+\_\+image, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} orig\+\_\+dest, \hyperlink{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}{Tags\+::ptr} filetags, \hyperlink{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}{Image\+Writer\+::ptr} preview\+\_\+file, bool can\+\_\+free=false)
+\item 
+void \hyperlink{process__scans_8cc_a5b949448942e878b3ddf4f26d2321604}{preview\+\_\+dir} (fs\+::path dir, std\+::string format, std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_tags}{Tags} $>$ tags)
+\item 
+int \hyperlink{process__scans_8cc_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{process__scans_8cc_a0ddf1224851353fc92bfbff6f499fa97}\label{process__scans_8cc_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}!main@{main}}
+\index{main@{main}!process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 120 of file process\+\_\+scans.\+cc.
+
+\mbox{\Hypertarget{process__scans_8cc_a695b7a4aa3643facc39016dd529701a2}\label{process__scans_8cc_a695b7a4aa3643facc39016dd529701a2}} 
+\index{process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}!make\+\_\+preview@{make\+\_\+preview}}
+\index{make\+\_\+preview@{make\+\_\+preview}!process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}}
+\subsubsection{\texorpdfstring{make\+\_\+preview()}{make\_preview()}}
+{\footnotesize\ttfamily void make\+\_\+preview (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{orig\+\_\+image,  }\item[{\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}}]{orig\+\_\+dest,  }\item[{\hyperlink{class_photo_finish_1_1_tags_a3f9b01990d51bb4f4e5086182a8ddcf9}{Tags\+::ptr}}]{filetags,  }\item[{\hyperlink{class_photo_finish_1_1_image_writer_ad09511cf9f26b7cec2ca0fb6ae361aac}{Image\+Writer\+::ptr}}]{preview\+\_\+file,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 47 of file process\+\_\+scans.\+cc.
+
+\mbox{\Hypertarget{process__scans_8cc_a5b949448942e878b3ddf4f26d2321604}\label{process__scans_8cc_a5b949448942e878b3ddf4f26d2321604}} 
+\index{process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}!preview\+\_\+dir@{preview\+\_\+dir}}
+\index{preview\+\_\+dir@{preview\+\_\+dir}!process\+\_\+scans.\+cc@{process\+\_\+scans.\+cc}}
+\subsubsection{\texorpdfstring{preview\+\_\+dir()}{preview\_dir()}}
+{\footnotesize\ttfamily void preview\+\_\+dir (\begin{DoxyParamCaption}\item[{fs\+::path}]{dir,  }\item[{std\+::string}]{format,  }\item[{std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_tags}{Tags} $>$}]{tags }\end{DoxyParamCaption})}
+
+
+
+Definition at line 88 of file process\+\_\+scans.\+cc.
+

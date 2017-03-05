@@ -1,0 +1,192 @@
+.TH "PhotoFinish::Tags" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Tags \- Reads and holds tag information\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Tags\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBTags\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for a \fBTags\fP object\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTags\fP ()"
+.br
+.RI "Empty Constructor\&. "
+.ti -1c
+.RI "\fBTags\fP (const \fBTags\fP &other)"
+.br
+.RI "Copy constructor\&. "
+.ti -1c
+.RI "\fBTags\fP (const fs::path &filepath)"
+.br
+.RI "Constructor with a filepath from which to load tags (calls Load) "
+.ti -1c
+.RI "\fBptr\fP \fBdupe\fP (void) const"
+.br
+.RI "Duplicate the tags\&. "
+.ti -1c
+.RI "void \fBadd_searchpath\fP (fs::path path)"
+.br
+.ti -1c
+.RI "\fBmultihash\fP & \fBvariables\fP (void)"
+.br
+.RI "The map of variables\&. "
+.ti -1c
+.RI "Exiv2::ExifData & \fBEXIFtags\fP (void)"
+.br
+.RI "The Exiv2::ExifData object\&. "
+.ti -1c
+.RI "Exiv2::IptcData & \fBIPTCtags\fP (void)"
+.br
+.RI "The Exiv2::IptcData object\&. "
+.ti -1c
+.RI "Exiv2::XmpData & \fBXMPtags\fP (void)"
+.br
+.RI "The Exiv2::XmpData object\&. "
+.ti -1c
+.RI "bool \fBtry_load\fP (fs::path filepath)"
+.br
+.ti -1c
+.RI "void \fBload\fP (fs::path filepath)"
+.br
+.RI "Load tags from supplied file path\&. "
+.ti -1c
+.RI "void \fBcopy_from\fP (\fBImage::ptr\fP img)"
+.br
+.RI "Copy EXIF/IPTC/XMP tags from an image\&. "
+.ti -1c
+.RI "void \fBmake_thumbnail\fP (\fBImage::ptr\fP img, const \fBD_thumbnail\fP &dt)"
+.br
+.RI "Create a thumbnail from the supplied image\&. "
+.ti -1c
+.RI "void \fBadd_resolution\fP (\fBImage::ptr\fP img)"
+.br
+.ti -1c
+.RI "void \fBcopy_to\fP (\fBImage::ptr\fP img) const"
+.br
+.RI "Copy EXIF/IPTC/XMP tags to an image\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Reads and holds tag information\&. 
+.PP
+Definition at line 41 of file Tags\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBTags\fP> \fBPhotoFinish::Tags::ptr\fP"
+
+.PP
+Shared pointer for a \fBTags\fP object\&. 
+.PP
+Definition at line 60 of file Tags\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Tags::Tags ()"
+
+.PP
+Empty Constructor\&. 
+.PP
+Definition at line 33 of file Tags\&.cc\&.
+.SS "PhotoFinish::Tags::Tags (const \fBTags\fP & other)"
+
+.PP
+Copy constructor\&. 
+.PP
+Definition at line 36 of file Tags\&.cc\&.
+.SS "PhotoFinish::Tags::Tags (const fs::path & filepath)"
+
+.PP
+Constructor with a filepath from which to load tags (calls Load) 
+.PP
+Definition at line 44 of file Tags\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::Tags::add_resolution (\fBImage::ptr\fP img)"
+
+.PP
+Definition at line 219 of file Tags\&.cc\&.
+.SS "void PhotoFinish::Tags::add_searchpath (fs::path path)\fC [inline]\fP"
+
+.PP
+Definition at line 65 of file Tags\&.hh\&.
+.SS "void PhotoFinish::Tags::copy_from (\fBImage::ptr\fP img)"
+
+.PP
+Copy EXIF/IPTC/XMP tags from an image\&. 
+.PP
+Definition at line 171 of file Tags\&.cc\&.
+.SS "void PhotoFinish::Tags::copy_to (\fBImage::ptr\fP img) const"
+
+.PP
+Copy EXIF/IPTC/XMP tags to an image\&. 
+.PP
+Definition at line 242 of file Tags\&.cc\&.
+.SS "\fBTags::ptr\fP PhotoFinish::Tags::dupe (void) const"
+
+.PP
+Duplicate the tags\&. 
+.PP
+Definition at line 48 of file Tags\&.cc\&.
+.SS "Exiv2::ExifData& PhotoFinish::Tags::EXIFtags (void)\fC [inline]\fP"
+
+.PP
+The Exiv2::ExifData object\&. 
+.PP
+Definition at line 71 of file Tags\&.hh\&.
+.SS "Exiv2::IptcData& PhotoFinish::Tags::IPTCtags (void)\fC [inline]\fP"
+
+.PP
+The Exiv2::IptcData object\&. 
+.PP
+Definition at line 74 of file Tags\&.hh\&.
+.SS "void PhotoFinish::Tags::load (fs::path filepath)"
+
+.PP
+Load tags from supplied file path\&. 
+.PP
+Definition at line 68 of file Tags\&.cc\&.
+.SS "void PhotoFinish::Tags::make_thumbnail (\fBImage::ptr\fP img, const \fBD_thumbnail\fP & dt)"
+
+.PP
+Create a thumbnail from the supplied image\&. 
+.PP
+Definition at line 182 of file Tags\&.cc\&.
+.SS "bool PhotoFinish::Tags::try_load (fs::path filepath)"
+Try to load tags from a file, looking in the search paths 
+.PP
+\fBReturns:\fP
+.RS 4
+if the file was found and loaded 
+.RE
+.PP
+
+.PP
+Definition at line 57 of file Tags\&.cc\&.
+.SS "\fBmultihash\fP& PhotoFinish::Tags::variables (void)\fC [inline]\fP"
+
+.PP
+The map of variables\&. 
+.PP
+Definition at line 68 of file Tags\&.hh\&.
+.SS "Exiv2::XmpData& PhotoFinish::Tags::XMPtags (void)\fC [inline]\fP"
+
+.PP
+The Exiv2::XmpData object\&. 
+.PP
+Definition at line 77 of file Tags\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

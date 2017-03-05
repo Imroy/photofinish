@@ -1,0 +1,220 @@
+\hypertarget{class_photo_finish_1_1_frame}{}\section{Photo\+Finish\+:\+:Frame Class Reference}
+\label{class_photo_finish_1_1_frame}\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+
+
+Crop+rescaling parameters.  
+
+
+
+
+{\ttfamily \#include $<$Frame.\+hh$>$}
+
+Inheritance diagram for Photo\+Finish\+:\+:Frame\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_photo_finish_1_1_frame}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_frame}{Frame} $>$ \hyperlink{class_photo_finish_1_1_frame_aaf5eaa56b8096024c0d45ad9e7f5e6c1}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for a \hyperlink{class_photo_finish_1_1_frame}{Frame}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_frame_a40b62f1f9f5b963ed7a39cd267352a84}{Frame} (double tw, double th, double x, double y, double w, double h)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_frame_aa6d461d604692d65cfe8dab624b86577}{Frame} (const \hyperlink{class_photo_finish_1_1_d__target}{D\+\_\+target} \&target, double x, double y, double w, double h)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} \hyperlink{class_photo_finish_1_1_frame_ae0c41ae4e50f1fb0c9b80ae7c3ef0765}{crop\+\_\+resize} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img, const \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} \&dr, bool can\+\_\+free=false)
+\begin{DoxyCompactList}\small\item\em Crop and resize an image. \end{DoxyCompactList}\item 
+const double \hyperlink{class_photo_finish_1_1_frame_af7fdd897762412a9d8dcfc309a0bd61a}{crop\+\_\+x} (void) const
+\begin{DoxyCompactList}\small\item\em The left-\/most border of the crop window. \end{DoxyCompactList}\item 
+const double \hyperlink{class_photo_finish_1_1_frame_afc570fbabb63837f104211f3102e70fd}{crop\+\_\+y} (void) const
+\begin{DoxyCompactList}\small\item\em The top-\/most border of the crop window. \end{DoxyCompactList}\item 
+const double \hyperlink{class_photo_finish_1_1_frame_a14195ec4f0fb7d0bc5ae1ec855f35ef5}{crop\+\_\+w} (void) const
+\begin{DoxyCompactList}\small\item\em The width of the crop window. \end{DoxyCompactList}\item 
+const double \hyperlink{class_photo_finish_1_1_frame_a69f8370ef64448ad0f0723c6ab8a23d3}{crop\+\_\+h} (void) const
+\begin{DoxyCompactList}\small\item\em The height of the crop window. \end{DoxyCompactList}\item 
+const double \hyperlink{class_photo_finish_1_1_frame_a7411d047a4825aa6180d6db316b38f3d}{waste} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img) const
+\begin{DoxyCompactList}\small\item\em How much of the original image is wasted by this crop frame. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Crop+rescaling parameters. 
+
+Definition at line 28 of file Frame.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_aaf5eaa56b8096024c0d45ad9e7f5e6c1}\label{class_photo_finish_1_1_frame_aaf5eaa56b8096024c0d45ad9e7f5e6c1}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_frame}{Frame}$>$ \hyperlink{class_photo_finish_1_1_frame_aaf5eaa56b8096024c0d45ad9e7f5e6c1}{Photo\+Finish\+::\+Frame\+::ptr}}
+
+
+
+Shared pointer for a \hyperlink{class_photo_finish_1_1_frame}{Frame}. 
+
+
+
+Definition at line 71 of file Frame.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_a40b62f1f9f5b963ed7a39cd267352a84}\label{class_photo_finish_1_1_frame_a40b62f1f9f5b963ed7a39cd267352a84}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!Frame@{Frame}}
+\index{Frame@{Frame}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{Frame()}{Frame()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Frame\+::\+Frame (\begin{DoxyParamCaption}\item[{double}]{tw,  }\item[{double}]{th,  }\item[{double}]{x,  }\item[{double}]{y,  }\item[{double}]{w,  }\item[{double}]{h }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tw,th} & Size (width, height) of the output \\
+\hline
+{\em x,y} & Top-\/left corner of crop+rescale window \\
+\hline
+{\em w,h} & Size of the crop+rescale window \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 28 of file Frame.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_aa6d461d604692d65cfe8dab624b86577}\label{class_photo_finish_1_1_frame_aa6d461d604692d65cfe8dab624b86577}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!Frame@{Frame}}
+\index{Frame@{Frame}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{Frame()}{Frame()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Frame\+::\+Frame (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d__target}{D\+\_\+target} \&}]{target,  }\item[{double}]{x,  }\item[{double}]{y,  }\item[{double}]{w,  }\item[{double}]{h }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em target} & \hyperlink{class_photo_finish_1_1_d__target}{D\+\_\+target} object providing the size (width, height) of the output \\
+\hline
+{\em x,y} & Top-\/left corner of crop+rescale window \\
+\hline
+{\em w,h} & Size of the crop+rescale window \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 34 of file Frame.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_a69f8370ef64448ad0f0723c6ab8a23d3}\label{class_photo_finish_1_1_frame_a69f8370ef64448ad0f0723c6ab8a23d3}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!crop\+\_\+h@{crop\+\_\+h}}
+\index{crop\+\_\+h@{crop\+\_\+h}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{crop\+\_\+h()}{crop\_h()}}
+{\footnotesize\ttfamily const double Photo\+Finish\+::\+Frame\+::crop\+\_\+h (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The height of the crop window. 
+
+
+
+Definition at line 65 of file Frame.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_ae0c41ae4e50f1fb0c9b80ae7c3ef0765}\label{class_photo_finish_1_1_frame_ae0c41ae4e50f1fb0c9b80ae7c3ef0765}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!crop\+\_\+resize@{crop\+\_\+resize}}
+\index{crop\+\_\+resize@{crop\+\_\+resize}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{crop\+\_\+resize()}{crop\_resize()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} Photo\+Finish\+::\+Frame\+::crop\+\_\+resize (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img,  }\item[{const \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} \&}]{dr,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Crop and resize an image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & The source image \\
+\hline
+{\em dr} & A \hyperlink{class_photo_finish_1_1_d__resize}{D\+\_\+resize} object which will supply our parameters. \\
+\hline
+{\em can\+\_\+free} & Can each row of the image be freed after it is convolved? \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new cropped and resized image 
+\end{DoxyReturn}
+
+
+Definition at line 40 of file Frame.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_a14195ec4f0fb7d0bc5ae1ec855f35ef5}\label{class_photo_finish_1_1_frame_a14195ec4f0fb7d0bc5ae1ec855f35ef5}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!crop\+\_\+w@{crop\+\_\+w}}
+\index{crop\+\_\+w@{crop\+\_\+w}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{crop\+\_\+w()}{crop\_w()}}
+{\footnotesize\ttfamily const double Photo\+Finish\+::\+Frame\+::crop\+\_\+w (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The width of the crop window. 
+
+
+
+Definition at line 63 of file Frame.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_af7fdd897762412a9d8dcfc309a0bd61a}\label{class_photo_finish_1_1_frame_af7fdd897762412a9d8dcfc309a0bd61a}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!crop\+\_\+x@{crop\+\_\+x}}
+\index{crop\+\_\+x@{crop\+\_\+x}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{crop\+\_\+x()}{crop\_x()}}
+{\footnotesize\ttfamily const double Photo\+Finish\+::\+Frame\+::crop\+\_\+x (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The left-\/most border of the crop window. 
+
+
+
+Definition at line 59 of file Frame.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_afc570fbabb63837f104211f3102e70fd}\label{class_photo_finish_1_1_frame_afc570fbabb63837f104211f3102e70fd}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!crop\+\_\+y@{crop\+\_\+y}}
+\index{crop\+\_\+y@{crop\+\_\+y}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{crop\+\_\+y()}{crop\_y()}}
+{\footnotesize\ttfamily const double Photo\+Finish\+::\+Frame\+::crop\+\_\+y (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The top-\/most border of the crop window. 
+
+
+
+Definition at line 61 of file Frame.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_frame_a7411d047a4825aa6180d6db316b38f3d}\label{class_photo_finish_1_1_frame_a7411d047a4825aa6180d6db316b38f3d}} 
+\index{Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}!waste@{waste}}
+\index{waste@{waste}!Photo\+Finish\+::\+Frame@{Photo\+Finish\+::\+Frame}}
+\subsubsection{\texorpdfstring{waste()}{waste()}}
+{\footnotesize\ttfamily const double Photo\+Finish\+::\+Frame\+::waste (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption}) const}
+
+
+
+How much of the original image is wasted by this crop frame. 
+
+
+
+Definition at line 53 of file Frame.\+cc.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_frame_8hh}{Frame.\+hh}\item 
+\hyperlink{_frame_8cc}{Frame.\+cc}\end{DoxyCompactItemize}

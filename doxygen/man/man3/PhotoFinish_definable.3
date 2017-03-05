@@ -1,0 +1,158 @@
+.TH "PhotoFinish::definable< T >" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::definable< T > \- Template class for storing things that can be defined or undefined\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Definable\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBdefinable\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBdefinable\fP (const T &i)"
+.br
+.RI "Construct from an item\&. "
+.ti -1c
+.RI "const bool \fBdefined\fP (void) const"
+.br
+.RI "Is this object defined? "
+.ti -1c
+.RI "void \fBset_defined\fP (bool v=true)"
+.br
+.RI "Set this object as 'defined' (or not) "
+.ti -1c
+.RI "void \fBundefine\fP (void)"
+.br
+.RI "Undefine the object\&. "
+.ti -1c
+.RI "T \fBget\fP (void)"
+.br
+.RI "Get the item\&. "
+.ti -1c
+.RI "const T & \fBget\fP (void) const"
+.br
+.RI "Get the item, const version\&. "
+.ti -1c
+.RI "\fBoperator T\fP (void) const"
+.br
+.RI "Cast to the contained type\&. "
+.ti -1c
+.RI "T * \fBoperator\->\fP ()"
+.br
+.RI "Arrow operator\&. "
+.ti -1c
+.RI "const T * \fBoperator\->\fP () const"
+.br
+.RI "Arrow operator, const version\&. "
+.ti -1c
+.RI "\fBdefinable\fP< T > & \fBoperator=\fP (const T &i)"
+.br
+.RI "Assignment operator\&. "
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "std::ostream & \fBoperator<<\fP (std::ostream &out, \fBdefinable\fP< T > &data)"
+.br
+.RI "Allow the contained data to be output to an ostream\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SS "template<typename T>
+.br
+class PhotoFinish::definable< T >"
+Template class for storing things that can be defined or undefined\&. 
+.PP
+Definition at line 29 of file Definable\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "template<typename T> \fBPhotoFinish::definable\fP< T >::\fBdefinable\fP ()\fC [inline]\fP"
+
+.PP
+Empty constructor\&. This sets the object to undefined and the item is initialised with its empty constructor 
+.PP
+Definition at line 39 of file Definable\&.hh\&.
+.SS "template<typename T> \fBPhotoFinish::definable\fP< T >::\fBdefinable\fP (const T & i)\fC [inline]\fP"
+
+.PP
+Construct from an item\&. This obviously also sets the object to 'defined' 
+.PP
+Definition at line 48 of file Definable\&.hh\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "template<typename T> const bool \fBPhotoFinish::definable\fP< T >::defined (void) const\fC [inline]\fP"
+
+.PP
+Is this object defined? 
+.PP
+Definition at line 54 of file Definable\&.hh\&.
+.SS "template<typename T> T \fBPhotoFinish::definable\fP< T >::get (void)\fC [inline]\fP"
+
+.PP
+Get the item\&. 
+.PP
+Definition at line 65 of file Definable\&.hh\&.
+.SS "template<typename T> const T& \fBPhotoFinish::definable\fP< T >::get (void) const\fC [inline]\fP"
+
+.PP
+Get the item, const version\&. 
+.PP
+Definition at line 67 of file Definable\&.hh\&.
+.SS "template<typename T> \fBPhotoFinish::definable\fP< T >::operator T (void) const\fC [inline]\fP"
+
+.PP
+Cast to the contained type\&. 
+.PP
+Definition at line 70 of file Definable\&.hh\&.
+.SS "template<typename T> T* \fBPhotoFinish::definable\fP< T >::operator\-> ()\fC [inline]\fP"
+
+.PP
+Arrow operator\&. 
+.PP
+Definition at line 73 of file Definable\&.hh\&.
+.SS "template<typename T> const T* \fBPhotoFinish::definable\fP< T >::operator\-> () const\fC [inline]\fP"
+
+.PP
+Arrow operator, const version\&. 
+.PP
+Definition at line 75 of file Definable\&.hh\&.
+.SS "template<typename T> \fBdefinable\fP<T>& \fBPhotoFinish::definable\fP< T >::operator= (const T & i)\fC [inline]\fP"
+
+.PP
+Assignment operator\&. 
+.PP
+Definition at line 78 of file Definable\&.hh\&.
+.SS "template<typename T> void \fBPhotoFinish::definable\fP< T >::set_defined (bool v = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Set this object as 'defined' (or not) 
+.PP
+Definition at line 59 of file Definable\&.hh\&.
+.SS "template<typename T> void \fBPhotoFinish::definable\fP< T >::undefine (void)\fC [inline]\fP"
+
+.PP
+Undefine the object\&. 
+.PP
+Definition at line 62 of file Definable\&.hh\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "template<typename T> std::ostream& operator<< (std::ostream & out, \fBdefinable\fP< T > & data)\fC [friend]\fP"
+
+.PP
+Allow the contained data to be output to an ostream\&. Outputs '[undefined]' if the value is not defined\&. 
+.PP
+Definition at line 88 of file Definable\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

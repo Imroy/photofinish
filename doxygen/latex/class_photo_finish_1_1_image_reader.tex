@@ -1,0 +1,183 @@
+\hypertarget{class_photo_finish_1_1_image_reader}{}\section{Photo\+Finish\+:\+:Image\+Reader Class Reference}
+\label{class_photo_finish_1_1_image_reader}\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+
+
+Abstract base class for reading image files.  
+
+
+
+
+{\ttfamily \#include $<$Image\+File.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_image_reader}{Image\+Reader} $>$ \hyperlink{class_photo_finish_1_1_image_reader_a4f077d55ff971217578dc51db00715aa}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for an \hyperlink{class_photo_finish_1_1_image_reader}{Image\+Reader}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} \hyperlink{class_photo_finish_1_1_image_reader_ad4c4ba4d84800ffe7e3d9f2150fc8ece}{read} (void)
+\begin{DoxyCompactList}\small\item\em Read the file into an image. \end{DoxyCompactList}\item 
+virtual \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} \hyperlink{class_photo_finish_1_1_image_reader_a2911b61ef1a592e9d384fd4be8699948}{read} (\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} dest)=0
+\begin{DoxyCompactList}\small\item\em Read the file into an image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_photo_finish_1_1_image_reader_a4f077d55ff971217578dc51db00715aa}{Image\+Reader\+::ptr} \hyperlink{class_photo_finish_1_1_image_reader_a8d27d2cf762f16189fbdd41182a1dc9e}{open} (const \hyperlink{class_photo_finish_1_1_image_filepath}{Image\+Filepath} \&ifp)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_image_reader_a9ce29baef024a887afc7a878fa6c71b5}{Image\+Reader} (const fs\+::path fp)
+\begin{DoxyCompactList}\small\item\em Private constructor. \end{DoxyCompactList}\item 
+virtual void \hyperlink{class_photo_finish_1_1_image_reader_a753ec07db45220b64a28d60200f5c3e2}{extract\+\_\+tags} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img)
+\begin{DoxyCompactList}\small\item\em Extract tags from file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const fs\+::path \hyperlink{class_photo_finish_1_1_image_reader_a674ef814523d0ff26c92c725888df0fa}{\+\_\+filepath}
+\item 
+bool \hyperlink{class_photo_finish_1_1_image_reader_a969fccd8f1d2fb28875c62a3f051dbcb}{\+\_\+is\+\_\+open}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Abstract base class for reading image files. 
+
+Definition at line 96 of file Image\+File.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a4f077d55ff971217578dc51db00715aa}\label{class_photo_finish_1_1_image_reader_a4f077d55ff971217578dc51db00715aa}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_image_reader}{Image\+Reader}$>$ \hyperlink{class_photo_finish_1_1_image_reader_a4f077d55ff971217578dc51db00715aa}{Photo\+Finish\+::\+Image\+Reader\+::ptr}}
+
+
+
+Shared pointer for an \hyperlink{class_photo_finish_1_1_image_reader}{Image\+Reader}. 
+
+
+
+Definition at line 109 of file Image\+File.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a9ce29baef024a887afc7a878fa6c71b5}\label{class_photo_finish_1_1_image_reader_a9ce29baef024a887afc7a878fa6c71b5}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!Image\+Reader@{Image\+Reader}}
+\index{Image\+Reader@{Image\+Reader}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{Image\+Reader()}{ImageReader()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Image\+Reader\+::\+Image\+Reader (\begin{DoxyParamCaption}\item[{const fs\+::path}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Private constructor. 
+
+
+
+Definition at line 126 of file Image\+File.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a753ec07db45220b64a28d60200f5c3e2}\label{class_photo_finish_1_1_image_reader_a753ec07db45220b64a28d60200f5c3e2}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!extract\+\_\+tags@{extract\+\_\+tags}}
+\index{extract\+\_\+tags@{extract\+\_\+tags}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{extract\+\_\+tags()}{extract\_tags()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+Reader\+::extract\+\_\+tags (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Extract tags from file. 
+
+
+
+Definition at line 131 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a8d27d2cf762f16189fbdd41182a1dc9e}\label{class_photo_finish_1_1_image_reader_a8d27d2cf762f16189fbdd41182a1dc9e}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!open@{open}}
+\index{open@{open}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{open()}{open()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_image_reader_a4f077d55ff971217578dc51db00715aa}{Image\+Reader\+::ptr} Photo\+Finish\+::\+Image\+Reader\+::open (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_image_filepath}{Image\+Filepath} \&}]{ifp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+Use the extension of the file path to decide what class to use 
+\begin{DoxyParams}{Parameters}
+{\em filepath} & File path \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 149 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_ad4c4ba4d84800ffe7e3d9f2150fc8ece}\label{class_photo_finish_1_1_image_reader_ad4c4ba4d84800ffe7e3d9f2150fc8ece}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!read@{read}}
+\index{read@{read}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{read()}{read()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} Photo\+Finish\+::\+Image\+Reader\+::read (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Read the file into an image. 
+
+\begin{DoxyReturn}{Returns}
+A new \hyperlink{class_photo_finish_1_1_image}{Image} object 
+\end{DoxyReturn}
+
+
+Definition at line 187 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a2911b61ef1a592e9d384fd4be8699948}\label{class_photo_finish_1_1_image_reader_a2911b61ef1a592e9d384fd4be8699948}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!read@{read}}
+\index{read@{read}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{read()}{read()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily virtual \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} Photo\+Finish\+::\+Image\+Reader\+::read (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}}]{dest }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Read the file into an image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest} & A \hyperlink{class_photo_finish_1_1_destination}{Destination} object where some information from the file will be placed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new \hyperlink{class_photo_finish_1_1_image}{Image} object 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a674ef814523d0ff26c92c725888df0fa}\label{class_photo_finish_1_1_image_reader_a674ef814523d0ff26c92c725888df0fa}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!\+\_\+filepath@{\+\_\+filepath}}
+\index{\+\_\+filepath@{\+\_\+filepath}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{\+\_\+filepath}{\_filepath}}
+{\footnotesize\ttfamily const fs\+::path Photo\+Finish\+::\+Image\+Reader\+::\+\_\+filepath\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 98 of file Image\+File.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_reader_a969fccd8f1d2fb28875c62a3f051dbcb}\label{class_photo_finish_1_1_image_reader_a969fccd8f1d2fb28875c62a3f051dbcb}} 
+\index{Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}!\+\_\+is\+\_\+open@{\+\_\+is\+\_\+open}}
+\index{\+\_\+is\+\_\+open@{\+\_\+is\+\_\+open}!Photo\+Finish\+::\+Image\+Reader@{Photo\+Finish\+::\+Image\+Reader}}
+\subsubsection{\texorpdfstring{\+\_\+is\+\_\+open}{\_is\_open}}
+{\footnotesize\ttfamily bool Photo\+Finish\+::\+Image\+Reader\+::\+\_\+is\+\_\+open\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 99 of file Image\+File.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_image_file_8hh}{Image\+File.\+hh}\item 
+\hyperlink{_image_file_8cc}{Image\+File.\+cc}\end{DoxyCompactItemize}

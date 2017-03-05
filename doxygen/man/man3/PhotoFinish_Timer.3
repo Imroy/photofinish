@@ -1,0 +1,78 @@
+.TH "PhotoFinish::Timer" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Timer \- Class for doing nanosecond-accurate timings\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Benchmark\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTimer\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "void \fBstart\fP (void)"
+.br
+.RI "Record the start time\&. "
+.ti -1c
+.RI "void \fBstop\fP (void)"
+.br
+.RI "Record the end time\&. "
+.ti -1c
+.RI "double \fBelapsed\fP (void) const"
+.br
+.RI "Return the number of seconds elapsed\&. "
+.ti -1c
+.RI "long long \fBelapsed_ns\fP (void) const"
+.br
+.RI "Return the number of nanoseconds elapsed\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Class for doing nanosecond-accurate timings\&. 
+.PP
+Definition at line 31 of file Benchmark\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Timer::Timer ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 25 of file Benchmark\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "double PhotoFinish::Timer::elapsed (void) const"
+
+.PP
+Return the number of seconds elapsed\&. 
+.PP
+Definition at line 29 of file Benchmark\&.cc\&.
+.SS "long long PhotoFinish::Timer::elapsed_ns (void) const"
+
+.PP
+Return the number of nanoseconds elapsed\&. 
+.PP
+Definition at line 36 of file Benchmark\&.cc\&.
+.SS "void PhotoFinish::Timer::start (void)\fC [inline]\fP"
+
+.PP
+Record the start time\&. 
+.PP
+Definition at line 41 of file Benchmark\&.hh\&.
+.SS "void PhotoFinish::Timer::stop (void)\fC [inline]\fP"
+
+.PP
+Record the end time\&. 
+.PP
+Definition at line 47 of file Benchmark\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

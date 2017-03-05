@@ -1,0 +1,31 @@
+\hypertarget{_j_p_e_g_8hh}{}\section{J\+P\+E\+G.\+hh File Reference}
+\label{_j_p_e_g_8hh}\index{J\+P\+E\+G.\+hh@{J\+P\+E\+G.\+hh}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$jpeglib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}C\+M\+S.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Image.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Destination.\+hh\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespace_photo_finish_a18ffc326d36fb31d16a6468b4bfc4715}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+src} (j\+\_\+decompress\+\_\+ptr dinfo, std\+::istream $\ast$is)
+\begin{DoxyCompactList}\small\item\em Set up a \char`\"{}source manager\char`\"{} on the given J\+P\+EG decompression structure to read from an istream. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_aca76b52b734af33c592f35e545811952}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+src\+\_\+free} (j\+\_\+decompress\+\_\+ptr dinfo)
+\begin{DoxyCompactList}\small\item\em Free the data structures of the istream source manager. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a8d7e2916997da593705b47a56cf33ea2}{Photo\+Finish\+::jpeg\+\_\+ostream\+\_\+dest} (j\+\_\+compress\+\_\+ptr cinfo, std\+::ostream $\ast$os)
+\begin{DoxyCompactList}\small\item\em Setup a \char`\"{}destination manager\char`\"{} on the given J\+P\+EG compression structure to write to an ostream. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a83c709bef3546d9271d51694a7bdbbab}{Photo\+Finish\+::jpeg\+\_\+ostream\+\_\+dest\+\_\+free} (j\+\_\+compress\+\_\+ptr cinfo)
+\begin{DoxyCompactList}\small\item\em Free the data structures of the ostream destination manager. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a790e2181f2d498b2d37bf662d4d39fe1}{Photo\+Finish\+::jpegfile\+\_\+scan\+\_\+\+R\+GB} (jpeg\+\_\+compress\+\_\+struct $\ast$cinfo)
+\begin{DoxyCompactList}\small\item\em Create a scan \char`\"{}script\char`\"{} for an R\+GB image. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_aeb3ed185a3672cf727f112889c7320d5}{Photo\+Finish\+::jpegfile\+\_\+scan\+\_\+greyscale} (jpeg\+\_\+compress\+\_\+struct $\ast$cinfo)
+\begin{DoxyCompactList}\small\item\em Create a scan \char`\"{}script\char`\"{} for a greyscale image. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} \hyperlink{namespace_photo_finish_a646def5a531d0c79b58c5a8ca485837b}{Photo\+Finish\+::jpeg\+\_\+read\+\_\+profile} (jpeg\+\_\+decompress\+\_\+struct $\ast$dinfo, Destination\+::ptr dest)
+\begin{DoxyCompactList}\small\item\em Read an I\+CC profile from A\+P\+P2 markers in a J\+P\+EG file. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a0437f142c40159470e827e79c20f6d59}{Photo\+Finish\+::jpeg\+\_\+write\+\_\+profile} (jpeg\+\_\+compress\+\_\+struct $\ast$cinfo, unsigned char $\ast$data, unsigned int size)
+\begin{DoxyCompactList}\small\item\em Write an I\+CC profile into A\+P\+P2 markers in a J\+P\+EG file. \end{DoxyCompactList}\end{DoxyCompactItemize}

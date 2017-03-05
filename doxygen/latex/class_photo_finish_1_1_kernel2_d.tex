@@ -1,0 +1,270 @@
+\hypertarget{class_photo_finish_1_1_kernel2_d}{}\section{Photo\+Finish\+:\+:Kernel2D Class Reference}
+\label{class_photo_finish_1_1_kernel2_d}\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+
+
+Creates and stores coefficients for convolving an image.  
+
+
+
+
+{\ttfamily \#include $<$Kernel2\+D.\+hh$>$}
+
+Inheritance diagram for Photo\+Finish\+:\+:Kernel2D\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_photo_finish_1_1_kernel2_d}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_kernel2_d}{Kernel2D} $>$ \hyperlink{class_photo_finish_1_1_kernel2_d_a7a209c34b3c8edb54835f1bab1244970}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for a \hyperlink{class_photo_finish_1_1_kernel2_d}{Kernel2D}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_kernel2_d_a41562fb9c80ee1aed47879347df24b4f}{Kernel2D} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_kernel2_d_a1ca692f0ba0f7d4ceb7870cbc00e4ec1}{$\sim$\+Kernel2D} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} \hyperlink{class_photo_finish_1_1_kernel2_d_a3ebc380c0b20cb9e1f0abbc53d35f451}{convolve} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} img, bool can\+\_\+free=false)
+\begin{DoxyCompactList}\small\item\em Convolve and image with this kernel and produce a new image. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_photo_finish_1_1_kernel2_d_a7a209c34b3c8edb54835f1bab1244970}{ptr} \hyperlink{class_photo_finish_1_1_kernel2_d_a1b28832e16ba150a49138caef3f4f918}{create} (const \hyperlink{class_photo_finish_1_1_d__sharpen}{D\+\_\+sharpen} \&ds)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_kernel2_d_a43c7b680295addf6ec51d57be59af461}{Kernel2D} (short unsigned int w, short unsigned int h, short unsigned int cx, short unsigned int cy)
+\begin{DoxyCompactList}\small\item\em Private constructor for derived classes. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_kernel2_d_abaf8fb7dc013f446340bd920f18a9a0d}{Kernel2D} (short unsigned int size, short unsigned int centre)
+\begin{DoxyCompactList}\small\item\em Private constructor for square filters. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \hyperlink{class_photo_finish_1_1_kernel2_d_ad3480df55b7e5ef7e3cd49d9c30d9ca3}{convolve\+\_\+type} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} src, \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} dest, bool can\+\_\+free=false)
+\item 
+{\footnotesize template$<$typename T , int channels$>$ }\\void \hyperlink{class_photo_finish_1_1_kernel2_d_abc243c488ecf5d4c435a6ff3e668286b}{convolve\+\_\+type\+\_\+channels} (\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} src, \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} dest, bool can\+\_\+free=false)
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+short unsigned int \hyperlink{class_photo_finish_1_1_kernel2_d_a1e47b71f4a0f09cc0cd9378d43aaba06}{\+\_\+width}
+\item 
+short unsigned int \hyperlink{class_photo_finish_1_1_kernel2_d_aa0b063aa148d574a833e6f4404c3b920}{\+\_\+height}
+\item 
+short unsigned int \hyperlink{class_photo_finish_1_1_kernel2_d_a184056430bd255f5ce75c67571304459}{\+\_\+centrex}
+\item 
+short unsigned int \hyperlink{class_photo_finish_1_1_kernel2_d_a4db11cdb4c2651d3f1b60c339fe908f6}{\+\_\+centrey}
+\item 
+\hyperlink{sample_8h_afc597c76b4f04a2da506a240d51d89a0}{S\+A\+M\+P\+LE} $\ast$$\ast$ \hyperlink{class_photo_finish_1_1_kernel2_d_a6210ca195130ad534ac7971b3a68f1e3}{\+\_\+values}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Creates and stores coefficients for convolving an image. 
+
+Definition at line 33 of file Kernel2\+D.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a7a209c34b3c8edb54835f1bab1244970}\label{class_photo_finish_1_1_kernel2_d_a7a209c34b3c8edb54835f1bab1244970}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_kernel2_d}{Kernel2D}$>$ \hyperlink{class_photo_finish_1_1_kernel2_d_a7a209c34b3c8edb54835f1bab1244970}{Photo\+Finish\+::\+Kernel2\+D\+::ptr}}
+
+
+
+Shared pointer for a \hyperlink{class_photo_finish_1_1_kernel2_d}{Kernel2D}. 
+
+
+
+Definition at line 52 of file Kernel2\+D.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a43c7b680295addf6ec51d57be59af461}\label{class_photo_finish_1_1_kernel2_d_a43c7b680295addf6ec51d57be59af461}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!Kernel2D@{Kernel2D}}
+\index{Kernel2D@{Kernel2D}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{Kernel2\+D()}{Kernel2D()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Kernel2\+D\+::\+Kernel2D (\begin{DoxyParamCaption}\item[{short unsigned int}]{w,  }\item[{short unsigned int}]{h,  }\item[{short unsigned int}]{cx,  }\item[{short unsigned int}]{cy }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Private constructor for derived classes. 
+
+
+
+Definition at line 35 of file Kernel2\+D.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_abaf8fb7dc013f446340bd920f18a9a0d}\label{class_photo_finish_1_1_kernel2_d_abaf8fb7dc013f446340bd920f18a9a0d}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!Kernel2D@{Kernel2D}}
+\index{Kernel2D@{Kernel2D}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{Kernel2\+D()}{Kernel2D()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Kernel2\+D\+::\+Kernel2D (\begin{DoxyParamCaption}\item[{short unsigned int}]{size,  }\item[{short unsigned int}]{centre }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Private constructor for square filters. 
+
+
+
+Definition at line 45 of file Kernel2\+D.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a41562fb9c80ee1aed47879347df24b4f}\label{class_photo_finish_1_1_kernel2_d_a41562fb9c80ee1aed47879347df24b4f}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!Kernel2D@{Kernel2D}}
+\index{Kernel2D@{Kernel2D}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{Kernel2\+D()}{Kernel2D()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Kernel2\+D\+::\+Kernel2D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 29 of file Kernel2\+D.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a1ca692f0ba0f7d4ceb7870cbc00e4ec1}\label{class_photo_finish_1_1_kernel2_d_a1ca692f0ba0f7d4ceb7870cbc00e4ec1}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!````~Kernel2D@{$\sim$\+Kernel2D}}
+\index{````~Kernel2D@{$\sim$\+Kernel2D}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{$\sim$\+Kernel2\+D()}{~Kernel2D()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Kernel2\+D\+::$\sim$\+Kernel2D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+
+
+Definition at line 59 of file Kernel2\+D.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a3ebc380c0b20cb9e1f0abbc53d35f451}\label{class_photo_finish_1_1_kernel2_d_a3ebc380c0b20cb9e1f0abbc53d35f451}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!convolve@{convolve}}
+\index{convolve@{convolve}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{convolve()}{convolve()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} Photo\+Finish\+::\+Kernel2\+D\+::convolve (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{img,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Convolve and image with this kernel and produce a new image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em img} & Source image \\
+\hline
+{\em can\+\_\+free} & Can each row of the image be freed after it is convolved? \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+New image 
+\end{DoxyReturn}
+
+
+Definition at line 215 of file Kernel2\+D.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_ad3480df55b7e5ef7e3cd49d9c30d9ca3}\label{class_photo_finish_1_1_kernel2_d_ad3480df55b7e5ef7e3cd49d9c30d9ca3}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!convolve\+\_\+type@{convolve\+\_\+type}}
+\index{convolve\+\_\+type@{convolve\+\_\+type}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{convolve\+\_\+type()}{convolve\_type()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Photo\+Finish\+::\+Kernel2\+D\+::convolve\+\_\+type (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{src,  }\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{dest,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 147 of file Kernel2\+D.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_abc243c488ecf5d4c435a6ff3e668286b}\label{class_photo_finish_1_1_kernel2_d_abc243c488ecf5d4c435a6ff3e668286b}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!convolve\+\_\+type\+\_\+channels@{convolve\+\_\+type\+\_\+channels}}
+\index{convolve\+\_\+type\+\_\+channels@{convolve\+\_\+type\+\_\+channels}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{convolve\+\_\+type\+\_\+channels()}{convolve\_type\_channels()}}
+{\footnotesize\ttfamily template$<$typename T , int channels$>$ \\
+void Photo\+Finish\+::\+Kernel2\+D\+::convolve\+\_\+type\+\_\+channels (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{src,  }\item[{\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr}}]{dest,  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 69 of file Kernel2\+D.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a1b28832e16ba150a49138caef3f4f918}\label{class_photo_finish_1_1_kernel2_d_a1b28832e16ba150a49138caef3f4f918}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!create@{create}}
+\index{create@{create}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{create()}{create()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_kernel2_d_a7a209c34b3c8edb54835f1bab1244970}{Kernel2\+D\+::ptr} Photo\+Finish\+::\+Kernel2\+D\+::create (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d__sharpen}{D\+\_\+sharpen} \&}]{ds }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+Create a \hyperlink{class_photo_finish_1_1_kernel2_d}{Kernel2D} object using the parameters in the \hyperlink{class_photo_finish_1_1_d__sharpen}{D\+\_\+sharpen} object. 
+\begin{DoxyParams}{Parameters}
+{\em ds} & A \hyperlink{class_photo_finish_1_1_d__sharpen}{D\+\_\+sharpen} object which will supply our parameters. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 55 of file Kernel2\+D.\+cc.
+
+
+
+\subsection{Member Data Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a184056430bd255f5ce75c67571304459}\label{class_photo_finish_1_1_kernel2_d_a184056430bd255f5ce75c67571304459}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!\+\_\+centrex@{\+\_\+centrex}}
+\index{\+\_\+centrex@{\+\_\+centrex}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{\+\_\+centrex}{\_centrex}}
+{\footnotesize\ttfamily short unsigned int Photo\+Finish\+::\+Kernel2\+D\+::\+\_\+centrex\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 35 of file Kernel2\+D.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a4db11cdb4c2651d3f1b60c339fe908f6}\label{class_photo_finish_1_1_kernel2_d_a4db11cdb4c2651d3f1b60c339fe908f6}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!\+\_\+centrey@{\+\_\+centrey}}
+\index{\+\_\+centrey@{\+\_\+centrey}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{\+\_\+centrey}{\_centrey}}
+{\footnotesize\ttfamily short unsigned int Photo\+Finish\+::\+Kernel2\+D\+::\+\_\+centrey\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 35 of file Kernel2\+D.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_aa0b063aa148d574a833e6f4404c3b920}\label{class_photo_finish_1_1_kernel2_d_aa0b063aa148d574a833e6f4404c3b920}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!\+\_\+height@{\+\_\+height}}
+\index{\+\_\+height@{\+\_\+height}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{\+\_\+height}{\_height}}
+{\footnotesize\ttfamily short unsigned int Photo\+Finish\+::\+Kernel2\+D\+::\+\_\+height\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 35 of file Kernel2\+D.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a6210ca195130ad534ac7971b3a68f1e3}\label{class_photo_finish_1_1_kernel2_d_a6210ca195130ad534ac7971b3a68f1e3}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!\+\_\+values@{\+\_\+values}}
+\index{\+\_\+values@{\+\_\+values}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{\+\_\+values}{\_values}}
+{\footnotesize\ttfamily \hyperlink{sample_8h_afc597c76b4f04a2da506a240d51d89a0}{S\+A\+M\+P\+LE}$\ast$$\ast$ Photo\+Finish\+::\+Kernel2\+D\+::\+\_\+values\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 36 of file Kernel2\+D.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_kernel2_d_a1e47b71f4a0f09cc0cd9378d43aaba06}\label{class_photo_finish_1_1_kernel2_d_a1e47b71f4a0f09cc0cd9378d43aaba06}} 
+\index{Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}!\+\_\+width@{\+\_\+width}}
+\index{\+\_\+width@{\+\_\+width}!Photo\+Finish\+::\+Kernel2D@{Photo\+Finish\+::\+Kernel2D}}
+\subsubsection{\texorpdfstring{\+\_\+width}{\_width}}
+{\footnotesize\ttfamily short unsigned int Photo\+Finish\+::\+Kernel2\+D\+::\+\_\+width\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 35 of file Kernel2\+D.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_kernel2_d_8hh}{Kernel2\+D.\+hh}\item 
+\hyperlink{_kernel2_d_8cc}{Kernel2\+D.\+cc}\end{DoxyCompactItemize}

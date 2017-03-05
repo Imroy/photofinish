@@ -1,0 +1,79 @@
+.TH "JPEG_iostream.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+JPEG_iostream.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <jpeglib\&.h>\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPhotoFinish::jpeg_source_state_t\fP"
+.br
+.RI "Structure holding information for the istream reader\&. "
+.ti -1c
+.RI "struct \fBPhotoFinish::jpeg_destination_state_t\fP"
+.br
+.RI "Structure holding information for the ostream writer\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_init_source\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Initialise the istream source manager\&. "
+.ti -1c
+.RI "boolean \fBPhotoFinish::jpeg_istream_fill_input_buffer\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Fill the buffer\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_skip_input_data\fP (j_decompress_ptr dinfo, long num_bytes)"
+.br
+.RI "Skip some data\&. "
+.ti -1c
+.RI "boolean \fBPhotoFinish::jpeg_istream_resync_to_restart\fP (j_decompress_ptr dinfo, int desired)"
+.br
+.RI "Resync to start?!? "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_term_source\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Terminate the istream source manager\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_src\fP (j_decompress_ptr dinfo, std::istream *is)"
+.br
+.RI "Set up a 'source manager' on the given JPEG decompression structure to read from an istream\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_src_free\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Free the data structures of the istream source manager\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_ostream_dest\fP (j_compress_ptr cinfo, std::ostream *os)"
+.br
+.RI "Setup a 'destination manager' on the given JPEG compression structure to write to an ostream\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_ostream_dest_free\fP (j_compress_ptr cinfo)"
+.br
+.RI "Free the data structures of the ostream destination manager\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

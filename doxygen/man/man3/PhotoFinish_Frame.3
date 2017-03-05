@@ -1,0 +1,165 @@
+.TH "PhotoFinish::Frame" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Frame \- Crop+rescaling parameters\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Frame\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::D_target\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBFrame\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for a \fBFrame\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFrame\fP (double tw, double th, double x, double y, double w, double h)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fBFrame\fP (const \fBD_target\fP &target, double x, double y, double w, double h)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fBImage::ptr\fP \fBcrop_resize\fP (\fBImage::ptr\fP img, const \fBD_resize\fP &dr, bool can_free=false)"
+.br
+.RI "Crop and resize an image\&. "
+.ti -1c
+.RI "const double \fBcrop_x\fP (void) const"
+.br
+.RI "The left-most border of the crop window\&. "
+.ti -1c
+.RI "const double \fBcrop_y\fP (void) const"
+.br
+.RI "The top-most border of the crop window\&. "
+.ti -1c
+.RI "const double \fBcrop_w\fP (void) const"
+.br
+.RI "The width of the crop window\&. "
+.ti -1c
+.RI "const double \fBcrop_h\fP (void) const"
+.br
+.RI "The height of the crop window\&. "
+.ti -1c
+.RI "const double \fBwaste\fP (\fBImage::ptr\fP img) const"
+.br
+.RI "How much of the original image is wasted by this crop frame\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Crop+rescaling parameters\&. 
+.PP
+Definition at line 28 of file Frame\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBFrame\fP> \fBPhotoFinish::Frame::ptr\fP"
+
+.PP
+Shared pointer for a \fBFrame\fP\&. 
+.PP
+Definition at line 71 of file Frame\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Frame::Frame (double tw, double th, double x, double y, double w, double h)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItw,th\fP Size (width, height) of the output 
+.br
+\fIx,y\fP Top-left corner of crop+rescale window 
+.br
+\fIw,h\fP Size of the crop+rescale window 
+.RE
+.PP
+
+.PP
+Definition at line 28 of file Frame\&.cc\&.
+.SS "PhotoFinish::Frame::Frame (const \fBD_target\fP & target, double x, double y, double w, double h)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fItarget\fP \fBD_target\fP object providing the size (width, height) of the output 
+.br
+\fIx,y\fP Top-left corner of crop+rescale window 
+.br
+\fIw,h\fP Size of the crop+rescale window 
+.RE
+.PP
+
+.PP
+Definition at line 34 of file Frame\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "const double PhotoFinish::Frame::crop_h (void) const\fC [inline]\fP"
+
+.PP
+The height of the crop window\&. 
+.PP
+Definition at line 65 of file Frame\&.hh\&.
+.SS "\fBImage::ptr\fP PhotoFinish::Frame::crop_resize (\fBImage::ptr\fP img, const \fBD_resize\fP & dr, bool can_free = \fCfalse\fP)"
+
+.PP
+Crop and resize an image\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimg\fP The source image 
+.br
+\fIdr\fP A \fBD_resize\fP object which will supply our parameters\&. 
+.br
+\fIcan_free\fP Can each row of the image be freed after it is convolved? 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A new cropped and resized image 
+.RE
+.PP
+
+.PP
+Definition at line 40 of file Frame\&.cc\&.
+.SS "const double PhotoFinish::Frame::crop_w (void) const\fC [inline]\fP"
+
+.PP
+The width of the crop window\&. 
+.PP
+Definition at line 63 of file Frame\&.hh\&.
+.SS "const double PhotoFinish::Frame::crop_x (void) const\fC [inline]\fP"
+
+.PP
+The left-most border of the crop window\&. 
+.PP
+Definition at line 59 of file Frame\&.hh\&.
+.SS "const double PhotoFinish::Frame::crop_y (void) const\fC [inline]\fP"
+
+.PP
+The top-most border of the crop window\&. 
+.PP
+Definition at line 61 of file Frame\&.hh\&.
+.SS "const double PhotoFinish::Frame::waste (\fBImage::ptr\fP img) const"
+
+.PP
+How much of the original image is wasted by this crop frame\&. 
+.PP
+Definition at line 53 of file Frame\&.cc\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

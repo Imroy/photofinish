@@ -1,0 +1,151 @@
+\hypertarget{class_photo_finish_1_1_image_filepath}{}\section{Photo\+Finish\+:\+:Image\+Filepath Class Reference}
+\label{class_photo_finish_1_1_image_filepath}\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+
+
+Class for holding filename and the image format.  
+
+
+
+
+{\ttfamily \#include $<$Image\+File.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_image_filepath_aae5f02530cacc69824458e02b8eac08d}{Image\+Filepath} (const fs\+::path \hyperlink{class_photo_finish_1_1_image_filepath_ae9e93bc121205dbc65545e43a58a22a2}{filepath}, const std\+::string \hyperlink{class_photo_finish_1_1_image_filepath_a8ab0726533af5d526fd077cd82f67020}{format})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_image_filepath_a7fb4ce09dba96f24ae704a27e9ef436e}{Image\+Filepath} (const fs\+::path \hyperlink{class_photo_finish_1_1_image_filepath_ae9e93bc121205dbc65545e43a58a22a2}{filepath})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+fs\+::path \hyperlink{class_photo_finish_1_1_image_filepath_ad3a3dc3f321bfc28e924ba4bc8ebcd71}{fixed\+\_\+filepath} (void) const
+\item 
+void \hyperlink{class_photo_finish_1_1_image_filepath_ab9dd1dbd29cf06bac332e9af808c900b}{fix\+\_\+filepath} (void)
+\item 
+virtual const fs\+::path \hyperlink{class_photo_finish_1_1_image_filepath_ae9e93bc121205dbc65545e43a58a22a2}{filepath} (void) const
+\begin{DoxyCompactList}\small\item\em File path of this image file. \end{DoxyCompactList}\item 
+virtual std\+::string \hyperlink{class_photo_finish_1_1_image_filepath_a8ab0726533af5d526fd077cd82f67020}{format} (void) const
+\begin{DoxyCompactList}\small\item\em Format of this image file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \hyperlink{class_photo_finish_1_1_image_filepath_a1eee4f55a949c2f66f1200d87c0e0f7c}{operator$<$$<$} (std\+::ostream \&out, const \hyperlink{class_photo_finish_1_1_image_filepath}{Image\+Filepath} \&fp)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for holding filename and the image format. 
+
+Definition at line 55 of file Image\+File.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_aae5f02530cacc69824458e02b8eac08d}\label{class_photo_finish_1_1_image_filepath_aae5f02530cacc69824458e02b8eac08d}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!Image\+Filepath@{Image\+Filepath}}
+\index{Image\+Filepath@{Image\+Filepath}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{Image\+Filepath()}{ImageFilepath()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Image\+Filepath\+::\+Image\+Filepath (\begin{DoxyParamCaption}\item[{const fs\+::path}]{filepath,  }\item[{const std\+::string}]{format }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filepath} & The path of the image file \\
+\hline
+{\em format} & Format of the image file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 28 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_a7fb4ce09dba96f24ae704a27e9ef436e}\label{class_photo_finish_1_1_image_filepath_a7fb4ce09dba96f24ae704a27e9ef436e}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!Image\+Filepath@{Image\+Filepath}}
+\index{Image\+Filepath@{Image\+Filepath}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{Image\+Filepath()}{ImageFilepath()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Image\+Filepath\+::\+Image\+Filepath (\begin{DoxyParamCaption}\item[{const fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+Guess the format from the file extension. 
+\begin{DoxyParams}{Parameters}
+{\em filepath} & The path of the image file \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 33 of file Image\+File.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_ae9e93bc121205dbc65545e43a58a22a2}\label{class_photo_finish_1_1_image_filepath_ae9e93bc121205dbc65545e43a58a22a2}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!filepath@{filepath}}
+\index{filepath@{filepath}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{filepath()}{filepath()}}
+{\footnotesize\ttfamily virtual const fs\+::path Photo\+Finish\+::\+Image\+Filepath\+::filepath (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+File path of this image file. 
+
+
+
+Definition at line 80 of file Image\+File.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_ab9dd1dbd29cf06bac332e9af808c900b}\label{class_photo_finish_1_1_image_filepath_ab9dd1dbd29cf06bac332e9af808c900b}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!fix\+\_\+filepath@{fix\+\_\+filepath}}
+\index{fix\+\_\+filepath@{fix\+\_\+filepath}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{fix\+\_\+filepath()}{fix\_filepath()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+Filepath\+::fix\+\_\+filepath (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 77 of file Image\+File.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_ad3a3dc3f321bfc28e924ba4bc8ebcd71}\label{class_photo_finish_1_1_image_filepath_ad3a3dc3f321bfc28e924ba4bc8ebcd71}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!fixed\+\_\+filepath@{fixed\+\_\+filepath}}
+\index{fixed\+\_\+filepath@{fixed\+\_\+filepath}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{fixed\+\_\+filepath()}{fixed\_filepath()}}
+{\footnotesize\ttfamily fs\+::path Photo\+Finish\+::\+Image\+Filepath\+::fixed\+\_\+filepath (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 84 of file Image\+File.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_a8ab0726533af5d526fd077cd82f67020}\label{class_photo_finish_1_1_image_filepath_a8ab0726533af5d526fd077cd82f67020}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!format@{format}}
+\index{format@{format}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{format()}{format()}}
+{\footnotesize\ttfamily virtual std\+::string Photo\+Finish\+::\+Image\+Filepath\+::format (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Format of this image file. 
+
+
+
+Definition at line 83 of file Image\+File.\+hh.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_filepath_a1eee4f55a949c2f66f1200d87c0e0f7c}\label{class_photo_finish_1_1_image_filepath_a1eee4f55a949c2f66f1200d87c0e0f7c}} 
+\index{Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Photo\+Finish\+::\+Image\+Filepath@{Photo\+Finish\+::\+Image\+Filepath}}
+\subsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{out,  }\item[{const \hyperlink{class_photo_finish_1_1_image_filepath}{Image\+Filepath} \&}]{fp }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 85 of file Image\+File.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_image_file_8hh}{Image\+File.\+hh}\item 
+\hyperlink{_image_file_8cc}{Image\+File.\+cc}\end{DoxyCompactItemize}

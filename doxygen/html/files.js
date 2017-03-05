@@ -1,5 +1,7 @@
 var files =
 [
+    [ "Benchmark.cc", "_benchmark_8cc.html", "_benchmark_8cc" ],
+    [ "Benchmark.hh", "_benchmark_8hh.html", "_benchmark_8hh" ],
     [ "CMS.cc", "_c_m_s_8cc.html", "_c_m_s_8cc" ],
     [ "CMS.hh", "_c_m_s_8hh.html", "_c_m_s_8hh" ],
     [ "CropSolution.cc", "_crop_solution_8cc.html", "_crop_solution_8cc" ],
@@ -52,7 +54,11 @@ var files =
     [ "JPEG_profiles.cc", "_j_p_e_g__profiles_8cc.html", "_j_p_e_g__profiles_8cc" ],
     [ "JPEG_scans.cc", "_j_p_e_g__scans_8cc.html", "_j_p_e_g__scans_8cc" ],
     [ "JPEGreader.cc", "_j_p_e_greader_8cc.html", null ],
-    [ "JPEGwriter.cc", "_j_p_e_gwriter_8cc.html", null ],
+    [ "JPEGwriter.cc", "_j_p_e_gwriter_8cc.html", "_j_p_e_gwriter_8cc" ],
+    [ "JXR.hh", "_j_x_r_8hh.html", "_j_x_r_8hh" ],
+    [ "JXR_formats.cc", "_j_x_r__formats_8cc.html", "_j_x_r__formats_8cc" ],
+    [ "JXRreader.cc", "_j_x_rreader_8cc.html", "_j_x_rreader_8cc" ],
+    [ "JXRwriter.cc", "_j_x_rwriter_8cc.html", null ],
     [ "Kernel1Dvar.cc", "_kernel1_dvar_8cc.html", "_kernel1_dvar_8cc" ],
     [ "Kernel1Dvar.hh", "_kernel1_dvar_8hh.html", [
       [ "Kernel1Dvar", "class_photo_finish_1_1_kernel1_dvar.html", "class_photo_finish_1_1_kernel1_dvar" ],

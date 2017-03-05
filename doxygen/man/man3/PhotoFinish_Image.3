@@ -1,0 +1,391 @@
+.TH "PhotoFinish::Image" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Image \- An image class\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Image\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBImage\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for an \fBImage\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBImage\fP (unsigned int w, unsigned int h, \fBCMS::Format\fP f)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fB~Image\fP ()"
+.br
+.RI "Destructor\&. "
+.ti -1c
+.RI "const unsigned int \fBwidth\fP (void) const"
+.br
+.RI "The width of this image\&. "
+.ti -1c
+.RI "const unsigned int \fBheight\fP (void) const"
+.br
+.RI "The height of this image\&. "
+.ti -1c
+.RI "bool \fBhas_profile\fP (void) const"
+.br
+.ti -1c
+.RI "const \fBCMS::Profile::ptr\fP \fBprofile\fP (void) const"
+.br
+.RI "Get the ICC profile\&. "
+.ti -1c
+.RI "void \fBset_profile\fP (\fBCMS::Profile::ptr\fP p)"
+.br
+.RI "Set the ICC profile\&. "
+.ti -1c
+.RI "\fBCMS::Format\fP \fBformat\fP (void) const"
+.br
+.RI "Get the \fBCMS\fP format\&. "
+.ti -1c
+.RI "const \fBdefinable\fP< double > \fBxres\fP (void) const"
+.br
+.RI "The X resolution of this image (PPI) "
+.ti -1c
+.RI "const \fBdefinable\fP< double > \fByres\fP (void) const"
+.br
+.RI "The Y resolution of this image (PPI) "
+.ti -1c
+.RI "void \fBset_resolution\fP (double r)"
+.br
+.RI "Set both the X and Y resolution (PPI) "
+.ti -1c
+.RI "void \fBset_xres\fP (double r)"
+.br
+.RI "Set the X resolution (PPI) "
+.ti -1c
+.RI "void \fBset_yres\fP (double r)"
+.br
+.RI "Set the Y resolution (PPI) "
+.ti -1c
+.RI "void \fBset_resolution\fP (double xr, double yr)"
+.br
+.RI "Set the X and Y resolutions (PPI) "
+.ti -1c
+.RI "void \fBset_resolution_from_size\fP (double size)"
+.br
+.RI "Set the resolution given the length of the longest side (in inches) "
+.ti -1c
+.RI "size_t \fBpixel_size\fP (void) const"
+.br
+.RI "Return the size of a pixel in bytes\&. "
+.ti -1c
+.RI "size_t \fBrow_size\fP (void) const"
+.br
+.RI "Retun the size of a row in bytes\&. "
+.ti -1c
+.RI "void \fBcheck_rowdata_alloc\fP (unsigned int y)"
+.br
+.ti -1c
+.RI "template<typename T  = unsigned char> T * \fBrow\fP (unsigned int y) const"
+.br
+.RI "Pointer to pixel data at start of row\&. "
+.ti -1c
+.RI "template<typename T > T * \fBat\fP (unsigned int x, unsigned int y) const"
+.br
+.RI "Pointer to pixel data at coordinates\&. "
+.ti -1c
+.RI "template<typename T > T & \fBat\fP (unsigned int x, unsigned int y, unsigned char c) const"
+.br
+.ti -1c
+.RI "void \fBfree_row\fP (unsigned int y)"
+.br
+.RI "Free the memory storing row 'y'\&. "
+.ti -1c
+.RI "Exiv2::ExifData & \fBEXIFtags\fP (void)"
+.br
+.RI "The Exiv2::ExifData object\&. "
+.ti -1c
+.RI "Exiv2::IptcData & \fBIPTCtags\fP (void)"
+.br
+.RI "The Exiv2::IptcData object\&. "
+.ti -1c
+.RI "Exiv2::XmpData & \fBXMPtags\fP (void)"
+.br
+.RI "The Exiv2::XmpData object\&. "
+.ti -1c
+.RI "\fBptr\fP \fBtransform_colour\fP (\fBCMS::Profile::ptr\fP dest_profile, \fBCMS::Format\fP dest_format, \fBCMS::Intent\fP intent=\fBCMS::Intent::Perceptual\fP, bool can_free=false)"
+.br
+.RI "Transform this image into a different colour space and/or ICC profile, making a new image\&. "
+.ti -1c
+.RI "void \fBtransform_colour_inplace\fP (\fBCMS::Profile::ptr\fP dest_profile, \fBCMS::Format\fP dest_format, \fBCMS::Intent\fP intent=\fBCMS::Intent::Perceptual\fP)"
+.br
+.RI "Transform this image in-place into a different colour space and/or ICC profile\&. "
+.ti -1c
+.RI "void \fBun_alpha_mult\fP (void)"
+.br
+.RI "Un-pre-multiply the colour values with the alpha channel\&. "
+.ti -1c
+.RI "void \fBalpha_mult\fP (\fBCMS::Format\fP dest_format)"
+.br
+.RI "Pre-multiply the colour values with the alpha\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBCMS::Profile::ptr\fP \fBdefault_profile\fP (\fBCMS::ColourModel\fP default_colourmodel, std::string for_desc)"
+.br
+.RI "Create either an sRGB or greyscale profile depending on image format\&. "
+.ti -1c
+.RI "static \fBCMS::Profile::ptr\fP \fBdefault_profile\fP (\fBCMS::Format\fP \fBformat\fP, std::string for_desc)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+An image class\&. 
+.PP
+Definition at line 31 of file Image\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBImage\fP> \fBPhotoFinish::Image::ptr\fP"
+
+.PP
+Shared pointer for an \fBImage\fP\&. 
+.PP
+Definition at line 55 of file Image\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Image::Image (unsigned int w, unsigned int h, \fBCMS::Format\fP f)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIw,h\fP Width and height of the image 
+.br
+\fIt\fP LCMS2 pixel format 
+.RE
+.PP
+
+.PP
+Definition at line 29 of file Image\&.cc\&.
+.SS "PhotoFinish::Image::~Image ()"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 45 of file Image\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::Image::alpha_mult (\fBCMS::Format\fP dest_format)"
+
+.PP
+Pre-multiply the colour values with the alpha\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest_format\fP \fBDestination\fP format, only the channel type (bytes and float flag) are used\&. 
+.RE
+.PP
+
+.PP
+Definition at line 444 of file Image\&.cc\&.
+.SS "template<typename T > T* PhotoFinish::Image::at (unsigned int x, unsigned int y) const\fC [inline]\fP"
+
+.PP
+Pointer to pixel data at coordinates\&. 
+.PP
+Definition at line 122 of file Image\&.hh\&.
+.SS "template<typename T > T& PhotoFinish::Image::at (unsigned int x, unsigned int y, unsigned char c) const\fC [inline]\fP"
+
+.PP
+Definition at line 125 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::check_rowdata_alloc (unsigned int y)\fC [inline]\fP"
+
+.PP
+Definition at line 111 of file Image\&.hh\&.
+.SS "\fBCMS::Profile::ptr\fP PhotoFinish::Image::default_profile (\fBCMS::ColourModel\fP default_colourmodel, std::string for_desc)\fC [static]\fP"
+
+.PP
+Create either an sRGB or greyscale profile depending on image format\&. 
+.PP
+Definition at line 57 of file Image\&.cc\&.
+.SS "static \fBCMS::Profile::ptr\fP PhotoFinish::Image::default_profile (\fBCMS::Format\fP format, std::string for_desc)\fC [inline]\fP, \fC [static]\fP"
+
+.PP
+Definition at line 147 of file Image\&.hh\&.
+.SS "Exiv2::ExifData& PhotoFinish::Image::EXIFtags (void)\fC [inline]\fP"
+
+.PP
+The Exiv2::ExifData object\&. 
+.PP
+Definition at line 136 of file Image\&.hh\&.
+.SS "\fBCMS::Format\fP PhotoFinish::Image::format (void) const\fC [inline]\fP"
+
+.PP
+Get the \fBCMS\fP format\&. 
+.PP
+Definition at line 82 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::free_row (unsigned int y)\fC [inline]\fP"
+
+.PP
+Free the memory storing row 'y'\&. 
+.PP
+Definition at line 128 of file Image\&.hh\&.
+.SS "bool PhotoFinish::Image::has_profile (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 73 of file Image\&.hh\&.
+.SS "const unsigned int PhotoFinish::Image::height (void) const\fC [inline]\fP"
+
+.PP
+The height of this image\&. 
+.PP
+Definition at line 71 of file Image\&.hh\&.
+.SS "Exiv2::IptcData& PhotoFinish::Image::IPTCtags (void)\fC [inline]\fP"
+
+.PP
+The Exiv2::IptcData object\&. 
+.PP
+Definition at line 139 of file Image\&.hh\&.
+.SS "size_t PhotoFinish::Image::pixel_size (void) const\fC [inline]\fP"
+
+.PP
+Return the size of a pixel in bytes\&. 
+.PP
+Definition at line 106 of file Image\&.hh\&.
+.SS "const \fBCMS::Profile::ptr\fP PhotoFinish::Image::profile (void) const\fC [inline]\fP"
+
+.PP
+Get the ICC profile\&. 
+.PP
+Definition at line 76 of file Image\&.hh\&.
+.SS "template<typename T  = unsigned char> T* PhotoFinish::Image::row (unsigned int y) const\fC [inline]\fP"
+
+.PP
+Pointer to pixel data at start of row\&. 
+.PP
+Definition at line 118 of file Image\&.hh\&.
+.SS "size_t PhotoFinish::Image::row_size (void) const\fC [inline]\fP"
+
+.PP
+Retun the size of a row in bytes\&. 
+.PP
+Definition at line 109 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::set_profile (\fBCMS::Profile::ptr\fP p)\fC [inline]\fP"
+
+.PP
+Set the ICC profile\&. 
+.PP
+Definition at line 79 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::set_resolution (double r)\fC [inline]\fP"
+
+.PP
+Set both the X and Y resolution (PPI) 
+.PP
+Definition at line 91 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::set_resolution (double xr, double yr)\fC [inline]\fP"
+
+.PP
+Set the X and Y resolutions (PPI) 
+.PP
+Definition at line 100 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::set_resolution_from_size (double size)\fC [inline]\fP"
+
+.PP
+Set the resolution given the length of the longest side (in inches) 
+.PP
+Definition at line 103 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::set_xres (double r)\fC [inline]\fP"
+
+.PP
+Set the X resolution (PPI) 
+.PP
+Definition at line 94 of file Image\&.hh\&.
+.SS "void PhotoFinish::Image::set_yres (double r)\fC [inline]\fP"
+
+.PP
+Set the Y resolution (PPI) 
+.PP
+Definition at line 97 of file Image\&.hh\&.
+.SS "\fBImage::ptr\fP PhotoFinish::Image::transform_colour (\fBCMS::Profile::ptr\fP dest_profile, \fBCMS::Format\fP dest_format, \fBCMS::Intent\fP intent = \fC\fBCMS::Intent::Perceptual\fP\fP, bool can_free = \fCfalse\fP)"
+
+.PP
+Transform this image into a different colour space and/or ICC profile, making a new image\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest_profile\fP The ICC profile of the destination\&. If NULL, uses image's profile\&. 
+.br
+\fIdest_format\fP The LCMS2 pixel format\&. 
+.br
+\fIintent\fP The ICC intent of the transform, defaults to perceptual\&. 
+.br
+\fIcan_free\fP Whether rows can be freed after transforming, defaults to false\&. 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+A new image 
+.RE
+.PP
+
+.PP
+Definition at line 147 of file Image\&.cc\&.
+.SS "void PhotoFinish::Image::transform_colour_inplace (\fBCMS::Profile::ptr\fP dest_profile, \fBCMS::Format\fP dest_format, \fBCMS::Intent\fP intent = \fC\fBCMS::Intent::Perceptual\fP\fP)"
+
+.PP
+Transform this image in-place into a different colour space and/or ICC profile\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdest_profile\fP The ICC profile of the destination\&. If NULL, uses image's profile\&. 
+.br
+\fIdest_format\fP The LCMS2 pixel format\&. 
+.br
+\fIintent\fP The ICC intent of the transform, defaults to perceptual\&. 
+.RE
+.PP
+
+.PP
+Definition at line 214 of file Image\&.cc\&.
+.SS "void PhotoFinish::Image::un_alpha_mult (void)"
+
+.PP
+Un-pre-multiply the colour values with the alpha channel\&. Converts data to floating point (SAMPLE) in the process 
+.PP
+Definition at line 347 of file Image\&.cc\&.
+.SS "const unsigned int PhotoFinish::Image::width (void) const\fC [inline]\fP"
+
+.PP
+The width of this image\&. 
+.PP
+Definition at line 68 of file Image\&.hh\&.
+.SS "Exiv2::XmpData& PhotoFinish::Image::XMPtags (void)\fC [inline]\fP"
+
+.PP
+The Exiv2::XmpData object\&. 
+.PP
+Definition at line 142 of file Image\&.hh\&.
+.SS "const \fBdefinable\fP<double> PhotoFinish::Image::xres (void) const\fC [inline]\fP"
+
+.PP
+The X resolution of this image (PPI) 
+.PP
+Definition at line 85 of file Image\&.hh\&.
+.SS "const \fBdefinable\fP<double> PhotoFinish::Image::yres (void) const\fC [inline]\fP"
+
+.PP
+The Y resolution of this image (PPI) 
+.PP
+Definition at line 88 of file Image\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

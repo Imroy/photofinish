@@ -1,0 +1,52 @@
+\hypertarget{_j_x_rreader_8cc}{}\section{J\+X\+Rreader.\+cc File Reference}
+\label{_j_x_rreader_8cc}\index{J\+X\+Rreader.\+cc@{J\+X\+Rreader.\+cc}}
+{\ttfamily \#include $<$J\+X\+R\+Glue.\+h$>$}\newline
+{\ttfamily \#include $<$boost/filesystem.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/filesystem/fstream.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}Image\+File.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Image.\+hh\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}J\+X\+R.\+hh\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_j_x_rreader_8cc_af5d24760088112bed6225531311cdd22}{jxr\+\_\+metadata\+\_\+size}(decoder,  name)~decoder-\/$>$W\+M\+P.\+wmi\+D\+E\+Misc.\+u\#\#name\#\#Byte\+Count
+\item 
+\#define \hyperlink{_j_x_rreader_8cc_a54c3f510d36b22cbbca13c3087d9de5b}{jxr\+\_\+metadata\+\_\+data}(decoder,  name,  data)
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_j_x_rreader_8cc_a54c3f510d36b22cbbca13c3087d9de5b}\label{_j_x_rreader_8cc_a54c3f510d36b22cbbca13c3087d9de5b}} 
+\index{J\+X\+Rreader.\+cc@{J\+X\+Rreader.\+cc}!jxr\+\_\+metadata\+\_\+data@{jxr\+\_\+metadata\+\_\+data}}
+\index{jxr\+\_\+metadata\+\_\+data@{jxr\+\_\+metadata\+\_\+data}!J\+X\+Rreader.\+cc@{J\+X\+Rreader.\+cc}}
+\subsubsection{\texorpdfstring{jxr\+\_\+metadata\+\_\+data}{jxr\_metadata\_data}}
+{\footnotesize\ttfamily \#define jxr\+\_\+metadata\+\_\+data(\begin{DoxyParamCaption}\item[{}]{decoder,  }\item[{}]{name,  }\item[{}]{data }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}
+\textcolor{keyword}{struct }WMPStream* s = decoder->pStream;         \(\backslash\)
+    size\_t curr\_pos;                                                    \(\backslash\)
+    JXRcheck(s->GetPos(s, &curr\_pos));                          \(\backslash\)
+    JXRcheck(s->SetPos(s, decoder->WMP.wmiDEMisc.u##name##Offset));     \(\backslash\)
+    JXRcheck(s->Read(s, data, decoder->WMP.wmiDEMisc.u##name##ByteCount)); \(\backslash\)
+    JXRcheck(s->SetPos(s, curr\_pos));
+\end{DoxyCode}
+
+
+Definition at line 36 of file J\+X\+Rreader.\+cc.
+
+\mbox{\Hypertarget{_j_x_rreader_8cc_af5d24760088112bed6225531311cdd22}\label{_j_x_rreader_8cc_af5d24760088112bed6225531311cdd22}} 
+\index{J\+X\+Rreader.\+cc@{J\+X\+Rreader.\+cc}!jxr\+\_\+metadata\+\_\+size@{jxr\+\_\+metadata\+\_\+size}}
+\index{jxr\+\_\+metadata\+\_\+size@{jxr\+\_\+metadata\+\_\+size}!J\+X\+Rreader.\+cc@{J\+X\+Rreader.\+cc}}
+\subsubsection{\texorpdfstring{jxr\+\_\+metadata\+\_\+size}{jxr\_metadata\_size}}
+{\footnotesize\ttfamily \#define jxr\+\_\+metadata\+\_\+size(\begin{DoxyParamCaption}\item[{}]{decoder,  }\item[{}]{name }\end{DoxyParamCaption})~decoder-\/$>$W\+M\+P.\+wmi\+D\+E\+Misc.\+u\#\#name\#\#Byte\+Count}
+
+
+
+Definition at line 35 of file J\+X\+Rreader.\+cc.
+

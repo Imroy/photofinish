@@ -1,0 +1,180 @@
+.TH "PhotoFinish::D_JP2" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_JP2 \- JP2 parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_JP2\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "void \fBadd_variables\fP (\fBmultihash\fP &vars)"
+.br
+.RI "Set values from a map of 'variables'\&. "
+.ti -1c
+.RI "\fBdefinable\fP< int > \fBnumresolutions\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_numresolutions\fP (int n)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBprog_order\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_prog_order\fP (const std::string &po)"
+.br
+.ti -1c
+.RI "int \fBnum_rates\fP (void) const"
+.br
+.ti -1c
+.RI "float \fBrate\fP (int n) const"
+.br
+.ti -1c
+.RI "void \fBset_rate\fP (int n, float r)"
+.br
+.ti -1c
+.RI "void \fBset_rates\fP (std::vector< float > r)"
+.br
+.ti -1c
+.RI "int \fBnum_qualities\fP (void) const"
+.br
+.ti -1c
+.RI "float \fBquality\fP (int n) const"
+.br
+.ti -1c
+.RI "void \fBset_quality\fP (int n, float r)"
+.br
+.ti -1c
+.RI "void \fBset_qualities\fP (std::vector< float > r)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::pair< int, int > > \fBtile_size\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_tile_size\fP (int h, int v)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBreversible\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_reversible\fP (bool r=true)"
+.br
+.ti -1c
+.RI "void \fBset_irreversible\fP (void)"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a \fBD_JP2\fP record from a YAML file\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+JP2 parameters for destination\&. 
+.PP
+Definition at line 180 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_JP2::D_JP2 ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 218 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::D_JP2::add_variables (\fBmultihash\fP & vars)"
+
+.PP
+Set values from a map of 'variables'\&. 
+.PP
+Definition at line 223 of file Destination_items\&.cc\&.
+.SS "int PhotoFinish::D_JP2::num_qualities (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 206 of file Destination_items\&.hh\&.
+.SS "int PhotoFinish::D_JP2::num_rates (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 201 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<int> PhotoFinish::D_JP2::numresolutions (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 195 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_JP2::prog_order (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 198 of file Destination_items\&.hh\&.
+.SS "float PhotoFinish::D_JP2::quality (int n) const\fC [inline]\fP"
+
+.PP
+Definition at line 207 of file Destination_items\&.hh\&.
+.SS "float PhotoFinish::D_JP2::rate (int n) const\fC [inline]\fP"
+
+.PP
+Definition at line 202 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::read_config (const YAML::Node & node)"
+
+.PP
+Read a \fBD_JP2\fP record from a YAML file\&. 
+.PP
+Definition at line 319 of file Destination_items\&.cc\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::D_JP2::reversible (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 214 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_irreversible (void)\fC [inline]\fP"
+
+.PP
+Definition at line 216 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_numresolutions (int n)\fC [inline]\fP"
+
+.PP
+Definition at line 196 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_prog_order (const std::string & po)\fC [inline]\fP"
+
+.PP
+Definition at line 199 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_qualities (std::vector< float > r)\fC [inline]\fP"
+
+.PP
+Definition at line 209 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_quality (int n, float r)\fC [inline]\fP"
+
+.PP
+Definition at line 208 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_rate (int n, float r)\fC [inline]\fP"
+
+.PP
+Definition at line 203 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_rates (std::vector< float > r)\fC [inline]\fP"
+
+.PP
+Definition at line 204 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_reversible (bool r = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 215 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JP2::set_tile_size (int h, int v)\fC [inline]\fP"
+
+.PP
+Definition at line 212 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP< std::pair<int, int> > PhotoFinish::D_JP2::tile_size (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 211 of file Destination_items\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

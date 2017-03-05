@@ -1,0 +1,53 @@
+.TH "CropSolution.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CropSolution.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <map>\fP
+.br
+\fC#include <memory>\fP
+.br
+\fC#include <ostream>\fP
+.br
+\fC#include <string>\fP
+.br
+\fC#include <utility>\fP
+.br
+\fC#include <list>\fP
+.br
+\fC#include 'Frame\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhotoFinish::CropSolver\fP"
+.br
+.RI "Class for finding the best frame position for cropping\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef std::pair< double, double > \fBPhotoFinish::rulerpair\fP"
+.br
+.RI "Ruler paramaters - percentage of final image vs\&. pixel position in original\&. "
+.ti -1c
+.RI "typedef std::list< rulerpair > \fBPhotoFinish::rulerlist\fP"
+.br
+.RI "A list of rulers\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

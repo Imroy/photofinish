@@ -1,0 +1,132 @@
+\hypertarget{_c_m_s_8hh}{}\section{C\+M\+S.\+hh File Reference}
+\label{_c_m_s_8hh}\index{C\+M\+S.\+hh@{C\+M\+S.\+hh}}
+{\ttfamily \#include $<$istream$>$}\newline
+{\ttfamily \#include $<$ostream$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$boost/filesystem.\+hpp$>$}\newline
+{\ttfamily \#include $<$lcms2.\+h$>$}\newline
+{\ttfamily \#include $<$lcms2\+\_\+plugin.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Exception.\+hh\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_c_m_s_1_1_profile}{C\+M\+S\+::\+Profile}
+\begin{DoxyCompactList}\small\item\em Wrap L\+C\+M\+S2\textquotesingle{}s cms\+H\+P\+R\+O\+F\+I\+LE. \end{DoxyCompactList}\item 
+class \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}
+\begin{DoxyCompactList}\small\item\em Wrap L\+C\+M\+S2\textquotesingle{}s pixel format. \end{DoxyCompactList}\item 
+class \hyperlink{class_c_m_s_1_1_transform}{C\+M\+S\+::\+Transform}
+\begin{DoxyCompactList}\small\item\em Wrap L\+C\+M\+S2\textquotesingle{}s transform object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_c_m_s}{C\+MS}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{C\+M\+S\+::\+Colour\+Model} \{ \newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42aed36a1ef76a59ee3f15180e0441188ad}{C\+M\+S\+::\+Colour\+Model\+::\+Any} = 0, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a9c3e864325dc62544d2c55dc4daf2fd9}{C\+M\+S\+::\+Colour\+Model\+::\+Greyscale} = 3, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a889574aebacda6bfd3e534e2b49b8028}{C\+M\+S\+::\+Colour\+Model\+::\+R\+GB}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a7236a471c9bd620fc28f6ab7b0bba75d}{C\+M\+S\+::\+Colour\+Model\+::\+C\+MY}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42afaa655c7dee48c19cd0bfc8187af941a}{C\+M\+S\+::\+Colour\+Model\+::\+C\+M\+YK}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42ace6ed93a275c43784e364658928de6d0}{C\+M\+S\+::\+Colour\+Model\+::\+Y\+Cb\+Cr}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42ab915b1a658d4fc573f623f17b1434601}{C\+M\+S\+::\+Colour\+Model\+::\+Y\+UV}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42ae65075d550f9b5bf9992fa1d71a131be}{C\+M\+S\+::\+Colour\+Model\+::\+X\+YZ}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42ab06aa260e841c9d55066eaa01050edfb}{C\+M\+S\+::\+Colour\+Model\+::\+Lab}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42aa0e5a7b9b6d49b8d2d91336ecf73a0c0}{C\+M\+S\+::\+Colour\+Model\+::\+Y\+U\+VK}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a6878315e698a7cbfd0d97d77f6619c5f}{C\+M\+S\+::\+Colour\+Model\+::\+H\+SV}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a03688639065c4aa962556d653afbc965}{C\+M\+S\+::\+Colour\+Model\+::\+H\+LS}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a3f91dab9cd5acaf5587ae8260854255d}{C\+M\+S\+::\+Colour\+Model\+::\+Yxy}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a69e6f58aa33c8775e2387e9ff24d18c0}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H1}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42aaa8c33c6ee6241eeb228fec734da57bd}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H2}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a45f36b35e73429e3efd32af3ccf7033c}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H3}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42afdc6e60e91e2a6cd0fb8bf7287865e75}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H4}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a4419a6d07233041a9ffc6936771262e6}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H5}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a29ab26a08121c42a5c93d5832f5230e6}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H6}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a419c0db57ae41e989108b065cbc9e4a1}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H7}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a69955731fd5bfbcb9e9a6666dd1dd332}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H8}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42acacd652574c55faf40054bf36b6f41b1}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H9}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42ace405901ff768c11a72b2676bfec81d3}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H10}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a40dfffb5bb0c83e7a9c142793f0af9ee}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H11}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42af1ed08f2987283e58d31d3ae4d3c59bc}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H12}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a57152cefeb5b15f77566ea3649bd098f}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H13}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42a620a481205b1aee6edaee8259c9f8c65}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H14}, 
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42ab467d9b6239a88548dbe56cf62e76ecc}{C\+M\+S\+::\+Colour\+Model\+::\+M\+C\+H15}, 
+\newline
+\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42adcfa436ea7af1a1cfba7e2b925dffea4}{C\+M\+S\+::\+Colour\+Model\+::\+Lab\+V2}
+ \}\begin{DoxyCompactList}\small\item\em An enum class of L\+C\+M\+S2\textquotesingle{}s colour models. \end{DoxyCompactList}
+\item 
+enum \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent} \{ \newline
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a09ab3095e9b2d0a7773cc3d2f0f879cd}{C\+M\+S\+::\+Intent\+::\+Perceptual}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069ae15cd0041e7b8a99a1fd66c52b44bfd8}{C\+M\+S\+::\+Intent\+::\+Relative\+\_\+colormetric}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a2e3307b9b1a2cc64b48f1cd6977a4b29}{C\+M\+S\+::\+Intent\+::\+Saturation}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a699eeb6f610370295e083eba32154356}{C\+M\+S\+::\+Intent\+::\+Absolute\+\_\+colormetric}, 
+\newline
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a174bb81ca3e5b185508b9cf38a1686ae}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+only\+\_\+perceptual} = 10, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069ac36c09559ae225fec0daa2270ee1937d}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+only\+\_\+relative\+\_\+colormetric}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069ada1d24f9665ef402a8df2800027fa6e8}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+only\+\_\+saturation}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a2201ddcfa0cf1ef27141ae9d7cc10aa8}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+only\+\_\+absolute\+\_\+colormetric}, 
+\newline
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069aa6341811efb776bb56f7be74fd2c6a02}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+plane\+\_\+perceptual}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069ae4062d9845bdc5d137dc15c6792c3149}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+plane\+\_\+relative\+\_\+colormetric}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069ada8f28ee52fca7e4c8a8f217a864ad09}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+plane\+\_\+saturation}, 
+\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069ad691fc3212388b53f8e3d96349c66c82}{C\+M\+S\+::\+Intent\+::\+Preserve\+\_\+k\+\_\+plane\+\_\+absolute\+\_\+colormetric}
+ \}\begin{DoxyCompactList}\small\item\em Wrap L\+C\+M\+S2\textquotesingle{}s intents. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \hyperlink{namespace_c_m_s_aebe3bd3845d84746f27134435fcaadbe}{C\+M\+S\+::operator$<$$<$} (std\+::ostream \&out, Colour\+Model model)
+\item 
+std\+::ostream \& \hyperlink{namespace_c_m_s_a0d812bc6465a5fef515e13517dbb14c4}{C\+M\+S\+::operator$<$$<$} (std\+::ostream \&out, Format f)
+\item 
+cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$ \hyperlink{namespace_c_m_s_a618226eaa9bf97c8c23669c516be6d4e}{C\+M\+S\+::\+Open\+I\+Ohandler\+From\+I\+Stream} (std\+::istream $\ast$is)
+\item 
+cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$ \hyperlink{namespace_c_m_s_ad1b15f2bd898c5c4e96ab247fb26575c}{C\+M\+S\+::\+Open\+I\+Ohandler\+From\+I\+F\+Stream} (fs\+::path filepath)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_a88c40f3fde62e521d5f3b4055e6854e6}{C\+M\+S\+::istream\+\_\+read} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, void $\ast$Buffer, cms\+U\+Int32\+Number size, cms\+U\+Int32\+Number count)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a55b53b00daedc8b76eba456e43713dd6}{C\+M\+S\+::istream\+\_\+seek} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number offset)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a60036a5e1db6c4320d3ce599758c9101}{C\+M\+S\+::istream\+\_\+close} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_a9e1e064622cf44c9e8958a37c0bae3e4}{C\+M\+S\+::istream\+\_\+tell} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a3562813bdb675436999b19d1b51a986f}{C\+M\+S\+::istream\+\_\+write} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number size, const void $\ast$Buffer)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_ac7b7b13d2c01af24cbf3fa7587e24c23}{C\+M\+S\+::ostream\+\_\+read} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, void $\ast$Buffer, cms\+U\+Int32\+Number size, cms\+U\+Int32\+Number count)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a42537c0a11f8f118b0380d202ff24430}{C\+M\+S\+::ostream\+\_\+seek} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number offset)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a57d6234e6fb36cc71bcae4a825ad3ba0}{C\+M\+S\+::ostream\+\_\+close} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_a4420e9cff988db0418ae3a9c76ec5f9e}{C\+M\+S\+::ostream\+\_\+tell} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_ac6a6e80213301c0cbce0fcd8a98e6108}{C\+M\+S\+::ostream\+\_\+write} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number size, const void $\ast$Buffer)
+\item 
+void \hyperlink{_c_m_s_8hh_a18e192f42eedbbf828a1ed4ed61a0f68}{lcms2\+\_\+error\+\_\+adaptor} (void)
+\begin{DoxyCompactList}\small\item\em Set up an error handler with L\+C\+M\+S2 that will throw a Library\+Error exception. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_c_m_s_8hh_a18e192f42eedbbf828a1ed4ed61a0f68}\label{_c_m_s_8hh_a18e192f42eedbbf828a1ed4ed61a0f68}} 
+\index{C\+M\+S.\+hh@{C\+M\+S.\+hh}!lcms2\+\_\+error\+\_\+adaptor@{lcms2\+\_\+error\+\_\+adaptor}}
+\index{lcms2\+\_\+error\+\_\+adaptor@{lcms2\+\_\+error\+\_\+adaptor}!C\+M\+S.\+hh@{C\+M\+S.\+hh}}
+\subsubsection{\texorpdfstring{lcms2\+\_\+error\+\_\+adaptor()}{lcms2\_error\_adaptor()}}
+{\footnotesize\ttfamily void lcms2\+\_\+error\+\_\+adaptor (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set up an error handler with L\+C\+M\+S2 that will throw a Library\+Error exception. 
+
+
+
+Definition at line 710 of file C\+M\+S.\+cc.
+

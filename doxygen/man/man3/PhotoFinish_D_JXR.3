@@ -1,0 +1,149 @@
+.TH "PhotoFinish::D_JXR" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_JXR \- JPEG XR parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_JXR\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "void \fBadd_variables\fP (\fBmultihash\fP &vars)"
+.br
+.RI "Set values from a map of 'variables'\&. "
+.ti -1c
+.RI "int \fBquality\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_quality\fP (int iq)"
+.br
+.ti -1c
+.RI "int \fBalphaq\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_alphaq\fP (int aq)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBoverlap\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_overlap\fP (const std::string &o)"
+.br
+.ti -1c
+.RI "std::string \fBsubsampling\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_subsampling\fP (const std::string &s)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< int > \fBtilesize\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_tilesize\fP (int ts)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBprogressive\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_progressive\fP (bool p=true)"
+.br
+.ti -1c
+.RI "void \fBset_sequential\fP (bool s=true)"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+JPEG XR parameters for destination\&. 
+.PP
+Definition at line 254 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_JXR::D_JXR ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 416 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::D_JXR::add_variables (\fBmultihash\fP & vars)"
+
+.PP
+Set values from a map of 'variables'\&. 
+.PP
+Definition at line 422 of file Destination_items\&.cc\&.
+.SS "int PhotoFinish::D_JXR::alphaq (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 272 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_JXR::overlap (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 275 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::D_JXR::progressive (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 284 of file Destination_items\&.hh\&.
+.SS "int PhotoFinish::D_JXR::quality (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 269 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::read_config (const YAML::Node & node)"
+
+.PP
+Definition at line 425 of file Destination_items\&.cc\&.
+.SS "void PhotoFinish::D_JXR::set_alphaq (int aq)\fC [inline]\fP"
+
+.PP
+Definition at line 273 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::set_overlap (const std::string & o)\fC [inline]\fP"
+
+.PP
+Definition at line 276 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::set_progressive (bool p = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 285 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::set_quality (int iq)\fC [inline]\fP"
+
+.PP
+Definition at line 270 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::set_sequential (bool s = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 286 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::set_subsampling (const std::string & s)\fC [inline]\fP"
+
+.PP
+Definition at line 279 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JXR::set_tilesize (int ts)\fC [inline]\fP"
+
+.PP
+Definition at line 282 of file Destination_items\&.hh\&.
+.SS "std::string PhotoFinish::D_JXR::subsampling (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 278 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<int> PhotoFinish::D_JXR::tilesize (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 281 of file Destination_items\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

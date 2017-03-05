@@ -1,0 +1,23 @@
+\hypertarget{_j_p2_8hh}{}\section{J\+P2.\+hh File Reference}
+\label{_j_p2_8hh}\index{J\+P2.\+hh@{J\+P2.\+hh}}
+{\ttfamily \#include $<$openjpeg.\+h$>$}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespace_photo_finish_a8f2a0015f605e0f89ff8e2080e62abd6}{Photo\+Finish\+::error\+\_\+callback} (const char $\ast$msg, void $\ast$client\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Error callback for Open\+J\+P\+EG -\/ throw a \hyperlink{class_photo_finish_1_1_library_error}{Library\+Error} exception. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a5ade5f8f065cbecf79f0d76fed6c1e97}{Photo\+Finish\+::warning\+\_\+callback} (const char $\ast$msg, void $\ast$client\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Warning callback for Open\+J\+P\+EG -\/ print the message to S\+T\+D\+E\+RR. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a15b915c1ad42e83a12e30b6b1fd36785}{Photo\+Finish\+::info\+\_\+callback} (const char $\ast$msg, void $\ast$client\+\_\+data)
+\begin{DoxyCompactList}\small\item\em Info callback for Open\+J\+P\+EG -\/ print the indented message to S\+T\+D\+E\+RR. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \hyperlink{namespace_photo_finish_a10db9072258646ff5fac41ce9bd1ee52}{Photo\+Finish\+::read\+\_\+planar} (unsigned int width, unsigned char channels, opj\+\_\+image\+\_\+t $\ast$image, T $\ast$row, unsigned int y)
+\begin{DoxyCompactList}\small\item\em Read a row of image data from Open\+J\+P\+EG\textquotesingle{}s planar integer components into an L\+C\+M\+S2-\/compatible single array. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \hyperlink{namespace_photo_finish_a8ac95b8e0f1442d867620a2af03b193a}{Photo\+Finish\+::write\+\_\+planar} (unsigned int width, unsigned char channels, T $\ast$row, opj\+\_\+image\+\_\+t $\ast$image, unsigned int y)
+\begin{DoxyCompactList}\small\item\em Read a row of planar pixel data into Open\+J\+P\+EG\textquotesingle{}s planar components. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\void \hyperlink{namespace_photo_finish_a5935e449413495c7af9504e518d0921b}{Photo\+Finish\+::write\+\_\+packed} (unsigned int width, unsigned char channels, T $\ast$row, opj\+\_\+image\+\_\+t $\ast$image, unsigned int y)
+\begin{DoxyCompactList}\small\item\em Read a row of packed pixel data into Open\+J\+P\+EG\textquotesingle{}s planar components. \end{DoxyCompactList}\end{DoxyCompactItemize}

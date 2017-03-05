@@ -1,0 +1,73 @@
+.TH "PhotoFinish::PNGreader_cb" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::PNGreader_cb
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <PNGreader_cb\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBPNGreader_cb\fP (\fBDestination::ptr\fP d)"
+.br
+.ti -1c
+.RI "void \fBinfo\fP (png_structp png, png_infop info)"
+.br
+.ti -1c
+.RI "void \fBrow\fP (png_structp png, png_bytep row_data, png_uint_32 row_num, int pass)"
+.br
+.ti -1c
+.RI "void \fBend\fP (png_structp png, png_infop \fBinfo\fP)"
+.br
+.in -1c
+.SS "Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBDestination::ptr\fP \fB_destination\fP"
+.br
+.ti -1c
+.RI "\fBImage::ptr\fP \fB_image\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line 28 of file PNGreader_cb\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::PNGreader_cb::PNGreader_cb (\fBDestination::ptr\fP d)"
+
+.PP
+Definition at line 23 of file PNGreader_cb\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::PNGreader_cb::end (png_structp png, png_infop info)"
+
+.PP
+Definition at line 137 of file PNGreader_cb\&.cc\&.
+.SS "void PhotoFinish::PNGreader_cb::info (png_structp png, png_infop info)"
+
+.PP
+Definition at line 27 of file PNGreader_cb\&.cc\&.
+.SS "void PhotoFinish::PNGreader_cb::row (png_structp png, png_bytep row_data, png_uint_32 row_num, int pass)"
+
+.PP
+Definition at line 126 of file PNGreader_cb\&.cc\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "\fBDestination::ptr\fP PhotoFinish::PNGreader_cb::_destination"
+
+.PP
+Definition at line 29 of file PNGreader_cb\&.hh\&.
+.SS "\fBImage::ptr\fP PhotoFinish::PNGreader_cb::_image"
+
+.PP
+Definition at line 30 of file PNGreader_cb\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

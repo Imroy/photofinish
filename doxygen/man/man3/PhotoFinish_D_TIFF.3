@@ -1,0 +1,120 @@
+.TH "PhotoFinish::D_TIFF" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_TIFF \- TIFF parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_TIFF\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBD_TIFF\fP (const std::string &c)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "void \fBadd_variables\fP (\fBmultihash\fP &vars)"
+.br
+.RI "Set values from a map of 'variables'\&. "
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBartist\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_artist\fP (const std::string &a)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBcopyright\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_copyright\fP (const std::string &c)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBcompression\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_compression\fP (const std::string &c)"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a \fBD_TIFF\fP record from a YAML file\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+TIFF parameters for destination\&. 
+.PP
+Definition at line 149 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_TIFF::D_TIFF ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 167 of file Destination_items\&.cc\&.
+.SS "PhotoFinish::D_TIFF::D_TIFF (const std::string & c)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIc\fP Compression string 
+.RE
+.PP
+
+.PP
+Definition at line 170 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::D_TIFF::add_variables (\fBmultihash\fP & vars)"
+
+.PP
+Set values from a map of 'variables'\&. 
+.PP
+Definition at line 174 of file Destination_items\&.cc\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_TIFF::artist (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 167 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_TIFF::compression (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 173 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_TIFF::copyright (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 170 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_TIFF::read_config (const YAML::Node & node)"
+
+.PP
+Read a \fBD_TIFF\fP record from a YAML file\&. 
+.PP
+Definition at line 202 of file Destination_items\&.cc\&.
+.SS "void PhotoFinish::D_TIFF::set_artist (const std::string & a)\fC [inline]\fP"
+
+.PP
+Definition at line 168 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_TIFF::set_compression (const std::string & c)\fC [inline]\fP"
+
+.PP
+Definition at line 174 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_TIFF::set_copyright (const std::string & c)\fC [inline]\fP"
+
+.PP
+Definition at line 171 of file Destination_items\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

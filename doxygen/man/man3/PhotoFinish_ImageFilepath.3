@@ -1,0 +1,111 @@
+.TH "PhotoFinish::ImageFilepath" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::ImageFilepath \- Class for holding filename and the image format\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ImageFile\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBImageFilepath\fP (const fs::path \fBfilepath\fP, const std::string \fBformat\fP)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fBImageFilepath\fP (const fs::path \fBfilepath\fP)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "fs::path \fBfixed_filepath\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBfix_filepath\fP (void)"
+.br
+.ti -1c
+.RI "virtual const fs::path \fBfilepath\fP (void) const"
+.br
+.RI "File path of this image file\&. "
+.ti -1c
+.RI "virtual std::string \fBformat\fP (void) const"
+.br
+.RI "Format of this image file\&. "
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "std::ostream & \fBoperator<<\fP (std::ostream &out, const \fBImageFilepath\fP &fp)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Class for holding filename and the image format\&. 
+.PP
+Definition at line 55 of file ImageFile\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::ImageFilepath::ImageFilepath (const fs::path filepath, const std::string format)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilepath\fP The path of the image file 
+.br
+\fIformat\fP Format of the image file 
+.RE
+.PP
+
+.PP
+Definition at line 28 of file ImageFile\&.cc\&.
+.SS "PhotoFinish::ImageFilepath::ImageFilepath (const fs::path filepath)"
+
+.PP
+Constructor\&. Guess the format from the file extension\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIfilepath\fP The path of the image file 
+.RE
+.PP
+
+.PP
+Definition at line 33 of file ImageFile\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "virtual const fs::path PhotoFinish::ImageFilepath::filepath (void) const\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+File path of this image file\&. 
+.PP
+Definition at line 80 of file ImageFile\&.hh\&.
+.SS "void PhotoFinish::ImageFilepath::fix_filepath (void)\fC [inline]\fP"
+
+.PP
+Definition at line 77 of file ImageFile\&.hh\&.
+.SS "fs::path PhotoFinish::ImageFilepath::fixed_filepath (void) const"
+
+.PP
+Definition at line 84 of file ImageFile\&.cc\&.
+.SS "virtual std::string PhotoFinish::ImageFilepath::format (void) const\fC [inline]\fP, \fC [virtual]\fP"
+
+.PP
+Format of this image file\&. 
+.PP
+Definition at line 83 of file ImageFile\&.hh\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "std::ostream& operator<< (std::ostream & out, const \fBImageFilepath\fP & fp)\fC [friend]\fP"
+
+.PP
+Definition at line 85 of file ImageFile\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

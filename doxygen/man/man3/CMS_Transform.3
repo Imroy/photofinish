@@ -1,0 +1,145 @@
+.TH "CMS::Transform" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CMS::Transform \- Wrap LCMS2's transform object\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <CMS\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBTransform\fP > \fBptr\fP"
+.br
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBTransform\fP (\fBProfile::ptr\fP input, const \fBFormat\fP &informat, \fBProfile::ptr\fP output, const \fBFormat\fP &outformat, \fBIntent\fP intent, cmsUInt32Number flags)"
+.br
+.RI "Construct a transform from two profiles and formats\&. "
+.ti -1c
+.RI "\fBTransform\fP (std::vector< \fBProfile::ptr\fP > profile, const \fBFormat\fP &informat, const \fBFormat\fP &outformat, \fBIntent\fP intent, cmsUInt32Number flags)"
+.br
+.RI "Construct a transform from multiple profiles\&. "
+.ti -1c
+.RI "\fB~Transform\fP ()"
+.br
+.RI "Deconstructor\&. "
+.ti -1c
+.RI "\fBFormat\fP \fBinput_format\fP (void) const"
+.br
+.RI "Get the input format\&. "
+.ti -1c
+.RI "\fBFormat\fP \fBoutput_format\fP (void) const"
+.br
+.RI "Get the output format\&. "
+.ti -1c
+.RI "void \fBchange_formats\fP (const \fBFormat\fP &informat, const \fBFormat\fP &outformat)"
+.br
+.RI "Change the input and output formats\&. "
+.ti -1c
+.RI "\fBProfile::ptr\fP \fBdevice_link\fP (double version, cmsUInt32Number flags) const"
+.br
+.RI "Create a device link profile from this transform\&. "
+.ti -1c
+.RI "void \fBtransform_buffer\fP (const unsigned char *input, unsigned char *output, cmsUInt32Number size) const"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBptr\fP \fBProofing\fP (\fBProfile::ptr\fP input, const \fBFormat\fP &informat, \fBProfile::ptr\fP output, const \fBFormat\fP &outformat, \fBProfile::ptr\fP proofing, \fBIntent\fP intent, \fBIntent\fP proofing_intent, cmsUInt32Number flags)"
+.br
+.RI "Named constructor for creating a proofing transform\&. "
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fB__gnu_cxx::new_allocator< Transform >\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Wrap LCMS2's transform object\&. 
+.PP
+Definition at line 397 of file CMS\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBTransform\fP> \fBCMS::Transform::ptr\fP"
+
+.PP
+Definition at line 421 of file CMS\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "CMS::Transform::Transform (\fBProfile::ptr\fP input, const \fBFormat\fP & informat, \fBProfile::ptr\fP output, const \fBFormat\fP & outformat, \fBIntent\fP intent, cmsUInt32Number flags)"
+
+.PP
+Construct a transform from two profiles and formats\&. 
+.PP
+Definition at line 545 of file CMS\&.cc\&.
+.SS "CMS::Transform::Transform (std::vector< \fBProfile::ptr\fP > profile, const \fBFormat\fP & informat, const \fBFormat\fP & outformat, \fBIntent\fP intent, cmsUInt32Number flags)"
+
+.PP
+Construct a transform from multiple profiles\&. 
+.PP
+Definition at line 554 of file CMS\&.cc\&.
+.SS "CMS::Transform::~Transform ()"
+
+.PP
+Deconstructor\&. 
+.PP
+Definition at line 561 of file CMS\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void CMS::Transform::change_formats (const \fBFormat\fP & informat, const \fBFormat\fP & outformat)"
+
+.PP
+Change the input and output formats\&. 
+.PP
+Definition at line 584 of file CMS\&.cc\&.
+.SS "\fBProfile::ptr\fP CMS::Transform::device_link (double version, cmsUInt32Number flags) const"
+
+.PP
+Create a device link profile from this transform\&. 
+.PP
+Definition at line 588 of file CMS\&.cc\&.
+.SS "\fBFormat\fP CMS::Transform::input_format (void) const"
+
+.PP
+Get the input format\&. 
+.PP
+Definition at line 576 of file CMS\&.cc\&.
+.SS "\fBFormat\fP CMS::Transform::output_format (void) const"
+
+.PP
+Get the output format\&. 
+.PP
+Definition at line 580 of file CMS\&.cc\&.
+.SS "\fBTransform::ptr\fP CMS::Transform::Proofing (\fBProfile::ptr\fP input, const \fBFormat\fP & informat, \fBProfile::ptr\fP output, const \fBFormat\fP & outformat, \fBProfile::ptr\fP proofing, \fBIntent\fP intent, \fBIntent\fP proofing_intent, cmsUInt32Number flags)\fC [static]\fP"
+
+.PP
+Named constructor for creating a proofing transform\&. 
+.PP
+Definition at line 565 of file CMS\&.cc\&.
+.SS "void CMS::Transform::transform_buffer (const unsigned char * input, unsigned char * output, cmsUInt32Number size) const"
+
+.PP
+Definition at line 592 of file CMS\&.cc\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class __gnu_cxx::new_allocator< \fBTransform\fP >\fC [friend]\fP"
+
+.PP
+Definition at line 405 of file CMS\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

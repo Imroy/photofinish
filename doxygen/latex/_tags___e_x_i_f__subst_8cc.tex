@@ -1,0 +1,45 @@
+\hypertarget{_tags___e_x_i_f__subst_8cc}{}\section{Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc File Reference}
+\label{_tags___e_x_i_f__subst_8cc}\index{Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc@{Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$map$>$}\newline
+{\ttfamily \#include $<$boost/algorithm/string.\+hpp$>$}\newline
+{\ttfamily \#include \char`\"{}Tags.\+hh\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_tags___e_x_i_f__subst_8cc_a6d8b31e2e55a2aaad6f6a9e09cf25fd4}{Key}(k,  h)~std\+::make\+\_\+pair$<$std\+::string, subst\+\_\+table$>$(k, h)
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Exiv2\+::\+Exif\+Key \hyperlink{namespace_photo_finish_a0b89b01a1b60b5e7c02fa92d001d9872}{Photo\+Finish\+::exif\+\_\+key\+\_\+read} (std\+::string key\+\_\+string)
+\item 
+{\footnotesize template$<$typename Num\+\_\+type , typename R\+\_\+type $>$ }\\Exiv2\+::\+Value\+::\+Auto\+Ptr \hyperlink{namespace_photo_finish_a61d5056e25d8cc76ff69e9a2e3782c76}{Photo\+Finish\+::parse\+\_\+\+Rational} (std\+::string s)
+\begin{DoxyCompactList}\small\item\em Parse a string into a rational fraction. \end{DoxyCompactList}\item 
+Exiv2\+::\+Value\+::\+Auto\+Ptr \hyperlink{namespace_photo_finish_a26b48907e51881629189963d62678563}{Photo\+Finish\+::exif\+\_\+value\+\_\+read} (Exiv2\+::\+Exif\+Key key, std\+::string value\+\_\+string)
+\begin{DoxyCompactList}\small\item\em Read an E\+X\+IF value from a string, with optional substitution for enum-\/style values. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+subst\+\_\+table \hyperlink{namespace_photo_finish_acca01aac5edaf04fa23bc5a9d77d8dfb}{Photo\+Finish\+::\+E\+X\+I\+F\+\_\+key\+\_\+subst}
+\begin{DoxyCompactList}\small\item\em Map from Image\+::\+Exiftool tag names to Exiv2\textquotesingle{}s tag names. \end{DoxyCompactList}\item 
+std\+::map$<$ std\+::string, subst\+\_\+table $>$ \hyperlink{namespace_photo_finish_a1f0c5f70be05938487cfe6ece463e22a}{Photo\+Finish\+::\+E\+X\+I\+F\+\_\+value\+\_\+subst}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_tags___e_x_i_f__subst_8cc_a6d8b31e2e55a2aaad6f6a9e09cf25fd4}\label{_tags___e_x_i_f__subst_8cc_a6d8b31e2e55a2aaad6f6a9e09cf25fd4}} 
+\index{Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc@{Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc}!Key@{Key}}
+\index{Key@{Key}!Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc@{Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc}}
+\subsubsection{\texorpdfstring{Key}{Key}}
+{\footnotesize\ttfamily \#define Key(\begin{DoxyParamCaption}\item[{}]{k,  }\item[{}]{h }\end{DoxyParamCaption})~std\+::make\+\_\+pair$<$std\+::string, subst\+\_\+table$>$(k, h)}
+
+
+
+Definition at line 91 of file Tags\+\_\+\+E\+X\+I\+F\+\_\+subst.\+cc.
+

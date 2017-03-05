@@ -1,0 +1,263 @@
+\hypertarget{class_photo_finish_1_1_d__profile}{}\section{Photo\+Finish\+:\+:D\+\_\+profile Class Reference}
+\label{class_photo_finish_1_1_d__profile}\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+
+
+I\+CC profile parameters for destination.  
+
+
+
+
+{\ttfamily \#include $<$Destination\+\_\+items.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} $>$ \hyperlink{class_photo_finish_1_1_d__profile_a9711c3571babd1b40709747a63866b38}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for a \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_d__profile_a5d2c843605849d4fe1a7e142bec84016}{D\+\_\+profile} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_d__profile_ab5b6dfde7c76fad1a4598a81800dc739}{D\+\_\+profile} (const std\+::string \&\hyperlink{class_photo_finish_1_1_d__profile_a7fd0fdc344ac49bb1bea312ef63f554c}{name}, fs\+::path \hyperlink{class_photo_finish_1_1_d__profile_aeacae9a94f4ecc6dabc4810a86e642fc}{filepath})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_d__profile_a3e1e0feb533ad141de8bfd071ecfb6af}{D\+\_\+profile} (const std\+::string \&\hyperlink{class_photo_finish_1_1_d__profile_a7fd0fdc344ac49bb1bea312ef63f554c}{name}, unsigned char $\ast$\hyperlink{class_photo_finish_1_1_d__profile_ab791e89b8333a60a13cdbb1b9579291c}{data}, unsigned int \hyperlink{class_photo_finish_1_1_d__profile_ab0907773b818b9d19c47e5aa4558b476}{data\+\_\+size})
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_d__profile_a5b840e8fc4a0550a8c49e72e93e40463}{D\+\_\+profile} (const \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} \&other)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_d__profile_a3d62633c6030dcae01e7a63760a83c77}{$\sim$\+D\+\_\+profile} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} \& \hyperlink{class_photo_finish_1_1_d__profile_a04192b431fefe553190e96e74fd00600}{operator=} (const \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} \&b)
+\begin{DoxyCompactList}\small\item\em Assignment operator. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ std\+::string $>$ \hyperlink{class_photo_finish_1_1_d__profile_a7fd0fdc344ac49bb1bea312ef63f554c}{name} (void) const
+\begin{DoxyCompactList}\small\item\em Name of the profile. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ fs\+::path $>$ \hyperlink{class_photo_finish_1_1_d__profile_aeacae9a94f4ecc6dabc4810a86e642fc}{filepath} (void) const
+\begin{DoxyCompactList}\small\item\em File path for reading the profile. \end{DoxyCompactList}\item 
+bool \hyperlink{class_photo_finish_1_1_d__profile_a2388aa76121bd35450fbd0e112567894}{has\+\_\+data} (void) const
+\begin{DoxyCompactList}\small\item\em Do we have the profile data instead of a file path? \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} \hyperlink{class_photo_finish_1_1_d__profile_ac8d5a87286d5c01f54401d200b1c96bf}{profile} (void) const
+\begin{DoxyCompactList}\small\item\em The profile data for L\+C\+M\+S2. \end{DoxyCompactList}\item 
+unsigned char $\ast$ \hyperlink{class_photo_finish_1_1_d__profile_ab791e89b8333a60a13cdbb1b9579291c}{data} (void) const
+\begin{DoxyCompactList}\small\item\em The profile data. \end{DoxyCompactList}\item 
+unsigned int \hyperlink{class_photo_finish_1_1_d__profile_ab0907773b818b9d19c47e5aa4558b476}{data\+\_\+size} (void) const
+\begin{DoxyCompactList}\small\item\em The size of the profile data. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_d__profile_a47e507f6e2a4ec5a87ac6074bdc9d902}{read\+\_\+config} (const Y\+A\+M\+L\+::\+Node \&node)
+\begin{DoxyCompactList}\small\item\em Read a \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} record from a Y\+A\+ML file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+I\+CC profile parameters for destination. 
+
+Definition at line 292 of file Destination\+\_\+items.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a9711c3571babd1b40709747a63866b38}\label{class_photo_finish_1_1_d__profile_a9711c3571babd1b40709747a63866b38}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile}$>$ \hyperlink{class_photo_finish_1_1_d__profile_a9711c3571babd1b40709747a63866b38}{Photo\+Finish\+::\+D\+\_\+profile\+::ptr}}
+
+
+
+Shared pointer for a \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile}. 
+
+
+
+Definition at line 339 of file Destination\+\_\+items.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a5d2c843605849d4fe1a7e142bec84016}\label{class_photo_finish_1_1_d__profile_a5d2c843605849d4fe1a7e142bec84016}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!D\+\_\+profile@{D\+\_\+profile}}
+\index{D\+\_\+profile@{D\+\_\+profile}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{D\+\_\+profile()}{D\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+D\+\_\+profile\+::\+D\+\_\+profile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 450 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_ab5b6dfde7c76fad1a4598a81800dc739}\label{class_photo_finish_1_1_d__profile_ab5b6dfde7c76fad1a4598a81800dc739}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!D\+\_\+profile@{D\+\_\+profile}}
+\index{D\+\_\+profile@{D\+\_\+profile}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{D\+\_\+profile()}{D\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+D\+\_\+profile\+::\+D\+\_\+profile (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+
+Definition at line 454 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a3e1e0feb533ad141de8bfd071ecfb6af}\label{class_photo_finish_1_1_d__profile_a3e1e0feb533ad141de8bfd071ecfb6af}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!D\+\_\+profile@{D\+\_\+profile}}
+\index{D\+\_\+profile@{D\+\_\+profile}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{D\+\_\+profile()}{D\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+D\+\_\+profile\+::\+D\+\_\+profile (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{unsigned char $\ast$}]{data,  }\item[{unsigned int}]{data\+\_\+size }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+
+Definition at line 460 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a5b840e8fc4a0550a8c49e72e93e40463}\label{class_photo_finish_1_1_d__profile_a5b840e8fc4a0550a8c49e72e93e40463}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!D\+\_\+profile@{D\+\_\+profile}}
+\index{D\+\_\+profile@{D\+\_\+profile}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{D\+\_\+profile()}{D\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+D\+\_\+profile\+::\+D\+\_\+profile (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Copy constructor. 
+
+
+
+Definition at line 465 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a3d62633c6030dcae01e7a63760a83c77}\label{class_photo_finish_1_1_d__profile_a3d62633c6030dcae01e7a63760a83c77}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!````~D\+\_\+profile@{$\sim$\+D\+\_\+profile}}
+\index{````~D\+\_\+profile@{$\sim$\+D\+\_\+profile}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{$\sim$\+D\+\_\+profile()}{~D\_profile()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+D\+\_\+profile\+::$\sim$\+D\+\_\+profile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+
+
+Definition at line 475 of file Destination\+\_\+items.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_ab791e89b8333a60a13cdbb1b9579291c}\label{class_photo_finish_1_1_d__profile_ab791e89b8333a60a13cdbb1b9579291c}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!data@{data}}
+\index{data@{data}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{data()}{data()}}
+{\footnotesize\ttfamily unsigned char$\ast$ Photo\+Finish\+::\+D\+\_\+profile\+::data (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The profile data. 
+
+
+
+Definition at line 331 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_ab0907773b818b9d19c47e5aa4558b476}\label{class_photo_finish_1_1_d__profile_ab0907773b818b9d19c47e5aa4558b476}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!data\+\_\+size@{data\+\_\+size}}
+\index{data\+\_\+size@{data\+\_\+size}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{data\+\_\+size()}{data\_size()}}
+{\footnotesize\ttfamily unsigned int Photo\+Finish\+::\+D\+\_\+profile\+::data\+\_\+size (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The size of the profile data. 
+
+
+
+Definition at line 334 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_aeacae9a94f4ecc6dabc4810a86e642fc}\label{class_photo_finish_1_1_d__profile_aeacae9a94f4ecc6dabc4810a86e642fc}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!filepath@{filepath}}
+\index{filepath@{filepath}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{filepath()}{filepath()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$fs\+::path$>$ Photo\+Finish\+::\+D\+\_\+profile\+::filepath (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+File path for reading the profile. 
+
+
+
+Definition at line 322 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a2388aa76121bd35450fbd0e112567894}\label{class_photo_finish_1_1_d__profile_a2388aa76121bd35450fbd0e112567894}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!has\+\_\+data@{has\+\_\+data}}
+\index{has\+\_\+data@{has\+\_\+data}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{has\+\_\+data()}{has\_data()}}
+{\footnotesize\ttfamily bool Photo\+Finish\+::\+D\+\_\+profile\+::has\+\_\+data (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Do we have the profile data instead of a file path? 
+
+
+
+Definition at line 325 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a7fd0fdc344ac49bb1bea312ef63f554c}\label{class_photo_finish_1_1_d__profile_a7fd0fdc344ac49bb1bea312ef63f554c}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!name@{name}}
+\index{name@{name}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{name()}{name()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1definable}{definable}$<$std\+::string$>$ Photo\+Finish\+::\+D\+\_\+profile\+::name (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Name of the profile. 
+
+
+
+Definition at line 319 of file Destination\+\_\+items.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a04192b431fefe553190e96e74fd00600}\label{class_photo_finish_1_1_d__profile_a04192b431fefe553190e96e74fd00600}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!operator=@{operator=}}
+\index{operator=@{operator=}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} \& Photo\+Finish\+::\+D\+\_\+profile\+::operator= (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} \&}]{b }\end{DoxyParamCaption})}
+
+
+
+Assignment operator. 
+
+
+
+Definition at line 483 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_ac8d5a87286d5c01f54401d200b1c96bf}\label{class_photo_finish_1_1_d__profile_ac8d5a87286d5c01f54401d200b1c96bf}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!profile@{profile}}
+\index{profile@{profile}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{profile()}{profile()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} Photo\+Finish\+::\+D\+\_\+profile\+::profile (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+The profile data for L\+C\+M\+S2. 
+
+
+
+Definition at line 495 of file Destination\+\_\+items.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_d__profile_a47e507f6e2a4ec5a87ac6074bdc9d902}\label{class_photo_finish_1_1_d__profile_a47e507f6e2a4ec5a87ac6074bdc9d902}} 
+\index{Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}!read\+\_\+config@{read\+\_\+config}}
+\index{read\+\_\+config@{read\+\_\+config}!Photo\+Finish\+::\+D\+\_\+profile@{Photo\+Finish\+::\+D\+\_\+profile}}
+\subsubsection{\texorpdfstring{read\+\_\+config()}{read\_config()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+D\+\_\+profile\+::read\+\_\+config (\begin{DoxyParamCaption}\item[{const Y\+A\+M\+L\+::\+Node \&}]{node }\end{DoxyParamCaption})}
+
+
+
+Read a \hyperlink{class_photo_finish_1_1_d__profile}{D\+\_\+profile} record from a Y\+A\+ML file. 
+
+
+
+Definition at line 505 of file Destination\+\_\+items.\+cc.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_destination__items_8hh}{Destination\+\_\+items.\+hh}\item 
+\hyperlink{_destination__items_8cc}{Destination\+\_\+items.\+cc}\end{DoxyCompactItemize}

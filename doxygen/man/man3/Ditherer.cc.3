@@ -1,0 +1,58 @@
+.TH "Ditherer.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Ditherer.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <vector>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'Ditherer\&.hh'\fP
+.br
+\fC#include 'sample\&.h'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBpos\fP   ((x * _channels) + c)"
+.br
+.ti -1c
+.RI "#define \fBprevpos\fP   (((x \- 1) * _channels) + c)"
+.br
+.ti -1c
+.RI "#define \fBnextpos\fP   (((x + 1) * _channels) + c)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define nextpos   (((x + 1) * _channels) + c)"
+
+.PP
+Definition at line 85 of file Ditherer\&.cc\&.
+.SS "#define pos   ((x * _channels) + c)"
+
+.PP
+Definition at line 83 of file Ditherer\&.cc\&.
+.SS "#define prevpos   (((x \- 1) * _channels) + c)"
+
+.PP
+Definition at line 84 of file Ditherer\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

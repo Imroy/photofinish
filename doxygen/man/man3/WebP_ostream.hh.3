@@ -1,0 +1,47 @@
+.TH "WebP_ostream.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+WebP_ostream.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <exiv2/exiv2\&.hpp>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhotoFinish::webp_stream_writer\fP"
+.br
+.RI "A custom writer for libwebp that writes using a std::ostream object\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "int \fBPhotoFinish::webp_stream_writer_func\fP (const uint8_t *data, size_t data_size, const WebPPicture *picture)"
+.br
+.RI "Wrapper around the \fBwebp_stream_writer\fP class\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::copy_le_to\fP (unsigned char *dest, unsigned int value, unsigned char length)"
+.br
+.ti -1c
+.RI "unsigned int \fBPhotoFinish::read_le32\fP (const unsigned char *data)"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

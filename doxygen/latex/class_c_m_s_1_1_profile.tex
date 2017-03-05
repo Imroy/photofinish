@@ -1,0 +1,504 @@
+\hypertarget{class_c_m_s_1_1_profile}{}\section{C\+MS\+:\+:Profile Class Reference}
+\label{class_c_m_s_1_1_profile}\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+
+
+Wrap L\+C\+M\+S2\textquotesingle{}s cms\+H\+P\+R\+O\+F\+I\+LE.  
+
+
+
+
+{\ttfamily \#include $<$C\+M\+S.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_c_m_s_1_1_profile}{Profile} $>$ \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer typedef. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_m_s_1_1_profile_a899c56378a13a7f5920f71d88aba7772}{Profile} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a46a702357e409603a511d93d55d02367}{Profile} (const \hyperlink{class_c_m_s_1_1_profile}{Profile} \&other)
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a53c301fecda6950999e2f87e1280cd8a}{Profile} (fs\+::path filepath)
+\begin{DoxyCompactList}\small\item\em Constructor from file path. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_ad0430f199a119c916dbf6fa3c7bdff2d}{Profile} (const unsigned char $\ast$data, cms\+U\+Int32\+Number size)
+\begin{DoxyCompactList}\small\item\em Constructor from memory. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a8c587e29eb6bc30ff4f9528347334081}{Profile} (std\+::istream stream)
+\begin{DoxyCompactList}\small\item\em Constructor from an istream. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_ae70df5df1fdc50817033134b958d2ab9}{$\sim$\+Profile} ()
+\begin{DoxyCompactList}\small\item\em Deconstructor. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_ae7f376b982ba270728c4cf1fe340d424}{operator cms\+H\+P\+R\+O\+F\+I\+LE} () const
+\begin{DoxyCompactList}\small\item\em Cast to a profile handle for direct use with L\+C\+M\+S2. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a636e6a2629c4e806a3eb8f2b2a7dc340}{set\+\_\+description} (std\+::string language, std\+::string country, std\+::string text)
+\begin{DoxyCompactList}\small\item\em Set the description tag. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a22b8574b4cf1fe0ca211fb6df9e81259}{set\+\_\+description} (std\+::string language, std\+::string country, std\+::wstring text)
+\begin{DoxyCompactList}\small\item\em Set the description tag with a wide string. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_c_m_s_1_1_profile_a1b2e3e2229a9cc307aa6bc4993640815}{description} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the description tag. \end{DoxyCompactList}\item 
+std\+::wstring \hyperlink{class_c_m_s_1_1_profile_a0c533b394f01ba7ea265652c77459ad7}{description\+\_\+wide} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the description tag in a wide string. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a628c7662b1e3986089c807738bdc8cd5}{set\+\_\+manufacturer} (std\+::string language, std\+::string country, std\+::string text)
+\begin{DoxyCompactList}\small\item\em Set the manufacturer tag. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a2a10ecfe0b67cb72be7d0afa9717dcee}{set\+\_\+manufacturer} (std\+::string language, std\+::string country, std\+::wstring text)
+\begin{DoxyCompactList}\small\item\em Set the manufacturer tag with a wide string. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_c_m_s_1_1_profile_a1fbb59d9f6e769da91b34b4d38fa4e57}{manufacturer} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the manufacturer tag. \end{DoxyCompactList}\item 
+std\+::wstring \hyperlink{class_c_m_s_1_1_profile_adabc31854f8bad3fff001bf1c368f578}{manufacturer\+\_\+wide} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the manufacturer tag in a wide string. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a3eac2ae4b39f826f173ea3d6d6fbebd0}{set\+\_\+model} (std\+::string language, std\+::string country, std\+::string text)
+\begin{DoxyCompactList}\small\item\em Set the model tag. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a9cf62798d019c1337df37e52b4b84e5a}{set\+\_\+model} (std\+::string language, std\+::string country, std\+::wstring text)
+\begin{DoxyCompactList}\small\item\em Set the model tag with a wide string. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_c_m_s_1_1_profile_a53625142c46b1ae35c5273bd9221b4c5}{model} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the model tag. \end{DoxyCompactList}\item 
+std\+::wstring \hyperlink{class_c_m_s_1_1_profile_abc14007394d919335db466432570c569}{model\+\_\+wide} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the model tag in a wide string. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a24a888e60c03f7e8e556cd3aca5e65ec}{set\+\_\+copyright} (std\+::string language, std\+::string country, std\+::string text)
+\begin{DoxyCompactList}\small\item\em Set the copyright tag. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_ad88fcfb7bd3adae8f8c9d4c9143f355f}{set\+\_\+copyright} (std\+::string language, std\+::string country, std\+::wstring text)
+\begin{DoxyCompactList}\small\item\em Set the copyright tag with a wide string. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_c_m_s_1_1_profile_aa0820c0bb156499d5597a7cf54a3ecc0}{copyright} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the copyright tag. \end{DoxyCompactList}\item 
+std\+::wstring \hyperlink{class_c_m_s_1_1_profile_a8ce6488b146cbffb1f14171c1b862a8b}{copyright\+\_\+wide} (std\+::string language, std\+::string country) const
+\begin{DoxyCompactList}\small\item\em Get the copyright tag in a wide string. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_profile_a223cfa717a36986157102cdcf32e2adf}{save\+\_\+to\+\_\+mem} (unsigned char $\ast$\&dest, unsigned int \&size) const
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{ptr} \hyperlink{class_c_m_s_1_1_profile_a8623f68331080ea5e1aef2f595e9ae00}{Lab4} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{ptr} \hyperlink{class_c_m_s_1_1_profile_a7ca6f825e5e356f8553019b36079f93e}{s\+R\+GB} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{ptr} \hyperlink{class_c_m_s_1_1_profile_a51111f314db7bfda93f5388f9eee551c}{s\+Grey} (void)
+\begin{DoxyCompactList}\small\item\em Named constructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_c_m_s_1_1_profile_acc1c1bb221523de35625f0057bffe1fd}{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Profile $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Wrap L\+C\+M\+S2\textquotesingle{}s cms\+H\+P\+R\+O\+F\+I\+LE. 
+
+Definition at line 37 of file C\+M\+S.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}\label{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!ptr@{ptr}}
+\index{ptr@{ptr}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_c_m_s_1_1_profile}{Profile}$>$ \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr}}
+
+
+
+Shared pointer typedef. 
+
+
+
+Definition at line 81 of file C\+M\+S.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a899c56378a13a7f5920f71d88aba7772}\label{class_c_m_s_1_1_profile_a899c56378a13a7f5920f71d88aba7772}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!Profile@{Profile}}
+\index{Profile@{Profile}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{Profile()}{Profile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::\+Profile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 34 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a46a702357e409603a511d93d55d02367}\label{class_c_m_s_1_1_profile_a46a702357e409603a511d93d55d02367}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!Profile@{Profile}}
+\index{Profile@{Profile}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{Profile()}{Profile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::\+Profile (\begin{DoxyParamCaption}\item[{const \hyperlink{class_c_m_s_1_1_profile}{Profile} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Copy constructor. 
+
+
+
+Definition at line 39 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a53c301fecda6950999e2f87e1280cd8a}\label{class_c_m_s_1_1_profile_a53c301fecda6950999e2f87e1280cd8a}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!Profile@{Profile}}
+\index{Profile@{Profile}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{Profile()}{Profile()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::\+Profile (\begin{DoxyParamCaption}\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Constructor from file path. 
+
+
+
+Definition at line 52 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_ad0430f199a119c916dbf6fa3c7bdff2d}\label{class_c_m_s_1_1_profile_ad0430f199a119c916dbf6fa3c7bdff2d}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!Profile@{Profile}}
+\index{Profile@{Profile}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{Profile()}{Profile()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::\+Profile (\begin{DoxyParamCaption}\item[{const unsigned char $\ast$}]{data,  }\item[{cms\+U\+Int32\+Number}]{size }\end{DoxyParamCaption})}
+
+
+
+Constructor from memory. 
+
+
+
+Definition at line 57 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a8c587e29eb6bc30ff4f9528347334081}\label{class_c_m_s_1_1_profile_a8c587e29eb6bc30ff4f9528347334081}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!Profile@{Profile}}
+\index{Profile@{Profile}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{Profile()}{Profile()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::\+Profile (\begin{DoxyParamCaption}\item[{std\+::istream}]{stream }\end{DoxyParamCaption})}
+
+
+
+Constructor from an istream. 
+
+
+
+Definition at line 62 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_ae70df5df1fdc50817033134b958d2ab9}\label{class_c_m_s_1_1_profile_ae70df5df1fdc50817033134b958d2ab9}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!````~Profile@{$\sim$\+Profile}}
+\index{````~Profile@{$\sim$\+Profile}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{$\sim$\+Profile()}{~Profile()}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::$\sim$\+Profile (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Deconstructor. 
+
+
+
+Definition at line 67 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_aa0820c0bb156499d5597a7cf54a3ecc0}\label{class_c_m_s_1_1_profile_aa0820c0bb156499d5597a7cf54a3ecc0}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!copyright@{copyright}}
+\index{copyright@{copyright}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{copyright()}{copyright()}}
+{\footnotesize\ttfamily std\+::string C\+M\+S\+::\+Profile\+::copyright (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the copyright tag. 
+
+
+
+Definition at line 205 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a8ce6488b146cbffb1f14171c1b862a8b}\label{class_c_m_s_1_1_profile_a8ce6488b146cbffb1f14171c1b862a8b}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!copyright\+\_\+wide@{copyright\+\_\+wide}}
+\index{copyright\+\_\+wide@{copyright\+\_\+wide}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{copyright\+\_\+wide()}{copyright\_wide()}}
+{\footnotesize\ttfamily std\+::wstring C\+M\+S\+::\+Profile\+::copyright\+\_\+wide (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the copyright tag in a wide string. 
+
+
+
+Definition at line 209 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a1b2e3e2229a9cc307aa6bc4993640815}\label{class_c_m_s_1_1_profile_a1b2e3e2229a9cc307aa6bc4993640815}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!description@{description}}
+\index{description@{description}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{description()}{description()}}
+{\footnotesize\ttfamily std\+::string C\+M\+S\+::\+Profile\+::description (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the description tag. 
+
+
+
+Definition at line 157 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a0c533b394f01ba7ea265652c77459ad7}\label{class_c_m_s_1_1_profile_a0c533b394f01ba7ea265652c77459ad7}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!description\+\_\+wide@{description\+\_\+wide}}
+\index{description\+\_\+wide@{description\+\_\+wide}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{description\+\_\+wide()}{description\_wide()}}
+{\footnotesize\ttfamily std\+::wstring C\+M\+S\+::\+Profile\+::description\+\_\+wide (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the description tag in a wide string. 
+
+
+
+Definition at line 161 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a8623f68331080ea5e1aef2f595e9ae00}\label{class_c_m_s_1_1_profile_a8623f68331080ea5e1aef2f595e9ae00}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!Lab4@{Lab4}}
+\index{Lab4@{Lab4}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{Lab4()}{Lab4()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} C\+M\+S\+::\+Profile\+::\+Lab4 (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 72 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a1fbb59d9f6e769da91b34b4d38fa4e57}\label{class_c_m_s_1_1_profile_a1fbb59d9f6e769da91b34b4d38fa4e57}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!manufacturer@{manufacturer}}
+\index{manufacturer@{manufacturer}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{manufacturer()}{manufacturer()}}
+{\footnotesize\ttfamily std\+::string C\+M\+S\+::\+Profile\+::manufacturer (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the manufacturer tag. 
+
+
+
+Definition at line 173 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_adabc31854f8bad3fff001bf1c368f578}\label{class_c_m_s_1_1_profile_adabc31854f8bad3fff001bf1c368f578}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!manufacturer\+\_\+wide@{manufacturer\+\_\+wide}}
+\index{manufacturer\+\_\+wide@{manufacturer\+\_\+wide}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{manufacturer\+\_\+wide()}{manufacturer\_wide()}}
+{\footnotesize\ttfamily std\+::wstring C\+M\+S\+::\+Profile\+::manufacturer\+\_\+wide (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the manufacturer tag in a wide string. 
+
+
+
+Definition at line 177 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a53625142c46b1ae35c5273bd9221b4c5}\label{class_c_m_s_1_1_profile_a53625142c46b1ae35c5273bd9221b4c5}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!model@{model}}
+\index{model@{model}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{model()}{model()}}
+{\footnotesize\ttfamily std\+::string C\+M\+S\+::\+Profile\+::model (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the model tag. 
+
+
+
+Definition at line 189 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_abc14007394d919335db466432570c569}\label{class_c_m_s_1_1_profile_abc14007394d919335db466432570c569}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!model\+\_\+wide@{model\+\_\+wide}}
+\index{model\+\_\+wide@{model\+\_\+wide}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{model\+\_\+wide()}{model\_wide()}}
+{\footnotesize\ttfamily std\+::wstring C\+M\+S\+::\+Profile\+::model\+\_\+wide (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country }\end{DoxyParamCaption}) const}
+
+
+
+Get the model tag in a wide string. 
+
+
+
+Definition at line 193 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_ae7f376b982ba270728c4cf1fe340d424}\label{class_c_m_s_1_1_profile_ae7f376b982ba270728c4cf1fe340d424}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!operator cms\+H\+P\+R\+O\+F\+I\+LE@{operator cms\+H\+P\+R\+O\+F\+I\+LE}}
+\index{operator cms\+H\+P\+R\+O\+F\+I\+LE@{operator cms\+H\+P\+R\+O\+F\+I\+LE}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{operator cms\+H\+P\+R\+O\+F\+I\+L\+E()}{operator cmsHPROFILE()}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Profile\+::operator cms\+H\+P\+R\+O\+F\+I\+LE (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Cast to a profile handle for direct use with L\+C\+M\+S2. 
+
+
+
+Definition at line 78 of file C\+M\+S.\+hh.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a223cfa717a36986157102cdcf32e2adf}\label{class_c_m_s_1_1_profile_a223cfa717a36986157102cdcf32e2adf}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!save\+\_\+to\+\_\+mem@{save\+\_\+to\+\_\+mem}}
+\index{save\+\_\+to\+\_\+mem@{save\+\_\+to\+\_\+mem}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{save\+\_\+to\+\_\+mem()}{save\_to\_mem()}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::save\+\_\+to\+\_\+mem (\begin{DoxyParamCaption}\item[{unsigned char $\ast$\&}]{dest,  }\item[{unsigned int \&}]{size }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 213 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a24a888e60c03f7e8e556cd3aca5e65ec}\label{class_c_m_s_1_1_profile_a24a888e60c03f7e8e556cd3aca5e65ec}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+copyright@{set\+\_\+copyright}}
+\index{set\+\_\+copyright@{set\+\_\+copyright}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+copyright()}{set\_copyright()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+copyright (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::string}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the copyright tag. 
+
+
+
+Definition at line 197 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_ad88fcfb7bd3adae8f8c9d4c9143f355f}\label{class_c_m_s_1_1_profile_ad88fcfb7bd3adae8f8c9d4c9143f355f}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+copyright@{set\+\_\+copyright}}
+\index{set\+\_\+copyright@{set\+\_\+copyright}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+copyright()}{set\_copyright()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+copyright (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::wstring}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the copyright tag with a wide string. 
+
+
+
+Definition at line 201 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a636e6a2629c4e806a3eb8f2b2a7dc340}\label{class_c_m_s_1_1_profile_a636e6a2629c4e806a3eb8f2b2a7dc340}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+description@{set\+\_\+description}}
+\index{set\+\_\+description@{set\+\_\+description}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+description()}{set\_description()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+description (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::string}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the description tag. 
+
+
+
+Definition at line 149 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a22b8574b4cf1fe0ca211fb6df9e81259}\label{class_c_m_s_1_1_profile_a22b8574b4cf1fe0ca211fb6df9e81259}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+description@{set\+\_\+description}}
+\index{set\+\_\+description@{set\+\_\+description}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+description()}{set\_description()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+description (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::wstring}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the description tag with a wide string. 
+
+
+
+Definition at line 153 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a628c7662b1e3986089c807738bdc8cd5}\label{class_c_m_s_1_1_profile_a628c7662b1e3986089c807738bdc8cd5}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+manufacturer@{set\+\_\+manufacturer}}
+\index{set\+\_\+manufacturer@{set\+\_\+manufacturer}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+manufacturer()}{set\_manufacturer()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+manufacturer (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::string}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the manufacturer tag. 
+
+
+
+Definition at line 165 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a2a10ecfe0b67cb72be7d0afa9717dcee}\label{class_c_m_s_1_1_profile_a2a10ecfe0b67cb72be7d0afa9717dcee}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+manufacturer@{set\+\_\+manufacturer}}
+\index{set\+\_\+manufacturer@{set\+\_\+manufacturer}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+manufacturer()}{set\_manufacturer()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+manufacturer (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::wstring}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the manufacturer tag with a wide string. 
+
+
+
+Definition at line 169 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a3eac2ae4b39f826f173ea3d6d6fbebd0}\label{class_c_m_s_1_1_profile_a3eac2ae4b39f826f173ea3d6d6fbebd0}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+model@{set\+\_\+model}}
+\index{set\+\_\+model@{set\+\_\+model}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+model()}{set\_model()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+model (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::string}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the model tag. 
+
+
+
+Definition at line 181 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a9cf62798d019c1337df37e52b4b84e5a}\label{class_c_m_s_1_1_profile_a9cf62798d019c1337df37e52b4b84e5a}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!set\+\_\+model@{set\+\_\+model}}
+\index{set\+\_\+model@{set\+\_\+model}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{set\+\_\+model()}{set\_model()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Profile\+::set\+\_\+model (\begin{DoxyParamCaption}\item[{std\+::string}]{language,  }\item[{std\+::string}]{country,  }\item[{std\+::wstring}]{text }\end{DoxyParamCaption})}
+
+
+
+Set the model tag with a wide string. 
+
+
+
+Definition at line 185 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a51111f314db7bfda93f5388f9eee551c}\label{class_c_m_s_1_1_profile_a51111f314db7bfda93f5388f9eee551c}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!s\+Grey@{s\+Grey}}
+\index{s\+Grey@{s\+Grey}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{s\+Grey()}{sGrey()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} C\+M\+S\+::\+Profile\+::s\+Grey (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 80 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_a7ca6f825e5e356f8553019b36079f93e}\label{class_c_m_s_1_1_profile_a7ca6f825e5e356f8553019b36079f93e}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!s\+R\+GB@{s\+R\+GB}}
+\index{s\+R\+GB@{s\+R\+GB}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{s\+R\+G\+B()}{sRGB()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} C\+M\+S\+::\+Profile\+::s\+R\+GB (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor. 
+
+
+
+Definition at line 76 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_profile_acc1c1bb221523de35625f0057bffe1fd}\label{class_c_m_s_1_1_profile_acc1c1bb221523de35625f0057bffe1fd}} 
+\index{C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}!\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Profile $>$@{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Profile $>$}}
+\index{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Profile $>$@{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Profile $>$}!C\+M\+S\+::\+Profile@{C\+M\+S\+::\+Profile}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Profile $>$}{\_\_gnu\_cxx::new\_allocator< Profile >}}
+{\footnotesize\ttfamily friend class \+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ \hyperlink{class_c_m_s_1_1_profile}{Profile} $>$\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 56 of file C\+M\+S.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_c_m_s_8hh}{C\+M\+S.\+hh}\item 
+\hyperlink{_c_m_s_8cc}{C\+M\+S.\+cc}\end{DoxyCompactItemize}

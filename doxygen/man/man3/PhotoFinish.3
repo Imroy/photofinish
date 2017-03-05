@@ -1,0 +1,955 @@
+.TH "PhotoFinish" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBcmsTypeError\fP"
+.br
+.ti -1c
+.RI "class \fBCropSolver\fP"
+.br
+.RI "Class for finding the best frame position for cropping\&. "
+.ti -1c
+.RI "class \fBD_JP2\fP"
+.br
+.RI "JP2 parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_JPEG\fP"
+.br
+.RI "JPEG parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_JXR\fP"
+.br
+.RI "JPEG XR parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_PNG\fP"
+.br
+.RI "PNG parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_profile\fP"
+.br
+.RI "ICC profile parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_resize\fP"
+.br
+.RI "Resize parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_sharpen\fP"
+.br
+.RI "Sharpen parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_target\fP"
+.br
+.RI "Target parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_thumbnail\fP"
+.br
+.RI "Thumbnail parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_TIFF\fP"
+.br
+.RI "TIFF parameters for destination\&. "
+.ti -1c
+.RI "class \fBD_WebP\fP"
+.br
+.RI "WebP parameters for destination\&. "
+.ti -1c
+.RI "class \fBdefinable\fP"
+.br
+.RI "Template class for storing things that can be defined or undefined\&. "
+.ti -1c
+.RI "class \fBDestination\fP"
+.br
+.RI "Represents a destination, read from destinations\&.yml\&. "
+.ti -1c
+.RI "class \fBDestinationError\fP"
+.br
+.RI "\fBDestination\fP exception\&. "
+.ti -1c
+.RI "class \fBDestinations\fP"
+.br
+.RI "A wrapper class for reading destinations from a YAML file and storing them in a map\&. "
+.ti -1c
+.RI "class \fBDitherer\fP"
+.br
+.RI "Class for dithering images down to 8-bit components\&. "
+.ti -1c
+.RI "class \fBErrorMsg\fP"
+.br
+.RI "Generic error message exception\&. "
+.ti -1c
+.RI "class \fBFileContentError\fP"
+.br
+.RI "File content exception\&. "
+.ti -1c
+.RI "class \fBFileError\fP"
+.br
+.RI "File error abstract base exception\&. "
+.ti -1c
+.RI "class \fBFileOpenError\fP"
+.br
+.RI "File open exception\&. "
+.ti -1c
+.RI "class \fBFrame\fP"
+.br
+.RI "Crop+rescaling parameters\&. "
+.ti -1c
+.RI "class \fBGaussianSharpen\fP"
+.br
+.RI "\fBGaussianSharpen\fP kernel\&. "
+.ti -1c
+.RI "class \fBImage\fP"
+.br
+.RI "An image class\&. "
+.ti -1c
+.RI "class \fBImageFilepath\fP"
+.br
+.RI "Class for holding filename and the image format\&. "
+.ti -1c
+.RI "class \fBImageReader\fP"
+.br
+.RI "Abstract base class for reading image files\&. "
+.ti -1c
+.RI "class \fBImageWriter\fP"
+.br
+.RI "Abstract base class for writing image files\&. "
+.ti -1c
+.RI "struct \fBjpeg_destination_state_t\fP"
+.br
+.RI "Structure holding information for the ostream writer\&. "
+.ti -1c
+.RI "struct \fBjpeg_source_state_t\fP"
+.br
+.RI "Structure holding information for the istream reader\&. "
+.ti -1c
+.RI "class \fBKernel1Dvar\fP"
+.br
+.RI "Creates and stores coefficients for cropping and resizing an image\&. "
+.ti -1c
+.RI "class \fBKernel2D\fP"
+.br
+.RI "Creates and stores coefficients for convolving an image\&. "
+.ti -1c
+.RI "class \fBLanczos\fP"
+.br
+.RI "\fBLanczos\fP filter\&. "
+.ti -1c
+.RI "class \fBLibraryError\fP"
+.br
+.RI "Library exception\&. "
+.ti -1c
+.RI "class \fBMemAllocError\fP"
+.br
+.RI "Memory allocation exception\&. "
+.ti -1c
+.RI "class \fBNoResults\fP"
+.br
+.RI "No results exception\&. "
+.ti -1c
+.RI "class \fBNoTargets\fP"
+.br
+.RI "No targets exception\&. "
+.ti -1c
+.RI "struct \fBPNGreader_cb\fP"
+.br
+.ti -1c
+.RI "class \fBRole_Definable\fP"
+.br
+.RI "Base class for adding 'definable' attribute\&. "
+.ti -1c
+.RI "class \fBSOLwriter\fP"
+.br
+.RI "Write the boot logo files for use on Motorola Atrix 4G and possibly other phones\&. "
+.ti -1c
+.RI "class \fBTags\fP"
+.br
+.RI "Reads and holds tag information\&. "
+.ti -1c
+.RI "class \fBTimer\fP"
+.br
+.RI "Class for doing nanosecond-accurate timings\&. "
+.ti -1c
+.RI "class \fBUnimplemented\fP"
+.br
+.RI "\fBUnimplemented\fP method exception\&. "
+.ti -1c
+.RI "class \fBUninitialised\fP"
+.br
+.RI "\fBUninitialised\fP attribute exception\&. "
+.ti -1c
+.RI "class \fBUnknownFileType\fP"
+.br
+.RI "Unknown file type exception\&. "
+.ti -1c
+.RI "class \fBwebp_stream_writer\fP"
+.br
+.RI "A custom writer for libwebp that writes using a std::ostream object\&. "
+.ti -1c
+.RI "class \fBWebPError\fP"
+.br
+.RI "WebP exception\&. "
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef std::pair< double, double > \fBrulerpair\fP"
+.br
+.RI "Ruler paramaters - percentage of final image vs\&. pixel position in original\&. "
+.ti -1c
+.RI "typedef std::list< \fBrulerpair\fP > \fBrulerlist\fP"
+.br
+.RI "A list of rulers\&. "
+.ti -1c
+.RI "typedef std::map< std::string, std::string > \fBhash\fP"
+.br
+.RI "A simple hash\&. "
+.ti -1c
+.RI "typedef std::vector< std::string > \fBstringlist\fP"
+.br
+.RI "A list of strings\&. "
+.ti -1c
+.RI "typedef std::map< std::string, \fBstringlist\fP > \fBmultihash\fP"
+.br
+.RI "A hash of string lists\&. "
+.ti -1c
+.RI "typedef std::vector< std::pair< std::string, std::string > > \fBsubst_table\fP"
+.br
+.ti -1c
+.RI "typedef std::vector< std::pair< unsigned int, const PKPixelFormatGUID * > > \fBjxr_format_subst\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "std::ostream & \fBoperator<<\fP (std::ostream &out, \fBTimer\fP t)"
+.br
+.ti -1c
+.RI "template<typename T > T \fBscaleval\fP (void)"
+.br
+.RI "A template function that returns the 'scale' value of a type\&. "
+.ti -1c
+.RI "template<> unsigned char \fBscaleval< unsigned char >\fP (void)"
+.br
+.ti -1c
+.RI "template<> unsigned short int \fBscaleval< unsigned short int >\fP (void)"
+.br
+.ti -1c
+.RI "template<> unsigned int \fBscaleval< unsigned int >\fP (void)"
+.br
+.ti -1c
+.RI "template<> unsigned long long \fBscaleval< unsigned long long >\fP (void)"
+.br
+.ti -1c
+.RI "template<> float \fBscaleval< float >\fP (void)"
+.br
+.ti -1c
+.RI "template<> double \fBscaleval< double >\fP (void)"
+.br
+.ti -1c
+.RI "template<typename T > T \fBlimitval\fP (\fBSAMPLE\fP v)"
+.br
+.RI "A template function that limits a floating-point value while converting to another type\&. "
+.ti -1c
+.RI "template<> unsigned char \fBlimitval< unsigned char >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> unsigned short int \fBlimitval< unsigned short int >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> unsigned int \fBlimitval< unsigned int >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> unsigned long long \fBlimitval< unsigned long long >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> float \fBlimitval< float >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "template<> double \fBlimitval< double >\fP (\fBSAMPLE\fP v)"
+.br
+.ti -1c
+.RI "bool \fBexists\fP (const \fBImageFilepath\fP &fp)"
+.br
+.ti -1c
+.RI "std::time_t \fBlast_write_time\fP (const \fBImageFilepath\fP &fp)"
+.br
+.ti -1c
+.RI "template<typename Num_type , typename R_type > Exiv2::ValueType< R_type > & \fBclosest_Rational\fP (double value)"
+.br
+.RI "Find a close rational fraction given a floating-point value\&. "
+.ti -1c
+.RI "void \fBadd_rulers\fP (\fBmultihash\fP &vars, std::string key, \fBrulerlist\fP &rulers)"
+.br
+.RI "Parse named variables into a list of rulers\&. "
+.ti -1c
+.RI "void \fBadd_ruler_pins\fP (\fBrulerlist\fP &rulers, unsigned int \fBmax\fP)"
+.br
+.RI "Add rulers to the either side of an image if there aren't enough\&. "
+.ti -1c
+.RI "void \fBerror_callback\fP (const char *msg, void *client_data)"
+.br
+.RI "Error callback for OpenJPEG - throw a \fBLibraryError\fP exception\&. "
+.ti -1c
+.RI "void \fBwarning_callback\fP (const char *msg, void *client_data)"
+.br
+.RI "Warning callback for OpenJPEG - print the message to STDERR\&. "
+.ti -1c
+.RI "void \fBinfo_callback\fP (const char *msg, void *client_data)"
+.br
+.RI "Info callback for OpenJPEG - print the indented message to STDERR\&. "
+.ti -1c
+.RI "template<typename T > void \fBread_planar\fP (unsigned int width, unsigned char channels, opj_image_t *image, T *row, unsigned int y)"
+.br
+.RI "Read a row of image data from OpenJPEG's planar integer components into an LCMS2-compatible single array\&. "
+.ti -1c
+.RI "template<typename T > void \fBwrite_planar\fP (unsigned int width, unsigned char channels, T *row, opj_image_t *image, unsigned int y)"
+.br
+.RI "Read a row of planar pixel data into OpenJPEG's planar components\&. "
+.ti -1c
+.RI "template<typename T > void \fBwrite_packed\fP (unsigned int width, unsigned char channels, T *row, opj_image_t *image, unsigned int y)"
+.br
+.RI "Read a row of packed pixel data into OpenJPEG's planar components\&. "
+.ti -1c
+.RI "void \fBjpeg_istream_src\fP (j_decompress_ptr dinfo, std::istream *is)"
+.br
+.RI "Set up a 'source manager' on the given JPEG decompression structure to read from an istream\&. "
+.ti -1c
+.RI "void \fBjpeg_istream_src_free\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Free the data structures of the istream source manager\&. "
+.ti -1c
+.RI "void \fBjpeg_ostream_dest\fP (j_compress_ptr cinfo, std::ostream *os)"
+.br
+.RI "Setup a 'destination manager' on the given JPEG compression structure to write to an ostream\&. "
+.ti -1c
+.RI "void \fBjpeg_ostream_dest_free\fP (j_compress_ptr cinfo)"
+.br
+.RI "Free the data structures of the ostream destination manager\&. "
+.ti -1c
+.RI "void \fBjpegfile_scan_RGB\fP (jpeg_compress_struct *cinfo)"
+.br
+.RI "Create a scan 'script' for an RGB image\&. "
+.ti -1c
+.RI "void \fBjpegfile_scan_greyscale\fP (jpeg_compress_struct *cinfo)"
+.br
+.RI "Create a scan 'script' for a greyscale image\&. "
+.ti -1c
+.RI "\fBCMS::Profile::ptr\fP \fBjpeg_read_profile\fP (jpeg_decompress_struct *dinfo, \fBDestination::ptr\fP dest)"
+.br
+.RI "Read an ICC profile from APP2 markers in a JPEG file\&. "
+.ti -1c
+.RI "void \fBjpeg_write_profile\fP (jpeg_compress_struct *cinfo, unsigned char *data, unsigned int size)"
+.br
+.RI "Write an ICC profile into APP2 markers in a JPEG file\&. "
+.ti -1c
+.RI "void \fBjpeg_istream_init_source\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Initialise the istream source manager\&. "
+.ti -1c
+.RI "boolean \fBjpeg_istream_fill_input_buffer\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Fill the buffer\&. "
+.ti -1c
+.RI "void \fBjpeg_istream_skip_input_data\fP (j_decompress_ptr dinfo, long num_bytes)"
+.br
+.RI "Skip some data\&. "
+.ti -1c
+.RI "boolean \fBjpeg_istream_resync_to_restart\fP (j_decompress_ptr dinfo, int desired)"
+.br
+.RI "Resync to start?!? "
+.ti -1c
+.RI "void \fBjpeg_istream_term_source\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Terminate the istream source manager\&. "
+.ti -1c
+.RI "void \fBjpeg_error_exit\fP (j_common_ptr cinfo)"
+.br
+.ti -1c
+.RI "const PKPixelFormatGUID & \fBjxr_pixel_format\fP (unsigned int n)"
+.br
+.ti -1c
+.RI "\fBCMS::Format\fP \fBjxr_cms_format\fP (const PKPixelFormatGUID &g)"
+.br
+.ti -1c
+.RI "void \fBpng_info_cb\fP (png_structp png, png_infop info)"
+.br
+.RI "Called by libPNG when the iHDR chunk has been read with the main 'header' information\&. "
+.ti -1c
+.RI "void \fBpng_row_cb\fP (png_structp png, png_bytep row_data, png_uint_32 row_num, int pass)"
+.br
+.RI "Called by libPNG when a row of image data has been read\&. "
+.ti -1c
+.RI "void \fBpng_end_cb\fP (png_structp png, png_infop info)"
+.br
+.RI "Called by libPNG when the image data has finished\&. "
+.ti -1c
+.RI "void \fBpng_write_ostream_cb\fP (png_structp png, png_bytep buffer, png_size_t length)"
+.br
+.RI "libPNG callback for writing to an ostream "
+.ti -1c
+.RI "void \fBpng_flush_ostream_cb\fP (png_structp png)"
+.br
+.RI "libPNG callback for flushing an ostream "
+.ti -1c
+.RI "void \fBwrite_be\fP (void *ptr, size_t size, std::ostream &stream)"
+.br
+.ti -1c
+.RI "int \fBwebp_stream_writer_func\fP (const uint8_t *data, size_t data_size, const WebPPicture *picture)"
+.br
+.RI "Wrapper around the \fBwebp_stream_writer\fP class\&. "
+.ti -1c
+.RI "void \fBcopy_le_to\fP (unsigned char *dest, unsigned int value, unsigned char length)"
+.br
+.ti -1c
+.RI "unsigned int \fBread_le32\fP (const unsigned char *data)"
+.br
+.ti -1c
+.RI "template<typename A , typename B > void \fBtransfer_alpha_typed2\fP (unsigned int width, unsigned char src_channels, const A *src_row, unsigned char dest_channels, const B *dest_row)"
+.br
+.ti -1c
+.RI "template<typename A > void \fBtransfer_alpha_typed\fP (unsigned int width, unsigned char src_channels, const A *src_row, \fBCMS::Format\fP dest_format, const unsigned char *dest_row)"
+.br
+.ti -1c
+.RI "void \fBtransfer_alpha\fP (unsigned int width, \fBCMS::Format\fP src_format, const unsigned char *src_row, \fBCMS::Format\fP dest_format, const unsigned char *dest_row)"
+.br
+.ti -1c
+.RI "std::string \fBprofile_name\fP (\fBCMS::Profile::ptr\fP profile)"
+.br
+.ti -1c
+.RI "void \fBlcms2_errorhandler\fP (cmsContext ContextID, cmsUInt32Number ErrorCode, const char *Text)"
+.br
+.RI "Throw a \fBLibraryError\fP exception whem LCMS2 returns an error\&. "
+.ti -1c
+.RI "void \fBlcms2_error_adaptor\fP (void)"
+.br
+.RI "Set up an error handler with LCMS2 that will throw a \fBLibraryError\fP exception\&. "
+.ti -1c
+.RI "Exiv2::ExifKey \fBexif_key_read\fP (std::string key_string)"
+.br
+.ti -1c
+.RI "Exiv2::Value::AutoPtr \fBexif_value_read\fP (Exiv2::ExifKey key, std::string value_string)"
+.br
+.RI "Read an EXIF value from a string, with optional substitution for enum-style values\&. "
+.ti -1c
+.RI "Exiv2::IptcKey \fBiptc_key_read\fP (std::string key_string)"
+.br
+.ti -1c
+.RI "Exiv2::XmpKey \fBxmp_key_read\fP (std::string key_string)"
+.br
+.ti -1c
+.RI "template<typename Num_type , typename R_type > Exiv2::Value::AutoPtr \fBparse_Rational\fP (std::string s)"
+.br
+.RI "Parse a string into a rational fraction\&. "
+.in -1c
+.SS "Variables"
+
+.in +1c
+.ti -1c
+.RI "bool \fBbenchmark_mode\fP = false"
+.br
+.ti -1c
+.RI "\fBjxr_format_subst\fP \fBJXR_format_table\fP"
+.br
+.ti -1c
+.RI "unsigned char \fBheader\fP [12]"
+.br
+.ti -1c
+.RI "std::map< std::string, WebPPreset > \fBWebP_presets\fP"
+.br
+.ti -1c
+.RI "\fBsubst_table\fP \fBEXIF_key_subst\fP"
+.br
+.RI "Map from Image::Exiftool tag names to Exiv2's tag names\&. "
+.ti -1c
+.RI "std::map< std::string, \fBsubst_table\fP > \fBEXIF_value_subst\fP"
+.br
+.ti -1c
+.RI "\fBsubst_table\fP \fBIPTC_key_subst\fP"
+.br
+.RI "Map from Image::Exiftool tag names to Exiv2's tag names\&. "
+.ti -1c
+.RI "\fBsubst_table\fP \fBXMP_key_subst\fP"
+.br
+.RI "Map from Image::Exiftool tag names to Exiv2's tag names\&. "
+.in -1c
+.SH "Typedef Documentation"
+.PP 
+.SS "typedef std::map<std::string, std::string> \fBPhotoFinish::hash\fP"
+
+.PP
+A simple hash\&. 
+.PP
+Definition at line 36 of file Destination_items\&.hh\&.
+.SS "typedef std::vector<std::pair<unsigned int, const PKPixelFormatGUID*> > \fBPhotoFinish::jxr_format_subst\fP"
+
+.PP
+Definition at line 34 of file JXR\&.hh\&.
+.SS "typedef std::map<std::string, \fBstringlist\fP > \fBPhotoFinish::multihash\fP"
+
+.PP
+A hash of string lists\&. 
+.PP
+Definition at line 42 of file Destination_items\&.hh\&.
+.SS "typedef std::list< \fBrulerpair\fP > \fBPhotoFinish::rulerlist\fP"
+
+.PP
+A list of rulers\&. 
+.PP
+Definition at line 36 of file CropSolution\&.hh\&.
+.SS "typedef std::pair<double, double> \fBPhotoFinish::rulerpair\fP"
+
+.PP
+Ruler paramaters - percentage of final image vs\&. pixel position in original\&. 
+.PP
+Definition at line 33 of file CropSolution\&.hh\&.
+.SS "typedef std::vector<std::string> \fBPhotoFinish::stringlist\fP"
+
+.PP
+A list of strings\&. 
+.PP
+Definition at line 39 of file Destination_items\&.hh\&.
+.SS "typedef std::vector<std::pair<std::string, std::string> > \fBPhotoFinish::subst_table\fP"
+
+.PP
+Definition at line 37 of file Tags\&.hh\&.
+.SH "Function Documentation"
+.PP 
+.SS "void PhotoFinish::add_ruler_pins (\fBrulerlist\fP & rulers, unsigned int max)"
+
+.PP
+Add rulers to the either side of an image if there aren't enough\&. 
+.PP
+Definition at line 53 of file CropSolution\&.cc\&.
+.SS "void PhotoFinish::add_rulers (\fBmultihash\fP & vars, std::string key, \fBrulerlist\fP & rulers)"
+
+.PP
+Parse named variables into a list of rulers\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIvars\fP The tag variables 
+.br
+\fIkey\fP The name of the variables to parse 
+.br
+\fIrulers\fP The list of rulers to add to 
+.RE
+.PP
+
+.PP
+Definition at line 36 of file CropSolution\&.cc\&.
+.SS "template<typename Num_type , typename R_type > Exiv2::ValueType<R_type>& PhotoFinish::closest_Rational (double value)"
+
+.PP
+Find a close rational fraction given a floating-point value\&. 
+.PP
+Definition at line 101 of file Tags\&.hh\&.
+.SS "void PhotoFinish::copy_le_to (unsigned char * dest, unsigned int value, unsigned char length)\fC [inline]\fP"
+
+.PP
+Definition at line 95 of file WebP_ostream\&.hh\&.
+.SS "void PhotoFinish::error_callback (const char * msg, void * client_data)"
+
+.PP
+Error callback for OpenJPEG - throw a \fBLibraryError\fP exception\&. 
+.PP
+Definition at line 25 of file JP2_callbacks\&.cc\&.
+.SS "Exiv2::ExifKey PhotoFinish::exif_key_read (std::string key_string)"
+
+.PP
+Definition at line 81 of file Tags_EXIF_subst\&.cc\&.
+.SS "Exiv2::Value::AutoPtr PhotoFinish::exif_value_read (Exiv2::ExifKey key, std::string value_string)"
+
+.PP
+Read an EXIF value from a string, with optional substitution for enum-style values\&. 
+.PP
+Definition at line 280 of file Tags_EXIF_subst\&.cc\&.
+.SS "bool PhotoFinish::exists (const \fBImageFilepath\fP & fp)\fC [inline]\fP"
+
+.PP
+Definition at line 92 of file ImageFile\&.hh\&.
+.SS "void PhotoFinish::info_callback (const char * msg, void * client_data)"
+
+.PP
+Info callback for OpenJPEG - print the indented message to STDERR\&. 
+.PP
+Definition at line 34 of file JP2_callbacks\&.cc\&.
+.SS "Exiv2::IptcKey PhotoFinish::iptc_key_read (std::string key_string)"
+
+.PP
+Definition at line 37 of file Tags_IPTC_subst\&.cc\&.
+.SS "void PhotoFinish::jpeg_error_exit (j_common_ptr cinfo)"
+
+.PP
+Definition at line 36 of file JPEGwriter\&.cc\&.
+.SS "boolean PhotoFinish::jpeg_istream_fill_input_buffer (j_decompress_ptr dinfo)"
+
+.PP
+Fill the buffer\&. 
+.PP
+Definition at line 45 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_istream_init_source (j_decompress_ptr dinfo)"
+
+.PP
+Initialise the istream source manager\&. 
+.PP
+Definition at line 34 of file JPEG_iostream\&.cc\&.
+.SS "boolean PhotoFinish::jpeg_istream_resync_to_restart (j_decompress_ptr dinfo, int desired)"
+
+.PP
+Resync to start?!? 
+.PP
+Definition at line 74 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_istream_skip_input_data (j_decompress_ptr dinfo, long num_bytes)"
+
+.PP
+Skip some data\&. 
+.PP
+Definition at line 57 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_istream_src (j_decompress_ptr dinfo, std::istream * is)"
+
+.PP
+Set up a 'source manager' on the given JPEG decompression structure to read from an istream\&. 
+.PP
+Definition at line 84 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_istream_src_free (j_decompress_ptr dinfo)"
+
+.PP
+Free the data structures of the istream source manager\&. 
+.PP
+Definition at line 99 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_istream_term_source (j_decompress_ptr dinfo)"
+
+.PP
+Terminate the istream source manager\&. 
+.PP
+Definition at line 79 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_ostream_dest (j_compress_ptr cinfo, std::ostream * os)"
+
+.PP
+Setup a 'destination manager' on the given JPEG compression structure to write to an ostream\&. 
+.PP
+Definition at line 144 of file JPEG_iostream\&.cc\&.
+.SS "void PhotoFinish::jpeg_ostream_dest_free (j_compress_ptr cinfo)"
+
+.PP
+Free the data structures of the ostream destination manager\&. 
+.PP
+Definition at line 157 of file JPEG_iostream\&.cc\&.
+.SS "\fBCMS::Profile::ptr\fP PhotoFinish::jpeg_read_profile (jpeg_decompress_struct * dinfo, \fBDestination::ptr\fP dest)"
+
+.PP
+Read an ICC profile from APP2 markers in a JPEG file\&. 
+.PP
+Definition at line 31 of file JPEG_profiles\&.cc\&.
+.SS "void PhotoFinish::jpeg_write_profile (jpeg_compress_struct * cinfo, unsigned char * data, unsigned int size)"
+
+.PP
+Write an ICC profile into APP2 markers in a JPEG file\&. 
+.PP
+Definition at line 78 of file JPEG_profiles\&.cc\&.
+.SS "void PhotoFinish::jpegfile_scan_greyscale (jpeg_compress_struct * cinfo)"
+
+.PP
+Create a scan 'script' for a greyscale image\&. Create a scan script for encoding a greyscale progressive JPEG\&. 
+.PP
+Definition at line 114 of file JPEG_scans\&.cc\&.
+.SS "void PhotoFinish::jpegfile_scan_RGB (jpeg_compress_struct * cinfo)"
+
+.PP
+Create a scan 'script' for an RGB image\&. Create a scan script for encoding a colour progressive JPEG\&. 
+.PP
+Definition at line 26 of file JPEG_scans\&.cc\&.
+.SS "\fBCMS::Format\fP PhotoFinish::jxr_cms_format (const PKPixelFormatGUID & g)"
+
+.PP
+Definition at line 51 of file JXR_formats\&.cc\&.
+.SS "const PKPixelFormatGUID & PhotoFinish::jxr_pixel_format (unsigned int n)"
+
+.PP
+Definition at line 43 of file JXR_formats\&.cc\&.
+.SS "std::time_t PhotoFinish::last_write_time (const \fBImageFilepath\fP & fp)\fC [inline]\fP"
+
+.PP
+Definition at line 93 of file ImageFile\&.hh\&.
+.SS "void PhotoFinish::lcms2_error_adaptor (void)"
+
+.PP
+Set up an error handler with LCMS2 that will throw a \fBLibraryError\fP exception\&. 
+.PP
+Definition at line 29 of file LCMS2ErrorHandler\&.cc\&.
+.SS "void PhotoFinish::lcms2_errorhandler (cmsContext ContextID, cmsUInt32Number ErrorCode, const char * Text)"
+
+.PP
+Throw a \fBLibraryError\fP exception whem LCMS2 returns an error\&. 
+.PP
+Definition at line 25 of file LCMS2ErrorHandler\&.cc\&.
+.SS "template<typename T > T PhotoFinish::limitval (\fBSAMPLE\fP v)"
+
+.PP
+A template function that limits a floating-point value while converting to another type\&. 
+.SS "template<> double \fBPhotoFinish::limitval\fP< double > (\fBSAMPLE\fP v)\fC [inline]\fP"
+
+.PP
+Definition at line 250 of file Image\&.hh\&.
+.SS "template<> float \fBPhotoFinish::limitval\fP< float > (\fBSAMPLE\fP v)\fC [inline]\fP"
+
+.PP
+Definition at line 245 of file Image\&.hh\&.
+.SS "template<> unsigned char \fBPhotoFinish::limitval\fP< unsigned char > (\fBSAMPLE\fP v)\fC [inline]\fP"
+
+.PP
+Definition at line 209 of file Image\&.hh\&.
+.SS "template<> unsigned int \fBPhotoFinish::limitval\fP< unsigned int > (\fBSAMPLE\fP v)\fC [inline]\fP"
+
+.PP
+Definition at line 227 of file Image\&.hh\&.
+.SS "template<> unsigned long long \fBPhotoFinish::limitval\fP< unsigned long long > (\fBSAMPLE\fP v)\fC [inline]\fP"
+
+.PP
+Definition at line 236 of file Image\&.hh\&.
+.SS "template<> unsigned short int \fBPhotoFinish::limitval\fP< unsigned short int > (\fBSAMPLE\fP v)\fC [inline]\fP"
+
+.PP
+Definition at line 218 of file Image\&.hh\&.
+.SS "std::ostream & PhotoFinish::operator<< (std::ostream & out, \fBTimer\fP t)"
+
+.PP
+Definition at line 43 of file Benchmark\&.cc\&.
+.SS "template<typename Num_type , typename R_type > Exiv2::Value::AutoPtr PhotoFinish::parse_Rational (std::string s)"
+
+.PP
+Parse a string into a rational fraction\&. 
+.PP
+Definition at line 267 of file Tags_EXIF_subst\&.cc\&.
+.SS "void PhotoFinish::png_end_cb (png_structp png, png_infop info)"
+
+.PP
+Called by libPNG when the image data has finished\&. 
+.PP
+Definition at line 141 of file PNGreader_cb\&.cc\&.
+.SS "void PhotoFinish::png_flush_ostream_cb (png_structp png)"
+
+.PP
+libPNG callback for flushing an ostream 
+.PP
+Definition at line 65 of file PNGwriter\&.cc\&.
+.SS "void PhotoFinish::png_info_cb (png_structp png, png_infop info)"
+
+.PP
+Called by libPNG when the iHDR chunk has been read with the main 'header' information\&. 
+.PP
+Definition at line 121 of file PNGreader_cb\&.cc\&.
+.SS "void PhotoFinish::png_row_cb (png_structp png, png_bytep row_data, png_uint_32 row_num, int pass)"
+
+.PP
+Called by libPNG when a row of image data has been read\&. 
+.PP
+Definition at line 132 of file PNGreader_cb\&.cc\&.
+.SS "void PhotoFinish::png_write_ostream_cb (png_structp png, png_bytep buffer, png_size_t length)"
+
+.PP
+libPNG callback for writing to an ostream 
+.PP
+Definition at line 59 of file PNGwriter\&.cc\&.
+.SS "std::string PhotoFinish::profile_name (\fBCMS::Profile::ptr\fP profile)"
+
+.PP
+Definition at line 143 of file Image\&.cc\&.
+.SS "unsigned int PhotoFinish::read_le32 (const unsigned char * data)\fC [inline]\fP"
+
+.PP
+Definition at line 102 of file WebP_ostream\&.hh\&.
+.SS "template<typename T > void PhotoFinish::read_planar (unsigned int width, unsigned char channels, opj_image_t * image, T * row, unsigned int y)\fC [inline]\fP"
+
+.PP
+Read a row of image data from OpenJPEG's planar integer components into an LCMS2-compatible single array\&. 
+.PP
+Definition at line 36 of file JP2\&.hh\&.
+.SS "template<typename T > T PhotoFinish::scaleval (void)"
+
+.PP
+A template function that returns the 'scale' value of a type\&. 
+.SS "template<> double \fBPhotoFinish::scaleval\fP< double > (void)\fC [inline]\fP"
+
+.PP
+Definition at line 201 of file Image\&.hh\&.
+.SS "template<> float \fBPhotoFinish::scaleval\fP< float > (void)\fC [inline]\fP"
+
+.PP
+Definition at line 198 of file Image\&.hh\&.
+.SS "template<> unsigned char \fBPhotoFinish::scaleval\fP< unsigned char > (void)\fC [inline]\fP"
+
+.PP
+Definition at line 186 of file Image\&.hh\&.
+.SS "template<> unsigned int \fBPhotoFinish::scaleval\fP< unsigned int > (void)\fC [inline]\fP"
+
+.PP
+Definition at line 192 of file Image\&.hh\&.
+.SS "template<> unsigned long long \fBPhotoFinish::scaleval\fP< unsigned long long > (void)\fC [inline]\fP"
+
+.PP
+Definition at line 195 of file Image\&.hh\&.
+.SS "template<> unsigned short int \fBPhotoFinish::scaleval\fP< unsigned short int > (void)\fC [inline]\fP"
+
+.PP
+Definition at line 189 of file Image\&.hh\&.
+.SS "void PhotoFinish::transfer_alpha (unsigned int width, \fBCMS::Format\fP src_format, const unsigned char * src_row, \fBCMS::Format\fP dest_format, const unsigned char * dest_row)"
+
+.PP
+Definition at line 118 of file Image\&.cc\&.
+.SS "template<typename A > void PhotoFinish::transfer_alpha_typed (unsigned int width, unsigned char src_channels, const A * src_row, \fBCMS::Format\fP dest_format, const unsigned char * dest_row)"
+
+.PP
+Definition at line 92 of file Image\&.cc\&.
+.SS "template<typename A , typename B > void PhotoFinish::transfer_alpha_typed2 (unsigned int width, unsigned char src_channels, const A * src_row, unsigned char dest_channels, const B * dest_row)"
+
+.PP
+Definition at line 83 of file Image\&.cc\&.
+.SS "void PhotoFinish::warning_callback (const char * msg, void * client_data)"
+
+.PP
+Warning callback for OpenJPEG - print the message to STDERR\&. 
+.PP
+Definition at line 29 of file JP2_callbacks\&.cc\&.
+.SS "int PhotoFinish::webp_stream_writer_func (const uint8_t * data, size_t data_size, const WebPPicture * picture)"
+
+.PP
+Wrapper around the \fBwebp_stream_writer\fP class\&. 
+.PP
+Definition at line 187 of file WebP_ostream\&.cc\&.
+.SS "void PhotoFinish::write_be (void * ptr, size_t size, std::ostream & stream)"
+
+.PP
+Definition at line 46 of file SOLwriter\&.cc\&.
+.SS "template<typename T > void PhotoFinish::write_packed (unsigned int width, unsigned char channels, T * row, opj_image_t * image, unsigned int y)"
+
+.PP
+Read a row of packed pixel data into OpenJPEG's planar components\&. 
+.PP
+Definition at line 60 of file JP2\&.hh\&.
+.SS "template<typename T > void PhotoFinish::write_planar (unsigned int width, unsigned char channels, T * row, opj_image_t * image, unsigned int y)"
+
+.PP
+Read a row of planar pixel data into OpenJPEG's planar components\&. 
+.PP
+Definition at line 48 of file JP2\&.hh\&.
+.SS "Exiv2::XmpKey PhotoFinish::xmp_key_read (std::string key_string)"
+
+.PP
+Definition at line 43 of file Tags_XMP_subst\&.cc\&.
+.SH "Variable Documentation"
+.PP 
+.SS "bool PhotoFinish::benchmark_mode = false"
+
+.PP
+Definition at line 23 of file Benchmark\&.cc\&.
+.SS "\fBsubst_table\fP PhotoFinish::EXIF_key_subst"
+
+.PP
+Map from Image::Exiftool tag names to Exiv2's tag names\&. 
+.PP
+Definition at line 27 of file Tags_EXIF_subst\&.cc\&.
+.SS "std::map<std::string, \fBsubst_table\fP> PhotoFinish::EXIF_value_subst"
+
+.PP
+Definition at line 93 of file Tags_EXIF_subst\&.cc\&.
+.SS "unsigned char PhotoFinish::header[12]"
+\fBInitial value:\fP
+.PP
+.nf
+= { 0x53, 0x4f, 0x4c, 0x3a, 0x00, 0x00, 0x00, 0x00,
+                               0x00, 0x00, 0x00, 0x00 }
+.fi
+.PP
+Definition at line 43 of file SOLwriter\&.cc\&.
+.SS "\fBsubst_table\fP PhotoFinish::IPTC_key_subst"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    StrPair("IPTC:By-line",                     "Iptc\&.Application2\&.Byline"),
+    StrPair("IPTC:City",                        "Iptc\&.Application2\&.City"),
+    StrPair("IPTC:Country-PrimaryLocationCode", "Iptc\&.Application2\&.CountryCode"),
+    StrPair("IPTC:Country-PrimaryLocationName", "Iptc\&.Application2\&.CountryName"),
+    StrPair("IPTC:CopyrightNotice",             "Iptc\&.Application2\&.Copyright"),
+    StrPair("IPTC:Province-State",              "Iptc\&.Application2\&.ProvinceState"),
+    StrPair("IPTC:Sub-location",                "Iptc\&.Application2\&.SubLocation"),
+  }
+.fi
+.PP
+Map from Image::Exiftool tag names to Exiv2's tag names\&. 
+.PP
+Definition at line 27 of file Tags_IPTC_subst\&.cc\&.
+.SS "\fBjxr_format_subst\fP PhotoFinish::JXR_format_table"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    FmtPair(TYPE_GRAY_8, &GUID_PKPixelFormat8bppGray),
+
+    FmtPair(TYPE_GRAY_16, &GUID_PKPixelFormat16bppGray),
+    
+
+    FmtPair(TYPE_BGR_8, &GUID_PKPixelFormat24bppBGR),
+    FmtPair(TYPE_RGB_8, &GUID_PKPixelFormat24bppRGB),
+
+    FmtPair(TYPE_BGRA_8, &GUID_PKPixelFormat32bppBGR),
+    FmtPair(TYPE_BGRA_8, &GUID_PKPixelFormat32bppBGRA),
+    
+    FmtPair(TYPE_GRAY_FLT, &GUID_PKPixelFormat32bppGrayFloat),
+    FmtPair(TYPE_RGBA_8, &GUID_PKPixelFormat32bppRGB),
+    FmtPair(TYPE_RGBA_8, &GUID_PKPixelFormat32bppRGBA),
+    
+  }
+.fi
+.PP
+Definition at line 25 of file JXR_formats\&.cc\&.
+.SS "std::map<std::string, WebPPreset> PhotoFinish::WebP_presets"
+\fBInitial value:\fP
+.PP
+.nf
+= { std::make_pair("Default", WEBP_PRESET_DEFAULT),
+                                                     std::make_pair("Picture", WEBP_PRESET_PICTURE),
+                                                     std::make_pair("Photo", WEBP_PRESET_PHOTO),
+                                                     std::make_pair("Drawing", WEBP_PRESET_DRAWING),
+                                                     std::make_pair("Icon", WEBP_PRESET_ICON),
+                                                     std::make_pair("Text", WEBP_PRESET_TEXT) }
+.fi
+.PP
+Definition at line 28 of file WebPwriter\&.cc\&.
+.SS "\fBsubst_table\fP PhotoFinish::XMP_key_subst"
+\fBInitial value:\fP
+.PP
+.nf
+= {
+    StrPair("XMP:Copyright",                            "Xmp\&.dc\&.Copyright"), 
+    StrPair("XMP:Creator",                              "Xmp\&.dc\&.Creator"),
+
+    StrPair("XMP:CreatorContactInfoCiAdrCity",          "Xmp\&.iptc\&.CiAdrCity"),
+    StrPair("XMP:CreatorContactInfoCiAdrCtry",          "Xmp\&.iptc\&.CiAdrCtry"),
+    StrPair("XMP:CreatorContactInfoCiAdrExtadr",        "Xmp\&.iptc\&.CiAdrExtadr"),
+    StrPair("XMP:CreatorContactInfoCiAdrPcode",         "Xmp\&.iptc\&.CiAdrPcode"),
+
+    StrPair("XMP-cc:License",                           "Xmp\&.cc\&.License"), 
+
+    StrPair("XMP-microsoft:CameraSerialNumber",         "Xmp\&.MicrosoftPhoto\&.CameraSerialNumber"),
+    StrPair("XMP-microsoft:LensManufacturer",           "Xmp\&.MicrosoftPhoto\&.LensManufacturer"),
+    StrPair("XMP-microsoft:LensModel",                  "Xmp\&.MicrosoftPhoto\&.LensModel"),
+  }
+.fi
+.PP
+Map from Image::Exiftool tag names to Exiv2's tag names\&. 
+.PP
+Definition at line 27 of file Tags_XMP_subst\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

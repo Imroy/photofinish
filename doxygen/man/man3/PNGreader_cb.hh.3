@@ -1,0 +1,48 @@
+.TH "PNGreader_cb.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PNGreader_cb.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <png\&.h>\fP
+.br
+\fC#include 'Destination\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "struct \fBPhotoFinish::PNGreader_cb\fP"
+.br
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::png_info_cb\fP (png_structp png, png_infop info)"
+.br
+.RI "Called by libPNG when the iHDR chunk has been read with the main 'header' information\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::png_row_cb\fP (png_structp png, png_bytep row_data, png_uint_32 row_num, int pass)"
+.br
+.RI "Called by libPNG when a row of image data has been read\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::png_end_cb\fP (png_structp png, png_infop info)"
+.br
+.RI "Called by libPNG when the image data has finished\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

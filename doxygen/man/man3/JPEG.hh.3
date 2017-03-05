@@ -1,0 +1,65 @@
+.TH "JPEG.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+JPEG.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <jpeglib\&.h>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'Destination\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_src\fP (j_decompress_ptr dinfo, std::istream *is)"
+.br
+.RI "Set up a 'source manager' on the given JPEG decompression structure to read from an istream\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_istream_src_free\fP (j_decompress_ptr dinfo)"
+.br
+.RI "Free the data structures of the istream source manager\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_ostream_dest\fP (j_compress_ptr cinfo, std::ostream *os)"
+.br
+.RI "Setup a 'destination manager' on the given JPEG compression structure to write to an ostream\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_ostream_dest_free\fP (j_compress_ptr cinfo)"
+.br
+.RI "Free the data structures of the ostream destination manager\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpegfile_scan_RGB\fP (jpeg_compress_struct *cinfo)"
+.br
+.RI "Create a scan 'script' for an RGB image\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpegfile_scan_greyscale\fP (jpeg_compress_struct *cinfo)"
+.br
+.RI "Create a scan 'script' for a greyscale image\&. "
+.ti -1c
+.RI "\fBCMS::Profile::ptr\fP \fBPhotoFinish::jpeg_read_profile\fP (jpeg_decompress_struct *dinfo, Destination::ptr dest)"
+.br
+.RI "Read an ICC profile from APP2 markers in a JPEG file\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::jpeg_write_profile\fP (jpeg_compress_struct *cinfo, unsigned char *data, unsigned int size)"
+.br
+.RI "Write an ICC profile into APP2 markers in a JPEG file\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

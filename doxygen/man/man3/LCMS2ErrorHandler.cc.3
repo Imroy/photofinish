@@ -1,0 +1,35 @@
+.TH "LCMS2ErrorHandler.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+LCMS2ErrorHandler.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <lcms2\&.h>\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::lcms2_errorhandler\fP (cmsContext ContextID, cmsUInt32Number ErrorCode, const char *Text)"
+.br
+.RI "Throw a \fBLibraryError\fP exception whem LCMS2 returns an error\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::lcms2_error_adaptor\fP (void)"
+.br
+.RI "Set up an error handler with LCMS2 that will throw a \fBLibraryError\fP exception\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

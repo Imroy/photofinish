@@ -1,0 +1,75 @@
+.TH "PhotoFinish::SOLwriter" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::SOLwriter \- Write the boot logo files for use on Motorola Atrix 4G and possibly other phones\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <ImageFile\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::ImageWriter\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBSOLwriter\fP (const fs::path filepath)"
+.br
+.ti -1c
+.RI "\fBCMS::Format\fP \fBpreferred_format\fP (\fBCMS::Format\fP format)"
+.br
+.RI "Modify an LCMS2 pixel format into a 'type' that the file format can write\&. "
+.ti -1c
+.RI "void \fBwrite\fP (\fBImage::ptr\fP img, \fBDestination::ptr\fP dest, bool can_free=false)"
+.br
+.RI "Write an image to the file\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Write the boot logo files for use on Motorola Atrix 4G and possibly other phones\&. 
+
+I haven't been able to find any documentation about this format\&. It starts with the ASCII string 'SOL:' followed by eight null bytes\&. Then comes the width and height as big-endian 32-bit values\&. The image data is as uncompressed 5-6-5 bit pixels i\&.e 16 bits per pixel\&. No footer\&. 
+.PP
+Definition at line 336 of file ImageFile\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::SOLwriter::SOLwriter (const fs::path filepath)"
+
+.PP
+Definition at line 26 of file SOLwriter\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBCMS::Format\fP PhotoFinish::SOLwriter::preferred_format (\fBCMS::Format\fP format)\fC [virtual]\fP"
+
+.PP
+Modify an LCMS2 pixel format into a 'type' that the file format can write\&. 
+.PP
+Implements \fBPhotoFinish::ImageWriter\fP\&.
+.PP
+Definition at line 30 of file SOLwriter\&.cc\&.
+.SS "void PhotoFinish::SOLwriter::write (\fBImage::ptr\fP img, \fBDestination::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [virtual]\fP"
+
+.PP
+Write an image to the file\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimg\fP The \fBImage\fP object to write 
+.br
+\fIdest\fP A \fBDestination\fP object, used for the JPEG/PNG/etc parameters 
+.br
+\fIcan_free\fP Can each row of the image be freed after it is written? 
+.RE
+.PP
+
+.PP
+Implements \fBPhotoFinish::ImageWriter\fP\&.
+.PP
+Definition at line 53 of file SOLwriter\&.cc\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

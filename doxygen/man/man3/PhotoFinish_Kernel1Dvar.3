@@ -1,0 +1,259 @@
+.TH "PhotoFinish::Kernel1Dvar" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Kernel1Dvar \- Creates and stores coefficients for cropping and resizing an image\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Kernel1Dvar\&.hh>\fP
+.PP
+Inherited by \fBPhotoFinish::Lanczos\fP\&.
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBKernel1Dvar\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for a \fBKernel1Dvar\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBKernel1Dvar\fP ()"
+.br
+.RI "Emoty constructor\&. "
+.ti -1c
+.RI "\fB~Kernel1Dvar\fP ()"
+.br
+.RI "Destructor\&. "
+.ti -1c
+.RI "\fBImage::ptr\fP \fBconvolve_h\fP (\fBImage::ptr\fP img, bool can_free=false)"
+.br
+.RI "Convolve an image horizontally with this kernel\&. "
+.ti -1c
+.RI "\fBImage::ptr\fP \fBconvolve_v\fP (\fBImage::ptr\fP img, bool can_free=false)"
+.br
+.RI "Convolve an image vertically with this kernel\&. "
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBptr\fP \fBcreate\fP (const \fBD_resize\fP &dr, double from_start, double from_size, unsigned int from_max, double to_size)"
+.br
+.RI "Named constructor\&. "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBKernel1Dvar\fP (double to_size)"
+.br
+.RI "Private constructor\&. "
+.ti -1c
+.RI "void \fBbuild\fP (double from_start, double from_size, unsigned int from_max)"
+.br
+.RI "Build the kernel; used by derived classes\&. "
+.ti -1c
+.RI "virtual double \fBrange\fP (void) const =0"
+.br
+.RI "The size of this filter\&. "
+.ti -1c
+.RI "virtual \fBSAMPLE\fP \fBeval\fP (double x) const =0"
+.br
+.RI "Evaluate the filter at a given point\&. "
+.ti -1c
+.RI "template<typename T , int channels> void \fBconvolve_h_type_channels\fP (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free=false)"
+.br
+.ti -1c
+.RI "template<typename T > void \fBconvolve_h_type\fP (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free=false)"
+.br
+.ti -1c
+.RI "template<typename T , int channels> void \fBconvolve_v_type_channels\fP (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free=false)"
+.br
+.ti -1c
+.RI "template<typename T > void \fBconvolve_v_type\fP (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free=false)"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "unsigned int * \fB_size\fP"
+.br
+.ti -1c
+.RI "unsigned int * \fB_start\fP"
+.br
+.ti -1c
+.RI "\fBSAMPLE\fP ** \fB_weights\fP"
+.br
+.ti -1c
+.RI "double \fB_scale\fP"
+.br
+.ti -1c
+.RI "double \fB_to_size\fP"
+.br
+.ti -1c
+.RI "unsigned int \fB_to_size_i\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Creates and stores coefficients for cropping and resizing an image\&. 
+.PP
+Definition at line 31 of file Kernel1Dvar\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBKernel1Dvar\fP> \fBPhotoFinish::Kernel1Dvar::ptr\fP"
+
+.PP
+Shared pointer for a \fBKernel1Dvar\fP\&. 
+.PP
+Definition at line 64 of file Kernel1Dvar\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Kernel1Dvar::Kernel1Dvar (double to_size)\fC [protected]\fP"
+
+.PP
+Private constructor\&. 
+.PP
+Definition at line 38 of file Kernel1Dvar\&.cc\&.
+.SS "PhotoFinish::Kernel1Dvar::Kernel1Dvar ()"
+
+.PP
+Emoty constructor\&. 
+.PP
+Definition at line 33 of file Kernel1Dvar\&.cc\&.
+.SS "PhotoFinish::Kernel1Dvar::~Kernel1Dvar ()"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 105 of file Kernel1Dvar\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::Kernel1Dvar::build (double from_start, double from_size, unsigned int from_max)\fC [protected]\fP"
+
+.PP
+Build the kernel; used by derived classes\&. 
+.PP
+Definition at line 49 of file Kernel1Dvar\&.cc\&.
+.SS "\fBImage::ptr\fP PhotoFinish::Kernel1Dvar::convolve_h (\fBImage::ptr\fP img, bool can_free = \fCfalse\fP)"
+
+.PP
+Convolve an image horizontally with this kernel\&. Convolve an image horizontally\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimg\fP Source image 
+.br
+\fIcan_free\fP Can each row of the image be freed after it is convolved? 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+New image 
+.RE
+.PP
+
+.PP
+Definition at line 248 of file Kernel1Dvar\&.cc\&.
+.SS "template<typename T > void PhotoFinish::Kernel1Dvar::convolve_h_type (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 179 of file Kernel1Dvar\&.cc\&.
+.SS "template<typename T , int channels> void PhotoFinish::Kernel1Dvar::convolve_h_type_channels (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 126 of file Kernel1Dvar\&.cc\&.
+.SS "\fBImage::ptr\fP PhotoFinish::Kernel1Dvar::convolve_v (\fBImage::ptr\fP img, bool can_free = \fCfalse\fP)"
+
+.PP
+Convolve an image vertically with this kernel\&. Convolve an image vertically\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIimg\fP Source image 
+.br
+\fIcan_free\fP Can each row of the image be freed after it is convolved? 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+New image 
+.RE
+.PP
+
+.PP
+Definition at line 433 of file Kernel1Dvar\&.cc\&.
+.SS "template<typename T > void PhotoFinish::Kernel1Dvar::convolve_v_type (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 364 of file Kernel1Dvar\&.cc\&.
+.SS "template<typename T , int channels> void PhotoFinish::Kernel1Dvar::convolve_v_type_channels (\fBImage::ptr\fP src, \fBImage::ptr\fP dest, bool can_free = \fCfalse\fP)\fC [protected]\fP"
+
+.PP
+Definition at line 284 of file Kernel1Dvar\&.cc\&.
+.SS "\fBKernel1Dvar::ptr\fP PhotoFinish::Kernel1Dvar::create (const \fBD_resize\fP & dr, double from_start, double from_size, unsigned int from_max, double to_size)\fC [static]\fP"
+
+.PP
+Named constructor\&. Create a \fBKernel1Dvar\fP object using the filter name in the \fBD_resize\fP object\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdr\fP A \fBD_resize\fP object which will supply our parameters\&. 
+.br
+\fIfrom_start\fP The starting point of the crop/resample 
+.br
+\fIfrom_size\fP The size of the crop/resample 
+.br
+\fIfrom_max\fP The size (maximum dimenstion) of the input 
+.br
+\fIto_size\fP The size of the output 
+.RE
+.PP
+
+.PP
+Definition at line 89 of file Kernel1Dvar\&.cc\&.
+.SS "virtual \fBSAMPLE\fP PhotoFinish::Kernel1Dvar::eval (double x) const\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+Evaluate the filter at a given point\&. 
+.SS "virtual double PhotoFinish::Kernel1Dvar::range (void) const\fC [protected]\fP, \fC [pure virtual]\fP"
+
+.PP
+The size of this filter\&. 
+.SH "Member Data Documentation"
+.PP 
+.SS "double PhotoFinish::Kernel1Dvar::_scale\fC [protected]\fP"
+
+.PP
+Definition at line 35 of file Kernel1Dvar\&.hh\&.
+.SS "unsigned int* PhotoFinish::Kernel1Dvar::_size\fC [protected]\fP"
+
+.PP
+Definition at line 33 of file Kernel1Dvar\&.hh\&.
+.SS "unsigned int * PhotoFinish::Kernel1Dvar::_start\fC [protected]\fP"
+
+.PP
+Definition at line 33 of file Kernel1Dvar\&.hh\&.
+.SS "double PhotoFinish::Kernel1Dvar::_to_size\fC [protected]\fP"
+
+.PP
+Definition at line 35 of file Kernel1Dvar\&.hh\&.
+.SS "unsigned int PhotoFinish::Kernel1Dvar::_to_size_i\fC [protected]\fP"
+
+.PP
+Definition at line 36 of file Kernel1Dvar\&.hh\&.
+.SS "\fBSAMPLE\fP** PhotoFinish::Kernel1Dvar::_weights\fC [protected]\fP"
+
+.PP
+Definition at line 34 of file Kernel1Dvar\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

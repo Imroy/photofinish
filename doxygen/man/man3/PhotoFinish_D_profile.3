@@ -1,0 +1,174 @@
+.TH "PhotoFinish::D_profile" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_profile \- ICC profile parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBD_profile\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for a \fBD_profile\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_profile\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBD_profile\fP (const std::string &\fBname\fP, fs::path \fBfilepath\fP)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fBD_profile\fP (const std::string &\fBname\fP, unsigned char *\fBdata\fP, unsigned int \fBdata_size\fP)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fBD_profile\fP (const \fBD_profile\fP &other)"
+.br
+.RI "Copy constructor\&. "
+.ti -1c
+.RI "\fB~D_profile\fP ()"
+.br
+.RI "Destructor\&. "
+.ti -1c
+.RI "\fBD_profile\fP & \fBoperator=\fP (const \fBD_profile\fP &b)"
+.br
+.RI "Assignment operator\&. "
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBname\fP (void) const"
+.br
+.RI "Name of the profile\&. "
+.ti -1c
+.RI "\fBdefinable\fP< fs::path > \fBfilepath\fP (void) const"
+.br
+.RI "File path for reading the profile\&. "
+.ti -1c
+.RI "bool \fBhas_data\fP (void) const"
+.br
+.RI "Do we have the profile data instead of a file path? "
+.ti -1c
+.RI "\fBCMS::Profile::ptr\fP \fBprofile\fP (void) const"
+.br
+.RI "The profile data for LCMS2\&. "
+.ti -1c
+.RI "unsigned char * \fBdata\fP (void) const"
+.br
+.RI "The profile data\&. "
+.ti -1c
+.RI "unsigned int \fBdata_size\fP (void) const"
+.br
+.RI "The size of the profile data\&. "
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a \fBD_profile\fP record from a YAML file\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+ICC profile parameters for destination\&. 
+.PP
+Definition at line 292 of file Destination_items\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBD_profile\fP> \fBPhotoFinish::D_profile::ptr\fP"
+
+.PP
+Shared pointer for a \fBD_profile\fP\&. 
+.PP
+Definition at line 339 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_profile::D_profile ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 450 of file Destination_items\&.cc\&.
+.SS "PhotoFinish::D_profile::D_profile (const std::string & name, fs::path filepath)"
+
+.PP
+Constructor\&. 
+.PP
+Definition at line 454 of file Destination_items\&.cc\&.
+.SS "PhotoFinish::D_profile::D_profile (const std::string & name, unsigned char * data, unsigned int data_size)"
+
+.PP
+Constructor\&. 
+.PP
+Definition at line 460 of file Destination_items\&.cc\&.
+.SS "PhotoFinish::D_profile::D_profile (const \fBD_profile\fP & other)"
+
+.PP
+Copy constructor\&. 
+.PP
+Definition at line 465 of file Destination_items\&.cc\&.
+.SS "PhotoFinish::D_profile::~D_profile ()"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 475 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "unsigned char* PhotoFinish::D_profile::data (void) const\fC [inline]\fP"
+
+.PP
+The profile data\&. 
+.PP
+Definition at line 331 of file Destination_items\&.hh\&.
+.SS "unsigned int PhotoFinish::D_profile::data_size (void) const\fC [inline]\fP"
+
+.PP
+The size of the profile data\&. 
+.PP
+Definition at line 334 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<fs::path> PhotoFinish::D_profile::filepath (void) const\fC [inline]\fP"
+
+.PP
+File path for reading the profile\&. 
+.PP
+Definition at line 322 of file Destination_items\&.hh\&.
+.SS "bool PhotoFinish::D_profile::has_data (void) const\fC [inline]\fP"
+
+.PP
+Do we have the profile data instead of a file path? 
+.PP
+Definition at line 325 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::D_profile::name (void) const\fC [inline]\fP"
+
+.PP
+Name of the profile\&. 
+.PP
+Definition at line 319 of file Destination_items\&.hh\&.
+.SS "\fBD_profile\fP & PhotoFinish::D_profile::operator= (const \fBD_profile\fP & b)"
+
+.PP
+Assignment operator\&. 
+.PP
+Definition at line 483 of file Destination_items\&.cc\&.
+.SS "\fBCMS::Profile::ptr\fP PhotoFinish::D_profile::profile (void) const"
+
+.PP
+The profile data for LCMS2\&. 
+.PP
+Definition at line 495 of file Destination_items\&.cc\&.
+.SS "void PhotoFinish::D_profile::read_config (const YAML::Node & node)"
+
+.PP
+Read a \fBD_profile\fP record from a YAML file\&. 
+.PP
+Definition at line 505 of file Destination_items\&.cc\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

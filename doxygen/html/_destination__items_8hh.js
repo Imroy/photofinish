@@ -8,6 +8,7 @@ var _destination__items_8hh =
     [ "D_TIFF", "class_photo_finish_1_1_d___t_i_f_f.html", "class_photo_finish_1_1_d___t_i_f_f" ],
     [ "D_JP2", "class_photo_finish_1_1_d___j_p2.html", "class_photo_finish_1_1_d___j_p2" ],
     [ "D_WebP", "class_photo_finish_1_1_d___web_p.html", "class_photo_finish_1_1_d___web_p" ],
+    [ "D_JXR", "class_photo_finish_1_1_d___j_x_r.html", "class_photo_finish_1_1_d___j_x_r" ],
     [ "D_profile", "class_photo_finish_1_1_d__profile.html", "class_photo_finish_1_1_d__profile" ],
     [ "D_thumbnail", "class_photo_finish_1_1_d__thumbnail.html", "class_photo_finish_1_1_d__thumbnail" ],
     [ "hash", "_destination__items_8hh.html#a5cfd59b3790dc7319dde2b4c0f96ac5a", null ],

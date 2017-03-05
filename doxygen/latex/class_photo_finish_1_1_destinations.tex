@@ -1,0 +1,233 @@
+\hypertarget{class_photo_finish_1_1_destinations}{}\section{Photo\+Finish\+:\+:Destinations Class Reference}
+\label{class_photo_finish_1_1_destinations}\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+
+
+A wrapper class for reading destinations from a Y\+A\+ML file and storing them in a map.  
+
+
+
+
+{\ttfamily \#include $<$Destination.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::map$<$ std\+::string, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} $>$\+::\hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} \hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator}
+\begin{DoxyCompactList}\small\item\em Iterator for stepping through destinations. \end{DoxyCompactList}\item 
+typedef std\+::map$<$ std\+::string, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} $>$\+::\hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator} \hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator}
+\begin{DoxyCompactList}\small\item\em Constant iterator for stepping through destinations. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_a454613582d7aea38d96b835a1550e597}{Destinations} (fs\+::path filepath)
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_a313eba1f3fb9da1c9fff50b255d5f00a}{Destinations} (const \hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&other)
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_ab809bba6c1fea56f171a94ce91fd3f4c}{$\sim$\+Destinations} ()
+\item 
+\hyperlink{class_photo_finish_1_1_destinations}{Destinations} \& \hyperlink{class_photo_finish_1_1_destinations_afc45abc75ba8e433c74b2be3e3d969e1}{operator=} (const \hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&b)
+\item 
+void \hyperlink{class_photo_finish_1_1_destinations_a00b26ae3f504ad19f80b07486a2fc641}{Load} (fs\+::path filepath)
+\item 
+std\+::map$<$ std\+::string, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} $>$\+::size\+\_\+type \hyperlink{class_photo_finish_1_1_destinations_a7e7108f13b73dc445874779ed4ecf5d8}{count} (const std\+::string \&key) const
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} \hyperlink{class_photo_finish_1_1_destinations_a07d7c99b7abd5c43b6b53c17689780e8}{begin} (void)
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator} \hyperlink{class_photo_finish_1_1_destinations_aaa8d1fbda8e89ec3e2c8aca5d77e9548}{begin} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} \hyperlink{class_photo_finish_1_1_destinations_a023eba4bedf55d90fff1d0d723d942f9}{end} (void)
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator} \hyperlink{class_photo_finish_1_1_destinations_a55aefa8640e5e04c2feb9f88a42504c6}{end} (void) const
+\item 
+\hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} \hyperlink{class_photo_finish_1_1_destinations_a93a9459dc194cc6511acc9c0ef948248}{operator\mbox{[}$\,$\mbox{]}} (const std\+::string \&key)
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} \hyperlink{class_photo_finish_1_1_destinations_ade7fb31c8d1fba6dee62f77783fe6236}{begin} (\hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&d)
+\item 
+\hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} \hyperlink{class_photo_finish_1_1_destinations_aa5c17bba7272204d0d3ae7a116feaec2}{end} (\hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&d)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A wrapper class for reading destinations from a Y\+A\+ML file and storing them in a map. 
+
+Definition at line 160 of file Destination.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}\label{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!const\+\_\+iterator@{const\+\_\+iterator}}
+\index{const\+\_\+iterator@{const\+\_\+iterator}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{const\+\_\+iterator}{const\_iterator}}
+{\footnotesize\ttfamily typedef std\+::map$<$std\+::string, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}$>$\+::\hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator} \hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{Photo\+Finish\+::\+Destinations\+::const\+\_\+iterator}}
+
+
+
+Constant iterator for stepping through destinations. 
+
+
+
+Definition at line 175 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}\label{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!iterator@{iterator}}
+\index{iterator@{iterator}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{iterator}{iterator}}
+{\footnotesize\ttfamily typedef std\+::map$<$std\+::string, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}$>$\+::\hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} \hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{Photo\+Finish\+::\+Destinations\+::iterator}}
+
+
+
+Iterator for stepping through destinations. 
+
+
+
+Definition at line 172 of file Destination.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a454613582d7aea38d96b835a1550e597}\label{class_photo_finish_1_1_destinations_a454613582d7aea38d96b835a1550e597}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!Destinations@{Destinations}}
+\index{Destinations@{Destinations}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{Destinations()}{Destinations()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Destinations\+::\+Destinations (\begin{DoxyParamCaption}\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Definition at line 291 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a313eba1f3fb9da1c9fff50b255d5f00a}\label{class_photo_finish_1_1_destinations_a313eba1f3fb9da1c9fff50b255d5f00a}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!Destinations@{Destinations}}
+\index{Destinations@{Destinations}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{Destinations()}{Destinations()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Destinations\+::\+Destinations (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&}]{other }\end{DoxyParamCaption})}
+
+
+
+Definition at line 295 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_ab809bba6c1fea56f171a94ce91fd3f4c}\label{class_photo_finish_1_1_destinations_ab809bba6c1fea56f171a94ce91fd3f4c}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!````~Destinations@{$\sim$\+Destinations}}
+\index{````~Destinations@{$\sim$\+Destinations}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{$\sim$\+Destinations()}{~Destinations()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Destinations\+::$\sim$\+Destinations (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 300 of file Destination.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a07d7c99b7abd5c43b6b53c17689780e8}\label{class_photo_finish_1_1_destinations_a07d7c99b7abd5c43b6b53c17689780e8}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!begin@{begin}}
+\index{begin@{begin}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} Photo\+Finish\+::\+Destinations\+::begin (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 181 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_aaa8d1fbda8e89ec3e2c8aca5d77e9548}\label{class_photo_finish_1_1_destinations_aaa8d1fbda8e89ec3e2c8aca5d77e9548}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!begin@{begin}}
+\index{begin@{begin}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{begin()}{begin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator} Photo\+Finish\+::\+Destinations\+::begin (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 182 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a7e7108f13b73dc445874779ed4ecf5d8}\label{class_photo_finish_1_1_destinations_a7e7108f13b73dc445874779ed4ecf5d8}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!count@{count}}
+\index{count@{count}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{count()}{count()}}
+{\footnotesize\ttfamily std\+::map$<$std\+::string, \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr}$>$\+::size\+\_\+type Photo\+Finish\+::\+Destinations\+::count (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 179 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a023eba4bedf55d90fff1d0d723d942f9}\label{class_photo_finish_1_1_destinations_a023eba4bedf55d90fff1d0d723d942f9}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!end@{end}}
+\index{end@{end}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} Photo\+Finish\+::\+Destinations\+::end (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 184 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a55aefa8640e5e04c2feb9f88a42504c6}\label{class_photo_finish_1_1_destinations_a55aefa8640e5e04c2feb9f88a42504c6}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!end@{end}}
+\index{end@{end}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{end()}{end()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations_a267e114a259d98ae440074660c7086cb}{const\+\_\+iterator} Photo\+Finish\+::\+Destinations\+::end (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 185 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a00b26ae3f504ad19f80b07486a2fc641}\label{class_photo_finish_1_1_destinations_a00b26ae3f504ad19f80b07486a2fc641}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!Load@{Load}}
+\index{Load@{Load}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{Load()}{Load()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Destinations\+::\+Load (\begin{DoxyParamCaption}\item[{fs\+::path}]{filepath }\end{DoxyParamCaption})}
+
+
+
+Definition at line 312 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_afc45abc75ba8e433c74b2be3e3d969e1}\label{class_photo_finish_1_1_destinations_afc45abc75ba8e433c74b2be3e3d969e1}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!operator=@{operator=}}
+\index{operator=@{operator=}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations}{Destinations} \& Photo\+Finish\+::\+Destinations\+::operator= (\begin{DoxyParamCaption}\item[{const \hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&}]{b }\end{DoxyParamCaption})}
+
+
+
+Definition at line 303 of file Destination.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_a93a9459dc194cc6511acc9c0ef948248}\label{class_photo_finish_1_1_destinations_a93a9459dc194cc6511acc9c0ef948248}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!operator\mbox{[}\mbox{]}@{operator[]}}
+\index{operator\mbox{[}\mbox{]}@{operator[]}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{operator[]()}{operator[]()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destination_a0d282a905cd81c3f0e6d7233c9bc7774}{Destination\+::ptr} Photo\+Finish\+::\+Destinations\+::operator\mbox{[}$\,$\mbox{]} (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{key }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 193 of file Destination.\+hh.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_ade7fb31c8d1fba6dee62f77783fe6236}\label{class_photo_finish_1_1_destinations_ade7fb31c8d1fba6dee62f77783fe6236}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!begin@{begin}}
+\index{begin@{begin}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{begin}{begin}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} begin (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&}]{d }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 187 of file Destination.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_destinations_aa5c17bba7272204d0d3ae7a116feaec2}\label{class_photo_finish_1_1_destinations_aa5c17bba7272204d0d3ae7a116feaec2}} 
+\index{Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}!end@{end}}
+\index{end@{end}!Photo\+Finish\+::\+Destinations@{Photo\+Finish\+::\+Destinations}}
+\subsubsection{\texorpdfstring{end}{end}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_destinations_adb2cf9240b0d2545643caa2c1d718913}{iterator} end (\begin{DoxyParamCaption}\item[{\hyperlink{class_photo_finish_1_1_destinations}{Destinations} \&}]{d }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 190 of file Destination.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_destination_8hh}{Destination.\+hh}\item 
+\hyperlink{_destination_8cc}{Destination.\+cc}\end{DoxyCompactItemize}

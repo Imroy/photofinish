@@ -55,6 +55,7 @@ var hierarchy =
     [ "PhotoFinish::Role_Definable", "class_photo_finish_1_1_role___definable.html", [
       [ "PhotoFinish::D_JP2", "class_photo_finish_1_1_d___j_p2.html", null ],
       [ "PhotoFinish::D_JPEG", "class_photo_finish_1_1_d___j_p_e_g.html", null ],
+      [ "PhotoFinish::D_JXR", "class_photo_finish_1_1_d___j_x_r.html", null ],
       [ "PhotoFinish::D_PNG", "class_photo_finish_1_1_d___p_n_g.html", null ],
       [ "PhotoFinish::D_resize", "class_photo_finish_1_1_d__resize.html", null ],
       [ "PhotoFinish::D_sharpen", "class_photo_finish_1_1_d__sharpen.html", null ],
@@ -63,6 +64,7 @@ var hierarchy =
       [ "PhotoFinish::D_WebP", "class_photo_finish_1_1_d___web_p.html", null ]
     ] ],
     [ "PhotoFinish::Tags", "class_photo_finish_1_1_tags.html", null ],
+    [ "PhotoFinish::Timer", "class_photo_finish_1_1_timer.html", null ],
     [ "CMS::Transform", "class_c_m_s_1_1_transform.html", null ],
     [ "PhotoFinish::webp_stream_writer", "class_photo_finish_1_1webp__stream__writer.html", null ]
 ];

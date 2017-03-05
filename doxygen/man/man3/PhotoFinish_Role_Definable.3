@@ -1,0 +1,100 @@
+.TH "PhotoFinish::Role_Definable" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Role_Definable \- Base class for adding 'definable' attribute\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Definable\&.hh>\fP
+.PP
+Inherited by \fBPhotoFinish::D_JP2\fP, \fBPhotoFinish::D_JPEG\fP, \fBPhotoFinish::D_JXR\fP, \fBPhotoFinish::D_PNG\fP, \fBPhotoFinish::D_resize\fP, \fBPhotoFinish::D_sharpen\fP, \fBPhotoFinish::D_thumbnail\fP, \fBPhotoFinish::D_TIFF\fP, and \fBPhotoFinish::D_WebP\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRole_Definable\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "const bool \fBdefined\fP (void) const"
+.br
+.RI "Is this object defined? "
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBset_defined\fP (bool v=true)"
+.br
+.RI "Set this object as 'defined' (or not) "
+.ti -1c
+.RI "void \fBundefine\fP (void)"
+.br
+.RI "Undefine the object\&. "
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "bool \fB_defined\fP"
+.br
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "bool \fBdefined\fP (const \fBRole_Definable\fP &obj)"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Base class for adding 'definable' attribute\&. 
+.PP
+Definition at line 99 of file Definable\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Role_Definable::Role_Definable ()\fC [inline]\fP"
+
+.PP
+Empty constructor\&. Sets defined to false 
+.PP
+Definition at line 114 of file Definable\&.hh\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "const bool PhotoFinish::Role_Definable::defined (void) const\fC [inline]\fP"
+
+.PP
+Is this object defined? 
+.PP
+Definition at line 119 of file Definable\&.hh\&.
+.SS "void PhotoFinish::Role_Definable::set_defined (bool v = \fCtrue\fP)\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Set this object as 'defined' (or not) 
+.PP
+Definition at line 104 of file Definable\&.hh\&.
+.SS "void PhotoFinish::Role_Definable::undefine (void)\fC [inline]\fP, \fC [protected]\fP"
+
+.PP
+Undefine the object\&. 
+.PP
+Definition at line 107 of file Definable\&.hh\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "bool defined (const \fBRole_Definable\fP & obj)\fC [friend]\fP"
+
+.PP
+Definition at line 121 of file Definable\&.hh\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "bool PhotoFinish::Role_Definable::_defined\fC [protected]\fP"
+
+.PP
+Definition at line 101 of file Definable\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

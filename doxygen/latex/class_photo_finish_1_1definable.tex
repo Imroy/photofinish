@@ -1,0 +1,245 @@
+\hypertarget{class_photo_finish_1_1definable}{}\section{Photo\+Finish\+:\+:definable$<$ T $>$ Class Template Reference}
+\label{class_photo_finish_1_1definable}\index{Photo\+Finish\+::definable$<$ T $>$@{Photo\+Finish\+::definable$<$ T $>$}}
+
+
+Template class for storing things that can be defined or undefined.  
+
+
+
+
+{\ttfamily \#include $<$Definable.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1definable_ac1efd98687fba9bb936b66fc050fedc1}{definable} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable_ac101abb7feaf8b5c6477c4f396ed7240}{definable} (const T \&i)
+\begin{DoxyCompactList}\small\item\em Construct from an item. \end{DoxyCompactList}\item 
+const bool \hyperlink{class_photo_finish_1_1definable_a16e04c8c780e3f7cc669a9877ea2d0b2}{defined} (void) const
+\begin{DoxyCompactList}\small\item\em Is this object defined? \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1definable_a0a5c7b94bc7298e26557fe0fe084f730}{set\+\_\+defined} (bool v=true)
+\begin{DoxyCompactList}\small\item\em Set this object as \textquotesingle{}defined\textquotesingle{} (or not) \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1definable_ab8b9336f1125a05efaa698f1faad0b89}{undefine} (void)
+\begin{DoxyCompactList}\small\item\em Undefine the object. \end{DoxyCompactList}\item 
+T \hyperlink{class_photo_finish_1_1definable_aafa6cc5bd59798b25e845c62600b50d6}{get} (void)
+\begin{DoxyCompactList}\small\item\em Get the item. \end{DoxyCompactList}\item 
+const T \& \hyperlink{class_photo_finish_1_1definable_a615dcc122a5af98b130316856d3531ea}{get} (void) const
+\begin{DoxyCompactList}\small\item\em Get the item, const version. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable_ad51147fde36f7c86f7c4b09bafce45fe}{operator T} (void) const
+\begin{DoxyCompactList}\small\item\em Cast to the contained type. \end{DoxyCompactList}\item 
+T $\ast$ \hyperlink{class_photo_finish_1_1definable_a0e82c3242b2da5bb3ad65cf2149b6f30}{operator-\/$>$} ()
+\begin{DoxyCompactList}\small\item\em Arrow operator. \end{DoxyCompactList}\item 
+const T $\ast$ \hyperlink{class_photo_finish_1_1definable_abeb8cd4e0d95d064ba43c61ed092e77a}{operator-\/$>$} () const
+\begin{DoxyCompactList}\small\item\em Arrow operator, const version. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$ T $>$ \& \hyperlink{class_photo_finish_1_1definable_a9d4202ced2d61cafad392d48db9ccfc6}{operator=} (const T \&i)
+\begin{DoxyCompactList}\small\item\em Assignment operator. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \hyperlink{class_photo_finish_1_1definable_a54dc7324456d4b6642fd684552720cf2}{operator$<$$<$} (std\+::ostream \&out, \hyperlink{class_photo_finish_1_1definable}{definable}$<$ T $>$ \&data)
+\begin{DoxyCompactList}\small\item\em Allow the contained data to be output to an ostream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$typename T$>$\newline
+class Photo\+Finish\+::definable$<$ T $>$}
+
+Template class for storing things that can be defined or undefined. 
+
+Definition at line 29 of file Definable.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1definable_ac1efd98687fba9bb936b66fc050fedc1}\label{class_photo_finish_1_1definable_ac1efd98687fba9bb936b66fc050fedc1}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!definable@{definable}}
+\index{definable@{definable}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{definable()}{definable()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::\hyperlink{class_photo_finish_1_1definable}{definable} (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Empty constructor. 
+
+This sets the object to undefined and the item is initialised with its empty constructor 
+
+Definition at line 39 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_ac101abb7feaf8b5c6477c4f396ed7240}\label{class_photo_finish_1_1definable_ac101abb7feaf8b5c6477c4f396ed7240}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!definable@{definable}}
+\index{definable@{definable}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{definable()}{definable()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::\hyperlink{class_photo_finish_1_1definable}{definable} (\begin{DoxyParamCaption}\item[{const T \&}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct from an item. 
+
+This obviously also sets the object to \textquotesingle{}defined\textquotesingle{} 
+
+Definition at line 48 of file Definable.\+hh.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1definable_a16e04c8c780e3f7cc669a9877ea2d0b2}\label{class_photo_finish_1_1definable_a16e04c8c780e3f7cc669a9877ea2d0b2}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!defined@{defined}}
+\index{defined@{defined}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{defined()}{defined()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+const bool \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::defined (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Is this object defined? 
+
+
+
+Definition at line 54 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_aafa6cc5bd59798b25e845c62600b50d6}\label{class_photo_finish_1_1definable_aafa6cc5bd59798b25e845c62600b50d6}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!get@{get}}
+\index{get@{get}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{get()}{get()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+T \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::get (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the item. 
+
+
+
+Definition at line 65 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_a615dcc122a5af98b130316856d3531ea}\label{class_photo_finish_1_1definable_a615dcc122a5af98b130316856d3531ea}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!get@{get}}
+\index{get@{get}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{get()}{get()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+const T\& \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::get (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the item, const version. 
+
+
+
+Definition at line 67 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_ad51147fde36f7c86f7c4b09bafce45fe}\label{class_photo_finish_1_1definable_ad51147fde36f7c86f7c4b09bafce45fe}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!operator T@{operator T}}
+\index{operator T@{operator T}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{operator T()}{operator T()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::operator T (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Cast to the contained type. 
+
+
+
+Definition at line 70 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_a0e82c3242b2da5bb3ad65cf2149b6f30}\label{class_photo_finish_1_1definable_a0e82c3242b2da5bb3ad65cf2149b6f30}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+T$\ast$ \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::operator-\/$>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Arrow operator. 
+
+
+
+Definition at line 73 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_abeb8cd4e0d95d064ba43c61ed092e77a}\label{class_photo_finish_1_1definable_abeb8cd4e0d95d064ba43c61ed092e77a}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!operator-\/$>$@{operator-\/$>$}}
+\index{operator-\/$>$@{operator-\/$>$}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{operator-\/$>$()}{operator->()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+const T$\ast$ \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::operator-\/$>$ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Arrow operator, const version. 
+
+
+
+Definition at line 75 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_a9d4202ced2d61cafad392d48db9ccfc6}\label{class_photo_finish_1_1definable_a9d4202ced2d61cafad392d48db9ccfc6}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!operator=@{operator=}}
+\index{operator=@{operator=}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{operator=()}{operator=()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+\hyperlink{class_photo_finish_1_1definable}{definable}$<$T$>$\& \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::operator= (\begin{DoxyParamCaption}\item[{const T \&}]{i }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Assignment operator. 
+
+
+
+Definition at line 78 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_a0a5c7b94bc7298e26557fe0fe084f730}\label{class_photo_finish_1_1definable_a0a5c7b94bc7298e26557fe0fe084f730}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!set\+\_\+defined@{set\+\_\+defined}}
+\index{set\+\_\+defined@{set\+\_\+defined}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{set\+\_\+defined()}{set\_defined()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+void \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::set\+\_\+defined (\begin{DoxyParamCaption}\item[{bool}]{v = {\ttfamily true} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set this object as \textquotesingle{}defined\textquotesingle{} (or not) 
+
+
+
+Definition at line 59 of file Definable.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1definable_ab8b9336f1125a05efaa698f1faad0b89}\label{class_photo_finish_1_1definable_ab8b9336f1125a05efaa698f1faad0b89}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!undefine@{undefine}}
+\index{undefine@{undefine}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{undefine()}{undefine()}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+void \hyperlink{class_photo_finish_1_1definable}{Photo\+Finish\+::definable}$<$ T $>$\+::undefine (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Undefine the object. 
+
+
+
+Definition at line 62 of file Definable.\+hh.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1definable_a54dc7324456d4b6642fd684552720cf2}\label{class_photo_finish_1_1definable_a54dc7324456d4b6642fd684552720cf2}} 
+\index{Photo\+Finish\+::definable@{Photo\+Finish\+::definable}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Photo\+Finish\+::definable@{Photo\+Finish\+::definable}}
+\subsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily template$<$typename T$>$ \\
+std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{out,  }\item[{\hyperlink{class_photo_finish_1_1definable}{definable}$<$ T $>$ \&}]{data }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Allow the contained data to be output to an ostream. 
+
+Outputs \char`\"{}\mbox{[}undefined\mbox{]}\char`\"{} if the value is not defined. 
+
+Definition at line 88 of file Definable.\+hh.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_definable_8hh}{Definable.\+hh}\end{DoxyCompactItemize}

@@ -1,0 +1,83 @@
+.TH "process_scans.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+process_scans.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <boost/program_options/options_description\&.hpp>\fP
+.br
+\fC#include <boost/program_options/variables_map\&.hpp>\fP
+.br
+\fC#include <boost/program_options/parsers\&.hpp>\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include <string>\fP
+.br
+\fC#include <vector>\fP
+.br
+\fC#include <algorithm>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/algorithm/string\&.hpp>\fP
+.br
+\fC#include <stdio\&.h>\fP
+.br
+\fC#include <stdlib\&.h>\fP
+.br
+\fC#include <sys/types\&.h>\fP
+.br
+\fC#include <sys/stat\&.h>\fP
+.br
+\fC#include <unistd\&.h>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'ImageFile\&.hh'\fP
+.br
+\fC#include 'Destination\&.hh'\fP
+.br
+\fC#include 'Tags\&.hh'\fP
+.br
+\fC#include 'Kernel2D\&.hh'\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+\fC#include 'Benchmark\&.hh'\fP
+.br
+
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBmake_preview\fP (\fBImage::ptr\fP orig_image, \fBDestination::ptr\fP orig_dest, \fBTags::ptr\fP filetags, \fBImageWriter::ptr\fP preview_file, bool can_free=false)"
+.br
+.ti -1c
+.RI "void \fBpreview_dir\fP (fs::path dir, std::string format, std::shared_ptr< \fBTags\fP > tags)"
+.br
+.ti -1c
+.RI "int \fBmain\fP (int argc, char *argv[])"
+.br
+.in -1c
+.SH "Function Documentation"
+.PP 
+.SS "int main (int argc, char * argv[])"
+
+.PP
+Definition at line 120 of file process_scans\&.cc\&.
+.SS "void make_preview (\fBImage::ptr\fP orig_image, \fBDestination::ptr\fP orig_dest, \fBTags::ptr\fP filetags, \fBImageWriter::ptr\fP preview_file, bool can_free = \fCfalse\fP)"
+
+.PP
+Definition at line 47 of file process_scans\&.cc\&.
+.SS "void preview_dir (fs::path dir, std::string format, std::shared_ptr< \fBTags\fP > tags)"
+
+.PP
+Definition at line 88 of file process_scans\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

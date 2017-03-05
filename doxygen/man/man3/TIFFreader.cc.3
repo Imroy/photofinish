@@ -1,0 +1,44 @@
+.TH "TIFFreader.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+TIFFreader.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <boost/algorithm/string\&.hpp>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/filesystem/fstream\&.hpp>\fP
+.br
+\fC#include <tiffio\&.h>\fP
+.br
+\fC#include <tiffio\&.hxx>\fP
+.br
+\fC#include 'ImageFile\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBTIFFcheck\fP(x)   if ((rc = TIFF##x) != 1) throw LibraryError('libtiff', 'TIFF' #x ' returned ' + rc)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define TIFFcheck(x)   if ((rc = TIFF##x) != 1) throw LibraryError('libtiff', 'TIFF' #x ' returned ' + rc)"
+
+.PP
+Definition at line 34 of file TIFFreader\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

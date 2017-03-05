@@ -1,0 +1,58 @@
+.TH "Tags.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Tags.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <fstream>\fP
+.br
+\fC#include <sstream>\fP
+.br
+\fC#include <string>\fP
+.br
+\fC#include <map>\fP
+.br
+\fC#include <exiv2/exiv2\&.hpp>\fP
+.br
+\fC#include <math\&.h>\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'ImageFile\&.hh'\fP
+.br
+\fC#include 'Tags\&.hh'\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "Exiv2::ExifKey \fBPhotoFinish::exif_key_read\fP (std::string key_string)"
+.br
+.ti -1c
+.RI "Exiv2::Value::AutoPtr \fBPhotoFinish::exif_value_read\fP (Exiv2::ExifKey key, std::string value_string)"
+.br
+.RI "Read an EXIF value from a string, with optional substitution for enum-style values\&. "
+.ti -1c
+.RI "Exiv2::IptcKey \fBPhotoFinish::iptc_key_read\fP (std::string key_string)"
+.br
+.ti -1c
+.RI "Exiv2::XmpKey \fBPhotoFinish::xmp_key_read\fP (std::string key_string)"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

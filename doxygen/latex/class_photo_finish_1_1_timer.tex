@@ -1,0 +1,113 @@
+\hypertarget{class_photo_finish_1_1_timer}{}\section{Photo\+Finish\+:\+:Timer Class Reference}
+\label{class_photo_finish_1_1_timer}\index{Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}}
+
+
+Class for doing nanosecond-\/accurate timings.  
+
+
+
+
+{\ttfamily \#include $<$Benchmark.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_timer_a29642b3310f111b0b1f3b7abe2d5c194}{Timer} ()
+\begin{DoxyCompactList}\small\item\em Empty constructor. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_timer_ae78ca8dbd0d6941f38089c00670e1026}{start} (void)
+\begin{DoxyCompactList}\small\item\em Record the start time. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_timer_ac7561d15636df785b1ef02eec31151e4}{stop} (void)
+\begin{DoxyCompactList}\small\item\em Record the end time. \end{DoxyCompactList}\item 
+double \hyperlink{class_photo_finish_1_1_timer_a77d32536b682c7482a9374ef2d32ad3c}{elapsed} (void) const
+\begin{DoxyCompactList}\small\item\em Return the number of seconds elapsed. \end{DoxyCompactList}\item 
+long long \hyperlink{class_photo_finish_1_1_timer_a147dff662681f10ad8afd1b5492f7c6a}{elapsed\+\_\+ns} (void) const
+\begin{DoxyCompactList}\small\item\em Return the number of nanoseconds elapsed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class for doing nanosecond-\/accurate timings. 
+
+Definition at line 31 of file Benchmark.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_timer_a29642b3310f111b0b1f3b7abe2d5c194}\label{class_photo_finish_1_1_timer_a29642b3310f111b0b1f3b7abe2d5c194}} 
+\index{Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}!Timer@{Timer}}
+\index{Timer@{Timer}!Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}}
+\subsubsection{\texorpdfstring{Timer()}{Timer()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Timer\+::\+Timer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Empty constructor. 
+
+
+
+Definition at line 25 of file Benchmark.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_timer_a77d32536b682c7482a9374ef2d32ad3c}\label{class_photo_finish_1_1_timer_a77d32536b682c7482a9374ef2d32ad3c}} 
+\index{Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}!elapsed@{elapsed}}
+\index{elapsed@{elapsed}!Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}}
+\subsubsection{\texorpdfstring{elapsed()}{elapsed()}}
+{\footnotesize\ttfamily double Photo\+Finish\+::\+Timer\+::elapsed (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Return the number of seconds elapsed. 
+
+
+
+Definition at line 29 of file Benchmark.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_timer_a147dff662681f10ad8afd1b5492f7c6a}\label{class_photo_finish_1_1_timer_a147dff662681f10ad8afd1b5492f7c6a}} 
+\index{Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}!elapsed\+\_\+ns@{elapsed\+\_\+ns}}
+\index{elapsed\+\_\+ns@{elapsed\+\_\+ns}!Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}}
+\subsubsection{\texorpdfstring{elapsed\+\_\+ns()}{elapsed\_ns()}}
+{\footnotesize\ttfamily long long Photo\+Finish\+::\+Timer\+::elapsed\+\_\+ns (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Return the number of nanoseconds elapsed. 
+
+
+
+Definition at line 36 of file Benchmark.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_timer_ae78ca8dbd0d6941f38089c00670e1026}\label{class_photo_finish_1_1_timer_ae78ca8dbd0d6941f38089c00670e1026}} 
+\index{Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}!start@{start}}
+\index{start@{start}!Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}}
+\subsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Timer\+::start (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Record the start time. 
+
+
+
+Definition at line 41 of file Benchmark.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_timer_ac7561d15636df785b1ef02eec31151e4}\label{class_photo_finish_1_1_timer_ac7561d15636df785b1ef02eec31151e4}} 
+\index{Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}!stop@{stop}}
+\index{stop@{stop}!Photo\+Finish\+::\+Timer@{Photo\+Finish\+::\+Timer}}
+\subsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Timer\+::stop (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Record the end time. 
+
+
+
+Definition at line 47 of file Benchmark.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_benchmark_8hh}{Benchmark.\+hh}\item 
+\hyperlink{_benchmark_8cc}{Benchmark.\+cc}\end{DoxyCompactItemize}

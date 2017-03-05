@@ -1,0 +1,96 @@
+.TH "PhotoFinish::Ditherer" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Ditherer \- Class for dithering images down to 8-bit components\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Ditherer\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDitherer\fP (unsigned int width, unsigned char channels, std::vector< unsigned char > maxvalues={})"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "\fB~Ditherer\fP ()"
+.br
+.RI "Destructor\&. "
+.ti -1c
+.RI "void \fBdither\fP (short unsigned int *inrow, unsigned char *outrow, bool lastrow=false)"
+.br
+.RI "Dither a row of image data\&. "
+.in -1c
+.SS "Static Public Attributes"
+
+.in +1c
+.ti -1c
+.RI "static const cmsUInt32Number \fBcmsBaseType\fP = BYTES_SH(2)"
+.br
+.RI "Base LCMS2 base type the ditherer expects the pixels to be in\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Class for dithering images down to 8-bit components\&. 
+.PP
+Definition at line 27 of file Ditherer\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Ditherer::Ditherer (unsigned int width, unsigned char channels, std::vector< unsigned char > maxvalues = \fC{}\fP)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIwidth\fP Width of the image 
+.br
+\fIchannels\fP Number of channels of the image 
+.br
+\fImaxvalues\fP The maximum values for each channel, defaults to 255 for each 
+.RE
+.PP
+
+.PP
+Definition at line 28 of file Ditherer\&.cc\&.
+.SS "PhotoFinish::Ditherer::~Ditherer ()"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 49 of file Ditherer\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::Ditherer::dither (short unsigned int * inrow, unsigned char * outrow, bool lastrow = \fCfalse\fP)"
+
+.PP
+Dither a row of image data\&. Performs a Floyd-Steinberg error diffusion dither
+.PP
+\fBParameters:\fP
+.RS 4
+\fIinrow\fP Pointer to a row of 16-bit image data 
+.br
+\fIoutrow\fP Pointer to a row 8-bit image data that will be produced 
+.br
+\fIlastrow\fP Whether this is the last row of the image\&. Less has to be done\&. 
+.RE
+.PP
+
+.PP
+Definition at line 87 of file Ditherer\&.cc\&.
+.SH "Member Data Documentation"
+.PP 
+.SS "const cmsUInt32Number PhotoFinish::Ditherer::cmsBaseType = BYTES_SH(2)\fC [static]\fP"
+
+.PP
+Base LCMS2 base type the ditherer expects the pixels to be in\&. Users of this class need to add the colour space and number of channels to this base type to be useable\&. 
+.PP
+Definition at line 54 of file Ditherer\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

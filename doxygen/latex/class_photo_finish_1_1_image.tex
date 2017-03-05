@@ -1,0 +1,576 @@
+\hypertarget{class_photo_finish_1_1_image}{}\section{Photo\+Finish\+:\+:Image Class Reference}
+\label{class_photo_finish_1_1_image}\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+
+
+An image class.  
+
+
+
+
+{\ttfamily \#include $<$Image.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_photo_finish_1_1_image}{Image} $>$ \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{ptr}
+\begin{DoxyCompactList}\small\item\em Shared pointer for an \hyperlink{class_photo_finish_1_1_image}{Image}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1_image_abffc53a4457723380ba48f27f2412452}{Image} (unsigned int w, unsigned int h, \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} f)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_image_a6c300a891d479ece70ffa849b39397fd}{$\sim$\+Image} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+const unsigned int \hyperlink{class_photo_finish_1_1_image_a2e6a66ad3009ab109e06ed0ac1878d18}{width} (void) const
+\begin{DoxyCompactList}\small\item\em The width of this image. \end{DoxyCompactList}\item 
+const unsigned int \hyperlink{class_photo_finish_1_1_image_abbfb02924c4b27949369526326bc11b9}{height} (void) const
+\begin{DoxyCompactList}\small\item\em The height of this image. \end{DoxyCompactList}\item 
+bool \hyperlink{class_photo_finish_1_1_image_a533606b08f614fe486835fccfcbbc6dd}{has\+\_\+profile} (void) const
+\item 
+const \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} \hyperlink{class_photo_finish_1_1_image_af70cbcdb6f40471c08a462cf10ea86fb}{profile} (void) const
+\begin{DoxyCompactList}\small\item\em Get the I\+CC profile. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_a5375d13c5ed04714d1ebc8dcbb2f0c4f}{set\+\_\+profile} (\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} p)
+\begin{DoxyCompactList}\small\item\em Set the I\+CC profile. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{class_photo_finish_1_1_image_af3e7c8a8d2da4244df61aee4179f3285}{format} (void) const
+\begin{DoxyCompactList}\small\item\em Get the \hyperlink{namespace_c_m_s}{C\+MS} format. \end{DoxyCompactList}\item 
+const \hyperlink{class_photo_finish_1_1definable}{definable}$<$ double $>$ \hyperlink{class_photo_finish_1_1_image_afaca8c09e654936291f078e28c7785ac}{xres} (void) const
+\begin{DoxyCompactList}\small\item\em The X resolution of this image (P\+PI) \end{DoxyCompactList}\item 
+const \hyperlink{class_photo_finish_1_1definable}{definable}$<$ double $>$ \hyperlink{class_photo_finish_1_1_image_a6f52945c791b47e598aa94a9c9643d66}{yres} (void) const
+\begin{DoxyCompactList}\small\item\em The Y resolution of this image (P\+PI) \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_ac2374ca246ba6c8b3d174fe4e7f74a25}{set\+\_\+resolution} (double r)
+\begin{DoxyCompactList}\small\item\em Set both the X and Y resolution (P\+PI) \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_a8e5edb65c6f92fee4ce7742e4ad61619}{set\+\_\+xres} (double r)
+\begin{DoxyCompactList}\small\item\em Set the X resolution (P\+PI) \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_a04eee7a8ff4ba52245cfcc32a7e54d31}{set\+\_\+yres} (double r)
+\begin{DoxyCompactList}\small\item\em Set the Y resolution (P\+PI) \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_ab0c3fd004f6fd3b39ea2e65d680911d1}{set\+\_\+resolution} (double xr, double yr)
+\begin{DoxyCompactList}\small\item\em Set the X and Y resolutions (P\+PI) \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_a4775db7132f11396138ea6a35301e896}{set\+\_\+resolution\+\_\+from\+\_\+size} (double size)
+\begin{DoxyCompactList}\small\item\em Set the resolution given the length of the longest side (in inches) \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{class_photo_finish_1_1_image_a0671615066506ceed7419e67e31a0db1}{pixel\+\_\+size} (void) const
+\begin{DoxyCompactList}\small\item\em Return the size of a pixel in bytes. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{class_photo_finish_1_1_image_aafdcf1eb872ae541275364205ee8afc2}{row\+\_\+size} (void) const
+\begin{DoxyCompactList}\small\item\em Retun the size of a row in bytes. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_a9e21d2c5b2d5615a335ea1f36e49aa2f}{check\+\_\+rowdata\+\_\+alloc} (unsigned int y)
+\item 
+{\footnotesize template$<$typename T  = unsigned char$>$ }\\T $\ast$ \hyperlink{class_photo_finish_1_1_image_af6b5f6b2039847b7501d8a69064eb248}{row} (unsigned int y) const
+\begin{DoxyCompactList}\small\item\em Pointer to pixel data at start of row. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T $\ast$ \hyperlink{class_photo_finish_1_1_image_a3c37b36b0de68de2d1f3dac005c9bc44}{at} (unsigned int x, unsigned int y) const
+\begin{DoxyCompactList}\small\item\em Pointer to pixel data at coordinates. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\T \& \hyperlink{class_photo_finish_1_1_image_a5317fe76e44a998b01160ebfe1fa6f05}{at} (unsigned int x, unsigned int y, unsigned char c) const
+\item 
+void \hyperlink{class_photo_finish_1_1_image_a9dfe18a5ebeca8e9ddd66e71608d3ba6}{free\+\_\+row} (unsigned int y)
+\begin{DoxyCompactList}\small\item\em Free the memory storing row \textquotesingle{}y\textquotesingle{}. \end{DoxyCompactList}\item 
+Exiv2\+::\+Exif\+Data \& \hyperlink{class_photo_finish_1_1_image_a56a6612bc223150cf8148cf7f96b88c9}{E\+X\+I\+Ftags} (void)
+\begin{DoxyCompactList}\small\item\em The Exiv2\+::\+Exif\+Data object. \end{DoxyCompactList}\item 
+Exiv2\+::\+Iptc\+Data \& \hyperlink{class_photo_finish_1_1_image_acf1cd5d69277be90373a3751d88584c6}{I\+P\+T\+Ctags} (void)
+\begin{DoxyCompactList}\small\item\em The Exiv2\+::\+Iptc\+Data object. \end{DoxyCompactList}\item 
+Exiv2\+::\+Xmp\+Data \& \hyperlink{class_photo_finish_1_1_image_a186fec390a5f37e2d26dec2b916ad513}{X\+M\+Ptags} (void)
+\begin{DoxyCompactList}\small\item\em The Exiv2\+::\+Xmp\+Data object. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{ptr} \hyperlink{class_photo_finish_1_1_image_a797a2f06e01df0c863cf4f3d0579504a}{transform\+\_\+colour} (\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} dest\+\_\+profile, \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} dest\+\_\+format, \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent} intent=\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a09ab3095e9b2d0a7773cc3d2f0f879cd}{C\+M\+S\+::\+Intent\+::\+Perceptual}, bool can\+\_\+free=false)
+\begin{DoxyCompactList}\small\item\em Transform this image into a different colour space and/or I\+CC profile, making a new image. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_aca7ebe2eaec99b320c750391434d8a9a}{transform\+\_\+colour\+\_\+inplace} (\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} dest\+\_\+profile, \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} dest\+\_\+format, \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent} intent=\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a09ab3095e9b2d0a7773cc3d2f0f879cd}{C\+M\+S\+::\+Intent\+::\+Perceptual})
+\begin{DoxyCompactList}\small\item\em Transform this image in-\/place into a different colour space and/or I\+CC profile. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_abd2dae98733ae83ccf7b57256f00a3ba}{un\+\_\+alpha\+\_\+mult} (void)
+\begin{DoxyCompactList}\small\item\em Un-\/pre-\/multiply the colour values with the alpha channel. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1_image_a4e491dfdc87676fac9f10b0ae15503ec}{alpha\+\_\+mult} (\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} dest\+\_\+format)
+\begin{DoxyCompactList}\small\item\em Pre-\/multiply the colour values with the alpha. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} \hyperlink{class_photo_finish_1_1_image_a0c0d0a10aaa05beca416be3b9e75810a}{default\+\_\+profile} (\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{C\+M\+S\+::\+Colour\+Model} default\+\_\+colourmodel, std\+::string for\+\_\+desc)
+\begin{DoxyCompactList}\small\item\em Create either an s\+R\+GB or greyscale profile depending on image format. \end{DoxyCompactList}\item 
+static \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} \hyperlink{class_photo_finish_1_1_image_a07287a4910a554444f3d637a82c7fa7e}{default\+\_\+profile} (\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} \hyperlink{class_photo_finish_1_1_image_af3e7c8a8d2da4244df61aee4179f3285}{format}, std\+::string for\+\_\+desc)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+An image class. 
+
+Definition at line 31 of file Image.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}\label{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!ptr@{ptr}}
+\index{ptr@{ptr}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_photo_finish_1_1_image}{Image}$>$ \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Photo\+Finish\+::\+Image\+::ptr}}
+
+
+
+Shared pointer for an \hyperlink{class_photo_finish_1_1_image}{Image}. 
+
+
+
+Definition at line 55 of file Image.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_abffc53a4457723380ba48f27f2412452}\label{class_photo_finish_1_1_image_abffc53a4457723380ba48f27f2412452}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!Image@{Image}}
+\index{Image@{Image}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{Image()}{Image()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Image\+::\+Image (\begin{DoxyParamCaption}\item[{unsigned int}]{w,  }\item[{unsigned int}]{h,  }\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{f }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em w,h} & Width and height of the image \\
+\hline
+{\em t} & L\+C\+M\+S2 pixel format \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 29 of file Image.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a6c300a891d479ece70ffa849b39397fd}\label{class_photo_finish_1_1_image_a6c300a891d479ece70ffa849b39397fd}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!````~Image@{$\sim$\+Image}}
+\index{````~Image@{$\sim$\+Image}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{$\sim$\+Image()}{~Image()}}
+{\footnotesize\ttfamily Photo\+Finish\+::\+Image\+::$\sim$\+Image (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+
+
+Definition at line 45 of file Image.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a4e491dfdc87676fac9f10b0ae15503ec}\label{class_photo_finish_1_1_image_a4e491dfdc87676fac9f10b0ae15503ec}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!alpha\+\_\+mult@{alpha\+\_\+mult}}
+\index{alpha\+\_\+mult@{alpha\+\_\+mult}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{alpha\+\_\+mult()}{alpha\_mult()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::alpha\+\_\+mult (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{dest\+\_\+format }\end{DoxyParamCaption})}
+
+
+
+Pre-\/multiply the colour values with the alpha. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest\+\_\+format} & \hyperlink{class_photo_finish_1_1_destination}{Destination} format, only the channel type (bytes and float flag) are used. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 444 of file Image.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a3c37b36b0de68de2d1f3dac005c9bc44}\label{class_photo_finish_1_1_image_a3c37b36b0de68de2d1f3dac005c9bc44}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!at@{at}}
+\index{at@{at}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{at()}{at()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T$\ast$ Photo\+Finish\+::\+Image\+::at (\begin{DoxyParamCaption}\item[{unsigned int}]{x,  }\item[{unsigned int}]{y }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Pointer to pixel data at coordinates. 
+
+
+
+Definition at line 122 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a5317fe76e44a998b01160ebfe1fa6f05}\label{class_photo_finish_1_1_image_a5317fe76e44a998b01160ebfe1fa6f05}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!at@{at}}
+\index{at@{at}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{at()}{at()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+T\& Photo\+Finish\+::\+Image\+::at (\begin{DoxyParamCaption}\item[{unsigned int}]{x,  }\item[{unsigned int}]{y,  }\item[{unsigned char}]{c }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 125 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a9e21d2c5b2d5615a335ea1f36e49aa2f}\label{class_photo_finish_1_1_image_a9e21d2c5b2d5615a335ea1f36e49aa2f}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!check\+\_\+rowdata\+\_\+alloc@{check\+\_\+rowdata\+\_\+alloc}}
+\index{check\+\_\+rowdata\+\_\+alloc@{check\+\_\+rowdata\+\_\+alloc}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{check\+\_\+rowdata\+\_\+alloc()}{check\_rowdata\_alloc()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::check\+\_\+rowdata\+\_\+alloc (\begin{DoxyParamCaption}\item[{unsigned int}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 111 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a0c0d0a10aaa05beca416be3b9e75810a}\label{class_photo_finish_1_1_image_a0c0d0a10aaa05beca416be3b9e75810a}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!default\+\_\+profile@{default\+\_\+profile}}
+\index{default\+\_\+profile@{default\+\_\+profile}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{default\+\_\+profile()}{default\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} Photo\+Finish\+::\+Image\+::default\+\_\+profile (\begin{DoxyParamCaption}\item[{\hyperlink{namespace_c_m_s_a9cb18b5da51a22c3c9dd25a5c9048e42}{C\+M\+S\+::\+Colour\+Model}}]{default\+\_\+colourmodel,  }\item[{std\+::string}]{for\+\_\+desc }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Create either an s\+R\+GB or greyscale profile depending on image format. 
+
+
+
+Definition at line 57 of file Image.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a07287a4910a554444f3d637a82c7fa7e}\label{class_photo_finish_1_1_image_a07287a4910a554444f3d637a82c7fa7e}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!default\+\_\+profile@{default\+\_\+profile}}
+\index{default\+\_\+profile@{default\+\_\+profile}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{default\+\_\+profile()}{default\_profile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily static \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} Photo\+Finish\+::\+Image\+::default\+\_\+profile (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{format,  }\item[{std\+::string}]{for\+\_\+desc }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Definition at line 147 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a56a6612bc223150cf8148cf7f96b88c9}\label{class_photo_finish_1_1_image_a56a6612bc223150cf8148cf7f96b88c9}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!E\+X\+I\+Ftags@{E\+X\+I\+Ftags}}
+\index{E\+X\+I\+Ftags@{E\+X\+I\+Ftags}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{E\+X\+I\+Ftags()}{EXIFtags()}}
+{\footnotesize\ttfamily Exiv2\+::\+Exif\+Data\& Photo\+Finish\+::\+Image\+::\+E\+X\+I\+Ftags (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Exiv2\+::\+Exif\+Data object. 
+
+
+
+Definition at line 136 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_af3e7c8a8d2da4244df61aee4179f3285}\label{class_photo_finish_1_1_image_af3e7c8a8d2da4244df61aee4179f3285}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!format@{format}}
+\index{format@{format}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{format()}{format()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format} Photo\+Finish\+::\+Image\+::format (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the \hyperlink{namespace_c_m_s}{C\+MS} format. 
+
+
+
+Definition at line 82 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a9dfe18a5ebeca8e9ddd66e71608d3ba6}\label{class_photo_finish_1_1_image_a9dfe18a5ebeca8e9ddd66e71608d3ba6}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!free\+\_\+row@{free\+\_\+row}}
+\index{free\+\_\+row@{free\+\_\+row}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{free\+\_\+row()}{free\_row()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::free\+\_\+row (\begin{DoxyParamCaption}\item[{unsigned int}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Free the memory storing row \textquotesingle{}y\textquotesingle{}. 
+
+
+
+Definition at line 128 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a533606b08f614fe486835fccfcbbc6dd}\label{class_photo_finish_1_1_image_a533606b08f614fe486835fccfcbbc6dd}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!has\+\_\+profile@{has\+\_\+profile}}
+\index{has\+\_\+profile@{has\+\_\+profile}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{has\+\_\+profile()}{has\_profile()}}
+{\footnotesize\ttfamily bool Photo\+Finish\+::\+Image\+::has\+\_\+profile (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Definition at line 73 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_abbfb02924c4b27949369526326bc11b9}\label{class_photo_finish_1_1_image_abbfb02924c4b27949369526326bc11b9}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!height@{height}}
+\index{height@{height}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{height()}{height()}}
+{\footnotesize\ttfamily const unsigned int Photo\+Finish\+::\+Image\+::height (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The height of this image. 
+
+
+
+Definition at line 71 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_acf1cd5d69277be90373a3751d88584c6}\label{class_photo_finish_1_1_image_acf1cd5d69277be90373a3751d88584c6}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!I\+P\+T\+Ctags@{I\+P\+T\+Ctags}}
+\index{I\+P\+T\+Ctags@{I\+P\+T\+Ctags}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{I\+P\+T\+Ctags()}{IPTCtags()}}
+{\footnotesize\ttfamily Exiv2\+::\+Iptc\+Data\& Photo\+Finish\+::\+Image\+::\+I\+P\+T\+Ctags (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Exiv2\+::\+Iptc\+Data object. 
+
+
+
+Definition at line 139 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a0671615066506ceed7419e67e31a0db1}\label{class_photo_finish_1_1_image_a0671615066506ceed7419e67e31a0db1}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!pixel\+\_\+size@{pixel\+\_\+size}}
+\index{pixel\+\_\+size@{pixel\+\_\+size}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{pixel\+\_\+size()}{pixel\_size()}}
+{\footnotesize\ttfamily size\+\_\+t Photo\+Finish\+::\+Image\+::pixel\+\_\+size (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Return the size of a pixel in bytes. 
+
+
+
+Definition at line 106 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_af70cbcdb6f40471c08a462cf10ea86fb}\label{class_photo_finish_1_1_image_af70cbcdb6f40471c08a462cf10ea86fb}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!profile@{profile}}
+\index{profile@{profile}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{profile()}{profile()}}
+{\footnotesize\ttfamily const \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} Photo\+Finish\+::\+Image\+::profile (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the I\+CC profile. 
+
+
+
+Definition at line 76 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_af6b5f6b2039847b7501d8a69064eb248}\label{class_photo_finish_1_1_image_af6b5f6b2039847b7501d8a69064eb248}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!row@{row}}
+\index{row@{row}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{row()}{row()}}
+{\footnotesize\ttfamily template$<$typename T  = unsigned char$>$ \\
+T$\ast$ Photo\+Finish\+::\+Image\+::row (\begin{DoxyParamCaption}\item[{unsigned int}]{y }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Pointer to pixel data at start of row. 
+
+
+
+Definition at line 118 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_aafdcf1eb872ae541275364205ee8afc2}\label{class_photo_finish_1_1_image_aafdcf1eb872ae541275364205ee8afc2}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!row\+\_\+size@{row\+\_\+size}}
+\index{row\+\_\+size@{row\+\_\+size}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{row\+\_\+size()}{row\_size()}}
+{\footnotesize\ttfamily size\+\_\+t Photo\+Finish\+::\+Image\+::row\+\_\+size (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Retun the size of a row in bytes. 
+
+
+
+Definition at line 109 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a5375d13c5ed04714d1ebc8dcbb2f0c4f}\label{class_photo_finish_1_1_image_a5375d13c5ed04714d1ebc8dcbb2f0c4f}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!set\+\_\+profile@{set\+\_\+profile}}
+\index{set\+\_\+profile@{set\+\_\+profile}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{set\+\_\+profile()}{set\_profile()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::set\+\_\+profile (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr}}]{p }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the I\+CC profile. 
+
+
+
+Definition at line 79 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_ac2374ca246ba6c8b3d174fe4e7f74a25}\label{class_photo_finish_1_1_image_ac2374ca246ba6c8b3d174fe4e7f74a25}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!set\+\_\+resolution@{set\+\_\+resolution}}
+\index{set\+\_\+resolution@{set\+\_\+resolution}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{set\+\_\+resolution()}{set\_resolution()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::set\+\_\+resolution (\begin{DoxyParamCaption}\item[{double}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set both the X and Y resolution (P\+PI) 
+
+
+
+Definition at line 91 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_ab0c3fd004f6fd3b39ea2e65d680911d1}\label{class_photo_finish_1_1_image_ab0c3fd004f6fd3b39ea2e65d680911d1}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!set\+\_\+resolution@{set\+\_\+resolution}}
+\index{set\+\_\+resolution@{set\+\_\+resolution}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{set\+\_\+resolution()}{set\_resolution()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::set\+\_\+resolution (\begin{DoxyParamCaption}\item[{double}]{xr,  }\item[{double}]{yr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the X and Y resolutions (P\+PI) 
+
+
+
+Definition at line 100 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a4775db7132f11396138ea6a35301e896}\label{class_photo_finish_1_1_image_a4775db7132f11396138ea6a35301e896}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!set\+\_\+resolution\+\_\+from\+\_\+size@{set\+\_\+resolution\+\_\+from\+\_\+size}}
+\index{set\+\_\+resolution\+\_\+from\+\_\+size@{set\+\_\+resolution\+\_\+from\+\_\+size}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{set\+\_\+resolution\+\_\+from\+\_\+size()}{set\_resolution\_from\_size()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::set\+\_\+resolution\+\_\+from\+\_\+size (\begin{DoxyParamCaption}\item[{double}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the resolution given the length of the longest side (in inches) 
+
+
+
+Definition at line 103 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a8e5edb65c6f92fee4ce7742e4ad61619}\label{class_photo_finish_1_1_image_a8e5edb65c6f92fee4ce7742e4ad61619}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!set\+\_\+xres@{set\+\_\+xres}}
+\index{set\+\_\+xres@{set\+\_\+xres}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{set\+\_\+xres()}{set\_xres()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::set\+\_\+xres (\begin{DoxyParamCaption}\item[{double}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the X resolution (P\+PI) 
+
+
+
+Definition at line 94 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a04eee7a8ff4ba52245cfcc32a7e54d31}\label{class_photo_finish_1_1_image_a04eee7a8ff4ba52245cfcc32a7e54d31}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!set\+\_\+yres@{set\+\_\+yres}}
+\index{set\+\_\+yres@{set\+\_\+yres}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{set\+\_\+yres()}{set\_yres()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::set\+\_\+yres (\begin{DoxyParamCaption}\item[{double}]{r }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the Y resolution (P\+PI) 
+
+
+
+Definition at line 97 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a797a2f06e01df0c863cf4f3d0579504a}\label{class_photo_finish_1_1_image_a797a2f06e01df0c863cf4f3d0579504a}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!transform\+\_\+colour@{transform\+\_\+colour}}
+\index{transform\+\_\+colour@{transform\+\_\+colour}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{transform\+\_\+colour()}{transform\_colour()}}
+{\footnotesize\ttfamily \hyperlink{class_photo_finish_1_1_image_ab336203305ed3a1397d7245063353b5a}{Image\+::ptr} Photo\+Finish\+::\+Image\+::transform\+\_\+colour (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr}}]{dest\+\_\+profile,  }\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{dest\+\_\+format,  }\item[{\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent}}]{intent = {\ttfamily \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a09ab3095e9b2d0a7773cc3d2f0f879cd}{C\+M\+S\+::\+Intent\+::\+Perceptual}},  }\item[{bool}]{can\+\_\+free = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Transform this image into a different colour space and/or I\+CC profile, making a new image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest\+\_\+profile} & The I\+CC profile of the destination. If N\+U\+LL, uses image\textquotesingle{}s profile. \\
+\hline
+{\em dest\+\_\+format} & The L\+C\+M\+S2 pixel format. \\
+\hline
+{\em intent} & The I\+CC intent of the transform, defaults to perceptual. \\
+\hline
+{\em can\+\_\+free} & Whether rows can be freed after transforming, defaults to false. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A new image 
+\end{DoxyReturn}
+
+
+Definition at line 147 of file Image.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_aca7ebe2eaec99b320c750391434d8a9a}\label{class_photo_finish_1_1_image_aca7ebe2eaec99b320c750391434d8a9a}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!transform\+\_\+colour\+\_\+inplace@{transform\+\_\+colour\+\_\+inplace}}
+\index{transform\+\_\+colour\+\_\+inplace@{transform\+\_\+colour\+\_\+inplace}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{transform\+\_\+colour\+\_\+inplace()}{transform\_colour\_inplace()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::transform\+\_\+colour\+\_\+inplace (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr}}]{dest\+\_\+profile,  }\item[{\hyperlink{class_c_m_s_1_1_format}{C\+M\+S\+::\+Format}}]{dest\+\_\+format,  }\item[{\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{C\+M\+S\+::\+Intent}}]{intent = {\ttfamily \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069a09ab3095e9b2d0a7773cc3d2f0f879cd}{C\+M\+S\+::\+Intent\+::\+Perceptual}} }\end{DoxyParamCaption})}
+
+
+
+Transform this image in-\/place into a different colour space and/or I\+CC profile. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em dest\+\_\+profile} & The I\+CC profile of the destination. If N\+U\+LL, uses image\textquotesingle{}s profile. \\
+\hline
+{\em dest\+\_\+format} & The L\+C\+M\+S2 pixel format. \\
+\hline
+{\em intent} & The I\+CC intent of the transform, defaults to perceptual. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 214 of file Image.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_abd2dae98733ae83ccf7b57256f00a3ba}\label{class_photo_finish_1_1_image_abd2dae98733ae83ccf7b57256f00a3ba}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!un\+\_\+alpha\+\_\+mult@{un\+\_\+alpha\+\_\+mult}}
+\index{un\+\_\+alpha\+\_\+mult@{un\+\_\+alpha\+\_\+mult}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{un\+\_\+alpha\+\_\+mult()}{un\_alpha\_mult()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::\+Image\+::un\+\_\+alpha\+\_\+mult (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Un-\/pre-\/multiply the colour values with the alpha channel. 
+
+Converts data to floating point (S\+A\+M\+P\+LE) in the process 
+
+Definition at line 347 of file Image.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a2e6a66ad3009ab109e06ed0ac1878d18}\label{class_photo_finish_1_1_image_a2e6a66ad3009ab109e06ed0ac1878d18}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!width@{width}}
+\index{width@{width}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{width()}{width()}}
+{\footnotesize\ttfamily const unsigned int Photo\+Finish\+::\+Image\+::width (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The width of this image. 
+
+
+
+Definition at line 68 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a186fec390a5f37e2d26dec2b916ad513}\label{class_photo_finish_1_1_image_a186fec390a5f37e2d26dec2b916ad513}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!X\+M\+Ptags@{X\+M\+Ptags}}
+\index{X\+M\+Ptags@{X\+M\+Ptags}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{X\+M\+Ptags()}{XMPtags()}}
+{\footnotesize\ttfamily Exiv2\+::\+Xmp\+Data\& Photo\+Finish\+::\+Image\+::\+X\+M\+Ptags (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Exiv2\+::\+Xmp\+Data object. 
+
+
+
+Definition at line 142 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_afaca8c09e654936291f078e28c7785ac}\label{class_photo_finish_1_1_image_afaca8c09e654936291f078e28c7785ac}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!xres@{xres}}
+\index{xres@{xres}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{xres()}{xres()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1definable}{definable}$<$double$>$ Photo\+Finish\+::\+Image\+::xres (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The X resolution of this image (P\+PI) 
+
+
+
+Definition at line 85 of file Image.\+hh.
+
+\mbox{\Hypertarget{class_photo_finish_1_1_image_a6f52945c791b47e598aa94a9c9643d66}\label{class_photo_finish_1_1_image_a6f52945c791b47e598aa94a9c9643d66}} 
+\index{Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}!yres@{yres}}
+\index{yres@{yres}!Photo\+Finish\+::\+Image@{Photo\+Finish\+::\+Image}}
+\subsubsection{\texorpdfstring{yres()}{yres()}}
+{\footnotesize\ttfamily const \hyperlink{class_photo_finish_1_1definable}{definable}$<$double$>$ Photo\+Finish\+::\+Image\+::yres (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The Y resolution of this image (P\+PI) 
+
+
+
+Definition at line 88 of file Image.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_image_8hh}{Image.\+hh}\item 
+\hyperlink{_image_8cc}{Image.\+cc}\end{DoxyCompactItemize}

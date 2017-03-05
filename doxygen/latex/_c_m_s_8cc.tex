@@ -1,0 +1,216 @@
+\hypertarget{_c_m_s_8cc}{}\section{C\+M\+S.\+cc File Reference}
+\label{_c_m_s_8cc}\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$boost/filesystem.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/filesystem/fstream.\+hpp$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}C\+M\+S.\+hh\char`\"{}}\newline
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_c_m_s}{C\+MS}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{_c_m_s_8cc_ac91cd061dbea1a6f3ffd8522a28c09e1}{F\+L\+O\+A\+T\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ F\+L\+O\+A\+T\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_ac154439a6e96511641067fcbf59f2c7d}{O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_a0c308a7242fc03bb1c27d3f372f27105}{C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+S\+H(31))
+\item 
+\#define \hyperlink{_c_m_s_8cc_ac4768cff92cad5b49dafb50c42ca410b}{S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_aadddcc18a1f1f563d39fc9c251ab5247}{F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ F\+L\+A\+V\+O\+R\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_a2641e8785104d466e76014005cc0110f}{P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ P\+L\+A\+N\+A\+R\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_a37eb282a508c69a8172e7dbb5af20db2}{E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ E\+N\+D\+I\+A\+N16\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_a120dd1897a3521c4da6b0574c1d86a65}{D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ D\+O\+S\+W\+A\+P\+\_\+\+S\+H(1))
+\item 
+\#define \hyperlink{_c_m_s_8cc_ad8b41b1870342dccbc89827b494403f7}{E\+X\+T\+R\+A\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ E\+X\+T\+R\+A\+\_\+\+S\+H(7))
+\item 
+\#define \hyperlink{_c_m_s_8cc_aa10353b5910b92df7722d1c9c09224b3}{C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+S\+H(15))
+\item 
+\#define \hyperlink{_c_m_s_8cc_aae7f35437c97ebcc8ae00d3dd6aaf304}{B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK}~(0xffffffff $^\wedge$ B\+Y\+T\+E\+S\+\_\+\+S\+H(7))
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \hyperlink{namespace_c_m_s_aebe3bd3845d84746f27134435fcaadbe}{C\+M\+S\+::operator$<$$<$} (std\+::ostream \&out, Colour\+Model model)
+\item 
+std\+::ostream \& \hyperlink{namespace_c_m_s_a0d812bc6465a5fef515e13517dbb14c4}{C\+M\+S\+::operator$<$$<$} (std\+::ostream \&out, Format f)
+\item 
+cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$ \hyperlink{namespace_c_m_s_a618226eaa9bf97c8c23669c516be6d4e}{C\+M\+S\+::\+Open\+I\+Ohandler\+From\+I\+Stream} (std\+::istream $\ast$is)
+\item 
+cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$ \hyperlink{namespace_c_m_s_ad1b15f2bd898c5c4e96ab247fb26575c}{C\+M\+S\+::\+Open\+I\+Ohandler\+From\+I\+F\+Stream} (fs\+::path filepath)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_a88c40f3fde62e521d5f3b4055e6854e6}{C\+M\+S\+::istream\+\_\+read} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, void $\ast$Buffer, cms\+U\+Int32\+Number size, cms\+U\+Int32\+Number count)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a55b53b00daedc8b76eba456e43713dd6}{C\+M\+S\+::istream\+\_\+seek} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number offset)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a60036a5e1db6c4320d3ce599758c9101}{C\+M\+S\+::istream\+\_\+close} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_a9e1e064622cf44c9e8958a37c0bae3e4}{C\+M\+S\+::istream\+\_\+tell} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a3562813bdb675436999b19d1b51a986f}{C\+M\+S\+::istream\+\_\+write} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number size, const void $\ast$Buffer)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_ac7b7b13d2c01af24cbf3fa7587e24c23}{C\+M\+S\+::ostream\+\_\+read} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, void $\ast$Buffer, cms\+U\+Int32\+Number size, cms\+U\+Int32\+Number count)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a42537c0a11f8f118b0380d202ff24430}{C\+M\+S\+::ostream\+\_\+seek} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number offset)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_a57d6234e6fb36cc71bcae4a825ad3ba0}{C\+M\+S\+::ostream\+\_\+close} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+U\+Int32\+Number \hyperlink{namespace_c_m_s_a4420e9cff988db0418ae3a9c76ec5f9e}{C\+M\+S\+::ostream\+\_\+tell} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler)
+\item 
+cms\+Bool \hyperlink{namespace_c_m_s_ac6a6e80213301c0cbce0fcd8a98e6108}{C\+M\+S\+::ostream\+\_\+write} (cms\+I\+O\+H\+A\+N\+D\+L\+ER $\ast$iohandler, cms\+U\+Int32\+Number size, const void $\ast$Buffer)
+\item 
+void \hyperlink{_c_m_s_8cc_a233853ff9d612d6eff8bd10e8f198de1}{lcms2\+\_\+errorhandler} (cms\+Context Context\+ID, cms\+U\+Int32\+Number Error\+Code, const char $\ast$Text)
+\begin{DoxyCompactList}\small\item\em Throw a Library\+Error exception whem L\+C\+M\+S2 returns an error. \end{DoxyCompactList}\item 
+void \hyperlink{_c_m_s_8cc_a18e192f42eedbbf828a1ed4ed61a0f68}{lcms2\+\_\+error\+\_\+adaptor} (void)
+\begin{DoxyCompactList}\small\item\em Set up an error handler with L\+C\+M\+S2 that will throw a Library\+Error exception. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{_c_m_s_8cc_aae7f35437c97ebcc8ae00d3dd6aaf304}\label{_c_m_s_8cc_aae7f35437c97ebcc8ae00d3dd6aaf304}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK@{B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK}}
+\index{B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK@{B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK}{BYTES\_MASK}}
+{\footnotesize\ttfamily \#define B\+Y\+T\+E\+S\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ B\+Y\+T\+E\+S\+\_\+\+S\+H(7))}
+
+
+
+Definition at line 319 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_aa10353b5910b92df7722d1c9c09224b3}\label{_c_m_s_8cc_aa10353b5910b92df7722d1c9c09224b3}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK@{C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK}}
+\index{C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK@{C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK}{CHANNELS\_MASK}}
+{\footnotesize\ttfamily \#define C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ C\+H\+A\+N\+N\+E\+L\+S\+\_\+\+S\+H(15))}
+
+
+
+Definition at line 318 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_a0c308a7242fc03bb1c27d3f372f27105}\label{_c_m_s_8cc_a0c308a7242fc03bb1c27d3f372f27105}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK@{C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK}}
+\index{C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK@{C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK}{COLORSPACE\_MASK}}
+{\footnotesize\ttfamily \#define C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ C\+O\+L\+O\+R\+S\+P\+A\+C\+E\+\_\+\+S\+H(31))}
+
+
+
+Definition at line 311 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_a120dd1897a3521c4da6b0574c1d86a65}\label{_c_m_s_8cc_a120dd1897a3521c4da6b0574c1d86a65}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK@{D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK}}
+\index{D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK@{D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK}{DOSWAP\_MASK}}
+{\footnotesize\ttfamily \#define D\+O\+S\+W\+A\+P\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ D\+O\+S\+W\+A\+P\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 316 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_a37eb282a508c69a8172e7dbb5af20db2}\label{_c_m_s_8cc_a37eb282a508c69a8172e7dbb5af20db2}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK@{E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK}}
+\index{E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK@{E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK}{ENDIAN16\_MASK}}
+{\footnotesize\ttfamily \#define E\+N\+D\+I\+A\+N16\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ E\+N\+D\+I\+A\+N16\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 315 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_ad8b41b1870342dccbc89827b494403f7}\label{_c_m_s_8cc_ad8b41b1870342dccbc89827b494403f7}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!E\+X\+T\+R\+A\+\_\+\+M\+A\+SK@{E\+X\+T\+R\+A\+\_\+\+M\+A\+SK}}
+\index{E\+X\+T\+R\+A\+\_\+\+M\+A\+SK@{E\+X\+T\+R\+A\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{E\+X\+T\+R\+A\+\_\+\+M\+A\+SK}{EXTRA\_MASK}}
+{\footnotesize\ttfamily \#define E\+X\+T\+R\+A\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ E\+X\+T\+R\+A\+\_\+\+S\+H(7))}
+
+
+
+Definition at line 317 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_aadddcc18a1f1f563d39fc9c251ab5247}\label{_c_m_s_8cc_aadddcc18a1f1f563d39fc9c251ab5247}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK@{F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK}}
+\index{F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK@{F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK}{FLAVOR\_MASK}}
+{\footnotesize\ttfamily \#define F\+L\+A\+V\+O\+R\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ F\+L\+A\+V\+O\+R\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 313 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_ac91cd061dbea1a6f3ffd8522a28c09e1}\label{_c_m_s_8cc_ac91cd061dbea1a6f3ffd8522a28c09e1}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!F\+L\+O\+A\+T\+\_\+\+M\+A\+SK@{F\+L\+O\+A\+T\+\_\+\+M\+A\+SK}}
+\index{F\+L\+O\+A\+T\+\_\+\+M\+A\+SK@{F\+L\+O\+A\+T\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{F\+L\+O\+A\+T\+\_\+\+M\+A\+SK}{FLOAT\_MASK}}
+{\footnotesize\ttfamily \#define F\+L\+O\+A\+T\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ F\+L\+O\+A\+T\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 309 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_ac154439a6e96511641067fcbf59f2c7d}\label{_c_m_s_8cc_ac154439a6e96511641067fcbf59f2c7d}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK@{O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK}}
+\index{O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK@{O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK}{OPTIMIZED\_MASK}}
+{\footnotesize\ttfamily \#define O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ O\+P\+T\+I\+M\+I\+Z\+E\+D\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 310 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_a2641e8785104d466e76014005cc0110f}\label{_c_m_s_8cc_a2641e8785104d466e76014005cc0110f}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK@{P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK}}
+\index{P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK@{P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK}{PLANAR\_MASK}}
+{\footnotesize\ttfamily \#define P\+L\+A\+N\+A\+R\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ P\+L\+A\+N\+A\+R\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 314 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_ac4768cff92cad5b49dafb50c42ca410b}\label{_c_m_s_8cc_ac4768cff92cad5b49dafb50c42ca410b}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK@{S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK}}
+\index{S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK@{S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK}{SWAPFIRST\_MASK}}
+{\footnotesize\ttfamily \#define S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+M\+A\+SK~(0xffffffff $^\wedge$ S\+W\+A\+P\+F\+I\+R\+S\+T\+\_\+\+S\+H(1))}
+
+
+
+Definition at line 312 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{_c_m_s_8cc_a18e192f42eedbbf828a1ed4ed61a0f68}\label{_c_m_s_8cc_a18e192f42eedbbf828a1ed4ed61a0f68}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!lcms2\+\_\+error\+\_\+adaptor@{lcms2\+\_\+error\+\_\+adaptor}}
+\index{lcms2\+\_\+error\+\_\+adaptor@{lcms2\+\_\+error\+\_\+adaptor}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{lcms2\+\_\+error\+\_\+adaptor()}{lcms2\_error\_adaptor()}}
+{\footnotesize\ttfamily void lcms2\+\_\+error\+\_\+adaptor (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Set up an error handler with L\+C\+M\+S2 that will throw a Library\+Error exception. 
+
+
+
+Definition at line 710 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{_c_m_s_8cc_a233853ff9d612d6eff8bd10e8f198de1}\label{_c_m_s_8cc_a233853ff9d612d6eff8bd10e8f198de1}} 
+\index{C\+M\+S.\+cc@{C\+M\+S.\+cc}!lcms2\+\_\+errorhandler@{lcms2\+\_\+errorhandler}}
+\index{lcms2\+\_\+errorhandler@{lcms2\+\_\+errorhandler}!C\+M\+S.\+cc@{C\+M\+S.\+cc}}
+\subsubsection{\texorpdfstring{lcms2\+\_\+errorhandler()}{lcms2\_errorhandler()}}
+{\footnotesize\ttfamily void lcms2\+\_\+errorhandler (\begin{DoxyParamCaption}\item[{cms\+Context}]{Context\+ID,  }\item[{cms\+U\+Int32\+Number}]{Error\+Code,  }\item[{const char $\ast$}]{Text }\end{DoxyParamCaption})}
+
+
+
+Throw a Library\+Error exception whem L\+C\+M\+S2 returns an error. 
+
+
+
+Definition at line 706 of file C\+M\+S.\+cc.
+

@@ -1,0 +1,210 @@
+\hypertarget{class_photo_finish_1_1webp__stream__writer}{}\section{Photo\+Finish\+:\+:webp\+\_\+stream\+\_\+writer Class Reference}
+\label{class_photo_finish_1_1webp__stream__writer}\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+
+
+A custom writer for libwebp that writes using a std\+::ostream object.  
+
+
+
+
+{\ttfamily \#include $<$Web\+P\+\_\+ostream.\+hh$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_photo_finish_1_1webp__stream__writer_affd26ebc255f3cf910c74cdf577cf3a5}{webp\+\_\+stream\+\_\+writer} (std\+::ostream $\ast$s, unsigned int w, unsigned int h)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\hyperlink{class_photo_finish_1_1webp__stream__writer_a758557947da2b769223b4c19f58bf030}{$\sim$webp\+\_\+stream\+\_\+writer} ()
+\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_aafd15e69e86d3e4819eb38baa763854f}{add\+\_\+icc} (\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr} profile)
+\begin{DoxyCompactList}\small\item\em Add an L\+C\+M\+S2 profile to be written. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_adf78aea755773161a6147460ffd6c6cd}{add\+\_\+exif} (const Exiv2\+::\+Exif\+Data \&exif)
+\begin{DoxyCompactList}\small\item\em Add a set of E\+X\+IF tags to be written. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_ad22643d45515cfbae75690571f80e55d}{add\+\_\+xmp} (const Exiv2\+::\+Xmp\+Data \&xmp)
+\begin{DoxyCompactList}\small\item\em Add a set of X\+MP tags to be written. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_ac5303bc270a92455915601648814d087}{write\+\_\+chunk} (const char $\ast$fourcc, const unsigned char $\ast$data, unsigned int length)
+\begin{DoxyCompactList}\small\item\em Write a R\+I\+FF chunk. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_ad5f4e2e62be1f16dd4160bbd8fd2b1cc}{before\+\_\+chunk} (void)
+\begin{DoxyCompactList}\small\item\em Write stuff before a chunk is written. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_a2c820fe74573fec2da615c31d93d495e}{modify\+\_\+chunk} (unsigned char $\ast$data)
+\begin{DoxyCompactList}\small\item\em Modify the current chunk. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_a6f24700d93d1d2d02efad82550b0398b}{after\+\_\+chunk} (void)
+\begin{DoxyCompactList}\small\item\em Write stuff after a chunk has been written. \end{DoxyCompactList}\item 
+void \hyperlink{class_photo_finish_1_1webp__stream__writer_ac31f3881d6e8ce55d58aa0259ab1ac66}{modify\+\_\+vp8x} (unsigned char $\ast$data)
+\item 
+int \hyperlink{class_photo_finish_1_1webp__stream__writer_af78944a649643669197131eb73241cf1}{write} (unsigned char $\ast$data, size\+\_\+t data\+\_\+size)
+\begin{DoxyCompactList}\small\item\em Write a block of data from the encoder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A custom writer for libwebp that writes using a std\+::ostream object. 
+
+This class is so large because libwebp does not handle metadata {\itshape at all}. So we have to keep track of R\+I\+FF chunks as the encoder emits them and insert our own, even modifying one of the chunks (V\+P8X). 
+
+Definition at line 34 of file Web\+P\+\_\+ostream.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_affd26ebc255f3cf910c74cdf577cf3a5}\label{class_photo_finish_1_1webp__stream__writer_affd26ebc255f3cf910c74cdf577cf3a5}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!webp\+\_\+stream\+\_\+writer@{webp\+\_\+stream\+\_\+writer}}
+\index{webp\+\_\+stream\+\_\+writer@{webp\+\_\+stream\+\_\+writer}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{webp\+\_\+stream\+\_\+writer()}{webp\_stream\_writer()}}
+{\footnotesize\ttfamily Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::webp\+\_\+stream\+\_\+writer (\begin{DoxyParamCaption}\item[{std\+::ostream $\ast$}]{s,  }\item[{unsigned int}]{w,  }\item[{unsigned int}]{h }\end{DoxyParamCaption})}
+
+
+
+Constructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & Pointer to a std\+::ostream derivative. \\
+\hline
+{\em w,h} & Width and height of the image \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 24 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_a758557947da2b769223b4c19f58bf030}\label{class_photo_finish_1_1webp__stream__writer_a758557947da2b769223b4c19f58bf030}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!````~webp\+\_\+stream\+\_\+writer@{$\sim$webp\+\_\+stream\+\_\+writer}}
+\index{````~webp\+\_\+stream\+\_\+writer@{$\sim$webp\+\_\+stream\+\_\+writer}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{$\sim$webp\+\_\+stream\+\_\+writer()}{~webp\_stream\_writer()}}
+{\footnotesize\ttfamily Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::$\sim$webp\+\_\+stream\+\_\+writer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 32 of file Web\+P\+\_\+ostream.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_adf78aea755773161a6147460ffd6c6cd}\label{class_photo_finish_1_1webp__stream__writer_adf78aea755773161a6147460ffd6c6cd}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!add\+\_\+exif@{add\+\_\+exif}}
+\index{add\+\_\+exif@{add\+\_\+exif}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{add\+\_\+exif()}{add\_exif()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::add\+\_\+exif (\begin{DoxyParamCaption}\item[{const Exiv2\+::\+Exif\+Data \&}]{exif }\end{DoxyParamCaption})}
+
+
+
+Add a set of E\+X\+IF tags to be written. 
+
+
+
+Definition at line 48 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_aafd15e69e86d3e4819eb38baa763854f}\label{class_photo_finish_1_1webp__stream__writer_aafd15e69e86d3e4819eb38baa763854f}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!add\+\_\+icc@{add\+\_\+icc}}
+\index{add\+\_\+icc@{add\+\_\+icc}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{add\+\_\+icc()}{add\_icc()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::add\+\_\+icc (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{C\+M\+S\+::\+Profile\+::ptr}}]{profile }\end{DoxyParamCaption})}
+
+
+
+Add an L\+C\+M\+S2 profile to be written. 
+
+
+
+Definition at line 42 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_ad22643d45515cfbae75690571f80e55d}\label{class_photo_finish_1_1webp__stream__writer_ad22643d45515cfbae75690571f80e55d}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!add\+\_\+xmp@{add\+\_\+xmp}}
+\index{add\+\_\+xmp@{add\+\_\+xmp}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{add\+\_\+xmp()}{add\_xmp()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::add\+\_\+xmp (\begin{DoxyParamCaption}\item[{const Exiv2\+::\+Xmp\+Data \&}]{xmp }\end{DoxyParamCaption})}
+
+
+
+Add a set of X\+MP tags to be written. 
+
+
+
+Definition at line 60 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_a6f24700d93d1d2d02efad82550b0398b}\label{class_photo_finish_1_1webp__stream__writer_a6f24700d93d1d2d02efad82550b0398b}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!after\+\_\+chunk@{after\+\_\+chunk}}
+\index{after\+\_\+chunk@{after\+\_\+chunk}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{after\+\_\+chunk()}{after\_chunk()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::after\+\_\+chunk (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Write stuff after a chunk has been written. 
+
+
+
+Definition at line 107 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_ad5f4e2e62be1f16dd4160bbd8fd2b1cc}\label{class_photo_finish_1_1webp__stream__writer_ad5f4e2e62be1f16dd4160bbd8fd2b1cc}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!before\+\_\+chunk@{before\+\_\+chunk}}
+\index{before\+\_\+chunk@{before\+\_\+chunk}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{before\+\_\+chunk()}{before\_chunk()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::before\+\_\+chunk (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Write stuff before a chunk is written. 
+
+
+
+Definition at line 81 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_a2c820fe74573fec2da615c31d93d495e}\label{class_photo_finish_1_1webp__stream__writer_a2c820fe74573fec2da615c31d93d495e}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!modify\+\_\+chunk@{modify\+\_\+chunk}}
+\index{modify\+\_\+chunk@{modify\+\_\+chunk}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{modify\+\_\+chunk()}{modify\_chunk()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::modify\+\_\+chunk (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{data }\end{DoxyParamCaption})}
+
+
+
+Modify the current chunk. 
+
+
+
+Definition at line 99 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_ac31f3881d6e8ce55d58aa0259ab1ac66}\label{class_photo_finish_1_1webp__stream__writer_ac31f3881d6e8ce55d58aa0259ab1ac66}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!modify\+\_\+vp8x@{modify\+\_\+vp8x}}
+\index{modify\+\_\+vp8x@{modify\+\_\+vp8x}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{modify\+\_\+vp8x()}{modify\_vp8x()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::modify\+\_\+vp8x (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{data }\end{DoxyParamCaption})}
+
+
+
+Definition at line 124 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_af78944a649643669197131eb73241cf1}\label{class_photo_finish_1_1webp__stream__writer_af78944a649643669197131eb73241cf1}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!write@{write}}
+\index{write@{write}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily int Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::write (\begin{DoxyParamCaption}\item[{unsigned char $\ast$}]{data,  }\item[{size\+\_\+t}]{data\+\_\+size }\end{DoxyParamCaption})}
+
+
+
+Write a block of data from the encoder. 
+
+
+
+Definition at line 136 of file Web\+P\+\_\+ostream.\+cc.
+
+\mbox{\Hypertarget{class_photo_finish_1_1webp__stream__writer_ac5303bc270a92455915601648814d087}\label{class_photo_finish_1_1webp__stream__writer_ac5303bc270a92455915601648814d087}} 
+\index{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}!write\+\_\+chunk@{write\+\_\+chunk}}
+\index{write\+\_\+chunk@{write\+\_\+chunk}!Photo\+Finish\+::webp\+\_\+stream\+\_\+writer@{Photo\+Finish\+::webp\+\_\+stream\+\_\+writer}}
+\subsubsection{\texorpdfstring{write\+\_\+chunk()}{write\_chunk()}}
+{\footnotesize\ttfamily void Photo\+Finish\+::webp\+\_\+stream\+\_\+writer\+::write\+\_\+chunk (\begin{DoxyParamCaption}\item[{const char $\ast$}]{fourcc,  }\item[{const unsigned char $\ast$}]{data,  }\item[{unsigned int}]{length }\end{DoxyParamCaption})}
+
+
+
+Write a R\+I\+FF chunk. 
+
+
+
+Definition at line 71 of file Web\+P\+\_\+ostream.\+cc.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_web_p__ostream_8hh}{Web\+P\+\_\+ostream.\+hh}\item 
+\hyperlink{_web_p__ostream_8cc}{Web\+P\+\_\+ostream.\+cc}\end{DoxyCompactItemize}

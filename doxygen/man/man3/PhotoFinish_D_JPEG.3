@@ -1,0 +1,124 @@
+.TH "PhotoFinish::D_JPEG" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_JPEG \- JPEG parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_JPEG\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBD_JPEG\fP (int q, char h, char v, bool p)"
+.br
+.RI "Constructor\&. "
+.ti -1c
+.RI "void \fBadd_variables\fP (\fBmultihash\fP &vars)"
+.br
+.RI "Set values from a map of 'variables'\&. "
+.ti -1c
+.RI "\fBdefinable\fP< int > \fBquality\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_quality\fP (int q)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::pair< int, int > > \fBsample\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_sample\fP (int h, int v)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBprogressive\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_progressive\fP (bool p=true)"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a \fBD_JPEG\fP record from a YAML file\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+JPEG parameters for destination\&. 
+.PP
+Definition at line 105 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_JPEG::D_JPEG ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 91 of file Destination_items\&.cc\&.
+.SS "PhotoFinish::D_JPEG::D_JPEG (int q, char h, char v, bool p)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIq\fP Quality 
+.br
+\fIh,v\fP Chroma sampling 
+.br
+\fIp\fP Progressive 
+.RE
+.PP
+
+.PP
+Definition at line 94 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "void PhotoFinish::D_JPEG::add_variables (\fBmultihash\fP & vars)"
+
+.PP
+Set values from a map of 'variables'\&. 
+.PP
+Definition at line 100 of file Destination_items\&.cc\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::D_JPEG::progressive (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 132 of file Destination_items\&.hh\&.
+.SS "\fBdefinable\fP<int> PhotoFinish::D_JPEG::quality (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 126 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JPEG::read_config (const YAML::Node & node)"
+
+.PP
+Read a \fBD_JPEG\fP record from a YAML file\&. 
+.PP
+Definition at line 131 of file Destination_items\&.cc\&.
+.SS "\fBdefinable\fP< std::pair<int, int> > PhotoFinish::D_JPEG::sample (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 129 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JPEG::set_progressive (bool p = \fCtrue\fP)\fC [inline]\fP"
+
+.PP
+Definition at line 133 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JPEG::set_quality (int q)\fC [inline]\fP"
+
+.PP
+Definition at line 127 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_JPEG::set_sample (int h, int v)\fC [inline]\fP"
+
+.PP
+Definition at line 130 of file Destination_items\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

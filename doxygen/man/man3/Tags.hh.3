@@ -1,0 +1,75 @@
+.TH "Tags.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Tags.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <exiv2/exiv2\&.hpp>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/lexical_cast\&.hpp>\fP
+.br
+\fC#include <iostream>\fP
+.br
+\fC#include <string>\fP
+.br
+\fC#include <map>\fP
+.br
+\fC#include <memory>\fP
+.br
+\fC#include <list>\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'Destination\&.hh'\fP
+.br
+
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBPhotoFinish::Tags\fP"
+.br
+.RI "Reads and holds tag information\&. "
+.in -1c
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBStrPair\fP(s,  v)   std::make_pair<std::string, std::string>(s, v)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef std::vector< std::pair< std::string, std::string > > \fBPhotoFinish::subst_table\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "template<typename Num_type , typename R_type > Exiv2::ValueType< R_type > & \fBPhotoFinish::closest_Rational\fP (double value)"
+.br
+.RI "Find a close rational fraction given a floating-point value\&. "
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define StrPair(s, v)   std::make_pair<std::string, std::string>(s, v)"
+
+.PP
+Definition at line 38 of file Tags\&.hh\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

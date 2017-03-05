@@ -1,0 +1,599 @@
+.TH "CMS::Format" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CMS::Format \- Wrap LCMS2's pixel format\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <CMS\&.hh>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFormat\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBoperator cmsUInt32Number\fP () const"
+.br
+.RI "Cast to an unsigned int for direct use with LCMS2\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_8bit\fP (void)"
+.br
+.RI "Set to 8 bit bytes per channel\&. "
+.ti -1c
+.RI "bool \fBis_8bit\fP (void) const"
+.br
+.RI "Is the format 8-bits per channel? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_16bit\fP (void)"
+.br
+.RI "Set to 16 bits per channel\&. "
+.ti -1c
+.RI "bool \fBis_16bit\fP (void) const"
+.br
+.RI "Is the format 16-bits (integer) per channel? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_32bit\fP (void)"
+.br
+.RI "Set to 32 bits per channel\&. "
+.ti -1c
+.RI "bool \fBis_32bit\fP (void) const"
+.br
+.RI "Is the format 32-bits (integer) per channel? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_half\fP (void)"
+.br
+.RI "Set to 16 bit half-precision floating point values per channel\&. "
+.ti -1c
+.RI "bool \fBis_half\fP (void) const"
+.br
+.RI "Is the format a half-precision floating point value(s) per channel? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_float\fP (void)"
+.br
+.RI "Set to 32 bit single-precision floating point values per channel\&. "
+.ti -1c
+.RI "bool \fBis_float\fP (void) const"
+.br
+.RI "Is the format a single-precision floating point value(s) per channel? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_double\fP (void)"
+.br
+.RI "Set to 64 bit double-precision floating point value(s) per channel\&. "
+.ti -1c
+.RI "bool \fBis_double\fP (void) const"
+.br
+.RI "Is the format a double-precision floating point value(s) per channel? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_channel_type\fP (unsigned char bytes, bool fp=false)"
+.br
+.RI "Set the channel type (bytes and float flag) "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_channel_type\fP (const \fBFormat\fP &other)"
+.br
+.RI "Set the channel type (bytes and float flag) from another \fBFormat\fP object\&. "
+.ti -1c
+.RI "template<typename P > \fBFormat\fP & \fBset_channel_type\fP (void)"
+.br
+.RI "Set the channel type (bytes and float flag) from the template type\&. "
+.ti -1c
+.RI "bool \fBis_integer\fP (void) const"
+.br
+.RI "Is the format integer? "
+.ti -1c
+.RI "bool \fBis_fp\fP (void) const"
+.br
+.RI "Is the format floating point? "
+.ti -1c
+.RI "bool \fBis_optimised\fP (void) const"
+.br
+.ti -1c
+.RI "unsigned int \fBchannels\fP (void) const"
+.br
+.RI "Get the number of channels\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_extra_channels\fP (unsigned int e)"
+.br
+.RI "Set the number of 'extra' channels e\&.g alpha\&. "
+.ti -1c
+.RI "unsigned int \fBextra_channels\fP (void) const"
+.br
+.RI "Get the number of 'extra' channels e\&.g alpha\&. "
+.ti -1c
+.RI "unsigned int \fBtotal_channels\fP (void) const"
+.br
+.RI "Get the total number of channels i\&.e \fBchannels()\fP + \fBextra_channels()\fP "
+.ti -1c
+.RI "unsigned int \fBbytes_per_channel\fP (void) const"
+.br
+.ti -1c
+.RI "unsigned int \fBbytes_per_pixel\fP (void) const"
+.br
+.ti -1c
+.RI "\fBFormat\fP & \fBset_swap\fP (bool s=true)"
+.br
+.RI "Set the format as being swapped e\&.g BGR\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBunset_swap\fP (void)"
+.br
+.RI "Set the format as not being swapped e\&.g RGB\&. "
+.ti -1c
+.RI "bool \fBis_swapped\fP (void) const"
+.br
+.RI "Is the channel order swapped? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_endianswap\fP (bool e=true)"
+.br
+.ti -1c
+.RI "\fBFormat\fP & \fBunset_endianswap\fP (void)"
+.br
+.ti -1c
+.RI "bool \fBis_endianswapped\fP (void) const"
+.br
+.ti -1c
+.RI "\fBFormat\fP & \fBset_swapfirst\fP (bool f=true)"
+.br
+.ti -1c
+.RI "\fBFormat\fP & \fBunset_swapfirst\fP (void)"
+.br
+.ti -1c
+.RI "bool \fBis_swappedfirst\fP (void) const"
+.br
+.ti -1c
+.RI "\fBFormat\fP & \fBset_planar\fP (bool p=true)"
+.br
+.RI "Set the format to be planar\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_packed\fP (void)"
+.br
+.RI "Set the format to be packed\&. "
+.ti -1c
+.RI "bool \fBis_planar\fP (void) const"
+.br
+.RI "Is the format planar? "
+.ti -1c
+.RI "bool \fBis_packed\fP (void) const"
+.br
+.RI "Is the format packed? "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_vanilla\fP (bool v=true)"
+.br
+.RI "Set the flavour to 'vanilla' i\&.e minimum value is white\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_chocolate\fP (void)"
+.br
+.RI "Set the flavour to 'chocolate' i\&.e minimum value is black\&. "
+.ti -1c
+.RI "bool \fBis_vanilla\fP (void) const"
+.br
+.RI "Is the flavour 'vanilla'? i\&.e minimum value is white\&. "
+.ti -1c
+.RI "bool \fBis_chocolate\fP (void) const"
+.br
+.RI "Is the flavour 'chocolate'? i\&.e minimum value is black\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_colour_model\fP (const \fBColourModel\fP cm, unsigned int \fBchannels\fP=0)"
+.br
+.ti -1c
+.RI "\fBColourModel\fP \fBcolour_model\fP (void) const"
+.br
+.RI "Get the colour model of the pixel format\&. "
+.ti -1c
+.RI "\fBFormat\fP & \fBset_premult_alpha\fP (bool pa=true)"
+.br
+.ti -1c
+.RI "\fBFormat\fP & \fBunset_premult_alpha\fP ()"
+.br
+.ti -1c
+.RI "bool \fBis_premult_alpha\fP (void) const"
+.br
+.ti -1c
+.RI "template<typename T > T \fBscaleval\fP (void)"
+.br
+.RI "Get the maximum value used/supported by this format\&. "
+.ti -1c
+.RI "template<> \fBFormat\fP & \fBset_channel_type\fP (void)"
+.br
+.ti -1c
+.RI "template<> \fBFormat\fP & \fBset_channel_type\fP (void)"
+.br
+.ti -1c
+.RI "template<> \fBFormat\fP & \fBset_channel_type\fP (void)"
+.br
+.ti -1c
+.RI "template<> \fBFormat\fP & \fBset_channel_type\fP (void)"
+.br
+.ti -1c
+.RI "template<> \fBFormat\fP & \fBset_channel_type\fP (void)"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBFormat\fP \fBGrey8\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBFormat\fP \fBGrey16\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBFormat\fP \fBRGB8\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBFormat\fP \fBRGB16\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBFormat\fP \fBCMYK8\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBFormat\fP \fBLabFloat\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBFormat\fP \fBLabDouble\fP (void)"
+.br
+.RI "Named constructor\&. "
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fBTransform\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Wrap LCMS2's pixel format\&. 
+.PP
+Definition at line 175 of file CMS\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "CMS::Format::Format ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 274 of file CMS\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "unsigned int CMS::Format::bytes_per_channel (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 279 of file CMS\&.hh\&.
+.SS "unsigned int CMS::Format::bytes_per_pixel (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 281 of file CMS\&.hh\&.
+.SS "unsigned int CMS::Format::channels (void) const\fC [inline]\fP"
+
+.PP
+Get the number of channels\&. 
+.PP
+Definition at line 268 of file CMS\&.hh\&.
+.SS "\fBFormat\fP CMS::Format::CMYK8 (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 296 of file CMS\&.cc\&.
+.SS "\fBColourModel\fP CMS::Format::colour_model (void) const\fC [inline]\fP"
+
+.PP
+Get the colour model of the pixel format\&. 
+.PP
+Definition at line 334 of file CMS\&.hh\&.
+.SS "unsigned int CMS::Format::extra_channels (void) const\fC [inline]\fP"
+
+.PP
+Get the number of 'extra' channels e\&.g alpha\&. 
+.PP
+Definition at line 274 of file CMS\&.hh\&.
+.SS "\fBFormat\fP CMS::Format::Grey16 (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 284 of file CMS\&.cc\&.
+.SS "\fBFormat\fP CMS::Format::Grey8 (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 280 of file CMS\&.cc\&.
+.SS "bool CMS::Format::is_16bit (void) const\fC [inline]\fP"
+
+.PP
+Is the format 16-bits (integer) per channel? 
+.PP
+Definition at line 223 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_32bit (void) const\fC [inline]\fP"
+
+.PP
+Is the format 32-bits (integer) per channel? 
+.PP
+Definition at line 229 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_8bit (void) const\fC [inline]\fP"
+
+.PP
+Is the format 8-bits per channel? 
+.PP
+Definition at line 217 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_chocolate (void) const\fC [inline]\fP"
+
+.PP
+Is the flavour 'chocolate'? i\&.e minimum value is black\&. 
+.PP
+Definition at line 327 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_double (void) const\fC [inline]\fP"
+
+.PP
+Is the format a double-precision floating point value(s) per channel? 
+.PP
+Definition at line 247 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_endianswapped (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 297 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_float (void) const\fC [inline]\fP"
+
+.PP
+Is the format a single-precision floating point value(s) per channel? 
+.PP
+Definition at line 241 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_fp (void) const\fC [inline]\fP"
+
+.PP
+Is the format floating point? 
+.PP
+Definition at line 263 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_half (void) const\fC [inline]\fP"
+
+.PP
+Is the format a half-precision floating point value(s) per channel? 
+.PP
+Definition at line 235 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_integer (void) const\fC [inline]\fP"
+
+.PP
+Is the format integer? 
+.PP
+Definition at line 260 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_optimised (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 265 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_packed (void) const\fC [inline]\fP"
+
+.PP
+Is the format packed? 
+.PP
+Definition at line 315 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_planar (void) const\fC [inline]\fP"
+
+.PP
+Is the format planar? 
+.PP
+Definition at line 312 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_premult_alpha (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 340 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_swapped (void) const\fC [inline]\fP"
+
+.PP
+Is the channel order swapped? 
+.PP
+Definition at line 290 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_swappedfirst (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 303 of file CMS\&.hh\&.
+.SS "bool CMS::Format::is_vanilla (void) const\fC [inline]\fP"
+
+.PP
+Is the flavour 'vanilla'? i\&.e minimum value is white\&. 
+.PP
+Definition at line 324 of file CMS\&.hh\&.
+.SS "\fBFormat\fP CMS::Format::LabDouble (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 304 of file CMS\&.cc\&.
+.SS "\fBFormat\fP CMS::Format::LabFloat (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 300 of file CMS\&.cc\&.
+.SS "CMS::Format::operator cmsUInt32Number () const\fC [inline]\fP"
+
+.PP
+Cast to an unsigned int for direct use with LCMS2\&. 
+.PP
+Definition at line 190 of file CMS\&.hh\&.
+.SS "\fBFormat\fP CMS::Format::RGB16 (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 292 of file CMS\&.cc\&.
+.SS "\fBFormat\fP CMS::Format::RGB8 (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 288 of file CMS\&.cc\&.
+.SS "template<typename T > T CMS::Format::scaleval (void)\fC [inline]\fP"
+
+.PP
+Get the maximum value used/supported by this format\&. 
+.PP
+Definition at line 344 of file CMS\&.hh\&.
+.SS "\fBFormat\fP & CMS::Format::set_16bit (void)"
+
+.PP
+Set to 16 bits per channel\&. 
+.PP
+Definition at line 328 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_32bit (void)"
+
+.PP
+Set to 32 bits per channel\&. 
+.PP
+Definition at line 335 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_8bit (void)"
+
+.PP
+Set to 8 bit bytes per channel\&. 
+.PP
+Definition at line 321 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_channel_type (unsigned char bytes, bool fp = \fCfalse\fP)"
+
+.PP
+Set the channel type (bytes and float flag) 
+.PP
+Definition at line 366 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_channel_type (const \fBFormat\fP & other)"
+
+.PP
+Set the channel type (bytes and float flag) from another \fBFormat\fP object\&. 
+.PP
+Definition at line 374 of file CMS\&.cc\&.
+.SS "template<typename P > \fBFormat\fP& CMS::Format::set_channel_type (void)"
+
+.PP
+Set the channel type (bytes and float flag) from the template type\&. 
+.SS "template<> \fBFormat\fP& CMS::Format::set_channel_type (void)\fC [inline]\fP"
+
+.PP
+Definition at line 360 of file CMS\&.hh\&.
+.SS "template<> \fBFormat\fP& CMS::Format::set_channel_type (void)\fC [inline]\fP"
+
+.PP
+Definition at line 363 of file CMS\&.hh\&.
+.SS "template<> \fBFormat\fP& CMS::Format::set_channel_type (void)\fC [inline]\fP"
+
+.PP
+Definition at line 366 of file CMS\&.hh\&.
+.SS "template<> \fBFormat\fP& CMS::Format::set_channel_type (void)\fC [inline]\fP"
+
+.PP
+Definition at line 369 of file CMS\&.hh\&.
+.SS "template<> \fBFormat\fP& CMS::Format::set_channel_type (void)\fC [inline]\fP"
+
+.PP
+Definition at line 372 of file CMS\&.hh\&.
+.SS "\fBFormat\fP & CMS::Format::set_chocolate (void)"
+
+.PP
+Set the flavour to 'chocolate' i\&.e minimum value is black\&. 
+.PP
+Definition at line 438 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_colour_model (const \fBColourModel\fP cm, unsigned int channels = \fC0\fP)"
+Set the colour model and number of channels 'channels' is only used if the colour model is unknown 
+.PP
+Definition at line 443 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_double (void)"
+
+.PP
+Set to 64 bit double-precision floating point value(s) per channel\&. 
+.PP
+Definition at line 358 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_endianswap (bool e = \fCtrue\fP)"
+
+.PP
+Definition at line 399 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_extra_channels (unsigned int e)"
+
+.PP
+Set the number of 'extra' channels e\&.g alpha\&. 
+.PP
+Definition at line 382 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_float (void)"
+
+.PP
+Set to 32 bit single-precision floating point values per channel\&. 
+.PP
+Definition at line 350 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_half (void)"
+
+.PP
+Set to 16 bit half-precision floating point values per channel\&. 
+.PP
+Definition at line 342 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_packed (void)"
+
+.PP
+Set the format to be packed\&. 
+.PP
+Definition at line 427 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_planar (bool p = \fCtrue\fP)"
+
+.PP
+Set the format to be planar\&. 
+.PP
+Definition at line 421 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_premult_alpha (bool pa = \fCtrue\fP)"
+
+.PP
+Definition at line 486 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_swap (bool s = \fCtrue\fP)"
+
+.PP
+Set the format as being swapped e\&.g BGR\&. 
+.PP
+Definition at line 388 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_swapfirst (bool f = \fCtrue\fP)"
+
+.PP
+Definition at line 410 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::set_vanilla (bool v = \fCtrue\fP)"
+
+.PP
+Set the flavour to 'vanilla' i\&.e minimum value is white\&. 
+.PP
+Definition at line 432 of file CMS\&.cc\&.
+.SS "unsigned int CMS::Format::total_channels (void) const\fC [inline]\fP"
+
+.PP
+Get the total number of channels i\&.e \fBchannels()\fP + \fBextra_channels()\fP 
+.PP
+Definition at line 277 of file CMS\&.hh\&.
+.SS "\fBFormat\fP & CMS::Format::unset_endianswap (void)"
+
+.PP
+Definition at line 405 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::unset_premult_alpha ()"
+
+.PP
+Definition at line 491 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::unset_swap (void)"
+
+.PP
+Set the format as not being swapped e\&.g RGB\&. 
+.PP
+Definition at line 394 of file CMS\&.cc\&.
+.SS "\fBFormat\fP & CMS::Format::unset_swapfirst (void)"
+
+.PP
+Definition at line 416 of file CMS\&.cc\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class \fBTransform\fP\fC [friend]\fP"
+
+.PP
+Definition at line 183 of file CMS\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

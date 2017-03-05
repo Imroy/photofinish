@@ -1,0 +1,60 @@
+.TH "JXRreader.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+JXRreader.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <JXRGlue\&.h>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/filesystem/fstream\&.hpp>\fP
+.br
+\fC#include 'ImageFile\&.hh'\fP
+.br
+\fC#include 'Image\&.hh'\fP
+.br
+\fC#include 'JXR\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBjxr_metadata_size\fP(decoder,  name)   decoder\->WMP\&.wmiDEMisc\&.u##name##ByteCount"
+.br
+.ti -1c
+.RI "#define \fBjxr_metadata_data\fP(decoder,  name,  data)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define jxr_metadata_data(decoder, name, data)"
+\fBValue:\fP
+.PP
+.nf
+struct WMPStream* s = decoder->pStream;             \
+    size_t curr_pos;                                                    \
+    JXRcheck(s->GetPos(s, &curr_pos));                          \
+    JXRcheck(s->SetPos(s, decoder->WMP\&.wmiDEMisc\&.u##name##Offset));       \
+    JXRcheck(s->Read(s, data, decoder->WMP\&.wmiDEMisc\&.u##name##ByteCount)); \
+    JXRcheck(s->SetPos(s, curr_pos));
+.fi
+.PP
+Definition at line 36 of file JXRreader\&.cc\&.
+.SS "#define jxr_metadata_size(decoder, name)   decoder\->WMP\&.wmiDEMisc\&.u##name##ByteCount"
+
+.PP
+Definition at line 35 of file JXRreader\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

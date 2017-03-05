@@ -1,0 +1,65 @@
+.TH "PhotoFinish::D_sharpen" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::D_sharpen \- Sharpen parameters for destination\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination_items\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Role_Definable\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBD_sharpen\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBdefinable\fP< double > \fBradius\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< double > \fBsigma\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a \fBD_sharpen\fP record from a YAML file\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+Sharpen parameters for destination\&. 
+.PP
+Definition at line 45 of file Destination_items\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::D_sharpen::D_sharpen ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 32 of file Destination_items\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBdefinable\fP<double> PhotoFinish::D_sharpen::radius (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 53 of file Destination_items\&.hh\&.
+.SS "void PhotoFinish::D_sharpen::read_config (const YAML::Node & node)"
+
+.PP
+Read a \fBD_sharpen\fP record from a YAML file\&. 
+.PP
+Definition at line 36 of file Destination_items\&.cc\&.
+.SS "\fBdefinable\fP<double> PhotoFinish::D_sharpen::sigma (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 54 of file Destination_items\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

@@ -1,0 +1,212 @@
+\hypertarget{class_c_m_s_1_1_transform}{}\section{C\+MS\+:\+:Transform Class Reference}
+\label{class_c_m_s_1_1_transform}\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+
+
+Wrap L\+C\+M\+S2\textquotesingle{}s transform object.  
+
+
+
+
+{\ttfamily \#include $<$C\+M\+S.\+hh$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef std\+::shared\+\_\+ptr$<$ \hyperlink{class_c_m_s_1_1_transform}{Transform} $>$ \hyperlink{class_c_m_s_1_1_transform_ac0fcc21ddc52273f9ce95dba97ef1116}{ptr}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_m_s_1_1_transform_a55f27c5ecf8005a39792686930395827}{Transform} (\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} input, const \hyperlink{class_c_m_s_1_1_format}{Format} \&informat, \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} output, const \hyperlink{class_c_m_s_1_1_format}{Format} \&outformat, \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent} intent, cms\+U\+Int32\+Number flags)
+\begin{DoxyCompactList}\small\item\em Construct a transform from two profiles and formats. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_transform_a57aedf6fd469c51b245a28afb36f8eaf}{Transform} (std\+::vector$<$ \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} $>$ profile, const \hyperlink{class_c_m_s_1_1_format}{Format} \&informat, const \hyperlink{class_c_m_s_1_1_format}{Format} \&outformat, \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent} intent, cms\+U\+Int32\+Number flags)
+\begin{DoxyCompactList}\small\item\em Construct a transform from multiple profiles. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_transform_ac76565923f8999c82fa8f1f65ad2e43d}{$\sim$\+Transform} ()
+\begin{DoxyCompactList}\small\item\em Deconstructor. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_transform_a2ae2120950c35eccd3dd9006d39b0049}{input\+\_\+format} (void) const
+\begin{DoxyCompactList}\small\item\em Get the input format. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_format}{Format} \hyperlink{class_c_m_s_1_1_transform_af907adbba92096714d54d99e9a99c53d}{output\+\_\+format} (void) const
+\begin{DoxyCompactList}\small\item\em Get the output format. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_transform_a1bb15efea35b385a09e84e5a38f87a3f}{change\+\_\+formats} (const \hyperlink{class_c_m_s_1_1_format}{Format} \&informat, const \hyperlink{class_c_m_s_1_1_format}{Format} \&outformat)
+\begin{DoxyCompactList}\small\item\em Change the input and output formats. \end{DoxyCompactList}\item 
+\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} \hyperlink{class_c_m_s_1_1_transform_ac8998c2530857d890e77ada564fec20a}{device\+\_\+link} (double version, cms\+U\+Int32\+Number flags) const
+\begin{DoxyCompactList}\small\item\em Create a device link profile from this transform. \end{DoxyCompactList}\item 
+void \hyperlink{class_c_m_s_1_1_transform_a8e86a3c86ac37b272bac946667abeb8d}{transform\+\_\+buffer} (const unsigned char $\ast$input, unsigned char $\ast$output, cms\+U\+Int32\+Number size) const
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_c_m_s_1_1_transform_ac0fcc21ddc52273f9ce95dba97ef1116}{ptr} \hyperlink{class_c_m_s_1_1_transform_ab67f92614a6ba25d1cc22c11d14f3c66}{Proofing} (\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} input, const \hyperlink{class_c_m_s_1_1_format}{Format} \&informat, \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} output, const \hyperlink{class_c_m_s_1_1_format}{Format} \&outformat, \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} proofing, \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent} intent, \hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent} proofing\+\_\+intent, cms\+U\+Int32\+Number flags)
+\begin{DoxyCompactList}\small\item\em Named constructor for creating a proofing transform. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{class_c_m_s_1_1_transform_aaeda30953f033efa311d71a812180996}{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Transform $>$}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Wrap L\+C\+M\+S2\textquotesingle{}s transform object. 
+
+Definition at line 397 of file C\+M\+S.\+hh.
+
+
+
+\subsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_ac0fcc21ddc52273f9ce95dba97ef1116}\label{class_c_m_s_1_1_transform_ac0fcc21ddc52273f9ce95dba97ef1116}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!ptr@{ptr}}
+\index{ptr@{ptr}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{ptr}{ptr}}
+{\footnotesize\ttfamily typedef std\+::shared\+\_\+ptr$<$\hyperlink{class_c_m_s_1_1_transform}{Transform}$>$ \hyperlink{class_c_m_s_1_1_transform_ac0fcc21ddc52273f9ce95dba97ef1116}{C\+M\+S\+::\+Transform\+::ptr}}
+
+
+
+Definition at line 421 of file C\+M\+S.\+hh.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_a55f27c5ecf8005a39792686930395827}\label{class_c_m_s_1_1_transform_a55f27c5ecf8005a39792686930395827}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!Transform@{Transform}}
+\index{Transform@{Transform}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{Transform()}{Transform()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Transform\+::\+Transform (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr}}]{input,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{informat,  }\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr}}]{output,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{outformat,  }\item[{\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent}}]{intent,  }\item[{cms\+U\+Int32\+Number}]{flags }\end{DoxyParamCaption})}
+
+
+
+Construct a transform from two profiles and formats. 
+
+
+
+Definition at line 545 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_a57aedf6fd469c51b245a28afb36f8eaf}\label{class_c_m_s_1_1_transform_a57aedf6fd469c51b245a28afb36f8eaf}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!Transform@{Transform}}
+\index{Transform@{Transform}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{Transform()}{Transform()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Transform\+::\+Transform (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} $>$}]{profile,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{informat,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{outformat,  }\item[{\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent}}]{intent,  }\item[{cms\+U\+Int32\+Number}]{flags }\end{DoxyParamCaption})}
+
+
+
+Construct a transform from multiple profiles. 
+
+
+
+Definition at line 554 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_ac76565923f8999c82fa8f1f65ad2e43d}\label{class_c_m_s_1_1_transform_ac76565923f8999c82fa8f1f65ad2e43d}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!````~Transform@{$\sim$\+Transform}}
+\index{````~Transform@{$\sim$\+Transform}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{$\sim$\+Transform()}{~Transform()}}
+{\footnotesize\ttfamily C\+M\+S\+::\+Transform\+::$\sim$\+Transform (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Deconstructor. 
+
+
+
+Definition at line 561 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_a1bb15efea35b385a09e84e5a38f87a3f}\label{class_c_m_s_1_1_transform_a1bb15efea35b385a09e84e5a38f87a3f}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!change\+\_\+formats@{change\+\_\+formats}}
+\index{change\+\_\+formats@{change\+\_\+formats}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{change\+\_\+formats()}{change\_formats()}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Transform\+::change\+\_\+formats (\begin{DoxyParamCaption}\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{informat,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{outformat }\end{DoxyParamCaption})}
+
+
+
+Change the input and output formats. 
+
+
+
+Definition at line 584 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_ac8998c2530857d890e77ada564fec20a}\label{class_c_m_s_1_1_transform_ac8998c2530857d890e77ada564fec20a}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!device\+\_\+link@{device\+\_\+link}}
+\index{device\+\_\+link@{device\+\_\+link}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{device\+\_\+link()}{device\_link()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr} C\+M\+S\+::\+Transform\+::device\+\_\+link (\begin{DoxyParamCaption}\item[{double}]{version,  }\item[{cms\+U\+Int32\+Number}]{flags }\end{DoxyParamCaption}) const}
+
+
+
+Create a device link profile from this transform. 
+
+
+
+Definition at line 588 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_a2ae2120950c35eccd3dd9006d39b0049}\label{class_c_m_s_1_1_transform_a2ae2120950c35eccd3dd9006d39b0049}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!input\+\_\+format@{input\+\_\+format}}
+\index{input\+\_\+format@{input\+\_\+format}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{input\+\_\+format()}{input\_format()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Transform\+::input\+\_\+format (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Get the input format. 
+
+
+
+Definition at line 576 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_af907adbba92096714d54d99e9a99c53d}\label{class_c_m_s_1_1_transform_af907adbba92096714d54d99e9a99c53d}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!output\+\_\+format@{output\+\_\+format}}
+\index{output\+\_\+format@{output\+\_\+format}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{output\+\_\+format()}{output\_format()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_format}{Format} C\+M\+S\+::\+Transform\+::output\+\_\+format (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption}) const}
+
+
+
+Get the output format. 
+
+
+
+Definition at line 580 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_ab67f92614a6ba25d1cc22c11d14f3c66}\label{class_c_m_s_1_1_transform_ab67f92614a6ba25d1cc22c11d14f3c66}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!Proofing@{Proofing}}
+\index{Proofing@{Proofing}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{Proofing()}{Proofing()}}
+{\footnotesize\ttfamily \hyperlink{class_c_m_s_1_1_transform_ac0fcc21ddc52273f9ce95dba97ef1116}{Transform\+::ptr} C\+M\+S\+::\+Transform\+::\+Proofing (\begin{DoxyParamCaption}\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr}}]{input,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{informat,  }\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr}}]{output,  }\item[{const \hyperlink{class_c_m_s_1_1_format}{Format} \&}]{outformat,  }\item[{\hyperlink{class_c_m_s_1_1_profile_a7d5a80e1317d17dbfdf5ae69820ab08b}{Profile\+::ptr}}]{proofing,  }\item[{\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent}}]{intent,  }\item[{\hyperlink{namespace_c_m_s_aabe6afbe3c2cd6188befc3096f1ea069}{Intent}}]{proofing\+\_\+intent,  }\item[{cms\+U\+Int32\+Number}]{flags }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Named constructor for creating a proofing transform. 
+
+
+
+Definition at line 565 of file C\+M\+S.\+cc.
+
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_a8e86a3c86ac37b272bac946667abeb8d}\label{class_c_m_s_1_1_transform_a8e86a3c86ac37b272bac946667abeb8d}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!transform\+\_\+buffer@{transform\+\_\+buffer}}
+\index{transform\+\_\+buffer@{transform\+\_\+buffer}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{transform\+\_\+buffer()}{transform\_buffer()}}
+{\footnotesize\ttfamily void C\+M\+S\+::\+Transform\+::transform\+\_\+buffer (\begin{DoxyParamCaption}\item[{const unsigned char $\ast$}]{input,  }\item[{unsigned char $\ast$}]{output,  }\item[{cms\+U\+Int32\+Number}]{size }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 592 of file C\+M\+S.\+cc.
+
+
+
+\subsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{class_c_m_s_1_1_transform_aaeda30953f033efa311d71a812180996}\label{class_c_m_s_1_1_transform_aaeda30953f033efa311d71a812180996}} 
+\index{C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}!\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Transform $>$@{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Transform $>$}}
+\index{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Transform $>$@{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Transform $>$}!C\+M\+S\+::\+Transform@{C\+M\+S\+::\+Transform}}
+\subsubsection{\texorpdfstring{\+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ Transform $>$}{\_\_gnu\_cxx::new\_allocator< Transform >}}
+{\footnotesize\ttfamily friend class \+\_\+\+\_\+gnu\+\_\+cxx\+::new\+\_\+allocator$<$ \hyperlink{class_c_m_s_1_1_transform}{Transform} $>$\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 405 of file C\+M\+S.\+hh.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+\hyperlink{_c_m_s_8hh}{C\+M\+S.\+hh}\item 
+\hyperlink{_c_m_s_8cc}{C\+M\+S.\+cc}\end{DoxyCompactItemize}

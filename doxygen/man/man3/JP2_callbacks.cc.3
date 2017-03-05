@@ -1,0 +1,41 @@
+.TH "JP2_callbacks.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+JP2_callbacks.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <iostream>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'Exception\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBPhotoFinish::error_callback\fP (const char *msg, void *client_data)"
+.br
+.RI "Error callback for OpenJPEG - throw a \fBLibraryError\fP exception\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::warning_callback\fP (const char *msg, void *client_data)"
+.br
+.RI "Warning callback for OpenJPEG - print the message to STDERR\&. "
+.ti -1c
+.RI "void \fBPhotoFinish::info_callback\fP (const char *msg, void *client_data)"
+.br
+.RI "Info callback for OpenJPEG - print the indented message to STDERR\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

@@ -1,0 +1,328 @@
+.TH "CMS::Profile" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CMS::Profile \- Wrap LCMS2's cmsHPROFILE\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <CMS\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBProfile\fP > \fBptr\fP"
+.br
+.RI "Shared pointer typedef\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBProfile\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBProfile\fP (const \fBProfile\fP &other)"
+.br
+.RI "Copy constructor\&. "
+.ti -1c
+.RI "\fBProfile\fP (fs::path filepath)"
+.br
+.RI "Constructor from file path\&. "
+.ti -1c
+.RI "\fBProfile\fP (const unsigned char *data, cmsUInt32Number size)"
+.br
+.RI "Constructor from memory\&. "
+.ti -1c
+.RI "\fBProfile\fP (std::istream stream)"
+.br
+.RI "Constructor from an istream\&. "
+.ti -1c
+.RI "\fB~Profile\fP ()"
+.br
+.RI "Deconstructor\&. "
+.ti -1c
+.RI "\fBoperator cmsHPROFILE\fP () const"
+.br
+.RI "Cast to a profile handle for direct use with LCMS2\&. "
+.ti -1c
+.RI "void \fBset_description\fP (std::string language, std::string country, std::string text)"
+.br
+.RI "Set the description tag\&. "
+.ti -1c
+.RI "void \fBset_description\fP (std::string language, std::string country, std::wstring text)"
+.br
+.RI "Set the description tag with a wide string\&. "
+.ti -1c
+.RI "std::string \fBdescription\fP (std::string language, std::string country) const"
+.br
+.RI "Get the description tag\&. "
+.ti -1c
+.RI "std::wstring \fBdescription_wide\fP (std::string language, std::string country) const"
+.br
+.RI "Get the description tag in a wide string\&. "
+.ti -1c
+.RI "void \fBset_manufacturer\fP (std::string language, std::string country, std::string text)"
+.br
+.RI "Set the manufacturer tag\&. "
+.ti -1c
+.RI "void \fBset_manufacturer\fP (std::string language, std::string country, std::wstring text)"
+.br
+.RI "Set the manufacturer tag with a wide string\&. "
+.ti -1c
+.RI "std::string \fBmanufacturer\fP (std::string language, std::string country) const"
+.br
+.RI "Get the manufacturer tag\&. "
+.ti -1c
+.RI "std::wstring \fBmanufacturer_wide\fP (std::string language, std::string country) const"
+.br
+.RI "Get the manufacturer tag in a wide string\&. "
+.ti -1c
+.RI "void \fBset_model\fP (std::string language, std::string country, std::string text)"
+.br
+.RI "Set the model tag\&. "
+.ti -1c
+.RI "void \fBset_model\fP (std::string language, std::string country, std::wstring text)"
+.br
+.RI "Set the model tag with a wide string\&. "
+.ti -1c
+.RI "std::string \fBmodel\fP (std::string language, std::string country) const"
+.br
+.RI "Get the model tag\&. "
+.ti -1c
+.RI "std::wstring \fBmodel_wide\fP (std::string language, std::string country) const"
+.br
+.RI "Get the model tag in a wide string\&. "
+.ti -1c
+.RI "void \fBset_copyright\fP (std::string language, std::string country, std::string text)"
+.br
+.RI "Set the copyright tag\&. "
+.ti -1c
+.RI "void \fBset_copyright\fP (std::string language, std::string country, std::wstring text)"
+.br
+.RI "Set the copyright tag with a wide string\&. "
+.ti -1c
+.RI "std::string \fBcopyright\fP (std::string language, std::string country) const"
+.br
+.RI "Get the copyright tag\&. "
+.ti -1c
+.RI "std::wstring \fBcopyright_wide\fP (std::string language, std::string country) const"
+.br
+.RI "Get the copyright tag in a wide string\&. "
+.ti -1c
+.RI "void \fBsave_to_mem\fP (unsigned char *&dest, unsigned int &size) const"
+.br
+.in -1c
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBptr\fP \fBLab4\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBptr\fP \fBsRGB\fP (void)"
+.br
+.RI "Named constructor\&. "
+.ti -1c
+.RI "static \fBptr\fP \fBsGrey\fP (void)"
+.br
+.RI "Named constructor\&. "
+.in -1c
+.SS "Friends"
+
+.in +1c
+.ti -1c
+.RI "class \fB__gnu_cxx::new_allocator< Profile >\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Wrap LCMS2's cmsHPROFILE\&. 
+.PP
+Definition at line 37 of file CMS\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBProfile\fP> \fBCMS::Profile::ptr\fP"
+
+.PP
+Shared pointer typedef\&. 
+.PP
+Definition at line 81 of file CMS\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "CMS::Profile::Profile ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 34 of file CMS\&.cc\&.
+.SS "CMS::Profile::Profile (const \fBProfile\fP & other)"
+
+.PP
+Copy constructor\&. 
+.PP
+Definition at line 39 of file CMS\&.cc\&.
+.SS "CMS::Profile::Profile (fs::path filepath)"
+
+.PP
+Constructor from file path\&. 
+.PP
+Definition at line 52 of file CMS\&.cc\&.
+.SS "CMS::Profile::Profile (const unsigned char * data, cmsUInt32Number size)"
+
+.PP
+Constructor from memory\&. 
+.PP
+Definition at line 57 of file CMS\&.cc\&.
+.SS "CMS::Profile::Profile (std::istream stream)"
+
+.PP
+Constructor from an istream\&. 
+.PP
+Definition at line 62 of file CMS\&.cc\&.
+.SS "CMS::Profile::~Profile ()"
+
+.PP
+Deconstructor\&. 
+.PP
+Definition at line 67 of file CMS\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "std::string CMS::Profile::copyright (std::string language, std::string country) const"
+
+.PP
+Get the copyright tag\&. 
+.PP
+Definition at line 205 of file CMS\&.cc\&.
+.SS "std::wstring CMS::Profile::copyright_wide (std::string language, std::string country) const"
+
+.PP
+Get the copyright tag in a wide string\&. 
+.PP
+Definition at line 209 of file CMS\&.cc\&.
+.SS "std::string CMS::Profile::description (std::string language, std::string country) const"
+
+.PP
+Get the description tag\&. 
+.PP
+Definition at line 157 of file CMS\&.cc\&.
+.SS "std::wstring CMS::Profile::description_wide (std::string language, std::string country) const"
+
+.PP
+Get the description tag in a wide string\&. 
+.PP
+Definition at line 161 of file CMS\&.cc\&.
+.SS "\fBProfile::ptr\fP CMS::Profile::Lab4 (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 72 of file CMS\&.cc\&.
+.SS "std::string CMS::Profile::manufacturer (std::string language, std::string country) const"
+
+.PP
+Get the manufacturer tag\&. 
+.PP
+Definition at line 173 of file CMS\&.cc\&.
+.SS "std::wstring CMS::Profile::manufacturer_wide (std::string language, std::string country) const"
+
+.PP
+Get the manufacturer tag in a wide string\&. 
+.PP
+Definition at line 177 of file CMS\&.cc\&.
+.SS "std::string CMS::Profile::model (std::string language, std::string country) const"
+
+.PP
+Get the model tag\&. 
+.PP
+Definition at line 189 of file CMS\&.cc\&.
+.SS "std::wstring CMS::Profile::model_wide (std::string language, std::string country) const"
+
+.PP
+Get the model tag in a wide string\&. 
+.PP
+Definition at line 193 of file CMS\&.cc\&.
+.SS "CMS::Profile::operator cmsHPROFILE () const\fC [inline]\fP"
+
+.PP
+Cast to a profile handle for direct use with LCMS2\&. 
+.PP
+Definition at line 78 of file CMS\&.hh\&.
+.SS "void CMS::Profile::save_to_mem (unsigned char *& dest, unsigned int & size) const"
+
+.PP
+Definition at line 213 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_copyright (std::string language, std::string country, std::string text)"
+
+.PP
+Set the copyright tag\&. 
+.PP
+Definition at line 197 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_copyright (std::string language, std::string country, std::wstring text)"
+
+.PP
+Set the copyright tag with a wide string\&. 
+.PP
+Definition at line 201 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_description (std::string language, std::string country, std::string text)"
+
+.PP
+Set the description tag\&. 
+.PP
+Definition at line 149 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_description (std::string language, std::string country, std::wstring text)"
+
+.PP
+Set the description tag with a wide string\&. 
+.PP
+Definition at line 153 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_manufacturer (std::string language, std::string country, std::string text)"
+
+.PP
+Set the manufacturer tag\&. 
+.PP
+Definition at line 165 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_manufacturer (std::string language, std::string country, std::wstring text)"
+
+.PP
+Set the manufacturer tag with a wide string\&. 
+.PP
+Definition at line 169 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_model (std::string language, std::string country, std::string text)"
+
+.PP
+Set the model tag\&. 
+.PP
+Definition at line 181 of file CMS\&.cc\&.
+.SS "void CMS::Profile::set_model (std::string language, std::string country, std::wstring text)"
+
+.PP
+Set the model tag with a wide string\&. 
+.PP
+Definition at line 185 of file CMS\&.cc\&.
+.SS "\fBProfile::ptr\fP CMS::Profile::sGrey (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 80 of file CMS\&.cc\&.
+.SS "\fBProfile::ptr\fP CMS::Profile::sRGB (void)\fC [static]\fP"
+
+.PP
+Named constructor\&. 
+.PP
+Definition at line 76 of file CMS\&.cc\&.
+.SH "Friends And Related Function Documentation"
+.PP 
+.SS "friend class __gnu_cxx::new_allocator< \fBProfile\fP >\fC [friend]\fP"
+
+.PP
+Definition at line 56 of file CMS\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

@@ -1,0 +1,180 @@
+.TH "CMS.cc" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CMS.cc
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <fstream>\fP
+.br
+\fC#include <boost/filesystem\&.hpp>\fP
+.br
+\fC#include <boost/filesystem/fstream\&.hpp>\fP
+.br
+\fC#include <string\&.h>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBCMS\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFLOAT_MASK\fP   (0xffffffff ^ FLOAT_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBOPTIMIZED_MASK\fP   (0xffffffff ^ OPTIMIZED_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBCOLORSPACE_MASK\fP   (0xffffffff ^ COLORSPACE_SH(31))"
+.br
+.ti -1c
+.RI "#define \fBSWAPFIRST_MASK\fP   (0xffffffff ^ SWAPFIRST_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBFLAVOR_MASK\fP   (0xffffffff ^ FLAVOR_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBPLANAR_MASK\fP   (0xffffffff ^ PLANAR_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBENDIAN16_MASK\fP   (0xffffffff ^ ENDIAN16_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBDOSWAP_MASK\fP   (0xffffffff ^ DOSWAP_SH(1))"
+.br
+.ti -1c
+.RI "#define \fBEXTRA_MASK\fP   (0xffffffff ^ EXTRA_SH(7))"
+.br
+.ti -1c
+.RI "#define \fBCHANNELS_MASK\fP   (0xffffffff ^ CHANNELS_SH(15))"
+.br
+.ti -1c
+.RI "#define \fBBYTES_MASK\fP   (0xffffffff ^ BYTES_SH(7))"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "std::ostream & \fBCMS::operator<<\fP (std::ostream &out, ColourModel model)"
+.br
+.ti -1c
+.RI "std::ostream & \fBCMS::operator<<\fP (std::ostream &out, Format f)"
+.br
+.ti -1c
+.RI "cmsIOHANDLER * \fBCMS::OpenIOhandlerFromIStream\fP (std::istream *is)"
+.br
+.ti -1c
+.RI "cmsIOHANDLER * \fBCMS::OpenIOhandlerFromIFStream\fP (fs::path filepath)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::istream_read\fP (cmsIOHANDLER *iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::istream_seek\fP (cmsIOHANDLER *iohandler, cmsUInt32Number offset)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::istream_close\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::istream_tell\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::istream_write\fP (cmsIOHANDLER *iohandler, cmsUInt32Number size, const void *Buffer)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::ostream_read\fP (cmsIOHANDLER *iohandler, void *Buffer, cmsUInt32Number size, cmsUInt32Number count)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::ostream_seek\fP (cmsIOHANDLER *iohandler, cmsUInt32Number offset)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::ostream_close\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsUInt32Number \fBCMS::ostream_tell\fP (cmsIOHANDLER *iohandler)"
+.br
+.ti -1c
+.RI "cmsBool \fBCMS::ostream_write\fP (cmsIOHANDLER *iohandler, cmsUInt32Number size, const void *Buffer)"
+.br
+.ti -1c
+.RI "void \fBlcms2_errorhandler\fP (cmsContext ContextID, cmsUInt32Number ErrorCode, const char *Text)"
+.br
+.RI "Throw a LibraryError exception whem LCMS2 returns an error\&. "
+.ti -1c
+.RI "void \fBlcms2_error_adaptor\fP (void)"
+.br
+.RI "Set up an error handler with LCMS2 that will throw a LibraryError exception\&. "
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define BYTES_MASK   (0xffffffff ^ BYTES_SH(7))"
+
+.PP
+Definition at line 319 of file CMS\&.cc\&.
+.SS "#define CHANNELS_MASK   (0xffffffff ^ CHANNELS_SH(15))"
+
+.PP
+Definition at line 318 of file CMS\&.cc\&.
+.SS "#define COLORSPACE_MASK   (0xffffffff ^ COLORSPACE_SH(31))"
+
+.PP
+Definition at line 311 of file CMS\&.cc\&.
+.SS "#define DOSWAP_MASK   (0xffffffff ^ DOSWAP_SH(1))"
+
+.PP
+Definition at line 316 of file CMS\&.cc\&.
+.SS "#define ENDIAN16_MASK   (0xffffffff ^ ENDIAN16_SH(1))"
+
+.PP
+Definition at line 315 of file CMS\&.cc\&.
+.SS "#define EXTRA_MASK   (0xffffffff ^ EXTRA_SH(7))"
+
+.PP
+Definition at line 317 of file CMS\&.cc\&.
+.SS "#define FLAVOR_MASK   (0xffffffff ^ FLAVOR_SH(1))"
+
+.PP
+Definition at line 313 of file CMS\&.cc\&.
+.SS "#define FLOAT_MASK   (0xffffffff ^ FLOAT_SH(1))"
+
+.PP
+Definition at line 309 of file CMS\&.cc\&.
+.SS "#define OPTIMIZED_MASK   (0xffffffff ^ OPTIMIZED_SH(1))"
+
+.PP
+Definition at line 310 of file CMS\&.cc\&.
+.SS "#define PLANAR_MASK   (0xffffffff ^ PLANAR_SH(1))"
+
+.PP
+Definition at line 314 of file CMS\&.cc\&.
+.SS "#define SWAPFIRST_MASK   (0xffffffff ^ SWAPFIRST_SH(1))"
+
+.PP
+Definition at line 312 of file CMS\&.cc\&.
+.SH "Function Documentation"
+.PP 
+.SS "void lcms2_error_adaptor (void)"
+
+.PP
+Set up an error handler with LCMS2 that will throw a LibraryError exception\&. 
+.PP
+Definition at line 710 of file CMS\&.cc\&.
+.SS "void lcms2_errorhandler (cmsContext ContextID, cmsUInt32Number ErrorCode, const char * Text)"
+
+.PP
+Throw a LibraryError exception whem LCMS2 returns an error\&. 
+.PP
+Definition at line 706 of file CMS\&.cc\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

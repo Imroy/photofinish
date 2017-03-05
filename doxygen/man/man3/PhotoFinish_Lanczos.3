@@ -1,0 +1,66 @@
+.TH "PhotoFinish::Lanczos" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Lanczos \- \fBLanczos\fP filter\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Kernel1Dvar\&.hh>\fP
+.PP
+Inherits \fBPhotoFinish::Kernel1Dvar\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLanczos\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBLanczos\fP (const \fBD_resize\fP &dr, double from_start, double from_size, unsigned int from_max, double to_size)"
+.br
+.RI "Constructor\&. "
+.in -1c
+.SS "Additional Inherited Members"
+.SH "Detailed Description"
+.PP 
+\fBLanczos\fP filter\&. 
+.PP
+Definition at line 101 of file Kernel1Dvar\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Lanczos::Lanczos ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 469 of file Kernel1Dvar\&.cc\&.
+.SS "PhotoFinish::Lanczos::Lanczos (const \fBD_resize\fP & dr, double from_start, double from_size, unsigned int from_max, double to_size)"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdr\fP A \fBD_resize\fP object which will supply our parameters\&. 
+.br
+\fIhoriz\fP Will the kernel run in horizontal (true) or vertical direction? 
+.br
+\fIfrom_start\fP The starting point of the crop/resample 
+.br
+\fIfrom_size\fP The size of the crop/resample 
+.br
+\fIfrom_max\fP The size (maximum dimenstion) of the input 
+.br
+\fIto_size\fP The size of the output 
+.RE
+.PP
+
+.PP
+Definition at line 473 of file Kernel1Dvar\&.cc\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

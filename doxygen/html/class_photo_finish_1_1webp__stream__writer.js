@@ -10,5 +10,5 @@ var class_photo_finish_1_1webp__stream__writer =
     [ "modify_chunk", "class_photo_finish_1_1webp__stream__writer.html#a2c820fe74573fec2da615c31d93d495e", null ],
     [ "modify_vp8x", "class_photo_finish_1_1webp__stream__writer.html#ac31f3881d6e8ce55d58aa0259ab1ac66", null ],
     [ "write", "class_photo_finish_1_1webp__stream__writer.html#af78944a649643669197131eb73241cf1", null ],
-    [ "write_chunk", "class_photo_finish_1_1webp__stream__writer.html#a6cab0d13f686187c6741299f906132ce", null ]
+    [ "write_chunk", "class_photo_finish_1_1webp__stream__writer.html#ac5303bc270a92455915601648814d087", null ]
 ];

@@ -1,0 +1,39 @@
+\hypertarget{_j_p_e_g__iostream_8cc}{}\section{J\+P\+E\+G\+\_\+iostream.\+cc File Reference}
+\label{_j_p_e_g__iostream_8cc}\index{J\+P\+E\+G\+\_\+iostream.\+cc@{J\+P\+E\+G\+\_\+iostream.\+cc}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$jpeglib.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Exception.\+hh\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_photo_finish_1_1jpeg__source__state__t}{Photo\+Finish\+::jpeg\+\_\+source\+\_\+state\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Structure holding information for the istream reader. \end{DoxyCompactList}\item 
+struct \hyperlink{struct_photo_finish_1_1jpeg__destination__state__t}{Photo\+Finish\+::jpeg\+\_\+destination\+\_\+state\+\_\+t}
+\begin{DoxyCompactList}\small\item\em Structure holding information for the ostream writer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \hyperlink{namespace_photo_finish}{Photo\+Finish}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{namespace_photo_finish_a3c02a5bc61e291f156e10ebbb5f544d7}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+init\+\_\+source} (j\+\_\+decompress\+\_\+ptr dinfo)
+\begin{DoxyCompactList}\small\item\em Initialise the istream source manager. \end{DoxyCompactList}\item 
+boolean \hyperlink{namespace_photo_finish_a414435f894edeafcef9bb6f39572ecf8}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+fill\+\_\+input\+\_\+buffer} (j\+\_\+decompress\+\_\+ptr dinfo)
+\begin{DoxyCompactList}\small\item\em Fill the buffer. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a7662e3a9bb30f7ca698a21e4c092da3c}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+skip\+\_\+input\+\_\+data} (j\+\_\+decompress\+\_\+ptr dinfo, long num\+\_\+bytes)
+\begin{DoxyCompactList}\small\item\em Skip some data. \end{DoxyCompactList}\item 
+boolean \hyperlink{namespace_photo_finish_a0a64252810bcf2b15205488328e3e061}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+resync\+\_\+to\+\_\+restart} (j\+\_\+decompress\+\_\+ptr dinfo, int desired)
+\begin{DoxyCompactList}\small\item\em Resync to start?!? \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a3e8433bb81cdaea426e1c9dcf492277f}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+term\+\_\+source} (j\+\_\+decompress\+\_\+ptr dinfo)
+\begin{DoxyCompactList}\small\item\em Terminate the istream source manager. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a18ffc326d36fb31d16a6468b4bfc4715}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+src} (j\+\_\+decompress\+\_\+ptr dinfo, std\+::istream $\ast$is)
+\begin{DoxyCompactList}\small\item\em Set up a \char`\"{}source manager\char`\"{} on the given J\+P\+EG decompression structure to read from an istream. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_aca76b52b734af33c592f35e545811952}{Photo\+Finish\+::jpeg\+\_\+istream\+\_\+src\+\_\+free} (j\+\_\+decompress\+\_\+ptr dinfo)
+\begin{DoxyCompactList}\small\item\em Free the data structures of the istream source manager. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a8d7e2916997da593705b47a56cf33ea2}{Photo\+Finish\+::jpeg\+\_\+ostream\+\_\+dest} (j\+\_\+compress\+\_\+ptr cinfo, std\+::ostream $\ast$os)
+\begin{DoxyCompactList}\small\item\em Setup a \char`\"{}destination manager\char`\"{} on the given J\+P\+EG compression structure to write to an ostream. \end{DoxyCompactList}\item 
+void \hyperlink{namespace_photo_finish_a83c709bef3546d9271d51694a7bdbbab}{Photo\+Finish\+::jpeg\+\_\+ostream\+\_\+dest\+\_\+free} (j\+\_\+compress\+\_\+ptr cinfo)
+\begin{DoxyCompactList}\small\item\em Free the data structures of the ostream destination manager. \end{DoxyCompactList}\end{DoxyCompactItemize}

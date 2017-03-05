@@ -1,0 +1,64 @@
+.TH "JXR.hh" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+JXR.hh
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <JXRGlue\&.h>\fP
+.br
+\fC#include <vector>\fP
+.br
+\fC#include <lcms2\&.h>\fP
+.br
+\fC#include 'CMS\&.hh'\fP
+.br
+
+.SS "Namespaces"
+
+.in +1c
+.ti -1c
+.RI " \fBPhotoFinish\fP"
+.br
+.in -1c
+.SS "Macros"
+
+.in +1c
+.ti -1c
+.RI "#define \fBJXRcheck\fP(exp)   if ((rc = (exp)) < 0) throw LibraryError('jxrlib', std::string(#exp) + ' returned ' + std::to_string(rc))"
+.br
+.ti -1c
+.RI "#define \fBFmtPair\fP(n,  g)   std::make_pair<unsigned int, const PKPixelFormatGUID*>(n, g)"
+.br
+.in -1c
+.SS "Typedefs"
+
+.in +1c
+.ti -1c
+.RI "typedef std::vector< std::pair< unsigned int, const PKPixelFormatGUID * > > \fBPhotoFinish::jxr_format_subst\fP"
+.br
+.in -1c
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "const PKPixelFormatGUID & \fBPhotoFinish::jxr_pixel_format\fP (unsigned int n)"
+.br
+.ti -1c
+.RI "\fBCMS::Format\fP \fBPhotoFinish::jxr_cms_format\fP (const PKPixelFormatGUID &g)"
+.br
+.in -1c
+.SH "Macro Definition Documentation"
+.PP 
+.SS "#define FmtPair(n, g)   std::make_pair<unsigned int, const PKPixelFormatGUID*>(n, g)"
+
+.PP
+Definition at line 36 of file JXR\&.hh\&.
+.SS "#define JXRcheck(exp)   if ((rc = (exp)) < 0) throw LibraryError('jxrlib', std::string(#exp) + ' returned ' + std::to_string(rc))"
+
+.PP
+Definition at line 30 of file JXR\&.hh\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.

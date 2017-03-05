@@ -1,0 +1,368 @@
+.TH "PhotoFinish::Destination" 3 "Mon Mar 6 2017" "Version 1" "Photo Finish" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+PhotoFinish::Destination \- Represents a destination, read from destinations\&.yml\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <Destination\&.hh>\fP
+.SS "Public Types"
+
+.in +1c
+.ti -1c
+.RI "typedef std::shared_ptr< \fBDestination\fP > \fBptr\fP"
+.br
+.RI "Shared pointer for a \fBDestination\fP\&. "
+.in -1c
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBDestination\fP ()"
+.br
+.RI "Empty constructor\&. "
+.ti -1c
+.RI "\fBDestination\fP (const \fBDestination\fP &other)"
+.br
+.RI "Copy constructor\&. "
+.ti -1c
+.RI "\fB~Destination\fP ()"
+.br
+.RI "Destructor\&. "
+.ti -1c
+.RI "\fBDestination\fP & \fBoperator=\fP (const \fBDestination\fP &b)"
+.br
+.RI "Assignment operator\&. "
+.ti -1c
+.RI "\fBptr\fP \fBdupe\fP (void)"
+.br
+.RI "Duplicate\&. "
+.ti -1c
+.RI "\fBptr\fP \fBadd_variables\fP (\fBmultihash\fP &vars)"
+.br
+.RI "Duplicate the current object and incorporate variables\&. "
+.ti -1c
+.RI "\fBFrame::ptr\fP \fBbest_frame\fP (\fBImage::ptr\fP img)"
+.br
+.RI "Find the best crop+rescaling frame for an image\&. "
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBname\fP (void) const"
+.br
+.ti -1c
+.RI "const \fBdefinable\fP< fs::path > & \fBdir\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< double > \fBsize\fP (void) const"
+.br
+.ti -1c
+.RI "const \fBD_sharpen\fP & \fBsharpen\fP (void) const"
+.br
+.ti -1c
+.RI "const \fBD_resize\fP & \fBresize\fP (void) const"
+.br
+.ti -1c
+.RI "int \fBnum_targets\fP (void) const"
+.br
+.ti -1c
+.RI "bool \fBhas_targets\fP (void) const"
+.br
+.ti -1c
+.RI "const std::map< std::string, \fBD_target::ptr\fP > & \fBtargets\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< std::string > \fBformat\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< int > \fBdepth\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_depth\fP (int d)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBnoresize\fP (void) const"
+.br
+.ti -1c
+.RI "\fBD_JPEG\fP & \fBjpeg\fP (void)"
+.br
+.ti -1c
+.RI "void \fBset_jpeg\fP (const \fBD_JPEG\fP &j)"
+.br
+.ti -1c
+.RI "\fBD_PNG\fP & \fBpng\fP (void)"
+.br
+.ti -1c
+.RI "void \fBset_png\fP (const \fBD_PNG\fP &p)"
+.br
+.ti -1c
+.RI "\fBD_TIFF\fP & \fBtiff\fP (void)"
+.br
+.ti -1c
+.RI "void \fBset_tiff\fP (const \fBD_TIFF\fP &t)"
+.br
+.ti -1c
+.RI "\fBD_JP2\fP & \fBjp2\fP (void)"
+.br
+.ti -1c
+.RI "void \fBset_jp2\fP (const \fBD_JP2\fP &j)"
+.br
+.ti -1c
+.RI "\fBD_WebP\fP & \fBwebp\fP (void)"
+.br
+.ti -1c
+.RI "void \fBset_webp\fP (const \fBD_WebP\fP &w)"
+.br
+.ti -1c
+.RI "\fBD_JXR\fP & \fBjxr\fP (void)"
+.br
+.ti -1c
+.RI "void \fBset_jxr\fP (const \fBD_JXR\fP &j)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< \fBCMS::Intent\fP > \fBintent\fP (void) const"
+.br
+.ti -1c
+.RI "\fBCMS::Format\fP \fBmodify_format\fP (\fBCMS::Format\fP \fBformat\fP)"
+.br
+.RI "Modify an LCMS2 pixel format using some of the parameters in the destination\&. "
+.ti -1c
+.RI "\fBCMS::Profile::ptr\fP \fBget_profile\fP (\fBCMS::ColourModel\fP default_colourmodel, std::string for_desc)"
+.br
+.RI "Return an LCMS2 profile object from the profile data\&. "
+.ti -1c
+.RI "const \fBD_profile::ptr\fP \fBprofile\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBset_profile\fP (std::string \fBname\fP, fs::path filepath)"
+.br
+.ti -1c
+.RI "void \fBset_profile\fP (std::string \fBname\fP, unsigned char *data, unsigned int data_size)"
+.br
+.ti -1c
+.RI "void \fBclear_profile\fP (void)"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBforcergb\fP (void) const"
+.br
+.ti -1c
+.RI "\fBdefinable\fP< bool > \fBforcegrey\fP (void) const"
+.br
+.ti -1c
+.RI "const \fBD_thumbnail\fP & \fBthumbnail\fP (void) const"
+.br
+.ti -1c
+.RI "void \fBread_config\fP (const YAML::Node &node)"
+.br
+.RI "Read a destination record from a YAML document\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a destination, read from destinations\&.yml\&. 
+.PP
+Definition at line 37 of file Destination\&.hh\&.
+.SH "Member Typedef Documentation"
+.PP 
+.SS "typedef std::shared_ptr<\fBDestination\fP> \fBPhotoFinish::Destination::ptr\fP"
+
+.PP
+Shared pointer for a \fBDestination\fP\&. 
+.PP
+Definition at line 87 of file Destination\&.hh\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "PhotoFinish::Destination::Destination ()"
+
+.PP
+Empty constructor\&. 
+.PP
+Definition at line 34 of file Destination\&.cc\&.
+.SS "PhotoFinish::Destination::Destination (const \fBDestination\fP & other)"
+
+.PP
+Copy constructor\&. 
+.PP
+Definition at line 37 of file Destination\&.cc\&.
+.SS "PhotoFinish::Destination::~Destination ()"
+
+.PP
+Destructor\&. 
+.PP
+Definition at line 58 of file Destination\&.cc\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBDestination::ptr\fP PhotoFinish::Destination::add_variables (\fBmultihash\fP & vars)"
+
+.PP
+Duplicate the current object and incorporate variables\&. 
+.PP
+Definition at line 91 of file Destination\&.cc\&.
+.SS "\fBFrame::ptr\fP PhotoFinish::Destination::best_frame (\fBImage::ptr\fP img)"
+
+.PP
+Find the best crop+rescaling frame for an image\&. 
+.PP
+Definition at line 100 of file Destination\&.cc\&.
+.SS "void PhotoFinish::Destination::clear_profile (void)\fC [inline]\fP"
+
+.PP
+Definition at line 148 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<int> PhotoFinish::Destination::depth (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 114 of file Destination\&.hh\&.
+.SS "const \fBdefinable\fP<fs::path>& PhotoFinish::Destination::dir (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 100 of file Destination\&.hh\&.
+.SS "\fBptr\fP PhotoFinish::Destination::dupe (void)\fC [inline]\fP"
+
+.PP
+Duplicate\&. 
+.PP
+Definition at line 90 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::Destination::forcegrey (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 151 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::Destination::forcergb (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 150 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::Destination::format (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 112 of file Destination\&.hh\&.
+.SS "\fBCMS::Profile::ptr\fP PhotoFinish::Destination::get_profile (\fBCMS::ColourModel\fP default_colourmodel, std::string for_desc)"
+
+.PP
+Return an LCMS2 profile object from the profile data\&. 
+.PP
+Definition at line 190 of file Destination\&.cc\&.
+.SS "bool PhotoFinish::Destination::has_targets (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 109 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<\fBCMS::Intent\fP> PhotoFinish::Destination::intent (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 137 of file Destination\&.hh\&.
+.SS "\fBD_JP2\fP& PhotoFinish::Destination::jp2 (void)\fC [inline]\fP"
+
+.PP
+Definition at line 128 of file Destination\&.hh\&.
+.SS "\fBD_JPEG\fP& PhotoFinish::Destination::jpeg (void)\fC [inline]\fP"
+
+.PP
+Definition at line 119 of file Destination\&.hh\&.
+.SS "\fBD_JXR\fP& PhotoFinish::Destination::jxr (void)\fC [inline]\fP"
+
+.PP
+Definition at line 134 of file Destination\&.hh\&.
+.SS "\fBCMS::Format\fP PhotoFinish::Destination::modify_format (\fBCMS::Format\fP format)"
+
+.PP
+Modify an LCMS2 pixel format using some of the parameters in the destination\&. 
+.PP
+Definition at line 154 of file Destination\&.cc\&.
+.SS "\fBdefinable\fP<std::string> PhotoFinish::Destination::name (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 98 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<bool> PhotoFinish::Destination::noresize (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 117 of file Destination\&.hh\&.
+.SS "int PhotoFinish::Destination::num_targets (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 108 of file Destination\&.hh\&.
+.SS "\fBDestination\fP & PhotoFinish::Destination::operator= (const \fBDestination\fP & b)"
+
+.PP
+Assignment operator\&. 
+.PP
+Definition at line 61 of file Destination\&.cc\&.
+.SS "\fBD_PNG\fP& PhotoFinish::Destination::png (void)\fC [inline]\fP"
+
+.PP
+Definition at line 122 of file Destination\&.hh\&.
+.SS "const \fBD_profile::ptr\fP PhotoFinish::Destination::profile (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 145 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::read_config (const YAML::Node & node)"
+
+.PP
+Read a destination record from a YAML document\&. Read a \fBDestination\fP record from a YAML file\&. 
+.PP
+Definition at line 207 of file Destination\&.cc\&.
+.SS "const \fBD_resize\fP& PhotoFinish::Destination::resize (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 106 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_depth (int d)\fC [inline]\fP"
+
+.PP
+Definition at line 115 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_jp2 (const \fBD_JP2\fP & j)\fC [inline]\fP"
+
+.PP
+Definition at line 129 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_jpeg (const \fBD_JPEG\fP & j)\fC [inline]\fP"
+
+.PP
+Definition at line 120 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_jxr (const \fBD_JXR\fP & j)\fC [inline]\fP"
+
+.PP
+Definition at line 135 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_png (const \fBD_PNG\fP & p)\fC [inline]\fP"
+
+.PP
+Definition at line 123 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_profile (std::string name, fs::path filepath)\fC [inline]\fP"
+
+.PP
+Definition at line 146 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_profile (std::string name, unsigned char * data, unsigned int data_size)\fC [inline]\fP"
+
+.PP
+Definition at line 147 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_tiff (const \fBD_TIFF\fP & t)\fC [inline]\fP"
+
+.PP
+Definition at line 126 of file Destination\&.hh\&.
+.SS "void PhotoFinish::Destination::set_webp (const \fBD_WebP\fP & w)\fC [inline]\fP"
+
+.PP
+Definition at line 132 of file Destination\&.hh\&.
+.SS "const \fBD_sharpen\fP& PhotoFinish::Destination::sharpen (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 104 of file Destination\&.hh\&.
+.SS "\fBdefinable\fP<double> PhotoFinish::Destination::size (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 102 of file Destination\&.hh\&.
+.SS "const std::map<std::string, \fBD_target::ptr\fP>& PhotoFinish::Destination::targets (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 110 of file Destination\&.hh\&.
+.SS "const \fBD_thumbnail\fP& PhotoFinish::Destination::thumbnail (void) const\fC [inline]\fP"
+
+.PP
+Definition at line 153 of file Destination\&.hh\&.
+.SS "\fBD_TIFF\fP& PhotoFinish::Destination::tiff (void)\fC [inline]\fP"
+
+.PP
+Definition at line 125 of file Destination\&.hh\&.
+.SS "\fBD_WebP\fP& PhotoFinish::Destination::webp (void)\fC [inline]\fP"
+
+.PP
+Definition at line 131 of file Destination\&.hh\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Photo Finish from the source code\&.
