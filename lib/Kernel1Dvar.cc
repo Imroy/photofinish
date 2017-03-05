@@ -41,9 +41,9 @@ namespace PhotoFinish {
     _to_size(to_size),
     _to_size_i(ceil(to_size))
   {
-    _size = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
-    _start = (unsigned int*)malloc(_to_size_i * sizeof(unsigned int));
-    _weights = (SAMPLE**)malloc(_to_size_i * sizeof(SAMPLE*));
+    _size = new unsigned int[_to_size_i];
+    _start = new unsigned int[_to_size_i];
+    _weights = new SAMPLE*[_to_size_i];
   }
 
   void Kernel1Dvar::build(double from_start, double from_size, unsigned int from_max) {
@@ -68,7 +68,7 @@ namespace PhotoFinish {
 	right = from_max - 1;
       _size[i] = right + 1 - left;
       _start[i] = left;
-      _weights[i] = (SAMPLE*)malloc(_size[i] * sizeof(SAMPLE));
+      _weights[i] = new SAMPLE[_size[i]];
       unsigned int k = 0;
       for (unsigned int j = left; j <= right; j++, k++)
 	_weights[i][k] = this->eval((centre - j) * norm_fact);
@@ -104,19 +104,19 @@ namespace PhotoFinish {
 
   Kernel1Dvar::~Kernel1Dvar() {
     if (_size != NULL) {
-      free(_size);
+      delete [] _size;
       _size = NULL;
     }
 
     if (_start != NULL) {
-      free(_start);
+      delete [] _start;
       _start = NULL;
     }
 
     if (_weights != NULL) {
       for (unsigned int i = 0; i < _to_size_i; i++)
-	free(_weights[i]);
-      free(_weights);
+	delete [] _weights[i];
+      delete [] _weights;
       _weights = NULL;
     }
   }

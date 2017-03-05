@@ -37,9 +37,9 @@ namespace PhotoFinish {
     _centrex(cx), _centrey(cy),
     _values(NULL)
   {
-    _values = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
+    _values = new SAMPLE*[_height];
     for (unsigned short int y = 0; y < _height; y++)
-      _values[y] = (SAMPLE*)malloc(_width * sizeof(SAMPLE));
+      _values[y] = new SAMPLE[_width];
   }
 
   Kernel2D::Kernel2D(short unsigned int size, short unsigned int centre) :
@@ -47,9 +47,9 @@ namespace PhotoFinish {
     _centrex(centre), _centrey(centre),
     _values(NULL)
   {
-    _values = (SAMPLE**)malloc(_height * sizeof(SAMPLE*));
+    _values = new SAMPLE*[_height];
     for (unsigned short int y = 0; y < _height; y++)
-      _values[y] = (SAMPLE*)malloc(_width * sizeof(SAMPLE));
+      _values[y] = new SAMPLE[_width];
   }
 
   Kernel2D::ptr Kernel2D::create(const D_sharpen& ds) {
@@ -59,8 +59,8 @@ namespace PhotoFinish {
   Kernel2D::~Kernel2D() {
     if (_values != NULL) {
       for (unsigned short int y = 0; y < _height; y++)
-	free(_values[y]);
-      free(_values);
+	delete [] _values[y];
+      delete [] _values;
       _values = NULL;
     }
   }
@@ -70,7 +70,7 @@ namespace PhotoFinish {
     int *row_needs;
     if (can_free) {
       int num_threads = omp_get_num_threads();
-      row_needs = (int*)malloc(src->height() * sizeof(int));
+      row_needs = new int[src->height()];
       for (unsigned int y = 0; y < src->height(); y++)
 	row_needs[y] = num_threads;
     }
@@ -136,7 +136,7 @@ namespace PhotoFinish {
     }
 
     if (can_free) {
-      free(row_needs);
+      delete [] row_needs;
       for (; next_freed < src->height(); next_freed++)
 	src->free_row(next_freed);
     }
