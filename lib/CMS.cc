@@ -379,6 +379,12 @@ namespace CMS {
     return *this;
   }
 
+  Format &Format::set_channels(unsigned int c) {
+    _format &= CHANNELS_MASK;
+    _format |= CHANNELS_SH(c & 0x0f);
+    return *this;
+  }
+
   Format &Format::set_extra_channels(unsigned int e) {
     _format &= EXTRA_MASK;
     _format |= EXTRA_SH(e);

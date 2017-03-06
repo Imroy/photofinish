@@ -264,6 +264,9 @@ namespace CMS {
 
     inline bool is_optimised(void) const { return (T_OPTIMIZED(_format) == 1); }
 
+    //! Set the number of channels
+    Format &set_channels(unsigned int c);
+
     //! Get the number of channels
     inline unsigned int channels(void) const { return T_CHANNELS(_format); }
 
