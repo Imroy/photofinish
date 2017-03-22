@@ -51,7 +51,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
     CMS::Format internal_format;
     internal_format.set_colour_model(CMS::ColourModel::Lab);
     SET_SAMPLE_FORMAT(internal_format);
-    orig_image->transform_colour_inplace(CMS::Profile::Lab4(), internal_format);
+    orig_image = orig_image->transform_colour(CMS::Profile::Lab4(), internal_format);
   }
 
   auto resized_dest = orig_dest->dupe();
@@ -79,7 +79,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   resized_format.set_colour_model(orig_model);
   CMS::Format dest_format = preview_file->preferred_format(resized_dest->modify_format(resized_format));
   CMS::Profile::ptr dest_profile = resized_dest->get_profile(dest_format.colour_model(), "preview");
-  resized_image->transform_colour_inplace(dest_profile, dest_format);
+  resized_image = resized_image->transform_colour(dest_profile, dest_format);
 
   filetags->copy_to(resized_image);
   preview_file->write(resized_image, resized_dest, can_free);

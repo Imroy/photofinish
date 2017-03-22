@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
 	  internal_format.set_colour_model(CMS::ColourModel::Lab);
 	  SET_SAMPLE_FORMAT(internal_format);
 	  internal_format.set_extra_channels(orig_image->format().extra_channels());
-	  orig_image->transform_colour_inplace(CMS::Profile::Lab4(), internal_format);
+	  orig_image = orig_image->transform_colour(CMS::Profile::Lab4(), internal_format);
 	}
 
 	auto num_destinations = arg_destinations.size();
@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
 
 	    CMS::Format dest_format = outfile->preferred_format(destination->modify_format(sharp_image->format()));
 	    CMS::Profile::ptr dest_profile = destination->get_profile(dest_format.colour_model(), "destination");
-	    sharp_image->transform_colour_inplace(dest_profile, dest_format);
+	    sharp_image = sharp_image->transform_colour(dest_profile, dest_format);
 
 	    tags->copy_to(sharp_image);
 	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);

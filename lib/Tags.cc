@@ -204,7 +204,7 @@ namespace PhotoFinish {
 
     CMS::Format dest_format = thumbfile.preferred_format(dest->modify_format(img->format()));
     CMS::Profile::ptr dest_profile = dest->get_profile(CMS::ColourModel::RGB, "JPEG thumbnail");
-    thumbimage->transform_colour_inplace(dest_profile, dest_format);
+    thumbimage = thumbimage->transform_colour(dest_profile, dest_format);
 
     std::ostringstream oss;
     thumbfile.write(oss, thumbimage, dest);

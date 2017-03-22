@@ -156,14 +156,6 @@ namespace PhotoFinish {
      */
     ptr transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual, bool can_free = false);
 
-    //! Transform this image in-place into a different colour space and/or ICC profile
-    /*!
-      \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
-      \param dest_format The LCMS2 pixel format.
-      \param intent The ICC intent of the transform, defaults to perceptual.
-     */
-    void transform_colour_inplace(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual);
-
     //! Un-pre-multiply the colour values with the alpha channel
     /*!
       Converts data to floating point (SAMPLE) in the process
