@@ -37,17 +37,17 @@ namespace PhotoFinish {
     _crop_w(w), _crop_h(h)
   {}
 
-  Image::ptr Frame::crop_resize(Image::ptr img, const D_resize& dr, bool can_free) {
+  Image::ptr Frame::crop_resize(Image::ptr img, const D_resize& dr) {
     auto scale_width = Kernel1Dvar::create(dr, _crop_x, _crop_w, img->width(), _width);
     auto scale_height = Kernel1Dvar::create(dr, _crop_y, _crop_h, img->height(), _height);
 
     if (_width * img->height() < img->width() * _height) {
-      auto temp = scale_width->convolve_h(img, can_free);
-      return scale_height->convolve_v(temp, true);
+      auto temp = scale_width->convolve_h(img);
+      return scale_height->convolve_v(temp);
     }
 
-    auto temp = scale_height->convolve_v(img, can_free);
-    return scale_width->convolve_h(temp, true);
+    auto temp = scale_height->convolve_v(img);
+    return scale_width->convolve_h(temp);
   }
 
   const double Frame::waste(Image::ptr img) const {

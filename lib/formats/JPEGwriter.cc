@@ -170,7 +170,7 @@ namespace PhotoFinish {
     std::cerr << "\tWriting " << img->width() << "×" << img->height() << " JPEG image..." << std::endl;
     while (cinfo->next_scanline < cinfo->image_height) {
       unsigned int y = cinfo->next_scanline;
-      jpeg_row[0] = img->row<unsigned char>(y);
+      jpeg_row[0] = img->row(y)->data<unsigned char>();
       jpeg_write_scanlines(cinfo, jpeg_row, 1);
 
       if (can_free)

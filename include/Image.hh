@@ -20,12 +20,15 @@
 #define __IMAGE_HH__
 
 #include <memory>
+#include <vector>
 #include <exiv2/exiv2.hpp>
 #include "Definable.hh"
 #include "CMS.hh"
 #include "sample.h"
 
 namespace PhotoFinish {
+
+  class ImageRow;
 
   //! An image class
   class Image {
@@ -34,21 +37,12 @@ namespace PhotoFinish {
     CMS::Profile::ptr _profile;
     CMS::Format _format;
     size_t _pixel_size, _row_size;
-    unsigned char **_rowdata;
+    std::vector<std::shared_ptr<ImageRow>> _rows;
     definable<double> _xres, _yres;		// PPI
 
     Exiv2::ExifData _EXIFtags;
     Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
-
-    template <typename SRC>
-    void _un_alpha_mult_src(void);
-
-    template <typename SRC, typename DST>
-    void _alpha_mult_src_dst(CMS::Format dest_format);
-
-    template <typename SRC>
-    void _alpha_mult_src(CMS::Format dest_format);
 
   public:
     //! Shared pointer for an Image
@@ -108,28 +102,19 @@ namespace PhotoFinish {
     //! Retun the size of a row in bytes
     inline size_t row_size(void) const { return _row_size; }
 
-    inline void check_rowdata_alloc(unsigned int y) {
-      if (_rowdata[y] == NULL)
-	_rowdata[y] = new unsigned char[_row_size];
+    inline void check_row_alloc(unsigned int y) {
+      if (_rows[y] == NULL)
+	_rows[y] = std::make_shared<ImageRow>(*this, y);
     }
 
-    //! Pointer to pixel data at start of row
-    template <typename T=unsigned char>
-    inline T* row(unsigned int y) const { return (T*)_rowdata[y]; }
 
-    //! Pointer to pixel data at coordinates
-    template <typename T>
-    inline T* at(unsigned int x, unsigned int y) const { return (T*)&_rowdata[y][x * _pixel_size]; }
-
-    template <typename T>
-    inline T& at(unsigned int x, unsigned int y, unsigned char c) const { return *((T*)&_rowdata[y][x * _pixel_size] + c); }
+    //! Row holder at a y value
+    std::shared_ptr<ImageRow> row(unsigned int y) const { return _rows[y]; }
 
     //! Free the memory storing row 'y'
     inline void free_row(unsigned int y) {
-      if (_rowdata[y] != NULL) {
-	delete [] _rowdata[y];
-	_rowdata[y] = NULL;
-      }
+      if (_rows[y] != NULL)
+	_rows[y].reset();
     }
 
     //! The Exiv2::ExifData object.
@@ -151,24 +136,84 @@ namespace PhotoFinish {
       \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
       \param dest_format The LCMS2 pixel format.
       \param intent The ICC intent of the transform, defaults to perceptual.
-      \param can_free Whether rows can be freed after transforming, defaults to false.
       \return A new image
      */
-    ptr transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual, bool can_free = false);
+    ptr transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual);
+
+  };
+
+
+  //! Class for holding a row of image data
+  class ImageRow {
+  private:
+    const Image *_image;
+    const unsigned int _y;
+    unsigned char *_data;
+
+    friend class Image;
+
+    template <typename SRC>
+    void _un_alpha_mult_src(std::shared_ptr<ImageRow> dest_row);
+
+    template <typename SRC, typename DST>
+    void _alpha_mult_src_dst(CMS::Format dest_format, std::shared_ptr<ImageRow> dest_row);
+
+    template <typename SRC>
+    void _alpha_mult_src(CMS::Format dest_format, std::shared_ptr<ImageRow> dest_row);
 
     //! Un-pre-multiply the colour values with the alpha channel
     /*!
       Converts data to floating point (SAMPLE) in the process
      */
-    void un_alpha_mult(void);
+    void _un_alpha_mult(std::shared_ptr<ImageRow> dest_row);
 
     //! Pre-multiply the colour values with the alpha
     /*!
       \param dest_format Destination format, only the channel type (bytes and float flag) are used.
      */
-    void alpha_mult(CMS::Format dest_format);
+    void _alpha_mult(CMS::Format dest_format, std::shared_ptr<ImageRow> dest_row);
+
+  public:
+    typedef std::shared_ptr<ImageRow> ptr;
+
+    //! Constructor
+    ImageRow(const Image& img, unsigned int y) :
+      _image(&img),
+      _y(y),
+      _data(new unsigned char[_image->width() * _image->pixel_size()])
+    {}
+
+    //! The width of the image
+    inline const unsigned int width(void) const { return _image->width(); }
+
+    //! The height of the image
+    inline const unsigned int height(void) const { return _image->height(); }
+
+    inline const unsigned int y(void) const { return _y; }
+
+    //! Get the image ICC profile
+    inline const CMS::Profile::ptr profile(void) const { return _image->profile(); }
+
+    //! Get the CMS format
+    inline CMS::Format format(void) const { return _image->format(); }
+
+    //! The X resolution of the image (PPI)
+    inline const definable<double> xres(void) const { return _image->xres(); }
+
+    //! The Y resolution of the image (PPI)
+    inline const definable<double> yres(void) const { return _image->yres(); }
+
+    //! Make a copy pointing to the same image, same y value, etc, but don't copy the pixel values
+    std::shared_ptr<ImageRow> empty_copy(void) const { return std::make_shared<ImageRow>(*_image, _y); }
+
+    template <typename T = unsigned char>
+    inline T* data(unsigned int x = 0) const { return (T*)&_data[x * _image->pixel_size()]; }
+
+    //! Transform this image row into a different colour space and/or ICC profile, making a new image
+    void transform_colour(CMS::Transform::ptr transform, std::shared_ptr<ImageRow> dest_row);
 
   };
+
 
   //! A template function that returns the 'scale' value of a type.
   template <typename T>

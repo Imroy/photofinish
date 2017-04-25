@@ -76,7 +76,7 @@ namespace PhotoFinish {
     unsigned char *temprow = new unsigned char[img->width() * 3];
 
     for (unsigned int y = 0; y < img->height(); y++) {
-      ditherer.dither(img->row<short unsigned int>(y), temprow, y == img->height() - 1);
+      ditherer.dither(img->row(y)->data<short unsigned int>(), temprow, y == img->height() - 1);
       if (can_free)
 	img->free_row(y);
 

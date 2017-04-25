@@ -50,10 +50,9 @@ namespace PhotoFinish {
     /*!
       \param img The source image
       \param dr A D_resize object which will supply our parameters.
-      \param can_free Can each row of the image be freed after it is convolved?
       \return A new cropped and resized image
     */
-    Image::ptr crop_resize(Image::ptr img, const D_resize &dr, bool can_free = false);
+    Image::ptr crop_resize(Image::ptr img, const D_resize &dr);
 
     //! The left-most border of the crop window
     inline const double crop_x(void) const { return _crop_x; }

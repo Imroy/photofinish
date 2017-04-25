@@ -164,7 +164,7 @@ namespace PhotoFinish {
     }
 
     for (unsigned int y = 0; y < img->height(); y++) {
-      TIFFWriteScanline(tiff, img->row(y), y, 0);
+      TIFFWriteScanline(tiff, img->row(y)->data(), y, 0);
 
       if (can_free)
 	img->free_row(y);

@@ -163,8 +163,8 @@ namespace PhotoFinish {
 
     std::cerr << "\tReading TIFF image..." << std::endl;
     for (unsigned int y = 0; y < height; y++) {
-      img->check_rowdata_alloc(y);
-      TIFFcheck(ReadScanline(tiff, img->row(y), y));
+      img->check_row_alloc(y);
+      TIFFcheck(ReadScanline(tiff, img->row(y)->data(), y));
       std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows";
     }
     std::cerr << "\r\tRead " << height << " of " << height << " rows." << std::endl;

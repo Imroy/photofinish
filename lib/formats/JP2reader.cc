@@ -140,12 +140,12 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < img->height(); y++) {
-      img->check_rowdata_alloc(y);
+      img->check_row_alloc(y);
       for (unsigned char c = 0; c < format.channels(); c++)
 	if (depth == 1)
-	  read_planar<unsigned char>(img->width(), format.channels(), jp2_image, img->row<unsigned char>(y), y);
+	  read_planar<unsigned char>(img->width(), format.channels(), jp2_image, img->row(y)->data<unsigned char>(), y);
 	else
-	  read_planar<short unsigned int>(img->width(), format.channels(), jp2_image, img->row<short unsigned int>(y), y);
+	  read_planar<short unsigned int>(img->width(), format.channels(), jp2_image, img->row(y)->data<short unsigned int>(), y);
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tCopied " << (y + 1) << " of " << img->height() << " rows";

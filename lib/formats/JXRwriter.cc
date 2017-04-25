@@ -228,7 +228,7 @@ namespace PhotoFinish {
 	  try {
 	    JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
 	    for (unsigned int y = 0; y < img->height(); y++) {
-	      memcpy(pixels + (y * img->row_size()), img->row(y), img->row_size());
+	      memcpy(pixels + (y * img->row_size()), img->row(y)->data(), img->row_size());
 	      std::cerr << "\r\tCopied " << y + 1 << " of " << img->height() << " rows";
 	    }
 	    std::cerr << "\r\tCopied " << img->height() << " of " << img->height() << " rows" << std::endl;
