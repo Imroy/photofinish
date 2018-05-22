@@ -117,6 +117,8 @@ namespace PhotoFinish {
 	_rows[y].reset();
     }
 
+    void replace_row(std::shared_ptr<ImageRow> newrow);
+
     //! The Exiv2::ExifData object.
     inline Exiv2::ExifData& EXIFtags(void) { return _EXIFtags; }
 

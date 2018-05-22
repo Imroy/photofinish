@@ -68,6 +68,11 @@ namespace PhotoFinish {
     return profile;
   }
 
+  void Image::replace_row(std::shared_ptr<ImageRow> newrow) {
+    if (newrow->_image == this)
+      _rows[newrow->_y] = newrow;
+  }
+
   template <typename A, typename B>
   void transfer_alpha_typed2(unsigned int width, unsigned char src_channels, const A* src_row, unsigned char dest_channels, const B* dest_row) {
     double factor = (double)scaleval<B>() / scaleval<A>();
@@ -192,6 +197,7 @@ namespace PhotoFinish {
 	auto temp = src_row->empty_copy();
 	src_row->_un_alpha_mult(temp);
 	src_row = temp;
+	replace_row(temp);
       }
 
       src_row->transform_colour(transform, dest_row);
@@ -200,6 +206,7 @@ namespace PhotoFinish {
 	auto temp = dest_row->empty_copy();
 	dest_row->_alpha_mult(orig_dest_format, temp);
 	dest_row = temp;
+	dest->replace_row(temp);
       }
 
       if (omp_get_thread_num() == 0)
