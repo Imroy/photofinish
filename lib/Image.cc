@@ -31,12 +31,11 @@ namespace PhotoFinish {
     _height(h),
     _profile(NULL),
     _format(f),
-    _row_size(0)
+    _row_size(0),
+    _rows(h, nullptr)
   {
     _pixel_size = _format.bytes_per_pixel();
     _row_size = _width * _pixel_size;
-
-    _rows.reserve(h);
   }
 
   Image::~Image() {
