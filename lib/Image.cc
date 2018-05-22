@@ -175,7 +175,7 @@ namespace PhotoFinish {
 
     CMS::Transform transform(profile, _format,
 			     dest_profile, dest_format,
-			     intent, 0);
+			     intent, cmsFLAGS_NOCACHE);
 
     auto dest = std::make_shared<Image>(_width, _height, dest_format);
     dest->set_profile(dest_profile);
