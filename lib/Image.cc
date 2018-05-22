@@ -185,6 +185,7 @@ namespace PhotoFinish {
 
 #pragma omp parallel for schedule(dynamic, 1)
     for (unsigned int y = 0; y < _height; y++) {
+      dest->check_row_alloc(y);
       ImageRow::ptr src_row = row(y), dest_row = dest->row(y);
 
       if (need_un_alpha_mult) {
