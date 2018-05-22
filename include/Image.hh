@@ -103,8 +103,8 @@ namespace PhotoFinish {
     inline size_t row_size(void) const { return _row_size; }
 
     inline void check_row_alloc(unsigned int y) {
-      if (_rows[y] == NULL)
-	_rows[y] = std::make_shared<ImageRow>(*this, y);
+      if (_rows[y] == nullptr)
+	_rows[y] = std::make_shared<ImageRow>(this, y);
     }
 
 
@@ -177,8 +177,8 @@ namespace PhotoFinish {
     typedef std::shared_ptr<ImageRow> ptr;
 
     //! Constructor
-    ImageRow(const Image& img, unsigned int y) :
-      _image(&img),
+    ImageRow(const Image* img, unsigned int y) :
+      _image(img),
       _y(y),
       _data(new unsigned char[_image->width() * _image->pixel_size()])
     {}
@@ -204,7 +204,7 @@ namespace PhotoFinish {
     inline const definable<double> yres(void) const { return _image->yres(); }
 
     //! Make a copy pointing to the same image, same y value, etc, but don't copy the pixel values
-    std::shared_ptr<ImageRow> empty_copy(void) const { return std::make_shared<ImageRow>(*_image, _y); }
+    std::shared_ptr<ImageRow> empty_copy(void) const { return std::make_shared<ImageRow>(_image, _y); }
 
     template <typename T = unsigned char>
     inline T* data(unsigned int x = 0) const { return (T*)&_data[x * _image->pixel_size()]; }
