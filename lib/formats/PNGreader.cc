@@ -73,27 +73,33 @@ namespace PhotoFinish {
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
 
-    PNGreader_cb cb(dest);
+    Image::ptr image;
+    {
+      PNGreader_cb cb(dest);
 
-    std::cerr << "\tReading PNG image..." << std::endl;
-    png_set_progressive_read_fn(_png, (void *)&cb, png_info_cb, png_row_cb, png_end_cb);
-    png_byte buffer[1048576];
-    size_t length;
-    do {
-      ifs.read((char*)buffer, 1048576);
-      length = ifs.gcount();
-      png_process_data(_png, _info, buffer, length);
-    } while (length > 0);
+      std::cerr << "\tReading PNG image..." << std::endl;
+      png_set_progressive_read_fn(_png, (void *)&cb, png_info_cb, png_row_cb, png_end_cb);
+      png_byte buffer[1048576];
+      size_t length;
+      do {
+	ifs.read((char*)buffer, 1048576);
+	length = ifs.gcount();
+	png_process_data(_png, _info, buffer, length);
+      } while (length > 0);
 
-    png_destroy_read_struct(&_png, &_info, NULL);
+      png_destroy_read_struct(&_png, &_info, NULL);
+
+      image = cb._image;
+    }
+
     ifs.close();
     _is_open = false;
 
     std::cerr << "\tExtracting tags..." << std::endl;
-    extract_tags(cb._image);
+    extract_tags(image);
 
     std::cerr << "Done." << std::endl;
-    return cb._image;
+    return image;
   }
 
 }
