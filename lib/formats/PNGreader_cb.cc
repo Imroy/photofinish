@@ -53,7 +53,7 @@ namespace PhotoFinish {
 
     default:
       std::cerr << "** Unknown depth " << (bit_depth >> 3) << " **" << std::endl;
-      throw LibraryError("libTIFF", "depth");
+      throw LibraryError("libpng", "depth");
     }
 
     switch (colour_type) {
