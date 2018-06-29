@@ -185,6 +185,11 @@ namespace PhotoFinish {
       _data(new unsigned char[_image->width() * _image->pixel_size()])
     {}
 
+    ~ImageRow() {
+      if (_data != nullptr)
+	delete [] _data;
+    }
+
     //! The width of the image
     inline const unsigned int width(void) const { return _image->width(); }
 
