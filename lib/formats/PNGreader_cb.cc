@@ -56,25 +56,21 @@ namespace PhotoFinish {
       throw LibraryError("libpng", "depth");
     }
 
-    switch (colour_type) {
-    case PNG_COLOR_TYPE_GRAY_ALPHA:
-      format.set_extra_channels(1);
-      format.set_premult_alpha();
-    case PNG_COLOR_TYPE_GRAY:
-      format.set_colour_model(CMS::ColourModel::Greyscale);
-      break;
-
-    case PNG_COLOR_TYPE_RGB_ALPHA:
-      format.set_extra_channels(1);
-      format.set_premult_alpha();
-    case PNG_COLOR_TYPE_RGB:
-      format.set_colour_model(CMS::ColourModel::RGB);
-      break;
-
-    default:
+    if (colour_type & PNG_COLOR_MASK_PALETTE) {
       std::cerr << "** unsupported PNG colour type " << colour_type << " **" << std::endl;
-      exit(1);
+      throw LibraryError("libpng", "colour type");
     }
+
+    if (colour_type & PNG_COLOR_MASK_COLOR)
+      format.set_colour_model(CMS::ColourModel::RGB);
+    else
+      format.set_colour_model(CMS::ColourModel::Greyscale);
+
+    if (colour_type & PNG_COLOR_MASK_ALPHA) {
+      format.set_extra_channels(1);
+      format.set_premult_alpha();
+    }
+
     _image = std::make_shared<Image>(width, height, format);
 
     {

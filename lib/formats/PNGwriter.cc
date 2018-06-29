@@ -99,16 +99,18 @@ namespace PhotoFinish {
     int png_colour_type;
     switch (format.colour_model()) {
     case CMS::ColourModel::RGB:
-      png_colour_type = format.extra_channels() ? PNG_COLOR_TYPE_RGB_ALPHA : PNG_COLOR_TYPE_RGB;
+      png_colour_type |= PNG_COLOR_MASK_COLOR;
       break;
 
     case CMS::ColourModel::Greyscale:
-      png_colour_type = format.extra_channels() ? PNG_COLOR_TYPE_GRAY_ALPHA : PNG_COLOR_TYPE_GRAY;
       break;
 
     default:
       throw cmsTypeError("Not RGB or greyscale", format);
     }
+
+    if (format.extra_channels())
+      png_colour_type |= PNG_COLOR_MASK_ALPHA;
 
     int depth = format.bytes_per_channel();
     if (depth > 2)
