@@ -21,8 +21,17 @@
 
 #include <string>
 #include <exception>
+#include <string.h>
 
 namespace PhotoFinish {
+
+  inline const char* new_c_str(const std::string& s) {
+    auto len = s.length() + 1;
+    char *ret = new char[len];
+    strncpy(ret, s.c_str(), len);
+    return ret;
+  }
+
   //! Uninitialised attribute exception
   class Uninitialised : public std::exception {
   protected:
@@ -50,7 +59,8 @@ namespace PhotoFinish {
       std::string w = _class;
       if (_attribute.length() > 0)
 	w += "::" + _attribute;
-      return (w + " is uninitialised.").c_str();
+      w += " is uninitialised.";
+      return new_c_str(w);
     }
   };
 
@@ -70,7 +80,7 @@ namespace PhotoFinish {
     {}
 
     virtual const char* what() const noexcept {
-      return (_class + "::" + _method + " is unimplemented.").c_str();
+      return new_c_str(_class + "::" + _method + " is unimplemented.");
     }
   };
 
@@ -90,7 +100,7 @@ namespace PhotoFinish {
     {}
 
     virtual const char* what() const noexcept {
-      return (_class + "::" + _method + " has no results.").c_str();
+      return new_c_str(_class + "::" + _method + " has no results.");
     }
   };
 
@@ -109,7 +119,7 @@ namespace PhotoFinish {
     {}
 
     virtual const char* what() const noexcept {
-      return ("Destination \"" + _destination + "\" has no targets.").c_str();
+      return new_c_str("Destination \"" + _destination + "\" has no targets.");
     }
   };
 
@@ -142,7 +152,7 @@ namespace PhotoFinish {
     {}
 
     const char* what() const noexcept {
-      return _msg.c_str();
+      return new_c_str(_msg);
     }
   };
 
@@ -197,7 +207,7 @@ namespace PhotoFinish {
       if (_msg.length() > 0)
 	w += ": " + _msg;
       w += ".";
-      return w.c_str();
+      return new_c_str(w);
     }
   };
 
@@ -226,7 +236,7 @@ namespace PhotoFinish {
       if (_msg.length() > 0)
 	w += ": " + _msg;
       w += ".";
-      return w.c_str();
+      return new_c_str(w);
     }
   };
 
@@ -255,7 +265,7 @@ namespace PhotoFinish {
       if (_msg.length() > 0)
 	w += ": " + _msg;
       w += ".";
-      return w.c_str();
+      return new_c_str(w);
     }
   };
 
@@ -275,7 +285,7 @@ namespace PhotoFinish {
     {}
 
     virtual const char* what() const noexcept {
-      return ("Error with value of destination field \"" + _path + "\" (\"" + _value + "\").").c_str();
+      return new_c_str("Error with value of destination field \"" + _path + "\" (\"" + _value + "\").");
     }
   };
 
@@ -295,7 +305,7 @@ namespace PhotoFinish {
     {}
 
     virtual const char* what() const noexcept {
-      return ("Error in " + _lib + ": " + _msg + ".").c_str();
+      return new_c_str("Error in " + _lib + ": " + _msg + ".");
     }
   };
 
@@ -314,7 +324,7 @@ namespace PhotoFinish {
     {}
 
     virtual const char* what() const noexcept {
-      return ("Error with value of cmsType: " + _msg + ".").c_str();
+      return new_c_str("Error with value of cmsType: " + _msg + ".");
     }
   };
 
@@ -335,40 +345,40 @@ namespace PhotoFinish {
     virtual const char* what() const noexcept {
       switch (_code) {
       case 0:
-	return std::string("No error").c_str();
+	return "No error";
 
       case 1:
-	return std::string("Out of memory").c_str();
+	return "Out of memory";
 
       case 2:
-	return std::string("Bitstream out of memory").c_str();
+	return "Bitstream out of memory";
 
       case 3:
-	return std::string("NULL parameter").c_str();
+	return "NULL parameter";
 
       case 4:
-	return std::string("Invalid configuration").c_str();
+	return "Invalid configuration";
 
       case 5:
-	return std::string("Bad dimension").c_str();
+	return "Bad dimension";
 
       case 6:
-	return std::string("Partition is larger than 512 KiB").c_str();
+	return "Partition is larger than 512 KiB";
 
       case 7:
-	return std::string("Partition is larger than 16 MiB").c_str();
+	return "Partition is larger than 16 MiB";
 
       case 8:
-	return std::string("Bad write").c_str();
+	return "Bad write";
 
       case 9:
-	return std::string("File is larger than 4 GiB").c_str();
+	return "File is larger than 4 GiB";
 
       case 10:
-	return std::string("User abort").c_str();
+	return "User abort";
 
       }
-      return std::string("Dunno").c_str();
+      return "Dunno";
     }
   };
 
