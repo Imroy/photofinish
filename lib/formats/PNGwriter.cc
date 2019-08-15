@@ -50,7 +50,7 @@ namespace PhotoFinish {
     format.set_premult_alpha();
 
     format.unset_swapfirst();
-    format.unset_endianswap();
+    format.unset_endian16_swap();
 
     return format;
   }

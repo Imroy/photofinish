@@ -391,6 +391,28 @@ namespace CMS {
     return *this;
   }
 
+  Format &Format::set_planar(bool p) {
+    _format &= PLANAR_MASK;
+    _format |= PLANAR_SH(p);
+    return *this;
+  }
+
+  Format &Format::set_chunky(void) {
+    _format &= PLANAR_MASK;
+    return *this;
+  }
+
+  Format &Format::set_endian16_swap(bool e) {
+    _format &= ENDIAN16_MASK;
+    _format |= ENDIAN16_SH(e);
+    return *this;
+  }
+
+  Format &Format::unset_endian16_swap(void) {
+    _format &= ENDIAN16_MASK;
+    return *this;
+  }
+
   Format &Format::set_swap(bool s) {
     _format &= DOSWAP_MASK;
     _format |= DOSWAP_SH(s);
@@ -402,17 +424,6 @@ namespace CMS {
     return *this;
   }
 
-  Format &Format::set_endianswap(bool e) {
-    _format &= ENDIAN16_MASK;
-    _format |= ENDIAN16_SH(e);
-    return *this;
-  }
-
-  Format &Format::unset_endianswap(void) {
-    _format &= ENDIAN16_MASK;
-    return *this;
-  }
-
   Format &Format::set_swapfirst(bool f) {
     _format &= SWAPFIRST_MASK;
     _format |= SWAPFIRST_SH(f);
@@ -421,12 +432,6 @@ namespace CMS {
 
   Format &Format::unset_swapfirst(void) {
     _format &= SWAPFIRST_MASK;
-    return *this;
-  }
-
-  Format &Format::set_planar(bool p) {
-    _format &= PLANAR_MASK;
-    _format |= PLANAR_SH(p);
     return *this;
   }
 
@@ -526,8 +531,8 @@ namespace CMS {
       out << ", chocolate";
     if (f.is_planar())
       out << ", planar";
-    if (f.is_endianswapped())
-      out << ", endianswapped";
+    if (f.is_endian16_swapped())
+      out << ", endian16_swapped";
     if (f.is_swapped())
       out << ", swapped";
 

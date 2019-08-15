@@ -283,6 +283,24 @@ namespace CMS {
 
     inline unsigned int bytes_per_pixel(void) const { return this->bytes_per_channel() * this->total_channels(); }
 
+    //! Set the format to be planar
+    Format &set_planar(bool p = true);
+
+    //! Set the format to be chunky
+    Format &set_chunky(void);
+
+    //! Is the format planar?
+    inline bool is_planar(void) const { return T_PLANAR(_format); }
+
+    //! Is the format chunky?
+    inline bool is_chunky(void) const { return !T_PLANAR(_format); }
+
+    Format &set_endian16_swap(bool e = true);
+
+    Format &unset_endian16_swap(void);
+
+    inline bool is_endian16_swapped(void) const { return T_ENDIAN16(_format); }
+
     //! Set the format as being swapped e.g BGR
     Format &set_swap(bool s = true);
 
@@ -292,27 +310,14 @@ namespace CMS {
     //! Is the channel order swapped?
     inline bool is_swapped(void) const { return T_DOSWAP(_format); }
 
-    //! 
-    Format &set_endianswap(bool e = true);
-
-    Format &unset_endianswap(void);
-
-    inline bool is_endianswapped(void) const { return T_ENDIAN16(_format); }
-
     Format &set_swapfirst(bool f = true);
 
     Format &unset_swapfirst(void);
 
     inline bool is_swappedfirst(void) const { return T_SWAPFIRST(_format); }
 
-    //! Set the format to be planar
-    Format &set_planar(bool p = true);
-
     //! Set the format to be packed
     Format &set_packed(void);
-
-    //! Is the format planar?
-    inline bool is_planar(void) const { return T_PLANAR(_format); }
 
     //! Is the format packed?
     inline bool is_packed(void) const { return T_PLANAR(_format) == 0; }
