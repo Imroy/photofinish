@@ -35,7 +35,7 @@ namespace PhotoFinish {
 
     png_uint_32 width, height;
     int bit_depth, colour_type;
-    png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, NULL, NULL, NULL);
+    png_get_IHDR(png, info, &width, &height, &bit_depth, &colour_type, nullptr, nullptr, nullptr);
     std::cerr << "\t" << width << "×" << height << ", " << bit_depth << " bpp, type " << colour_type << "." << std::endl;
 
     _destination->set_depth(bit_depth);

@@ -35,7 +35,7 @@ namespace PhotoFinish {
 
   PNGreader::PNGreader(const fs::path filepath) :
     ImageReader(filepath),
-    _png(NULL), _info(NULL)
+    _png(nullptr), _info(nullptr)
   {}
 
   Image::ptr PNGreader::read(Destination::ptr dest) {
@@ -57,18 +57,18 @@ namespace PhotoFinish {
     }
 
     _png = png_create_read_struct(PNG_LIBPNG_VER_STRING,
-					     NULL, NULL, NULL);
+					     nullptr, nullptr, nullptr);
     if (!_png)
       throw LibraryError("libpng", "Could not create PNG read structure");
 
     _info = png_create_info_struct(_png);
     if (!_info) {
-      png_destroy_read_struct(&_png, (png_infopp)NULL, (png_infopp)NULL);
+      png_destroy_read_struct(&_png, (png_infopp)nullptr, (png_infopp)nullptr);
       throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
     if (setjmp(png_jmpbuf(_png))) {
-      png_destroy_read_struct(&_png, &_info, NULL);
+      png_destroy_read_struct(&_png, &_info, nullptr);
       ifs.close();
       throw LibraryError("libpng", "Something went wrong reading the PNG");
     }
@@ -87,7 +87,7 @@ namespace PhotoFinish {
 	png_process_data(_png, _info, buffer, length);
       } while (length > 0);
 
-      png_destroy_read_struct(&_png, &_info, NULL);
+      png_destroy_read_struct(&_png, &_info, nullptr);
 
       image = cb._image;
     }

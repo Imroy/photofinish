@@ -31,13 +31,13 @@
 namespace PhotoFinish {
 
   Kernel1Dvar::Kernel1Dvar() :
-    _size(NULL), _start(NULL),
-    _weights(NULL)
+    _size(nullptr), _start(nullptr),
+    _weights(nullptr)
   {}
 
   Kernel1Dvar::Kernel1Dvar(double to_size) :
-    _size(NULL), _start(NULL),
-    _weights(NULL),
+    _size(nullptr), _start(nullptr),
+    _weights(nullptr),
     _to_size(to_size),
     _to_size_i(ceil(to_size))
   {
@@ -103,21 +103,21 @@ namespace PhotoFinish {
   }
 
   Kernel1Dvar::~Kernel1Dvar() {
-    if (_size != NULL) {
+    if (_size != nullptr) {
       delete [] _size;
-      _size = NULL;
+      _size = nullptr;
     }
 
-    if (_start != NULL) {
+    if (_start != nullptr) {
       delete [] _start;
-      _start = NULL;
+      _start = nullptr;
     }
 
-    if (_weights != NULL) {
+    if (_weights != nullptr) {
       for (unsigned int i = 0; i < _to_size_i; i++)
 	delete [] _weights[i];
       delete [] _weights;
-      _weights = NULL;
+      _weights = nullptr;
     }
   }
 
@@ -292,7 +292,7 @@ namespace PhotoFinish {
       }
     }
 
-    int *row_needs = NULL;
+    int *row_needs = nullptr;
     if (can_free) {
       row_needs = new int[src->height()];
       int num_threads = omp_get_num_threads();

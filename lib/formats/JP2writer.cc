@@ -189,7 +189,7 @@ namespace PhotoFinish {
     }
     opj_image_t *jp2_image = opj_image_create(channels, components, colour_space);
 
-    if (jp2_image == NULL) {
+    if (jp2_image == nullptr) {
       delete [] components;
       return;
     }
@@ -236,8 +236,8 @@ namespace PhotoFinish {
     opj_cinfo_t* cinfo = opj_create_compress(CODEC_JP2);
     opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, (void*)this);
     opj_setup_encoder(cinfo, &parameters, jp2_image);
-    opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, NULL, 0);
-    opj_encode(cinfo, cio, jp2_image, NULL);
+    opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, nullptr, 0);
+    opj_encode(cinfo, cio, jp2_image, nullptr);
 
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())

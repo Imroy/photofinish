@@ -57,7 +57,7 @@ namespace PhotoFinish {
     opj_setup_decoder(dinfo, &parameters);
     opj_cio_t *cio = opj_cio_open((opj_common_ptr)dinfo, src, file_size);
     opj_image_t *jp2_image = opj_decode(dinfo, cio);
-    if (jp2_image == NULL)
+    if (jp2_image == nullptr)
       throw LibraryError("OpenJPEG", "Could not decode file");
 
     opj_cio_close(cio);
@@ -125,7 +125,7 @@ namespace PhotoFinish {
 
     auto img = std::make_shared<Image>(jp2_image->x1 - jp2_image->x0, jp2_image->y1 - jp2_image->y0, format);
 
-    if (jp2_image->icc_profile_buf != NULL) {
+    if (jp2_image->icc_profile_buf != nullptr) {
       CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(jp2_image->icc_profile_buf, jp2_image->icc_profile_len);
       unsigned char *data_copy = new unsigned char[jp2_image->icc_profile_len];
       memcpy(data_copy, jp2_image->icc_profile_buf, jp2_image->icc_profile_len);

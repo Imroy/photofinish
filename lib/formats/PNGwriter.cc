@@ -34,7 +34,7 @@ namespace PhotoFinish {
 
   PNGwriter::PNGwriter(const fs::path filepath) :
     ImageWriter(filepath),
-    _png(NULL), _info(NULL)
+    _png(nullptr), _info(nullptr)
   {}
 
   CMS::Format PNGwriter::preferred_format(CMS::Format format) {
@@ -77,13 +77,13 @@ namespace PhotoFinish {
     ofs.open(_filepath, std::ios_base::out);
 
     _png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
-					      NULL, NULL, NULL);
+					      nullptr, nullptr, nullptr);
     if (!_png)
       throw LibraryError("libpng", "Could not create PNG write structure");
 
     _info = png_create_info_struct(_png);
     if (!_info) {
-      png_destroy_write_struct(&_png, (png_infopp)NULL);
+      png_destroy_write_struct(&_png, (png_infopp)nullptr);
       throw LibraryError("libpng", "Could not create PNG info structure");
     }
 
@@ -157,7 +157,7 @@ namespace PhotoFinish {
     }
 
     {
-      time_t t = time(NULL);
+      time_t t = time(nullptr);
       if (t > 0) {
 	png_time ptime;
 	png_convert_from_time_t(&ptime, t);

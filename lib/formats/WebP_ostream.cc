@@ -24,7 +24,7 @@ namespace PhotoFinish {
   webp_stream_writer::webp_stream_writer(std::ostream* s, unsigned int w, unsigned int h) :
     stream(s), chunk_size(4), next_chunk(12), header_at_start(false),
     need_vp8x(false), width(w - 1), height(h - 1),
-    icc_data(NULL), exif_data(NULL), xmp_data(NULL),
+    icc_data(nullptr), exif_data(nullptr), xmp_data(nullptr),
     icc_size(0), exif_size(0), xmp_size(0) {
     memcpy(fourcc, "   ", 4);
   }

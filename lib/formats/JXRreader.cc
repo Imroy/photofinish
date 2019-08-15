@@ -56,11 +56,11 @@ namespace PhotoFinish {
     std::cerr << "Opening file " << _filepath << "..." << std::endl;
     long rc;
 
-    PKCodecFactory *codec_factory = NULL;
+    PKCodecFactory *codec_factory = nullptr;
     try {
       JXRcheck(PKCreateCodecFactory(&codec_factory, WMP_SDK_VERSION));
 
-      PKImageDecode *decoder = NULL;
+      PKImageDecode *decoder = nullptr;
       try {
 	JXRcheck(codec_factory->CreateDecoderFromFile(_filepath.c_str(), &decoder));
 
@@ -127,7 +127,7 @@ namespace PhotoFinish {
 
 	decoder->WMP.wmiSCP.uAlphaMode = img->format().extra_channels();
 
-	unsigned char *pixels = NULL;
+	unsigned char *pixels = nullptr;
 	try {
 	  JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
 

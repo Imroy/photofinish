@@ -32,7 +32,7 @@ namespace PhotoFinish {
     unsigned int profile_size = 0;
     unsigned char num_markers = 0;
     std::map<unsigned char, jpeg_marker_struct*> icc_markers;
-    for (jpeg_marker_struct *marker = dinfo->marker_list; marker != NULL; marker = marker->next)
+    for (jpeg_marker_struct *marker = dinfo->marker_list; marker != nullptr; marker = marker->next)
       if ((marker->marker == JPEG_APP0 + 2)
 	  && (marker->data_length > 14)
 	  && (memcmp(marker->data, "ICC_PROFILE\0", 12) == 0)) {
@@ -48,11 +48,11 @@ namespace PhotoFinish {
       }
 
     if (profile_size == 0)	// Probably no APP2 markers
-      return NULL;
+      return nullptr;
 
     if (num_markers != icc_markers.size()) {
       std::cerr << "** Supposed to have " << (int)num_markers << " APP2 markers, but only have " << icc_markers.size() << " in list **" << std::endl;
-      return NULL;
+      return nullptr;
     }
 
     unsigned char *profile_data = new unsigned char[profile_size];
@@ -63,7 +63,7 @@ namespace PhotoFinish {
     }
 
     CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
-    if (profile != NULL) {
+    if (profile != nullptr) {
       std::string profile_name = profile->description("en", "");
       if (profile_name.length() > 0)
 	dest->set_profile(profile_name, profile_data, profile_size);

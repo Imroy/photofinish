@@ -147,7 +147,7 @@ namespace PhotoFinish {
   }
 
   ImageReader::ptr ImageReader::open(const ImageFilepath& ifp) {
-    ImageReader *ir = NULL;
+    ImageReader *ir = nullptr;
 #ifdef HAZ_PNG
     if (boost::iequals(ifp.format(), "png"))
       ir = new PNGreader(ifp.filepath());
@@ -178,7 +178,7 @@ namespace PhotoFinish {
       ir = new JXRreader(ifp.filepath());
 #endif
 
-    if (ir == NULL)
+    if (ir == nullptr)
       throw UnknownFileType(ifp.format());
 
     return ImageReader::ptr(ir);
@@ -209,7 +209,7 @@ namespace PhotoFinish {
   }
 
   ImageWriter::ptr ImageWriter::open(const ImageFilepath& ifp) {
-    ImageWriter *iw = NULL;
+    ImageWriter *iw = nullptr;
 #ifdef HAZ_PNG
     if (boost::iequals(ifp.format(), "png"))
       iw = new PNGwriter(ifp.fixed_filepath());
@@ -245,7 +245,7 @@ namespace PhotoFinish {
     if (boost::iequals(ifp.format(), "sol"))
       iw = new SOLwriter(ifp.fixed_filepath());
 
-    if (iw == NULL)
+    if (iw == nullptr)
       throw UnknownFileType(ifp.format());
 
     return ImageWriter::ptr(iw);

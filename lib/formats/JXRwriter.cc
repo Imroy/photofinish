@@ -67,18 +67,18 @@ namespace PhotoFinish {
   void JXRwriter::write(Image::ptr img, Destination::ptr dest, bool can_free) {
     long rc;
 
-    PKFactory *factory = NULL;
+    PKFactory *factory = nullptr;
     try {
       JXRcheck(PKCreateFactory(&factory, PK_SDK_VERSION));
 
-      PKCodecFactory *codec_factory = NULL;
+      PKCodecFactory *codec_factory = nullptr;
       try {
 	JXRcheck(PKCreateCodecFactory(&codec_factory, WMP_SDK_VERSION));
 
 	struct WMPStream *stream;
 	JXRcheck(factory->CreateStreamFromFilename(&stream, _filepath.c_str(), "wb"));
 
-	PKImageEncode *encoder = NULL;
+	PKImageEncode *encoder = nullptr;
 	try {
 	  JXRcheck(codec_factory->CreateCodec(&IID_PKImageWmpEncode, (void**)&encoder));
 
@@ -224,7 +224,7 @@ namespace PhotoFinish {
 	    }
 	  }
 
-	  unsigned char *pixels = NULL;
+	  unsigned char *pixels = nullptr;
 	  try {
 	    JXRcheck(PKAllocAligned((void**)&pixels, img->row_size() * img->height(), 128));
 	    for (unsigned int y = 0; y < img->height(); y++) {

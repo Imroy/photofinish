@@ -36,7 +36,7 @@ namespace PhotoFinish {
     jpeg_source_state_t *ss = (jpeg_source_state_t*)(dinfo->client_data);
     ss->is->seekg(0, std::ios_base::beg);
     ss->buffer = new JOCTET[ss->buffer_size];
-    if (ss->buffer == NULL)
+    if (ss->buffer == nullptr)
       throw MemAllocError("Out of memory?");
     smgr->bytes_in_buffer = 0;
   }
@@ -114,7 +114,7 @@ namespace PhotoFinish {
     jpeg_destination_mgr *dmgr = (jpeg_destination_mgr*)(cinfo->dest);
     jpeg_destination_state_t *ds = (jpeg_destination_state_t*)(cinfo->client_data);
     ds->buffer = new JOCTET[ds->buffer_size];
-    if (ds->buffer == NULL)
+    if (ds->buffer == nullptr)
       throw MemAllocError("Out of memory?");
 
     dmgr->next_output_byte = ds->buffer;
@@ -137,7 +137,7 @@ namespace PhotoFinish {
     jpeg_destination_state_t *ds = (jpeg_destination_state_t*)(cinfo->client_data);
     ds->os->write((char*)ds->buffer, ds->buffer_size - dmgr->free_in_buffer);
     delete [] ds->buffer;
-    ds->buffer = NULL;
+    ds->buffer = nullptr;
     dmgr->free_in_buffer = 0;
   }
 

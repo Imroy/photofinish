@@ -82,7 +82,7 @@ namespace PhotoFinish {
 	  unsigned char *profile_data = new unsigned char[chunk_size];
 	  ifs.read((char*)profile_data, chunk_size);
 	  profile = std::make_shared<CMS::Profile>(profile_data, chunk_size);
-	  if (profile != NULL) {
+	  if (profile != nullptr) {
 	    std::string profile_name = profile->description("en", "");
 	    if (profile_name.length() > 0)
 	      dest->set_profile(profile_name, profile_data, chunk_size);
@@ -126,8 +126,8 @@ namespace PhotoFinish {
       int status = WebPIAppend(idec, buffer, length);
 
       rowdata = WebPIDecGetRGB(idec, &last_y, &width, &height, &stride);
-      if (rowdata != NULL) {
-	if (img == NULL) {
+      if (rowdata != nullptr) {
+	if (img == nullptr) {
 	  std::cerr << "\t" << width << "×" << height << " RGB" << (format.extra_channels() > 0 ? "A" : "") << std::endl;
 	  img = std::make_shared<Image>(width, height, format);
 	}
@@ -146,7 +146,7 @@ namespace PhotoFinish {
 
     WebPIDelete(idec);
 
-    if (profile != NULL)
+    if (profile != nullptr)
       img->set_profile(profile);
 
     for (auto ei : EXIFtags)

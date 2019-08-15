@@ -322,7 +322,7 @@ namespace PhotoFinish {
     inline definable<fs::path> filepath(void) const { return _filepath; }
 
     //! Do we have the profile data instead of a file path?
-    inline bool has_data(void) const { return _data != NULL; }
+    inline bool has_data(void) const { return _data != nullptr; }
 
     //! The profile data for LCMS2
     CMS::Profile::ptr profile(void) const;

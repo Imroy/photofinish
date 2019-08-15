@@ -29,13 +29,13 @@ namespace PhotoFinish {
   Kernel2D::Kernel2D() :
     _width(0), _height(0),
     _centrex(0), _centrey(0),
-    _values(NULL)
+    _values(nullptr)
   {}
 
   Kernel2D::Kernel2D(short unsigned int w, short unsigned int h, short unsigned int cx, short unsigned int cy) :
     _width(w), _height(h),
     _centrex(cx), _centrey(cy),
-    _values(NULL)
+    _values(nullptr)
   {
     _values = new SAMPLE*[_height];
     for (unsigned short int y = 0; y < _height; y++)
@@ -45,7 +45,7 @@ namespace PhotoFinish {
   Kernel2D::Kernel2D(short unsigned int size, short unsigned int centre) :
     _width(size), _height(size),
     _centrex(centre), _centrey(centre),
-    _values(NULL)
+    _values(nullptr)
   {
     _values = new SAMPLE*[_height];
     for (unsigned short int y = 0; y < _height; y++)
@@ -57,11 +57,11 @@ namespace PhotoFinish {
   }
 
   Kernel2D::~Kernel2D() {
-    if (_values != NULL) {
+    if (_values != nullptr) {
       for (unsigned short int y = 0; y < _height; y++)
 	delete [] _values[y];
       delete [] _values;
-      _values = NULL;
+      _values = nullptr;
     }
   }
 

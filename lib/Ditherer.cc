@@ -27,9 +27,9 @@ namespace PhotoFinish {
 
   Ditherer::Ditherer(unsigned int width, unsigned char channels, std::vector<unsigned char> maxvalues) :
     _width(width), _channels(channels),
-    _error_row_curr(NULL), _error_row_next(NULL),
+    _error_row_curr(nullptr), _error_row_next(nullptr),
     _maxvalues(maxvalues),
-    _scale(NULL), _unscale(NULL)
+    _scale(nullptr), _unscale(nullptr)
   {
     _error_row_curr = new short int[_width * _channels];
     _error_row_next = new short int[_width * _channels];
@@ -47,24 +47,24 @@ namespace PhotoFinish {
   }
 
   Ditherer::~Ditherer() {
-    if (_error_row_curr != NULL) {
+    if (_error_row_curr != nullptr) {
       delete [] _error_row_curr;
-      _error_row_curr = NULL;
+      _error_row_curr = nullptr;
     }
 
-    if (_error_row_next != NULL) {
+    if (_error_row_next != nullptr) {
       delete [] _error_row_next;
-      _error_row_next = NULL;
+      _error_row_next = nullptr;
     }
 
-    if (_scale != NULL) {
+    if (_scale != nullptr) {
       delete [] _scale;
-      _scale = NULL;
+      _scale = nullptr;
     }
 
-    if (_unscale != NULL) {
+    if (_unscale != nullptr) {
       delete [] _unscale;
-      _unscale = NULL;
+      _unscale = nullptr;
     }
   }
 

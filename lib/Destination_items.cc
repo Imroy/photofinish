@@ -448,13 +448,13 @@ namespace PhotoFinish {
 
 
   D_profile::D_profile() :
-    _data(NULL), _data_size(0)
+    _data(nullptr), _data_size(0)
   {}
 
   D_profile::D_profile(const std::string& name, fs::path filepath) :
     _name(name),
     _filepath(filepath),
-    _data(NULL), _data_size(0)
+    _data(nullptr), _data_size(0)
   {}
 
   D_profile::D_profile(const std::string& name, unsigned char* data, unsigned int data_size) :
@@ -465,7 +465,7 @@ namespace PhotoFinish {
   D_profile::D_profile(const D_profile& other) :
     _name(other._name),
     _filepath(other._filepath),
-    _data(NULL),
+    _data(nullptr),
     _data_size(0)
   {
     _data = new unsigned char[other._data_size];
@@ -473,9 +473,9 @@ namespace PhotoFinish {
   }
 
   D_profile::~D_profile() {
-    if (_data != NULL) {
+    if (_data != nullptr) {
       delete [] _data;
-      _data = NULL;
+      _data = nullptr;
       _data_size = 0;
     }
   }
@@ -495,7 +495,7 @@ namespace PhotoFinish {
   CMS::Profile::ptr D_profile::profile(void) const {
     if (_filepath.defined())
       return std::make_shared<CMS::Profile>(_filepath);
-    if (_data != NULL)
+    if (_data != nullptr)
       return std::make_shared<CMS::Profile>(_data, _data_size);
 
     throw Uninitialised("D_profile", "filepath and data");

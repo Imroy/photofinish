@@ -32,15 +32,15 @@ namespace CMS {
   */
 
   Profile::Profile()
-    : _profile(cmsCreateProfilePlaceholder(NULL))
+    : _profile(cmsCreateProfilePlaceholder(nullptr))
   {
   }
 
   Profile::Profile(const Profile& other) :
-    _profile(NULL)
+    _profile(nullptr)
   {
     cmsUInt32Number length;
-    cmsSaveProfileToMem(other._profile, NULL, &length);
+    cmsSaveProfileToMem(other._profile, nullptr, &length);
     if (length) {
       unsigned char *data = new unsigned char [length];
       cmsSaveProfileToMem(other._profile, data, &length);
@@ -60,7 +60,7 @@ namespace CMS {
   }
 
   Profile::Profile(std::istream stream)
-    : _profile(NULL)
+    : _profile(nullptr)
   {
   }
 
@@ -70,7 +70,7 @@ namespace CMS {
   }
 
   Profile::ptr Profile::Lab4(void) {
-    return std::make_shared<Profile>(cmsCreateLab4Profile(NULL));
+    return std::make_shared<Profile>(cmsCreateLab4Profile(nullptr));
   }
       
   Profile::ptr Profile::sRGB(void) {
@@ -88,7 +88,7 @@ namespace CMS {
       0.04045,              // d
     };
     // y = (x >= d ? (a*x + b)^Gamma : c*x)
-    cmsToneCurve *gamma = cmsBuildParametricToneCurve(NULL, 4, Parameters);
+    cmsToneCurve *gamma = cmsBuildParametricToneCurve(nullptr, 4, Parameters);
     Profile::ptr profile = std::make_shared<Profile>(cmsCreateGrayProfile(&D65, gamma));
     cmsFreeToneCurve(gamma);
 
@@ -99,8 +99,8 @@ namespace CMS {
   }
 
   void Profile::write_MLU(cmsTagSignature sig, std::string language, std::string country, std::string text) {
-    cmsMLU *MLU = cmsMLUalloc(NULL, 1);
-    if (MLU != NULL) {
+    cmsMLU *MLU = cmsMLUalloc(nullptr, 1);
+    if (MLU != nullptr) {
       if (cmsMLUsetASCII(MLU, language.c_str(), country.c_str(), text.c_str()))
 	cmsWriteTag(_profile, sig, MLU);
       cmsMLUfree(MLU);
@@ -108,8 +108,8 @@ namespace CMS {
   }
 
   void Profile::write_MLU(cmsTagSignature sig, std::string language, std::string country, std::wstring text) {
-    cmsMLU *MLU = cmsMLUalloc(NULL, 1);
-    if (MLU != NULL) {
+    cmsMLU *MLU = cmsMLUalloc(nullptr, 1);
+    if (MLU != nullptr) {
       if (cmsMLUsetWide(MLU, language.c_str(), country.c_str(), text.c_str()))
 	cmsWriteTag(_profile, sig, MLU);
       cmsMLUfree(MLU);
@@ -120,7 +120,7 @@ namespace CMS {
     const char *lc = language.length() > 0 ? language.c_str() : cmsNoLanguage;
     const char *cc = country.length() > 0 ? country.c_str() : cmsNoCountry;
     unsigned int text_len;
-    if ((text_len = cmsGetProfileInfoASCII(_profile, type, lc, cc, NULL, 0)) > 0) {
+    if ((text_len = cmsGetProfileInfoASCII(_profile, type, lc, cc, nullptr, 0)) > 0) {
       char *text = new char[text_len];
       cmsGetProfileInfoASCII(_profile, type, lc, cc, text, text_len);
 
@@ -135,7 +135,7 @@ namespace CMS {
     const char *lc = language.length() > 0 ? language.c_str() : cmsNoLanguage;
     const char *cc = country.length() > 0 ? country.c_str() : cmsNoCountry;
     unsigned int text_len;
-    if ((text_len = cmsGetProfileInfo(_profile, type, lc, cc, NULL, 0)) > 0) {
+    if ((text_len = cmsGetProfileInfo(_profile, type, lc, cc, nullptr, 0)) > 0) {
       wchar_t *text = new wchar_t[text_len];
       cmsGetProfileInfo(_profile, type, lc, cc, text, text_len);
 
@@ -211,12 +211,12 @@ namespace CMS {
   }
 
   void Profile::save_to_mem(unsigned char* &dest, unsigned int &size) const {
-    cmsSaveProfileToMem(_profile, NULL, &size);
+    cmsSaveProfileToMem(_profile, nullptr, &size);
     if (size > 0) {
       dest = new unsigned char[size];
       cmsSaveProfileToMem(_profile, dest, &size);
     } else
-      dest = NULL;
+      dest = nullptr;
   }
 
 
@@ -565,7 +565,7 @@ namespace CMS {
   Transform::Transform(std::vector<Profile::ptr> profile,
 		       const Format &informat, const Format &outformat,
 		       Intent intent, cmsUInt32Number flags)
-    : _transform(NULL)
+    : _transform(nullptr)
   {
   }
 
@@ -634,7 +634,7 @@ namespace CMS {
   cmsIOHANDLER* OpenIOhandlerFromIFStream(fs::path filepath) {
     fs::ifstream ifs(filepath, std::ios_base::in);
     // How is OpenIOHandlerFromIStream not declared in this scope?!?
-    cmsIOHANDLER *ioh = NULL; //OpenIOHandlerFromIStream(dynamic_cast<std::istream*>(&ifs));
+    cmsIOHANDLER *ioh = nullptr; //OpenIOHandlerFromIStream(dynamic_cast<std::istream*>(&ifs));
     strncpy(ioh->PhysicalFile, filepath.generic_string().c_str(), cmsMAX_PATH);
 
     return ioh;

@@ -44,7 +44,7 @@ namespace PhotoFinish {
       throw FileOpenError(_filepath.native());
 
     TIFF *tiff = TIFFStreamOpen("", &fb);
-    if (tiff == NULL)
+    if (tiff == nullptr)
       throw FileOpenError(_filepath.native());
 
     int rc;

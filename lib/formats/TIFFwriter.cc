@@ -57,7 +57,7 @@ namespace PhotoFinish {
     fb.open(_filepath, std::ios_base::out);
 
     TIFF *tiff = TIFFStreamOpen("", &fb);
-    if (tiff == NULL)
+    if (tiff == nullptr)
       throw FileOpenError(_filepath.native());
 
     int rc;
@@ -107,9 +107,9 @@ namespace PhotoFinish {
       }
     }
     {
-      time_t t = time(NULL);
+      time_t t = time(nullptr);
       tm *lt = localtime(&t);
-      if (lt != NULL) {
+      if (lt != nullptr) {
 	char *datetime = (char*)malloc(20);
 	strftime(datetime, 20, "%Y:%m:%d %H:%M:%S", lt);
 	std::cerr << "\tSetting datetime tag to \"" << datetime << "\"" << std::endl;
@@ -154,7 +154,7 @@ namespace PhotoFinish {
     TIFFcheck(SetField(tiff, TIFFTAG_BITSPERSAMPLE, format.bytes_per_channel() << 3));
 
     if (img->has_profile()) {
-      unsigned char *profile_data = NULL;
+      unsigned char *profile_data = nullptr;
       unsigned int profile_len = 0;
       img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {

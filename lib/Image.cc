@@ -29,33 +29,33 @@ namespace PhotoFinish {
   Image::Image(unsigned int w, unsigned int h, CMS::Format f) :
     _width(w),
     _height(h),
-    _profile(NULL),
+    _profile(nullptr),
     _format(f),
     _row_size(0),
-    _rowdata(NULL)
+    _rowdata(nullptr)
   {
     _pixel_size = _format.bytes_per_pixel();
     _row_size = _width * _pixel_size;
 
     _rowdata = new unsigned char*[_height];
     for (unsigned int y = 0; y < _height; y++)
-      _rowdata[y] = NULL;
+      _rowdata[y] = nullptr;
   }
 
   Image::~Image() {
-    if (_rowdata != NULL) {
+    if (_rowdata != nullptr) {
       for (unsigned int y = 0; y < _height; y++)
-	if (_rowdata[y] != NULL) {
+	if (_rowdata[y] != nullptr) {
 	  delete [] _rowdata[y];
-	  _rowdata[y] = NULL;
+	  _rowdata[y] = nullptr;
 	}
       delete [] _rowdata;
-      _rowdata = NULL;
+      _rowdata = nullptr;
     }
   }
 
   CMS::Profile::ptr Image::default_profile(CMS::ColourModel default_colourmodel, std::string for_desc) {
-    CMS::Profile::ptr profile = NULL;
+    CMS::Profile::ptr profile = nullptr;
     switch (default_colourmodel) {
     case CMS::ColourModel::RGB:
       std::cerr << "\tUsing default sRGB profile for " << for_desc << "." << std::endl;
@@ -146,9 +146,9 @@ namespace PhotoFinish {
 
   Image::ptr Image::transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent, bool can_free) {
     CMS::Profile::ptr profile = _profile;
-    if (_profile == NULL)
+    if (_profile == nullptr)
       profile = default_profile(_format, "source");
-    if (dest_profile == NULL)
+    if (dest_profile == nullptr)
       dest_profile = profile;
 
     CMS::Format orig_dest_format = dest_format;
