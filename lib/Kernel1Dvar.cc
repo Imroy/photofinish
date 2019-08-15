@@ -18,7 +18,7 @@
 */
 #include <iostream>
 #include <iomanip>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>

@@ -24,7 +24,7 @@
 #include <vector>
 #include <algorithm>
 #include <boost/filesystem.hpp>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>

@@ -18,7 +18,7 @@
 */
 #include <string>
 #include <map>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include "Tags.hh"
 
 namespace PhotoFinish {

@@ -21,7 +21,7 @@
 #include <fstream>
 #include <memory>
 #include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 #include <string.h>
 #include "Destination_items.hh"
 #include "Destination.hh"
