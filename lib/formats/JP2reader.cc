@@ -17,7 +17,6 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <boost/algorithm/string/predicate.hpp>
-#include <openjpeg.h>
 #include <omp.h>
 #include "ImageFile.hh"
 #include "Exception.hh"
@@ -29,16 +28,33 @@ namespace PhotoFinish {
     ImageReader(filepath)
   {}
 
+  OPJ_SIZE_T ifstream_read(void * p_buffer, OPJ_SIZE_T p_nb_bytes, void* p_user_data) {
+    fs::ifstream *ifs = (fs::ifstream*)p_user_data;
+    ifs->read((char*)p_buffer, p_nb_bytes);
+    return ifs->gcount();
+  }
+
+  OPJ_OFF_T ifstream_skip(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
+    fs::ifstream *ifs = (fs::ifstream*)p_user_data;
+    ifs->seekg(p_nb_bytes, fs::ifstream::cur);
+    return ifs->tellg(); // ?
+  }
+
+  OPJ_BOOL ifstream_seek(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
+    fs::ifstream *ifs = (fs::ifstream*)p_user_data;
+    ifs->seekg(p_nb_bytes);
+    return ifs->good();
+  }
+
+  void ifstream_free(void * p_user_data) {
+    fs::ifstream *ifs = (fs::ifstream*)p_user_data;
+    ifs->close();
+  }
+
   Image::ptr JP2reader::read(Destination::ptr dest) {
     if (_is_open)
       throw FileOpenError("already open");
     _is_open = true;
-
-    opj_event_mgr_t event_mgr;
-    memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
-    event_mgr.error_handler = error_callback;
-    event_mgr.warning_handler = warning_callback;
-    event_mgr.info_handler = info_callback;
 
     opj_dparameters_t parameters;
     opj_set_default_decoder_parameters(&parameters);
@@ -48,20 +64,23 @@ namespace PhotoFinish {
     if (ifs.fail())
       throw FileOpenError(_filepath.native());
 
-    unsigned int file_size = fs::file_size(_filepath);
-    unsigned char *src = new unsigned char[file_size];
-    ifs.read((char*)src, file_size);
+    opj_codec_t *decoder = opj_create_decompress(OPJ_CODEC_JP2);
+    opj_set_error_handler(decoder, error_callback, nullptr);
+    opj_set_warning_handler(decoder, warning_callback, nullptr);
+    opj_set_info_handler(decoder, info_callback, nullptr);
+    opj_setup_decoder(decoder, &parameters);
 
-    opj_dinfo_t *dinfo = opj_create_decompress(CODEC_JP2);
-    opj_set_event_mgr((opj_common_ptr)dinfo, &event_mgr, (void*)this);
-    opj_setup_decoder(dinfo, &parameters);
-    opj_cio_t *cio = opj_cio_open((opj_common_ptr)dinfo, src, file_size);
-    opj_image_t *jp2_image = opj_decode(dinfo, cio);
-    if (jp2_image == nullptr)
+    opj_stream_t *stream = opj_stream_default_create(OPJ_STREAM_READ);
+    opj_stream_set_read_function(stream, ifstream_read);
+    opj_stream_set_skip_function(stream, ifstream_skip);
+    opj_stream_set_seek_function(stream, ifstream_seek);
+    opj_stream_set_user_data(stream, &ifs, ifstream_free);
+
+    opj_image_t *jp2_image = nullptr;
+    if (!opj_decode(decoder, stream, jp2_image))
       throw LibraryError("OpenJPEG", "Could not decode file");
 
-    opj_cio_close(cio);
-    delete [] src;
+    opj_stream_destroy(stream);
 
     // Is this necessary?
     if (jp2_image->numcomps > 1)
@@ -105,15 +124,15 @@ namespace PhotoFinish {
     }
 
     switch (jp2_image->color_space) {
-    case CLRSPC_SRGB:
+    case OPJ_CLRSPC_SRGB:
       format.set_colour_model(CMS::ColourModel::RGB, jp2_image->numcomps);
       break;
 
-    case CLRSPC_GRAY:
+    case OPJ_CLRSPC_GRAY:
       format.set_colour_model(CMS::ColourModel::Greyscale, jp2_image->numcomps);
       break;
 
-    case CLRSPC_SYCC:
+    case OPJ_CLRSPC_SYCC:
       format.set_colour_model(CMS::ColourModel::YUV, jp2_image->numcomps);
       break;
 

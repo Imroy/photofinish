@@ -45,6 +45,29 @@ namespace PhotoFinish {
     return format;
   }
 
+  OPJ_SIZE_T ofstream_write(void * p_buffer, OPJ_SIZE_T p_nb_bytes, void* p_user_data) {
+    fs::ofstream *ofs = (fs::ofstream*)p_user_data;
+    ofs->write((char*)p_buffer, p_nb_bytes);
+    return p_nb_bytes;
+  }
+
+  OPJ_OFF_T ofstream_skip(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
+    fs::ofstream *ofs = (fs::ofstream*)p_user_data;
+    ofs->seekp(p_nb_bytes, fs::ofstream::cur);
+    return ofs->tellp(); // ?
+  }
+
+  OPJ_BOOL ofstream_seek(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
+    fs::ofstream *ofs = (fs::ofstream*)p_user_data;
+    ofs->seekp(p_nb_bytes);
+    return ofs->good();
+  }
+
+  void ofstream_free(void * p_user_data) {
+    fs::ofstream *ofs = (fs::ofstream*)p_user_data;
+    ofs->close();
+  }
+
   void JP2writer::write(Image::ptr img, Destination::ptr dest, bool can_free) {
     if (_is_open)
       throw FileOpenError("already open");
@@ -57,16 +80,16 @@ namespace PhotoFinish {
     OPJ_COLOR_SPACE colour_space;
     switch (format.colour_model()) {
     case CMS::ColourModel::RGB:
-      colour_space = CLRSPC_SRGB;
+      colour_space = OPJ_CLRSPC_SRGB;
       break;
 
     case CMS::ColourModel::Greyscale:
-      colour_space = CLRSPC_GRAY;
+      colour_space = OPJ_CLRSPC_GRAY;
       break;
 
     case CMS::ColourModel::YCbCr:
     case CMS::ColourModel::YUV:
-      colour_space = CLRSPC_SYCC;
+      colour_space = OPJ_CLRSPC_SYCC;
       break;
 
     default:
@@ -77,12 +100,6 @@ namespace PhotoFinish {
     std::cerr << "Preparing for file " << _filepath << "..." << std::endl;
     std::cerr << "\t" << img->width() << "×" << img->height()
 	      << " " << (format.bytes_per_channel() << 3) << "-bpp " << (format.is_planar() ? "planar" : "packed" ) << " " << (colour_space == PT_GRAY ? "greyscale" : "RGB") << std::endl;
-    opj_event_mgr_t event_mgr;
-    memset(&event_mgr, 0, sizeof(opj_event_mgr_t));
-    event_mgr.error_handler = error_callback;
-    event_mgr.warning_handler = warning_callback;
-    event_mgr.info_handler = info_callback;
-
     opj_cparameters_t parameters;
     opj_set_default_encoder_parameters(&parameters);
 
@@ -100,19 +117,19 @@ namespace PhotoFinish {
 	std::string po = d.prog_order().get();
 	if (boost::iequals(po, "lrcp")) {
 	  std::cerr << "\tLayer-resolution-component-precinct order." << std::endl;
-	  parameters.prog_order = LRCP;
+	  parameters.prog_order = OPJ_LRCP;
 	} else if (boost::iequals(po, "rlcp")) {
 	  std::cerr << "\tResolution-layer-component-precinct order." << std::endl;
-	  parameters.prog_order = RLCP;
+	  parameters.prog_order = OPJ_RLCP;
 	} else if (boost::iequals(po, "rpcl")) {
 	  std::cerr << "\tResolution-precinct-component-layer order." << std::endl;
-	  parameters.prog_order = RPCL;
+	  parameters.prog_order = OPJ_RPCL;
 	} else if (boost::iequals(po, "pcrl")) {
 	  std::cerr << "\tPrecinct-component-resolution-layer order." << std::endl;
-	  parameters.prog_order = PCRL;
+	  parameters.prog_order = OPJ_PCRL;
 	} else if (boost::iequals(po, "cprl")) {
 	  std::cerr << "\tComponent-precinct-resolution-layer order." << std::endl;
-	  parameters.prog_order = CPRL;
+	  parameters.prog_order = OPJ_CPRL;
 	}
       }
       if (d.num_rates() > 0) {
@@ -233,34 +250,31 @@ namespace PhotoFinish {
 
     parameters.tcp_mct = jp2_image->numcomps == 3 ? 1 : 0;
 
-    opj_cinfo_t* cinfo = opj_create_compress(CODEC_JP2);
-    opj_set_event_mgr((opj_common_ptr)cinfo, &event_mgr, (void*)this);
-    opj_setup_encoder(cinfo, &parameters, jp2_image);
-    opj_cio_t *cio = opj_cio_open((opj_common_ptr)cinfo, nullptr, 0);
-    opj_encode(cinfo, cio, jp2_image, nullptr);
+    opj_codec_t *encoder = opj_create_compress(OPJ_CODEC_JP2);
+    opj_set_error_handler(encoder, error_callback, nullptr);
+    opj_set_warning_handler(encoder, warning_callback, nullptr);
+    opj_set_info_handler(encoder, info_callback, nullptr);
+    opj_setup_encoder(encoder, &parameters, jp2_image);
 
     fs::ofstream ofs(_filepath, std::ios_base::out);
     if (ofs.fail())
       throw FileOpenError(_filepath.native());
 
-    {
-      int size = cio_tell(cio);
-      std::cerr << "\tWriting..." << std::endl;
-      char *data = (char*)cio->buffer;
-      unsigned int written = 0;
-      while (size) {
-	unsigned int to_write = size > 1024 ? 1024 : size;
-	ofs.write(data, to_write);
-	data += to_write;
-	written += to_write;
-	size -= to_write;
-	std::cerr << "\r\tWritten " << written << " bytes";
-      }
-      std::cerr << "\r\tWritten " << written << " bytes" << std::endl;
-      ofs.close();
-    }
-    opj_cio_close(cio);
-    opj_destroy_compress(cinfo);
+    opj_stream_t *stream = opj_stream_default_create(OPJ_STREAM_WRITE);
+    opj_stream_set_write_function(stream, ofstream_write);
+    opj_stream_set_skip_function(stream, ofstream_skip);
+    opj_stream_set_seek_function(stream, ofstream_seek);
+    opj_stream_set_user_data(stream, &ofs, ofstream_free);
+
+    if (!opj_start_compress(encoder, jp2_image, stream))
+      throw LibraryError("OpenJPEG", "Could not start compression");
+    if (!opj_encode(encoder, stream))
+      throw LibraryError("OpenJPEG", "Could not encode");
+    if (!opj_end_compress(encoder, stream))
+      throw LibraryError("OpenJPEG", "Could not end compression");
+
+    opj_stream_destroy(stream);
+    opj_destroy_codec(encoder);
     opj_image_destroy(jp2_image);
     _is_open = false;
 
