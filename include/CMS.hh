@@ -136,38 +136,38 @@ namespace CMS {
   //! An enum class of LCMS2's colour models
   enum class ColourModel {
     Any = 0,
-      Greyscale = 3,
-      RGB,
-      CMY,
-      CMYK,
-      YCbCr,
-      YUV,	// Lu'v'
-      XYZ,
-      Lab,	// Lab v4
-      YUVK,	// Lu'v'K
-      HSV,
-      HLS,
-      Yxy,
+    Greyscale = 3,
+    RGB,
+    CMY,
+    CMYK,
+    YCbCr,
+    YUV,	// Lu'v'
+    XYZ,
+    Lab,	// Lab v4
+    YUVK,	// Lu'v'K
+    HSV,
+    HLS,
+    Yxy,
 
-      MCH1,
-      MCH2,
-      MCH3,
-      MCH4,
-      MCH5,
-      MCH6,
-      MCH7,
-      MCH8,
-      MCH9,
-      MCH10,
-      MCH11,
-      MCH12,
-      MCH13,
-      MCH14,
-      MCH15,
+    MCH1,
+    MCH2,
+    MCH3,
+    MCH4,
+    MCH5,
+    MCH6,
+    MCH7,
+    MCH8,
+    MCH9,
+    MCH10,
+    MCH11,
+    MCH12,
+    MCH13,
+    MCH14,
+    MCH15,
 
-      LabV2,	// Lab v2
+    LabV2,	// Lab v2
 
-      }; // class ColourModel
+  }; // enum class ColourModel
 
   std::ostream& operator<< (std::ostream& out, ColourModel model);
 
@@ -386,20 +386,20 @@ namespace CMS {
   enum class Intent {
     // ICC intents
     Perceptual,
-      Relative_colormetric,
-      Saturation,
-      Absolute_colormetric,
+    Relative_colormetric,
+    Saturation,
+    Absolute_colormetric,
 
     // non-ICC intents
-      Preserve_k_only_perceptual = 10,
-      Preserve_k_only_relative_colormetric,
-      Preserve_k_only_saturation,
-      Preserve_k_only_absolute_colormetric,
-      Preserve_k_plane_perceptual,
-      Preserve_k_plane_relative_colormetric,
-      Preserve_k_plane_saturation,
-      Preserve_k_plane_absolute_colormetric,
-      };
+    Preserve_k_only_perceptual = 10,
+    Preserve_k_only_relative_colormetric,
+    Preserve_k_only_saturation,
+    Preserve_k_only_absolute_colormetric,
+    Preserve_k_plane_perceptual,
+    Preserve_k_plane_relative_colormetric,
+    Preserve_k_plane_saturation,
+    Preserve_k_plane_absolute_colormetric,
+  };
 
   //! Wrap LCMS2's transform object
   class Transform {
