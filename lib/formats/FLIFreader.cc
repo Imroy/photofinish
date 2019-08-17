@@ -73,7 +73,26 @@ namespace PhotoFinish {
 					 flif_image_get_height(flif_image),
 					 format);
 
-    // TODO: Get ICC profile
+    {
+      uint8_t *profile_data;
+      size_t profile_len;
+      if (flif_image_get_metadata(flif_image, "iCCP", &profile_data, &profile_len)) {
+	std::cerr << "\tImage has iCCP chunk." << std::endl;
+	CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_len);
+	unsigned char *data_copy = new unsigned char[profile_len];
+	memcpy(data_copy, profile_data, profile_len);
+
+	std::string profile_name = profile->description("en", "");
+	if (profile_name.length() > 0)
+	  dest->set_profile(profile_name, data_copy, profile_len);
+	else
+	  dest->set_profile("FLIF ICC profile", data_copy, profile_len);
+	image->set_profile(profile);
+
+	flif_image_free_metadata(flif_image, profile_data);
+      }
+    }
+
     // TODO: Get EXIF/IPTC/XMP metadata
  
 #pragma omp parallel for schedule(dynamic, 1)
