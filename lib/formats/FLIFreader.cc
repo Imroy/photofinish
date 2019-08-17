@@ -99,24 +99,80 @@ namespace PhotoFinish {
     for (uint32_t y = 0; y < image->height(); y++) {
       image->check_rowdata_alloc(y);
 
-      switch (format.channels()) {
-      case 1:
+      // libflif only returns greyscale and RGBA (8 or 16 bpp)
+      // Greyscale with alpha and RGB has to be extracted from RGBA
+      if ((format.channels() == 1) && (format.extra_channels() == 0)) {
 	switch(format.bytes_per_channel()) {
 	case 1: flif_image_read_row_GRAY8(flif_image, y, image->row<void>(y), image->row_size());
 	  break;
+
 	case 2: flif_image_read_row_GRAY16(flif_image, y, image->row<void>(y), image->row_size());
 	  break;
+
+	default:
+	  break;
 	}
-	break;
-      case 3:
+
+      } else if ((format.channels() == 3) && (format.extra_channels() == 1)) {
 	switch(format.bytes_per_channel()) {
 	case 1: flif_image_read_row_RGBA8(flif_image, y, image->row<void>(y), image->row_size());
 	  break;
+
 	case 2: flif_image_read_row_RGBA16(flif_image, y, image->row<void>(y), image->row_size());
 	  break;
+
+	default:
+	  break;
 	}
-	break;
+
+      } else {
+	if (format.bytes_per_channel() == 1) {
+	  uint8_t temp[image->width() * 4];
+	  flif_image_read_row_RGBA8(flif_image, y, temp, sizeof(temp));
+
+	  uint8_t *in = temp, *out = image->row<uint8_t>(y);
+	  switch (format.channels()) {
+	  case 1: // Greyscale with alpha - grey value is in the 'blue' channel
+	    for (uint32_t x = 0; x < image->width(); x++, in += 4, out += 2) {
+	      out[0] = in[2];
+	      out[1] = in[3];
+	    }
+	    break;
+
+	  case 3: // RGB - throw out empty alpha channel
+	    for (uint32_t x = 0; x < image->width(); x++, in += 4, out += 3) {
+	      out[0] = in[0];
+	      out[1] = in[1];
+	      out[2] = in[2];
+	    }
+	    break;
+	  }
+
+	} else {
+	  uint16_t temp[image->width() * 4];
+	  flif_image_read_row_RGBA16(flif_image, y, temp, sizeof(temp));
+
+	  uint16_t *in = temp, *out = image->row<uint16_t>(y);
+	  switch (format.channels()) {
+	  case 1: // Greyscale with alpha - grey value is in the 'blue' channel
+	    for (uint32_t x = 0; x < image->width(); x++, in += 4, out += 2) {
+	      out[0] = in[2];
+	      out[1] = in[3];
+	    }
+	    break;
+
+	  case 3: // RGB - throw out empty alpha channel
+	    for (uint32_t x = 0; x < image->width(); x++, in += 4, out += 3) {
+	      out[0] = in[0];
+	      out[1] = in[1];
+	      out[2] = in[2];
+	    }
+	    break;
+
+	  }
+	}
       }
+
     }
 
     flif_destroy_decoder(decoder);
