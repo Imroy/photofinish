@@ -67,7 +67,7 @@ namespace PhotoFinish {
 
   template <typename T, int channels>
   void Kernel2D::convolve_type_channels(Image::ptr src, Image::ptr dest, bool can_free) {
-    int *row_needs;
+    int *row_needs = nullptr;
     if (can_free) {
       int num_threads = omp_get_num_threads();
       row_needs = new int[src->height()];
