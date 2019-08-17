@@ -288,6 +288,38 @@ namespace PhotoFinish {
     void read_config(const YAML::Node& node);
   };
 
+
+  //! FLIF parameters for destinations
+  class D_FLIF : public Role_Definable {
+  private:
+    bool _interlaced, _crc, _alpha_zero, _channel_compact, _ycocg;
+    uint32_t _learn_repeat, _divisor, _min_size, _split_threshold;
+    uint32_t _chance_cutoff, _chance_alpha, _loss;
+
+  public:
+    //! Empty constructor
+    D_FLIF();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    inline bool interlaced(void) const { return _interlaced; }
+    inline bool crc(void) const { return _crc; }
+    inline bool alpha_zero(void) const { return _alpha_zero; }
+    inline bool channel_compact(void) const { return _channel_compact; }
+    inline bool ycocg(void) const { return _ycocg; }
+    inline bool learn_repeat(void) const { return _learn_repeat; }
+    inline bool divisor(void) const { return _divisor; }
+    inline bool min_size(void) const { return _min_size; }
+    inline bool split_threshold(void) const { return _split_threshold; }
+    inline bool chance_cutoff(void) const { return _chance_cutoff; }
+    inline bool chance_alpha(void) const { return _chance_alpha; }
+    inline bool loss(void) const { return _loss; }
+
+    void read_config(const YAML::Node& node);
+  }; // class D_FLIF
+
+
   //! ICC profile parameters for destination
   class D_profile {
   private:

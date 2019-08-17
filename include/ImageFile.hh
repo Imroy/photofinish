@@ -40,6 +40,10 @@
 #include <webp/encode.h>
 #include <webp/decode.h>
 #endif
+#ifdef HAZ_FLIF
+#include <flif_dec.h>
+#include <flif_enc.h>
+#endif
 
 #include "CMS.hh"
 #include "Image.hh"
@@ -324,6 +328,34 @@ namespace PhotoFinish {
   }; // class JXRwriter
 
 #endif // HAZ_JXR
+
+#ifdef HAZ_FLIF
+  //! FLIF reader
+  class FLIFreader : public ImageReader {
+  private:
+
+  public:
+    FLIFreader(const fs::path filepath);
+
+    Image::ptr read(Destination::ptr dest);
+
+  }; // class FLIFreader
+
+
+  //! FLIF writer
+  class FLIFwriter : public ImageWriter {
+  private:
+
+  public:
+    FLIFwriter(const fs::path filepath);
+
+    CMS::Format preferred_format(CMS::Format format);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+
+  }; // class FLIFwriter
+
+
+#endif // HAZ_FLIF
 
   //! Write the boot logo files for use on Motorola Atrix 4G and possibly other phones
   /*!

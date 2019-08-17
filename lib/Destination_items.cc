@@ -447,6 +447,69 @@ namespace PhotoFinish {
 
 
 
+  D_FLIF::D_FLIF() :
+    _interlaced(true),
+    _crc(true),
+    _alpha_zero(false),
+    _channel_compact(true),
+    _ycocg(true),
+    _learn_repeat(2),
+    _divisor(30),
+    _min_size(50),
+    _split_threshold(64),
+    _chance_cutoff(2),
+    _chance_alpha(19),
+    _loss(0)
+  {}
+
+  void D_FLIF::add_variables(multihash& vars) {
+  }
+
+  void D_FLIF::read_config(const YAML::Node& node) {
+    if (node["interlaced"])
+      _interlaced = node["interlaced"].as<bool>();
+
+    if (node["crc"])
+      _crc = node["crc"].as<bool>();
+
+    if (node["alpha_zero"])
+      _alpha_zero = node["alpha_zero"].as<bool>();
+
+    if (node["channel_compact"])
+      _channel_compact = node["channel_compact"].as<bool>();
+
+    if (node["ycocg"])
+      _ycocg = node["ycocg"].as<bool>();
+
+    if (node["learn_repeat"])
+      _learn_repeat = node["learn_repeat"].as<uint32_t>();
+
+    if (node["divisor"])
+      _divisor = node["divisor"].as<uint32_t>();
+
+    if (node["min_size"])
+      _min_size = node["min_size"].as<uint32_t>();
+
+    if (node["split_threshold"])
+      _split_threshold = node["split_threshold"].as<uint32_t>();
+
+    if (node["chance_cutoff"])
+      _chance_cutoff = node["chance_cutoff"].as<uint32_t>();
+
+    if (node["chance_alpha"])
+      _chance_alpha = node["chance_alpha"].as<uint32_t>();
+
+    if (node["loss"])
+      _loss = node["loss"].as<uint32_t>();
+
+    if (node["lossless"])
+      _loss = 0;
+
+  }
+
+
+
+
   D_profile::D_profile() :
     _data(nullptr), _data_size(0)
   {}

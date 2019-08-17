@@ -44,6 +44,7 @@ namespace PhotoFinish {
     _jpeg(other._jpeg), _png(other._png),
     _tiff(other._tiff), _jp2(other._jp2),
     _webp(other._webp), _jxr(other._jxr),
+    _flif(other._flif),
     _intent(other._intent),
     _profile(other._profile),
     _forcergb(other._forcergb),
@@ -74,6 +75,7 @@ namespace PhotoFinish {
       _jp2 = b._jp2;
       _webp = b._webp;
       _jxr = b._jxr;
+      _flif = b._flif;
       _intent = b._intent;
       _profile = b._profile;
       _forcergb = b._forcergb;
@@ -267,6 +269,9 @@ namespace PhotoFinish {
 
     if (node["jxr"])
       _jxr.read_config(node["jxr"]);
+
+    if (node["flif"])
+      _flif.read_config(node["flif"]);
 
     if (node["profile"]) {
       _profile = std::make_shared<D_profile>();

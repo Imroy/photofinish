@@ -77,6 +77,13 @@ namespace PhotoFinish {
     }
 #endif
 
+#ifdef HAZ_FLIF
+    if (boost::iequals(ext, "flif")) {
+      _format = "flif";
+      unknown = false;
+    }
+#endif
+
     if (unknown)
       throw UnknownFileType(filepath.generic_string());
   }
@@ -113,6 +120,11 @@ namespace PhotoFinish {
 #ifdef HAZ_JXR
     if (boost::iequals(_format, "jxr"))
       return fp.replace_extension(".jxr");
+#endif
+
+#ifdef HAZ_FLIF
+    if (boost::iequals(_format, "flif"))
+      return fp.replace_extension(".flif");
 #endif
 
     if (boost::iequals(_format, "sol"))
@@ -176,6 +188,11 @@ namespace PhotoFinish {
 #ifdef HAZ_JXR
     if (boost::iequals(ifp.format(), "jxr"))
       ir = new JXRreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_FLIF
+    if (boost::iequals(ifp.format(), "flif"))
+      ir = new FLIFreader(ifp.filepath());
 #endif
 
     if (ir == nullptr)
@@ -242,6 +259,11 @@ namespace PhotoFinish {
       iw = new JXRwriter(ifp.fixed_filepath());
 #endif
 
+#ifdef HAZ_FLIF
+    if (boost::iequals(ifp.format(), "flif"))
+      iw = new FLIFwriter(ifp.fixed_filepath());
+#endif
+
     if (boost::iequals(ifp.format(), "sol"))
       iw = new SOLwriter(ifp.fixed_filepath());
 
@@ -269,6 +291,9 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "jxr"))
       const_cast<D_JXR&>(dest->jxr()).add_variables(vars);
+
+    if (boost::iequals(format, "flif"))
+      const_cast<D_FLIF&>(dest->flif()).add_variables(vars);
   }
 
 }

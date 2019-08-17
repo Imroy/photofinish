@@ -40,6 +40,7 @@ pkg_check_modules(TIFF libtiff-4)
 pkg_check_modules(JP2 libopenjp2)
 pkg_check_modules(WEBP libwebp)
 # TODO JXR?
+# TODO FLIF?
 
 set(FORMATS_FILES lib/formats/SOLwriter.cc)
 set(FORMATS_INCLUDE_DIRS lib/formats)
@@ -77,6 +78,12 @@ if (WEBP_FOUND)
 	set(FORMATS_LIBRARIES ${FORMATS_LIBRARIES} ${WEBP_LIBRARIES})
 endif()
 # TODO JXR?
+#if (FLIF_FOUND)
+	set(FORMATS_FILES ${FORMATS_FILES} lib/formats/FLIFreader.cc lib/formats/FLIFwriter.cc)
+	set(FORMATS_INCLUDE_DIRS ${FORMATS_INCLUDE_DIRS} /usr/local/include)
+	set(FORMATS_CFLAGS ${FORMATS_CFLAGS} -DHAZ_FLIF)
+	set(FORMATS_LIBRARIES ${FORMATS_LIBRARIES} -lflif)
+#endif()
 
 add_library(pf
 	${CORE_FILES}

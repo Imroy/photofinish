@@ -58,6 +58,7 @@ namespace PhotoFinish {
     D_JP2 _jp2;
     D_WebP _webp;
     D_JXR _jxr;
+    D_FLIF _flif;
 
     definable<CMS::Intent> _intent;	//! CMS rendering intent
 
@@ -133,6 +134,9 @@ namespace PhotoFinish {
 
     inline D_JXR& jxr(void) { return _jxr; }
     inline void set_jxr(const D_JXR& j) { _jxr = j; }
+
+    inline D_FLIF& flif(void) { return _flif; }
+    inline void set_flif(const D_FLIF& f) { _flif = f; }
 
     inline definable<CMS::Intent> intent(void) const { return _intent; }
 
