@@ -36,14 +36,18 @@ namespace PhotoFinish {
 
   OPJ_OFF_T ifstream_skip(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
     fs::ifstream *ifs = (fs::ifstream*)p_user_data;
+    auto start_pos = ifs->tellg();
     ifs->seekg(p_nb_bytes, fs::ifstream::cur);
-    return ifs->tellg(); // ?
+    if (ifs->fail())
+      return -1;
+
+    return ifs->tellg() - start_pos;
   }
 
   OPJ_BOOL ifstream_seek(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
     fs::ifstream *ifs = (fs::ifstream*)p_user_data;
     ifs->seekg(p_nb_bytes);
-    return ifs->good();
+    return !ifs->fail();
   }
 
   void ifstream_free(void * p_user_data) {

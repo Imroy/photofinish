@@ -47,20 +47,25 @@ namespace PhotoFinish {
 
   OPJ_SIZE_T ofstream_write(void * p_buffer, OPJ_SIZE_T p_nb_bytes, void* p_user_data) {
     fs::ofstream *ofs = (fs::ofstream*)p_user_data;
+    auto start_pos = ofs->tellp();
     ofs->write((char*)p_buffer, p_nb_bytes);
-    return p_nb_bytes;
+    return ofs->tellp() - start_pos;
   }
 
   OPJ_OFF_T ofstream_skip(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
     fs::ofstream *ofs = (fs::ofstream*)p_user_data;
+    auto start_pos = ofs->tellp();
     ofs->seekp(p_nb_bytes, fs::ofstream::cur);
-    return ofs->tellp(); // ?
+    if (ofs->fail())
+      return -1;
+
+    return ofs->tellp() - start_pos;
   }
 
   OPJ_BOOL ofstream_seek(OPJ_OFF_T p_nb_bytes, void * p_user_data) {
     fs::ofstream *ofs = (fs::ofstream*)p_user_data;
     ofs->seekp(p_nb_bytes);
-    return ofs->good();
+    return !ofs->fail();
   }
 
   void ofstream_free(void * p_user_data) {
