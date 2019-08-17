@@ -17,6 +17,8 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ImageFile.hh"
+#include <iostream>
+#include <iomanip>
 
 namespace fs = boost::filesystem;
 
@@ -26,13 +28,21 @@ namespace PhotoFinish {
     ImageReader(filepath)
   {}
 
+  uint32_t flif_read_callback(uint32_t quality, int64_t bytes_read, uint8_t decode_over, void *user_data, void *context) {
+    std::cerr << "\r\tLoaded " << bytes_read << " bytes, quality=" << std::setprecision(2) << (quality * 0.01) << "%  ";
+    return quality + 1000;
+  }
+
   Image::ptr FLIFreader::read(Destination::ptr dest) {
     if (_is_open)
       throw FileOpenError("already open");
     _is_open = true;
 
     FLIF_DECODER *decoder = flif_create_decoder();
+    flif_decoder_set_callback(decoder, flif_read_callback, nullptr);
+    flif_decoder_set_first_callback_quality(decoder, 1000);
     flif_decoder_decode_file(decoder, _filepath.c_str());
+    std::cerr << std::endl;
 
     FLIF_IMAGE *flif_image = flif_decoder_get_image(decoder, 0);
 
