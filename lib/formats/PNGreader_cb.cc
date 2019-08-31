@@ -120,8 +120,8 @@ namespace PhotoFinish {
   }
 
   void PNGreader_cb::row(png_structp png, png_bytep row_data, png_uint_32 row_num, int pass) {
-    _image->check_rowdata_alloc(row_num);
-    memcpy(_image->row(row_num), row_data, _image->row_size());
+    _image->check_row_alloc(row_num);
+    memcpy(_image->row(row_num)->data(), row_data, _image->row_size());
     std::cerr << "\r\tRead " << (row_num + 1) << " of " << _image->height() << " rows";
   }
 

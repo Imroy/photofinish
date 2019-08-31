@@ -73,7 +73,7 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
 				       0, 0,
 				       orig_image->width(), orig_image->height());
 
-  auto resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3), true);
+  auto resized_image = frame->crop_resize(orig_image, D_resize::lanczos(3));
 
   CMS::Format resized_format = resized_image->format();
   resized_format.set_colour_model(orig_model);

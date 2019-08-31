@@ -113,7 +113,7 @@ namespace PhotoFinish {
       std::cerr << "\tCopying image data to blob..." << std::endl;
       unsigned char *rgb = new unsigned char[img->row_size() * img->height()];
       for (unsigned int y = 0; y < img->height(); y++) {
-	memcpy(rgb + (y * img->row_size()), img->row(y), img->row_size());
+	memcpy(rgb + (y * img->row_size()), img->row(y)->data(), img->row_size());
 	if (can_free)
 	  img->free_row(y);
       }

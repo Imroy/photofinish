@@ -229,14 +229,14 @@ namespace PhotoFinish {
     for (unsigned int y = 0; y < img->height(); y++) {
       if (format.is_planar())
 	if (depth == 1)
-	  write_planar<unsigned char>(img->width(), channels, img->row<unsigned char>(y), jp2_image, y);
+	  write_planar<unsigned char>(img->width(), channels, img->row(y)->data<unsigned char>(), jp2_image, y);
 	else
-	  write_planar<short unsigned int>(img->width(), channels, img->row<short unsigned int>(y), jp2_image, y);
+	  write_planar<short unsigned int>(img->width(), channels, img->row(y)->data<short unsigned int>(), jp2_image, y);
       else
 	if (depth == 1)
-	  write_packed<unsigned char>(img->width(), channels, img->row<unsigned char>(y), jp2_image, y);
+	  write_packed<unsigned char>(img->width(), channels, img->row(y)->data<unsigned char>(), jp2_image, y);
 	else
-	  write_packed<short unsigned int>(img->width(), channels, img->row<short unsigned int>(y), jp2_image, y);
+	  write_packed<short unsigned int>(img->width(), channels, img->row(y)->data<short unsigned int>(), jp2_image, y);
 
       if (can_free)
 	img->free_row(y);

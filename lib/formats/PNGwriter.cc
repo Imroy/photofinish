@@ -176,7 +176,7 @@ namespace PhotoFinish {
 
     std::cerr << "\tWriting image..." << std::endl;
     for (unsigned int y = 0; y < img->height(); y++) {
-      png_write_row(_png, img->row<unsigned char>(y));
+      png_write_row(_png, img->row(y)->data<unsigned char>());
 
       if (can_free)
 	img->free_row(y);

@@ -132,7 +132,7 @@ namespace PhotoFinish {
 	  img = std::make_shared<Image>(width, height, format);
 	}
 	while (y < last_y) {
-	  memcpy(img->row(y), rowdata, stride);
+	  memcpy(img->row(y)->data(), rowdata, stride);
 	  std::cerr << "\r\tRead " << (y + 1) << " of " << height << " rows";
 	  y++;
 	  rowdata += stride;

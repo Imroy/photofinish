@@ -141,8 +141,8 @@ namespace PhotoFinish {
 	  }
 
 	  for (unsigned int y = 0; y < img->height(); y++) {
-	    img->check_rowdata_alloc(y);
-	    memcpy(img->row(y), pixels + (y * img->row_size()), img->row_size());
+	    img->check_row_alloc(y);
+	    memcpy(img->row(y)->data(), pixels + (y * img->row_size()), img->row_size());
 	    std::cerr << "\r\tRead " << y << " of " << img->height() << " rows";
 	  }
 	  std::cerr << "\r\tRead " << img->height() << " of " << img->height() << " rows" << std::endl;

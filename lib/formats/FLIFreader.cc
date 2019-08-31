@@ -107,16 +107,16 @@ namespace PhotoFinish {
  
 #pragma omp parallel for schedule(dynamic, 1)
     for (uint32_t y = 0; y < image->height(); y++) {
-      image->check_rowdata_alloc(y);
+      image->check_row_alloc(y);
 
       // libflif only returns greyscale and RGBA (8 or 16 bpp)
       // Greyscale with alpha and RGB has to be extracted from RGBA
       if ((format.channels() == 1) && (format.extra_channels() == 0)) {
 	switch(format.bytes_per_channel()) {
-	case 1: flif_image_read_row_GRAY8(flif_image, y, image->row<void>(y), image->row_size());
+	case 1: flif_image_read_row_GRAY8(flif_image, y, image->row(y)->data<void>(), image->row_size());
 	  break;
 
-	case 2: flif_image_read_row_GRAY16(flif_image, y, image->row<void>(y), image->row_size());
+	case 2: flif_image_read_row_GRAY16(flif_image, y, image->row(y)->data<void>(), image->row_size());
 	  break;
 
 	default:
@@ -125,10 +125,10 @@ namespace PhotoFinish {
 
       } else if ((format.channels() == 3) && (format.extra_channels() == 1)) {
 	switch(format.bytes_per_channel()) {
-	case 1: flif_image_read_row_RGBA8(flif_image, y, image->row<void>(y), image->row_size());
+	case 1: flif_image_read_row_RGBA8(flif_image, y, image->row(y)->data<void>(), image->row_size());
 	  break;
 
-	case 2: flif_image_read_row_RGBA16(flif_image, y, image->row<void>(y), image->row_size());
+	case 2: flif_image_read_row_RGBA16(flif_image, y, image->row(y)->data<void>(), image->row_size());
 	  break;
 
 	default:
@@ -140,7 +140,7 @@ namespace PhotoFinish {
 	  uint8_t temp[image->width() * 4];
 	  flif_image_read_row_RGBA8(flif_image, y, temp, sizeof(temp));
 
-	  uint8_t *in = temp, *out = image->row<uint8_t>(y);
+	  uint8_t *in = temp, *out = image->row(y)->data<uint8_t>();
 	  switch (format.channels()) {
 	  case 1: // Greyscale with alpha - grey value is in the 'blue' channel
 	    for (uint32_t x = 0; x < image->width(); x++, in += 4, out += 2) {
@@ -162,7 +162,7 @@ namespace PhotoFinish {
 	  uint16_t temp[image->width() * 4];
 	  flif_image_read_row_RGBA16(flif_image, y, temp, sizeof(temp));
 
-	  uint16_t *in = temp, *out = image->row<uint16_t>(y);
+	  uint16_t *in = temp, *out = image->row(y)->data<uint16_t>();
 	  switch (format.channels()) {
 	  case 1: // Greyscale with alpha - grey value is in the 'blue' channel
 	    for (uint32_t x = 0; x < image->width(); x++, in += 4, out += 2) {
