@@ -29,7 +29,6 @@ namespace PhotoFinish {
   Image::Image(unsigned int w, unsigned int h, CMS::Format f) :
     _width(w),
     _height(h),
-    _profile(nullptr),
     _format(f),
     _row_size(0),
     _rows(h, nullptr)
@@ -43,7 +42,6 @@ namespace PhotoFinish {
   }
 
   CMS::Profile::ptr Image::default_profile(CMS::ColourModel default_colourmodel, std::string for_desc) {
-    CMS::Profile::ptr profile = nullptr;
     switch (default_colourmodel) {
     case CMS::ColourModel::RGB:
       std::cerr << "\tUsing default sRGB profile for " << for_desc << "." << std::endl;
@@ -64,7 +62,7 @@ namespace PhotoFinish {
       std::cerr << "** Cannot assign a default profile for colour model " << default_colourmodel << " **" << std::endl;
     }
 
-    return profile;
+    return std::make_shared<CMS::Profile>();
   }
 
   void Image::replace_row(std::shared_ptr<ImageRow> newrow) {
@@ -145,9 +143,9 @@ namespace PhotoFinish {
 
   Image::ptr Image::transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent) {
     CMS::Profile::ptr profile = _profile;
-    if (_profile == nullptr)
+    if (!_profile)
       profile = default_profile(_format, "source");
-    if (dest_profile == nullptr)
+    if (!dest_profile)
       dest_profile = profile;
 
     CMS::Format orig_dest_format = dest_format;

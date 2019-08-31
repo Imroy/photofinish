@@ -64,7 +64,7 @@ namespace PhotoFinish {
     //! The height of this image
     inline const unsigned int height(void) const { return _height; }
 
-    inline bool has_profile(void) const { return _profile == nullptr ? false : true; }
+    inline bool has_profile(void) const { return _profile ? true : false; }
 
     //! Get the ICC profile
     inline const CMS::Profile::ptr profile(void) const { return _profile; }
@@ -103,7 +103,7 @@ namespace PhotoFinish {
     inline size_t row_size(void) const { return _row_size; }
 
     inline void check_row_alloc(unsigned int y) {
-      if (_rows[y] == nullptr)
+      if (!_rows[y])
 	_rows[y] = std::make_shared<ImageRow>(this, y);
     }
 
@@ -113,7 +113,7 @@ namespace PhotoFinish {
 
     //! Free the memory storing row 'y'
     inline void free_row(unsigned int y) {
-      if (_rows[y] != nullptr)
+      if (_rows[y])
 	_rows[y].reset();
     }
 
@@ -135,7 +135,7 @@ namespace PhotoFinish {
 
     //! Transform this image into a different colour space and/or ICC profile, making a new image
     /*!
-      \param dest_profile The ICC profile of the destination. If NULL, uses image's profile.
+      \param dest_profile The ICC profile of the destination. If empty, uses image's profile.
       \param dest_format The LCMS2 pixel format.
       \param intent The ICC intent of the transform, defaults to perceptual.
       \return A new image

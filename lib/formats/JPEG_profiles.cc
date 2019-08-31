@@ -48,11 +48,11 @@ namespace PhotoFinish {
       }
 
     if (profile_size == 0)	// Probably no APP2 markers
-      return nullptr;
+      return std::make_shared<CMS::Profile>();
 
     if (num_markers != icc_markers.size()) {
       std::cerr << "** Supposed to have " << (int)num_markers << " APP2 markers, but only have " << icc_markers.size() << " in list **" << std::endl;
-      return nullptr;
+      return std::make_shared<CMS::Profile>();
     }
 
     unsigned char *profile_data = new unsigned char[profile_size];
@@ -63,7 +63,7 @@ namespace PhotoFinish {
     }
 
     CMS::Profile::ptr profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
-    if (profile != nullptr) {
+    if (profile) {
       std::string profile_name = profile->description("en", "");
       if (profile_name.length() > 0)
 	dest->set_profile(profile_name, profile_data, profile_size);

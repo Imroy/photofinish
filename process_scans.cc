@@ -240,7 +240,7 @@ int main(int argc, char* argv[]) {
 	    if (orig_format == converted_format)
 	      converted_image = orig_image;
 	    else
-	      converted_image = orig_image->transform_colour(nullptr, converted_format);
+	      converted_image = orig_image->transform_colour(std::make_shared<CMS::Profile>(), converted_format);
 
 	    filetags->copy_to(converted_image);
 	    converted_file->write(converted_image, converted_dest, !do_preview);
