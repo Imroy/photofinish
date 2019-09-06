@@ -78,14 +78,12 @@ namespace PhotoFinish {
     switch (flif_image_get_nb_channels(flif_image)) {
     case 2:
       format.set_extra_channels(1);
-      format.set_premult_alpha();
     case 1:
       format.set_colour_model(CMS::ColourModel::Greyscale);
       break;
 
     case 4:
       format.set_extra_channels(1);
-      format.set_premult_alpha();
     case 3:
       format.set_colour_model(CMS::ColourModel::RGB);
       break;
