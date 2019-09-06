@@ -153,14 +153,10 @@ namespace PhotoFinish {
     if (_format.extra_channels() > 0) {
       if (_format.is_premult_alpha() && (!dest_format.is_premult_alpha())) {
 	need_un_alpha_mult = true;
-	_format = orig_dest_format;
 	_format.unset_premult_alpha();
 	_pixel_size = orig_dest_format.bytes_per_pixel();
 	_row_size = _width * _pixel_size;
       } else if ((!_format.is_premult_alpha()) && dest_format.is_premult_alpha()) {
-	dest_format.set_channel_type(_format);
-	dest_format.set_extra_channels(_format.extra_channels());
-	dest_format.set_packed();
 	dest_format.unset_premult_alpha();
 	need_alpha_mult = true;
       }
