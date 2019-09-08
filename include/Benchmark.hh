@@ -1,5 +1,5 @@
 /*
-        Copyright 2014 Ian Tester
+        Copyright 2014-2019 Ian Tester
 
         This file is part of Photo Finish.
 
