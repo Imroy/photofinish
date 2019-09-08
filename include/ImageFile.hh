@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __IMAGEFILE_HH__
-#define __IMAGEFILE_HH__
+#pragma once
 
 #include <string>
 #include <memory>
@@ -376,5 +375,3 @@ namespace PhotoFinish {
   }; // class SOLwriter
 
 }
-
-#endif // __IMAGEFILE_HH__

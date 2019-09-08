@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __WEBP_OSTREAM_HH__
-#define __WEBP_OSTREAM_HH__
+#pragma once
 
 #include <iostream>
 #include <exiv2/exiv2.hpp>
@@ -104,5 +103,3 @@ namespace PhotoFinish {
   }
 
 }; // namespace PhotoFinish
-
-#endif // __WEBP_OSTREAM_HH__

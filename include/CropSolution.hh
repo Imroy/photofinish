@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __CROPSOLUTION_HH__
-#define __CROPSOLUTION_HH__
+#pragma once
 
 #include <map>
 #include <memory>
@@ -47,5 +46,3 @@ namespace PhotoFinish {
   };
 
 };
-
-#endif /* __CROPSOLUTION_H__ */

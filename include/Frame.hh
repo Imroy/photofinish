@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __FRAME_HH__
-#define __FRAME_HH__
+#pragma once
 
 #include <memory>
 #include "Destination_items.hh"
@@ -72,5 +71,3 @@ namespace PhotoFinish {
   };
 
 }
-
-#endif /* __FRAME_HH__ */

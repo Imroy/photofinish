@@ -16,8 +16,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __JP2_HH__
-#define __JP2_HH__
+#pragma once
+
 #include <openjpeg.h>
 
 namespace PhotoFinish {
@@ -66,6 +66,3 @@ namespace PhotoFinish {
   }
 
 } // namespace PhotoFinish
-
-
-#endif // __JP2_HH__

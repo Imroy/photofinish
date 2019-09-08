@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __JXR_HH__
-#define __JXR_HH__
+#pragma once
 
 #include <JXRGlue.h>
 #undef min
@@ -40,5 +39,3 @@ namespace PhotoFinish {
   CMS::Format jxr_cms_format(const PKPixelFormatGUID &g);
 
 }
-
-#endif // __JXR_HH__

@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __DESTINATION_ITEMS_HH__
-#define __DESTINATION_ITEMS_HH__
+#pragma once
 
 #include <string>
 #include <memory>
@@ -388,5 +387,3 @@ namespace PhotoFinish {
   };
 
 }
-
-#endif // __DESTINATION_ITEMS_HH__

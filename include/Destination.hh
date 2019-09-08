@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __DESTINATION_HH__
-#define __DESTINATION_HH__
+#pragma once
 
 #include "yaml-cpp/yaml.h"
 #include <string>
@@ -198,5 +197,3 @@ namespace PhotoFinish {
   };
 
 }
-
-#endif // __DESTINATION_HH__

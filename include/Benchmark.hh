@@ -16,8 +16,7 @@
         You should have received a copy of the GNU General Public License
         along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __BENCHMARK_HH__
-#define __BENCHMARK_HH__
+#pragma once
 
 #include <ostream>
 #include <time.h>
@@ -60,5 +59,3 @@ namespace PhotoFinish {
   std::ostream& operator<< (std::ostream& out, Timer t);
 
 }; // namespace PhotoFinish;
-
-#endif

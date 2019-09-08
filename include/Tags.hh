@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __TAGS_HH__
-#define __TAGS_HH__
+#pragma once
 
 #include <exiv2/exiv2.hpp>
 #include <boost/filesystem.hpp>
@@ -118,5 +117,3 @@ namespace PhotoFinish {
   }
 
 }
-
-#endif /* __TAGS_HH__ */

@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __PNGREADER_CB_HH__
-#define __PNGREADER_CB_HH__
+#pragma once
 
 #include <png.h>
 #include "Destination.hh"
@@ -49,5 +48,3 @@ namespace PhotoFinish {
   void png_end_cb(png_structp png, png_infop info);
 
 } // namespace PhotoFinish
-
-#endif // __PNGREADER_CB_HH__

@@ -16,8 +16,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __JPEG_HH__
-#define __JPEG_HH__
+#pragma once
+
 #include <stdio.h>
 #include <jpeglib.h>
 #include "CMS.hh"
@@ -51,6 +51,3 @@ namespace PhotoFinish {
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size);
 
 } // namespace PhotoFinish
-
-
-#endif // __JPEG_HH__

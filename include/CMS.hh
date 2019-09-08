@@ -16,8 +16,7 @@
         You should have received a copy of the GNU General Public License
         along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __CMS_HH__
-#define __CMS_HH__
+#pragma once
 
 #include <istream>
 #include <ostream>
@@ -472,5 +471,3 @@ namespace CMS {
 
 //! Set up an error handler with LCMS2 that will throw a LibraryError exception
 void lcms2_error_adaptor(void);
-
-#endif // __CMS_HH__

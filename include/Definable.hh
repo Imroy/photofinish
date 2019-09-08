@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __DEFINABLE_HH__
-#define __DEFINABLE_HH__
+#pragma once
 
 #include <ostream>
 #include <string>
@@ -122,5 +121,3 @@ namespace PhotoFinish {
   };
 
 }
-
-#endif /* __DEFINABLE_HH__ */

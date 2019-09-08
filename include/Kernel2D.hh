@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __KERNEL_HH__
-#define __KERNEL_HH__
+#pragma once
 
 #include <memory>
 #include "Image.hh"
@@ -92,5 +91,3 @@ namespace PhotoFinish {
 
 
 }
-
-#endif // __KERNEL_HH__

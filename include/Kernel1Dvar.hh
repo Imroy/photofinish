@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __KERNEL1DVAR_HH__
-#define __KERNEL1DVAR_HH__
+#pragma once
 
 #include <memory>
 #include "Destination_items.hh"
@@ -122,5 +121,3 @@ namespace PhotoFinish {
 
 
 }
-
-#endif // __KERNEL1DVAR_HH__

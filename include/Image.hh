@@ -16,8 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __IMAGE_HH__
-#define __IMAGE_HH__
+#pragma once
 
 #include <memory>
 #include <vector>
@@ -297,5 +296,3 @@ namespace PhotoFinish {
   }
 
 }
-
-#endif // __IMAGE_HH__

@@ -16,8 +16,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __DITHERER_HH__
-#define __DITHERER_HH__
+#pragma once
+
 #include <lcms2.h>
 #include "sample.h"
 
@@ -65,5 +65,3 @@ namespace PhotoFinish {
   };
 
 }
-
-#endif /* __DITHERER_HH__ */
