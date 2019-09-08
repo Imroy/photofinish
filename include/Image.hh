@@ -138,9 +138,10 @@ namespace PhotoFinish {
       \param dest_profile The ICC profile of the destination. If empty, uses image's profile.
       \param dest_format The LCMS2 pixel format.
       \param intent The ICC intent of the transform, defaults to perceptual.
+      \param can_free Whether rows can be freed after transforming, defaults to false.
       \return A new image
      */
-    ptr transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual);
+    ptr transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent = CMS::Intent::Perceptual, bool can_free = false);
 
   };
 

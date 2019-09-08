@@ -42,10 +42,10 @@ namespace PhotoFinish {
     Kernel2D(short unsigned int size, short unsigned int centre);
 
     template <typename T>
-    void convolve_type(Image::ptr src, Image::ptr dest);
+    void convolve_type(Image::ptr src, Image::ptr dest, bool can_free = false);
 
     template <typename T, int channels>
-    void convolve_type_channels(Image::ptr src, Image::ptr dest);
+    void convolve_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
 
   public:
     //! Shared pointer for a Kernel2D
@@ -66,9 +66,10 @@ namespace PhotoFinish {
     //! Convolve and image with this kernel and produce a new image
     /*!
       \param img Source image
+      \param can_free Can each row of the image be freed after it is convolved?
       \return New image
      */
-    Image::ptr convolve(Image::ptr img);
+    Image::ptr convolve(Image::ptr img, bool can_free = false);
   };
 
   //! GaussianSharpen kernel

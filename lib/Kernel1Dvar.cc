@@ -123,7 +123,7 @@ namespace PhotoFinish {
 
   // Template method that does the actual horizontal convolving
   template <typename T, int channels>
-  void Kernel1Dvar::convolve_h_type_channels(Image::ptr src, Image::ptr dest) {
+  void Kernel1Dvar::convolve_h_type_channels(Image::ptr src, Image::ptr dest, bool can_free) {
 #pragma omp parallel
     {
 #pragma omp master
@@ -158,6 +158,9 @@ namespace PhotoFinish {
 	  *out = limitval<T>(temp[c]);
       }
 
+      if (can_free)
+	src->free_row(y);
+
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << y + 1 << " of " << src->height() << " rows";
     }
@@ -174,67 +177,67 @@ namespace PhotoFinish {
 
   // Template method that handles each type for horizontal convolving
   template <typename T>
-  void Kernel1Dvar::convolve_h_type(Image::ptr src, Image::ptr dest) {
+  void Kernel1Dvar::convolve_h_type(Image::ptr src, Image::ptr dest, bool can_free) {
     unsigned char channels = src->format().total_channels();
     switch (channels) {
     case 1: // e.g greyscale
-      convolve_h_type_channels<T, 1>(src, dest);
+      convolve_h_type_channels<T, 1>(src, dest, can_free);
       break;
 
     case 2: // e.g greyscale with alpha
-      convolve_h_type_channels<T, 2>(src, dest);
+      convolve_h_type_channels<T, 2>(src, dest, can_free);
       break;
 
     case 3: // e.g RGB, Lab, etc
-      convolve_h_type_channels<T, 3>(src, dest);
+      convolve_h_type_channels<T, 3>(src, dest, can_free);
       break;
 
     case 4: // e.g CMYK, or RGB, Lab, etc with alpha
-      convolve_h_type_channels<T, 4>(src, dest);
+      convolve_h_type_channels<T, 4>(src, dest, can_free);
       break;
 
     case 5: // e.g CMYK with alpha
-      convolve_h_type_channels<T, 5>(src, dest);
+      convolve_h_type_channels<T, 5>(src, dest, can_free);
       break;
 
     case 6:
-      convolve_h_type_channels<T, 6>(src, dest);
+      convolve_h_type_channels<T, 6>(src, dest, can_free);
       break;
 
     case 7:
-      convolve_h_type_channels<T, 7>(src, dest);
+      convolve_h_type_channels<T, 7>(src, dest, can_free);
       break;
 
     case 8:
-      convolve_h_type_channels<T, 8>(src, dest);
+      convolve_h_type_channels<T, 8>(src, dest, can_free);
       break;
 
     case 9:
-      convolve_h_type_channels<T, 9>(src, dest);
+      convolve_h_type_channels<T, 9>(src, dest, can_free);
       break;
 
     case 10:
-      convolve_h_type_channels<T, 10>(src, dest);
+      convolve_h_type_channels<T, 10>(src, dest, can_free);
       break;
 
     case 11:
-      convolve_h_type_channels<T, 11>(src, dest);
+      convolve_h_type_channels<T, 11>(src, dest, can_free);
       break;
 
     case 12:
-      convolve_h_type_channels<T, 12>(src, dest);
+      convolve_h_type_channels<T, 12>(src, dest, can_free);
       break;
 
     case 13:
-      convolve_h_type_channels<T, 13>(src, dest);
+      convolve_h_type_channels<T, 13>(src, dest, can_free);
       break;
 
     case 14:
-      convolve_h_type_channels<T, 14>(src, dest);
+      convolve_h_type_channels<T, 14>(src, dest, can_free);
       break;
 
     case 15:
-      convolve_h_type_channels<T, 15>(src, dest);
+      convolve_h_type_channels<T, 15>(src, dest, can_free);
       break;
 
     default:
@@ -243,7 +246,7 @@ namespace PhotoFinish {
   }
 
   //! Convolve an image horizontally
-  Image::ptr Kernel1Dvar::convolve_h(Image::ptr img) {
+  Image::ptr Kernel1Dvar::convolve_h(Image::ptr img, bool can_free) {
     auto ni = std::make_shared<Image>(_to_size_i, img->height(), img->format());
     ni->set_profile(img->profile());
 
@@ -254,22 +257,22 @@ namespace PhotoFinish {
 
     switch (img->format().bytes_per_channel()) {
     case 1:
-      convolve_h_type<unsigned char>(img, ni);
+      convolve_h_type<unsigned char>(img, ni, can_free);
       break;
 
     case 2:
-      convolve_h_type<short unsigned int>(img, ni);
+      convolve_h_type<short unsigned int>(img, ni, can_free);
       break;
 
     case 4:
       if (img->format().is_fp())
-	convolve_h_type<float>(img, ni);
+	convolve_h_type<float>(img, ni, can_free);
       else
-	convolve_h_type<unsigned int>(img, ni);
+	convolve_h_type<unsigned int>(img, ni, can_free);
       break;
 
     case 8:
-      convolve_h_type<double>(img, ni);
+      convolve_h_type<double>(img, ni, can_free);
       break;
 
     }
@@ -279,7 +282,7 @@ namespace PhotoFinish {
 
   // Template method that does the actual vertical convolving
   template <typename T, int channels>
-  void Kernel1Dvar::convolve_v_type_channels(Image::ptr src, Image::ptr dest) {
+  void Kernel1Dvar::convolve_v_type_channels(Image::ptr src, Image::ptr dest, bool can_free) {
 #pragma omp parallel
     {
 #pragma omp master
@@ -318,6 +321,9 @@ namespace PhotoFinish {
 	  *out = limitval<T>(temp[c]);
       }
 
+      if (can_free)
+	src->free_row(ny);
+
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tConvolved " << ny + 1 << " of " << _to_size_i << " rows";
     }
@@ -334,67 +340,67 @@ namespace PhotoFinish {
 
   // Template method that handles each type for vertical convolving
   template <typename T>
-  void Kernel1Dvar::convolve_v_type(Image::ptr src, Image::ptr dest) {
+  void Kernel1Dvar::convolve_v_type(Image::ptr src, Image::ptr dest, bool can_free) {
     unsigned char channels = src->format().total_channels();
     switch (channels) {
     case 1:
-      convolve_v_type_channels<T, 1>(src, dest);
+      convolve_v_type_channels<T, 1>(src, dest, can_free);
       break;
 
     case 2:
-      convolve_v_type_channels<T, 2>(src, dest);
+      convolve_v_type_channels<T, 2>(src, dest, can_free);
       break;
 
     case 3:
-      convolve_v_type_channels<T, 3>(src, dest);
+      convolve_v_type_channels<T, 3>(src, dest, can_free);
       break;
 
     case 4:
-      convolve_v_type_channels<T, 4>(src, dest);
+      convolve_v_type_channels<T, 4>(src, dest, can_free);
       break;
 
     case 5:
-      convolve_v_type_channels<T, 5>(src, dest);
+      convolve_v_type_channels<T, 5>(src, dest, can_free);
       break;
 
     case 6:
-      convolve_v_type_channels<T, 6>(src, dest);
+      convolve_v_type_channels<T, 6>(src, dest, can_free);
       break;
 
     case 7:
-      convolve_v_type_channels<T, 7>(src, dest);
+      convolve_v_type_channels<T, 7>(src, dest, can_free);
       break;
 
     case 8:
-      convolve_v_type_channels<T, 8>(src, dest);
+      convolve_v_type_channels<T, 8>(src, dest, can_free);
       break;
 
     case 9:
-      convolve_v_type_channels<T, 9>(src, dest);
+      convolve_v_type_channels<T, 9>(src, dest, can_free);
       break;
 
     case 10:
-      convolve_v_type_channels<T, 10>(src, dest);
+      convolve_v_type_channels<T, 10>(src, dest, can_free);
       break;
 
     case 11:
-      convolve_v_type_channels<T, 11>(src, dest);
+      convolve_v_type_channels<T, 11>(src, dest, can_free);
       break;
 
     case 12:
-      convolve_v_type_channels<T, 12>(src, dest);
+      convolve_v_type_channels<T, 12>(src, dest, can_free);
       break;
 
     case 13:
-      convolve_v_type_channels<T, 13>(src, dest);
+      convolve_v_type_channels<T, 13>(src, dest, can_free);
       break;
 
     case 14:
-      convolve_v_type_channels<T, 14>(src, dest);
+      convolve_v_type_channels<T, 14>(src, dest, can_free);
       break;
 
     case 15:
-      convolve_v_type_channels<T, 15>(src, dest);
+      convolve_v_type_channels<T, 15>(src, dest, can_free);
       break;
 
     default:
@@ -403,7 +409,7 @@ namespace PhotoFinish {
   }
 
   //! Convolve an image vertically
-  Image::ptr Kernel1Dvar::convolve_v(Image::ptr img) {
+  Image::ptr Kernel1Dvar::convolve_v(Image::ptr img, bool can_free) {
     auto ni = std::make_shared<Image>(img->width(), _to_size_i, img->format());
     ni->set_profile(img->profile());
 
@@ -414,22 +420,22 @@ namespace PhotoFinish {
 
     switch (img->format().bytes_per_channel()) {
     case 1:
-      convolve_v_type<unsigned char>(img, ni);
+      convolve_v_type<unsigned char>(img, ni, can_free);
       break;
 
     case 2:
-      convolve_v_type<short unsigned int>(img, ni);
+      convolve_v_type<short unsigned int>(img, ni, can_free);
       break;
 
     case 4:
       if (img->format().is_fp())
-	convolve_v_type<float>(img, ni);
+	convolve_v_type<float>(img, ni, can_free);
       else
-	convolve_v_type<unsigned int>(img, ni);
+	convolve_v_type<unsigned int>(img, ni, can_free);
       break;
 
     case 8:
-      convolve_v_type<double>(img, ni);
+      convolve_v_type<double>(img, ni, can_free);
       break;
 
     }

@@ -141,7 +141,7 @@ namespace PhotoFinish {
     return profile->description("en", "");
   }
 
-  Image::ptr Image::transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent) {
+  Image::ptr Image::transform_colour(CMS::Profile::ptr dest_profile, CMS::Format dest_format, CMS::Intent intent, bool can_free) {
     CMS::Profile::ptr profile = _profile;
     if (!_profile)
       profile = default_profile(_format, "source");
@@ -201,6 +201,9 @@ namespace PhotoFinish {
 	dest_row = temp;
 	dest->replace_row(temp);
       }
+
+      if (can_free)
+	this->free_row(y);
 
       if (omp_get_thread_num() == 0)
 	std::cerr << "\r\tTransformed " << y + 1 << " of " << _height << " rows";

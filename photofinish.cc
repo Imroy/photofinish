@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
 
 	auto num_destinations = arg_destinations.size();
 	for (auto& di : arg_destinations) {
+	  bool last_dest = (num_destinations == 1);
 	  auto destination = destinations[di]->add_variables(tags->variables());
 	  try {
 	    definable<double> size = destination->size();
@@ -99,7 +100,7 @@ int main(int argc, char* argv[]) {
 	      sized_image = orig_image;
 	    } else {
 	      auto frame = destination->best_frame(orig_image);
-	      sized_image = frame->crop_resize(orig_image, destination->resize());
+	      sized_image = frame->crop_resize(orig_image, destination->resize(), last_dest);
 	      if (frame->size().defined())
 		size = frame->size();
 	    }
@@ -107,7 +108,7 @@ int main(int argc, char* argv[]) {
 	    Image::ptr sharp_image;
 	    if (destination->sharpen().defined()) {
 	      auto sharpen = Kernel2D::create(destination->sharpen());
-	      sharp_image = sharpen->convolve(sized_image);
+	      sharp_image = sharpen->convolve(sized_image, (sized_image != orig_image) || last_dest);
 	    } else
 	      sharp_image = sized_image;
 	    sized_image.reset();	// Unallocate resized image
@@ -136,7 +137,7 @@ int main(int argc, char* argv[]) {
 	    sharp_image = sharp_image->transform_colour(dest_profile, dest_format);
 
 	    tags->copy_to(sharp_image);
-	    outfile->write(sharp_image, destination);
+	    outfile->write(sharp_image, destination, (sharp_image != orig_image) || last_dest);
 	  } catch (DestinationError& ex) {
 	    std::cout << ex.what() << std::endl;
 	    continue;

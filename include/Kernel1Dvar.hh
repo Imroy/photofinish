@@ -48,16 +48,16 @@ namespace PhotoFinish {
     virtual SAMPLE eval(double x) const = 0;
 
     template <typename T, int channels>
-    void convolve_h_type_channels(Image::ptr src, Image::ptr dest);
+    void convolve_h_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
 
     template <typename T>
-    void convolve_h_type(Image::ptr src, Image::ptr dest);
+    void convolve_h_type(Image::ptr src, Image::ptr dest, bool can_free = false);
 
     template <typename T, int channels>
-    void convolve_v_type_channels(Image::ptr src, Image::ptr dest);
+    void convolve_v_type_channels(Image::ptr src, Image::ptr dest, bool can_free = false);
 
     template <typename T>
-    void convolve_v_type(Image::ptr src, Image::ptr dest);
+    void convolve_v_type(Image::ptr src, Image::ptr dest, bool can_free = false);
 
   public:
     //! Shared pointer for a Kernel1Dvar
@@ -84,14 +84,14 @@ namespace PhotoFinish {
       \param img Source image
       \return New image
      */
-    Image::ptr convolve_h(Image::ptr img);
+    Image::ptr convolve_h(Image::ptr img, bool can_free = false);
 
     //! Convolve an image vertically with this kernel
     /*!
       \param img Source image
       \return New image
      */
-    Image::ptr convolve_v(Image::ptr img);
+    Image::ptr convolve_v(Image::ptr img, bool can_free = false);
 
   };
 
