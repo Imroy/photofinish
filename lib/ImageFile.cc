@@ -84,6 +84,13 @@ namespace PhotoFinish {
     }
 #endif
 
+#ifdef HAZ_HEIF
+    if (boost::iequals(ext, "heif") || boost::iequals(ext, "heic")) {
+      _format = "heif";
+      unknown = false;
+    }
+#endif
+
     if (unknown)
       throw UnknownFileType(filepath.generic_string());
   }
@@ -125,6 +132,11 @@ namespace PhotoFinish {
 #ifdef HAZ_FLIF
     if (boost::iequals(_format, "flif"))
       return fp.replace_extension(".flif");
+#endif
+
+#ifdef HAZ_HEIF
+    if (boost::iequals(_format, "heif"))
+      return fp.replace_extension(".heif");
 #endif
 
     if (boost::iequals(_format, "sol"))
@@ -193,6 +205,11 @@ namespace PhotoFinish {
 #ifdef HAZ_FLIF
     if (boost::iequals(ifp.format(), "flif"))
       ir = new FLIFreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_HEIF
+    if (boost::iequals(ifp.format(), "heif"))
+      ir = new HEIFreader(ifp.filepath());
 #endif
 
     if (ir == nullptr)
@@ -264,6 +281,11 @@ namespace PhotoFinish {
       iw = new FLIFwriter(ifp.fixed_filepath());
 #endif
 
+#ifdef HAZ_HEIF
+    if (boost::iequals(ifp.format(), "heif"))
+      iw = new HEIFwriter(ifp.fixed_filepath());
+#endif
+
     if (boost::iequals(ifp.format(), "sol"))
       iw = new SOLwriter(ifp.fixed_filepath());
 
@@ -294,6 +316,9 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "flif"))
       const_cast<D_FLIF&>(dest->flif()).add_variables(vars);
+
+    if (boost::iequals(format, "heif"))
+      const_cast<D_HEIF&>(dest->heif()).add_variables(vars);
   }
 
 }

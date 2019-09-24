@@ -41,6 +41,7 @@ pkg_check_modules(JP2 libopenjp2)
 pkg_check_modules(WEBP libwebp)
 # TODO JXR?
 # TODO FLIF?
+pkg_check_modules(HEIF libheif)
 
 set(FORMATS_FILES lib/formats/SOLwriter.cc)
 set(FORMATS_INCLUDE_DIRS lib/formats)
@@ -84,6 +85,12 @@ endif()
 	set(FORMATS_CFLAGS ${FORMATS_CFLAGS} -DHAZ_FLIF)
 	set(FORMATS_LIBRARIES ${FORMATS_LIBRARIES} -lflif)
 #endif()
+if (HEIF_FOUND)
+	set(FORMATS_FILES ${FORMATS_FILES} lib/formats/HEIFreader.cc lib/formats/HEIFwriter.cc)
+	set(FORMATS_INCLUDE_DIRS ${FORMATS_INCLUDE_DIRS} ${HEIF_INCLUDE_DIRS})
+	set(FORMATS_CFLAGS ${FORMATS_CFLAGS} -DHAZ_HEIF ${HEIF_CFLAGS})
+	set(FORMATS_LIBRARIES ${FORMATS_LIBRARIES} ${HEIF_LIBRARIES})
+endif()
 
 add_library(pf
 	${CORE_FILES}

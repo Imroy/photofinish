@@ -43,6 +43,8 @@
 #include <flif_dec.h>
 #include <flif_enc.h>
 #endif
+#ifdef HAZ_HEIF
+#endif
 
 #include "CMS.hh"
 #include "Image.hh"
@@ -355,6 +357,33 @@ namespace PhotoFinish {
 
 
 #endif // HAZ_FLIF
+
+#ifdef HAZ_HEIF
+  //! HEIF reader
+  class HEIFreader : public ImageReader {
+  private:
+
+  public:
+    HEIFreader(const fs::path filepath);
+
+    Image::ptr read(Destination::ptr dest);
+
+  }; // class HEIFreader
+
+
+  //! HEIF writer
+  class HEIFwriter : public ImageWriter {
+  private:
+
+  public:
+    HEIFwriter(const fs::path filepath);
+
+    CMS::Format preferred_format(CMS::Format format);
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+
+  }; // class HEIFwriter
+
+#endif // HAZ_HEIF
 
   //! Write the boot logo files for use on Motorola Atrix 4G and possibly other phones
   /*!

@@ -319,6 +319,30 @@ namespace PhotoFinish {
   }; // class D_FLIF
 
 
+  //! HEIF parameters
+  class D_HEIF : public Role_Definable {
+  private:
+    int _lossy_quality;
+    bool _lossless;
+
+  public:
+    //! Empty constructor
+    D_HEIF();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    inline int lossy_quality(void) const { return _lossy_quality; }
+    inline void set_lossy_quality(int lq) { _lossy_quality = lq; }
+
+    inline bool lossless(void) const { return _lossless; }
+    inline void set_lossless(bool l = true) { _lossless = l; }
+    inline void set_lossy(bool l = true) { _lossless = !l; }
+
+    void read_config(const YAML::Node& node);
+  }; // class D_HEIF
+
+
   //! ICC profile parameters for destination
   class D_profile {
   private:
