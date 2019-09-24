@@ -35,13 +35,15 @@ namespace PhotoFinish {
     unsigned int _width, _height;
     CMS::Profile::ptr _profile;
     CMS::Format _format;
-    size_t _pixel_size, _row_size;
+    size_t _pixel_size, _plane_size, _row_size;
     std::vector<std::shared_ptr<ImageRow>> _rows;
     definable<double> _xres, _yres;		// PPI
 
     Exiv2::ExifData _EXIFtags;
     Exiv2::IptcData _IPTCtags;
     Exiv2::XmpData _XMPtags;
+
+    void _calc_sizes(void);
 
   public:
     //! Shared pointer for an Image
@@ -97,6 +99,9 @@ namespace PhotoFinish {
 
     //! Return the size of a pixel in bytes
     inline size_t pixel_size(void) const { return _pixel_size; }
+
+    //! Retun the size of a row-plane in bytes
+    inline size_t plane_size(void) const { return _plane_size; }
 
     //! Retun the size of a row in bytes
     inline size_t row_size(void) const { return _row_size; }
@@ -182,7 +187,7 @@ namespace PhotoFinish {
     ImageRow(const Image* img, unsigned int y) :
       _image(img),
       _y(y),
-      _data(new unsigned char[_image->width() * _image->pixel_size()])
+      _data(new unsigned char[_image->row_size()])
     {}
 
     ~ImageRow() {
@@ -210,11 +215,20 @@ namespace PhotoFinish {
     //! The Y resolution of the image (PPI)
     inline const definable<double> yres(void) const { return _image->yres(); }
 
+    //! Return the size of a pixel in bytes
+    inline size_t pixel_size(void) const { return _image->pixel_size(); }
+
+    //! Retun the size of a row-plane in bytes
+    inline size_t plane_size(void) const { return _image->plane_size(); }
+
+    //! Retun the size of a row in bytes
+    inline size_t size(void) const { return _image->row_size(); }
+
     //! Make a copy pointing to the same image, same y value, etc, but don't copy the pixel values
     std::shared_ptr<ImageRow> empty_copy(void) const { return std::make_shared<ImageRow>(_image, _y); }
 
     template <typename T = unsigned char>
-    inline T* data(unsigned int x = 0) const { return (T*)&_data[x * _image->pixel_size()]; }
+    inline T* data(unsigned int x = 0, unsigned int c = 0) const { return (T*)&_data[(x * pixel_size()) + (c * plane_size())]; }
 
     //! Transform this image row into a different colour space and/or ICC profile, making a new image
     void transform_colour(CMS::Transform::ptr transform, std::shared_ptr<ImageRow> dest_row);

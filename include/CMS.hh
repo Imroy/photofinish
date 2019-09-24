@@ -404,6 +404,7 @@ namespace CMS {
   class Transform {
   private:
     cmsHTRANSFORM _transform;
+    bool _one_is_planar;
 
     //! Private constructor
     Transform(cmsHTRANSFORM t);
@@ -443,10 +444,17 @@ namespace CMS {
     //! Change the input and output formats
     void change_formats(const Format &informat, const Format &outformat);
 
+    bool one_is_planar(void) const { return _one_is_planar; }
+
     //! Create a device link profile from this transform
     Profile::ptr device_link(double version, cmsUInt32Number flags) const;
 
     void transform_buffer(const unsigned char* input, unsigned char* output, cmsUInt32Number size) const;
+
+    void transform_buffer_planar(const unsigned char* input, unsigned char* output,
+				 cmsUInt32Number PixelsPerLine, cmsUInt32Number LineCount,
+				 cmsUInt32Number BytesPerLineIn, cmsUInt32Number BytesPerLineOut,
+				 cmsUInt32Number BytesPerPlaneIn, cmsUInt32Number BytesPerPlaneOut) const;
 
   }; // class Transform
 

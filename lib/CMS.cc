@@ -549,7 +549,8 @@ namespace CMS {
   */
 
   Transform::Transform(cmsHTRANSFORM t)
-    : _transform(t)
+    : _transform(t),
+      _one_is_planar(true)
   {
   }
 
@@ -558,14 +559,16 @@ namespace CMS {
 		       Intent intent, cmsUInt32Number flags)
     : _transform(cmsCreateTransform(*input, (cmsUInt32Number)informat,
 				    *output, (cmsUInt32Number)outformat,
-				    (cmsUInt32Number)intent, flags))
+				    (cmsUInt32Number)intent, flags)),
+      _one_is_planar(informat.is_planar() || outformat.is_planar())
   {
   }
 
   Transform::Transform(std::vector<Profile::ptr> profile,
 		       const Format &informat, const Format &outformat,
 		       Intent intent, cmsUInt32Number flags)
-    : _transform(nullptr)
+    : _transform(nullptr),
+      _one_is_planar(informat.is_planar() || outformat.is_planar())
   {
   }
 
@@ -594,6 +597,7 @@ namespace CMS {
 
   void Transform::change_formats(const Format &informat, const Format &outformat) {
     cmsChangeBuffersFormat(_transform, (cmsUInt32Number)informat, (cmsUInt32Number)outformat);
+    _one_is_planar = informat.is_planar() || outformat.is_planar();
   }
 
   Profile::ptr Transform::device_link(double version, cmsUInt32Number flags) const {
@@ -602,6 +606,16 @@ namespace CMS {
 
   void Transform::transform_buffer(const unsigned char* input, unsigned char* output, cmsUInt32Number size) const {
     cmsDoTransform(_transform, input, output, size);
+  }
+
+  void Transform::transform_buffer_planar(const unsigned char* input, unsigned char* output,
+					  cmsUInt32Number PixelsPerLine, cmsUInt32Number LineCount,
+					  cmsUInt32Number BytesPerLineIn, cmsUInt32Number BytesPerLineOut,
+					  cmsUInt32Number BytesPerPlaneIn, cmsUInt32Number BytesPerPlaneOut) const {
+    cmsDoTransformLineStride(_transform, input, output,
+			     PixelsPerLine, LineCount,
+			     BytesPerLineIn, BytesPerLineOut,
+			     BytesPerPlaneIn, BytesPerPlaneOut);
   }
 
 

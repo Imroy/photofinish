@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <cmath>
 #include <iostream>
 #include <stdlib.h>
 #include <string.h>
@@ -33,8 +34,20 @@ namespace PhotoFinish {
     _row_size(0),
     _rows(h, nullptr)
   {
-    _pixel_size = _format.bytes_per_pixel();
-    _row_size = _width * _pixel_size;
+    _calc_sizes();
+  }
+
+  void Image::_calc_sizes(void) {
+    // byte_index = (x * pixel_size) + (c * plane_size)
+    if (_format.is_planar()) {
+      _pixel_size = _format.bytes_per_channel();
+      _plane_size = std::ceil(_width * _pixel_size * 0.25) * 4;
+      _row_size = _plane_size * _format.total_channels();
+    } else {
+      _pixel_size = _format.bytes_per_pixel();
+      _plane_size = 1;
+      _row_size = _width * _pixel_size;
+    }
   }
 
   Image::~Image() {
@@ -131,7 +144,15 @@ namespace PhotoFinish {
   }
 
   void ImageRow::transform_colour(CMS::Transform::ptr transform, ImageRow::ptr dest_row) {
-    transform->transform_buffer(_data, dest_row->_data, _image->width());
+    if (transform->one_is_planar())
+      transform->transform_buffer_planar(_data, dest_row->_data,
+					 _image->width(), 1,
+					 _image->row_size(), dest_row->_image->row_size(),
+					 _image->plane_size(), dest_row->_image->plane_size());
+    else
+      transform->transform_buffer(_data, dest_row->_data,
+				  _image->width());
+
     if (dest_row->format().extra_channels())
       transfer_alpha(_image->width(), _image->format(), _data, dest_row->format(), dest_row->_data);
   }
@@ -154,8 +175,7 @@ namespace PhotoFinish {
       if (_format.is_premult_alpha() && (!dest_format.is_premult_alpha())) {
 	need_un_alpha_mult = true;
 	_format.unset_premult_alpha();
-	_pixel_size = orig_dest_format.bytes_per_pixel();
-	_row_size = _width * _pixel_size;
+	_calc_sizes();
       } else if ((!_format.is_premult_alpha()) && dest_format.is_premult_alpha()) {
 	dest_format.unset_premult_alpha();
 	need_alpha_mult = true;
@@ -221,8 +241,7 @@ namespace PhotoFinish {
       _format.set_channel_type(orig_dest_format);
       _format.set_premult_alpha();
       _format.set_packed();
-      _pixel_size = orig_dest_format.bytes_per_pixel();
-      _row_size = _width * _pixel_size;
+      _calc_sizes();
     }
 
     return dest;
