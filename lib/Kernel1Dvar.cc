@@ -89,13 +89,13 @@ namespace PhotoFinish {
   Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) {
     Kernel1Dvar::ptr ret;
     if (!dr.filter().defined()) {
-      ret = std::make_shared<Lanczos>(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size);
+      ret = std::make_shared<Lanczos1D>(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size);
       return ret;
     }
 
     std::string filter = dr.filter();
     if (boost::iequals(filter.substr(0, min(filter.length(), 7)), "lanczos")) {
-      ret = std::make_shared<Lanczos>(dr, from_start, from_size, from_max, to_size);
+      ret = std::make_shared<Lanczos1D>(dr, from_start, from_size, from_max, to_size);
       return ret;
     }
 
@@ -445,11 +445,11 @@ namespace PhotoFinish {
 
 
 
-  Lanczos::Lanczos() :
+  Lanczos1D::Lanczos1D() :
     Kernel1Dvar()
   {}
 
-    Lanczos::Lanczos(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) :
+    Lanczos1D::Lanczos1D(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) :
       Kernel1Dvar(to_size),
       _radius(dr.support()),
       _r_radius(_radius.defined() ? 1.0 / _radius : 0.0)
@@ -457,13 +457,13 @@ namespace PhotoFinish {
     build(from_start, from_size, from_max);
   }
 
-  double Lanczos::range(void) const {
+  double Lanczos1D::range(void) const {
     return _radius;
   }
 
-  SAMPLE Lanczos::eval(double x) const {
+  SAMPLE Lanczos1D::eval(double x) const {
     if (!_radius.defined())
-      throw Uninitialised("Lanczos", "resize.radius");
+      throw Uninitialised("Lanczos1D", "resize.radius");
 
     if (fabs(x) < 1e-6)
       return 1.0;

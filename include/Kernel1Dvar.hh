@@ -95,7 +95,7 @@ namespace PhotoFinish {
   };
 
   //! Lanczos filter
-  class Lanczos : public Kernel1Dvar {
+  class Lanczos1D : public Kernel1Dvar {
   private:
     definable<double> _radius;	//! Radius
     double _r_radius;		//! Reciprocal of the radius
@@ -105,7 +105,7 @@ namespace PhotoFinish {
 
   public:
     //! Empty constructor
-    Lanczos();
+    Lanczos1D();
 
     //! Constructor
     /*!
@@ -116,7 +116,7 @@ namespace PhotoFinish {
       \param from_max The size (maximum dimenstion) of the input
       \param to_size The size of the output
     */
-    Lanczos(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size);
+    Lanczos1D(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size);
   };
 
 
