@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <openjpeg.h>
 #include <omp.h>

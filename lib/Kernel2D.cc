@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <iostream>
 #include <stdlib.h>
 #include <omp.h>
 #include "Kernel2D.hh"
