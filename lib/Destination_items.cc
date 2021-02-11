@@ -510,6 +510,27 @@ namespace PhotoFinish {
 
 
 
+  D_HEIF::D_HEIF() :
+    _lossy_quality(50),
+    _lossless(false)
+  {}
+
+  void D_HEIF::add_variables(multihash& vars) {
+    // TODO
+  }
+
+  void D_HEIF::read_config(const YAML::Node& node) {
+    if (node["quality"])
+      _lossy_quality = node["quality"].as<int>();
+
+    if (node["lossless"])
+      _lossless = node["lossless"].as<bool>();
+
+  }
+
+
+
+
   D_profile::D_profile() :
     _data(nullptr), _data_size(0)
   {}
