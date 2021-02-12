@@ -343,6 +343,20 @@ namespace PhotoFinish {
   }; // class D_HEIF
 
 
+  class D_JXL : public Role_Definable {
+  private:
+
+  public:
+    //! Empty constructor
+    D_JXL();
+
+    //! Set values from a map of "variables"
+    void add_variables(multihash& vars);
+
+    void read_config(const YAML::Node& node);
+  }; // class D_JXL
+
+
   //! ICC profile parameters for destination
   class D_profile {
   private:

@@ -531,6 +531,19 @@ namespace PhotoFinish {
 
 
 
+  D_JXL::D_JXL()
+  {}
+
+  void D_JXL::add_variables(multihash& vars) {
+    // TODO
+  }
+
+  void D_JXL::read_config(const YAML::Node& node) {
+  }
+
+
+
+
   D_profile::D_profile() :
     _data(nullptr), _data_size(0)
   {}

@@ -91,6 +91,13 @@ namespace PhotoFinish {
     }
 #endif
 
+#ifdef HAZ_JXL
+    if (boost::iequals(ext, "jxl")) {
+      _format = "jxl";
+      unknown = false;
+    }
+#endif
+
     if (unknown)
       throw UnknownFileType(filepath.generic_string());
   }
@@ -137,6 +144,11 @@ namespace PhotoFinish {
 #ifdef HAZ_HEIF
     if (boost::iequals(_format, "heif"))
       return fp.replace_extension(".heif");
+#endif
+
+#ifdef HAZ_JXL
+    if (boost::iequals(_format, "jxl"))
+      return fp.replace_extension(".jxl");
 #endif
 
     if (boost::iequals(_format, "sol"))
@@ -210,6 +222,11 @@ namespace PhotoFinish {
 #ifdef HAZ_HEIF
     if (boost::iequals(ifp.format(), "heif"))
       ir = new HEIFreader(ifp.filepath());
+#endif
+
+#ifdef HAZ_JXL
+    if (boost::iequals(ifp.format(), "jxl"))
+      ir = new JXLreader(ifp.filepath());
 #endif
 
     if (ir == nullptr)
@@ -286,6 +303,11 @@ namespace PhotoFinish {
       iw = new HEIFwriter(ifp.fixed_filepath());
 #endif
 
+#ifdef HAZ_JXL
+    if (boost::iequals(ifp.format(), "jxl"))
+      iw = new JXLwriter(ifp.fixed_filepath());
+#endif
+
     if (boost::iequals(ifp.format(), "sol"))
       iw = new SOLwriter(ifp.fixed_filepath());
 
@@ -319,6 +341,9 @@ namespace PhotoFinish {
 
     if (boost::iequals(format, "heif"))
       const_cast<D_HEIF&>(dest->heif()).add_variables(vars);
+
+    if (boost::iequals(format, "jxl"))
+      const_cast<D_JXL&>(dest->jxl()).add_variables(vars);
   }
 
 }

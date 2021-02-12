@@ -42,6 +42,7 @@ pkg_check_modules(WEBP libwebp)
 # TODO JXR?
 # TODO FLIF?
 pkg_check_modules(HEIF libheif)
+pkg_check_modules(JXL libjxl)
 
 set(FORMATS_FILES lib/formats/SOLwriter.cc)
 set(FORMATS_INCLUDE_DIRS lib/formats)
@@ -90,6 +91,12 @@ if (HEIF_FOUND)
 	set(FORMATS_INCLUDE_DIRS ${FORMATS_INCLUDE_DIRS} ${HEIF_INCLUDE_DIRS})
 	set(FORMATS_CFLAGS ${FORMATS_CFLAGS} -DHAZ_HEIF ${HEIF_CFLAGS})
 	set(FORMATS_LIBRARIES ${FORMATS_LIBRARIES} ${HEIF_LIBRARIES})
+endif()
+if (JXL_FOUND AND JXL_THREADS_FOUND)
+	set(FORMATS_FILES ${FORMATS_FILES} lib/formats/JXLreader.cc lib/formats/JXLwriter.cc)
+	set(FORMATS_INCLUDE_DIRS ${FORMATS_INCLUDE_DIRS} ${JXL_INCLUDE_DIRS})
+	set(FORMATS_CFLAGS ${FORMATS_CFLAGS} -DHAZ_JXL ${JXL_CFLAGS})
+	set(FORMATS_LIBRARIES ${FORMATS_LIBRARIES} ${JXL_LIBRARIES})
 endif()
 
 add_library(pf

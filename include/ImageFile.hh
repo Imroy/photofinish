@@ -45,6 +45,9 @@
 #endif
 #ifdef HAZ_HEIF
 #endif
+#ifdef HAZ_JXL
+#include <jxl/decode.h>
+#endif
 
 #include "CMS.hh"
 #include "Image.hh"
@@ -385,6 +388,36 @@ namespace PhotoFinish {
 
 #endif // HAZ_HEIF
 
+#ifdef HAZ_JXL
+  //! JPEG XL file reader
+  class JXLreader : public ImageReader {
+  private:
+
+  public:
+    JXLreader(const fs::path filepath);
+
+    static CMS::Format cmsformat(const JxlPixelFormat& pf);
+    static void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat);
+
+    Image::ptr read(Destination::ptr dest);
+  }; // class JXLreader
+
+
+  //! JPEG XL file writer
+  class JXLwriter : public ImageWriter {
+  private:
+
+  public:
+    JXLwriter(const fs::path filepath);
+
+    static JxlPixelFormat pixelformat(const CMS::Format& format);
+
+    CMS::Format preferred_format(CMS::Format format);
+
+    void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
+  }; // class JXLwriter
+#endif // HAZ_JXL
+
   //! Write the boot logo files for use on Motorola Atrix 4G and possibly other phones
   /*!
     I haven't been able to find any documentation about this format.
@@ -400,6 +433,7 @@ namespace PhotoFinish {
     SOLwriter(const fs::path filepath);
 
     CMS::Format preferred_format(CMS::Format format);
+
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class SOLwriter
 

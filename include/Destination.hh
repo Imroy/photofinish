@@ -59,6 +59,7 @@ namespace PhotoFinish {
     D_JXR _jxr;
     D_FLIF _flif;
     D_HEIF _heif;
+    D_JXL _jxl;
 
     definable<CMS::Intent> _intent;	//! CMS rendering intent
 
@@ -140,6 +141,9 @@ namespace PhotoFinish {
 
     inline D_HEIF& heif(void) { return _heif; }
     inline void set_heif(const D_HEIF& h) { _heif = h; }
+
+    inline D_JXL& jxl(void) { return _jxl; }
+    inline void set_jxl(const D_JXL& j) { _jxl = j; }
 
     inline definable<CMS::Intent> intent(void) const { return _intent; }
 
