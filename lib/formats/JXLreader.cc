@@ -22,6 +22,7 @@
 #include "Image.hh"
 #include "mmap.hh"
 #include <jxl/decode_cxx.h>
+#include <jxl/thread_parallel_runner_cxx.h>
 
 namespace fs = boost::filesystem;
 
@@ -120,6 +121,12 @@ namespace PhotoFinish {
 				  | JXL_DEC_FULL_IMAGE) > 0)
       throw LibraryError("libjxl", "Could not subscribe to decoder events");
 
+    auto runner = JxlThreadParallelRunnerMake(nullptr, JxlThreadParallelRunnerDefaultNumWorkerThreads());
+    if (JxlDecoderSetParallelRunner(decoder.get(),
+				    JxlThreadParallelRunner,
+				    runner.get()) > 0)
+      throw LibraryError("libjxl", "Could not set parallel runners");
+
     JxlBasicInfo info;
     JxlPixelFormat pixelformat;
     CMS::Format format;
@@ -207,6 +214,7 @@ namespace PhotoFinish {
 			     std::cerr << std::endl << "\tgot full image, copying to our own image object...";
 			     {
 			       uint32_t row_size = info.xsize * (info.num_color_channels + info.num_extra_channels) * info.bits_per_sample >> 3;
+#pragma omp parallel for schedule(dynamic, 1)
 			       for (uint32_t y = 0; y < info.ysize; y++) {
 				 image->check_row_alloc(y);
 				 auto row = image->row(y);
