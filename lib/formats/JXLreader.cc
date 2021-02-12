@@ -17,8 +17,10 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <iostream>
+#include <stdexcept>
 #include "ImageFile.hh"
 #include "Image.hh"
+#include "mmap.hh"
 #include <jxl/decode_cxx.h>
 
 namespace fs = boost::filesystem;
@@ -102,18 +104,13 @@ namespace PhotoFinish {
       throw FileOpenError("already open");
     _is_open = true;
 
-    std::cerr << "Opening file " << _filepath << "..." << std::endl;
-    fs::ifstream ifs(_filepath, std::ios_base::in);
-    if (ifs.fail())
-      throw FileOpenError(_filepath.native());
+    std::cerr << "Memory mapping file " << _filepath << "..." << std::endl;
+    ::MemMap ifm(_filepath);
 
     {
-      unsigned char header[12];
-      ifs.read((char*)header, 12);
-      auto sig = JxlSignatureCheck(header, ifs.gcount());
+      auto sig = JxlSignatureCheck(ifm.data(), 12);
       if (sig < JXL_SIG_CODESTREAM)
 	throw FileContentError(_filepath.string(), "is not a JPEG XL codestream or container");
-      ifs.seekg(0, std::ios_base::beg);
     }
 
     auto decoder = JxlDecoderMake(nullptr);
@@ -130,126 +127,110 @@ namespace PhotoFinish {
     uint8_t *outbuffer;
     Image::ptr image;
 
-    size_t read_size = JxlDecoderSizeHintBasicInfo(decoder.get()), buffer_len = read_size;
-    uint8_t *buffer = nullptr;
-    std::streamsize total_read = 0;
-    //    std::cerr << "\tRead 0 bytes";
-    size_t unprocessed_len = 0, processed_len = 0;
-    while (!ifs.eof()) {
-      {
-	uint8_t *old_buffer = buffer;
-	buffer_len = unprocessed_len + read_size;
-	buffer = new uint8_t[buffer_len];
+    if (JxlDecoderSetInput(decoder.get(), ifm.data(), ifm.length()) > 0)
+      throw LibraryError("libjxl", "Could not set decoder input");
 
-	if (old_buffer != nullptr) {
-	  if (unprocessed_len > 0)
-	    memcpy(buffer, old_buffer + processed_len, unprocessed_len);
-	  delete [] old_buffer;
-	}
-      }
+    install_signal_handlers();
 
-      std::cerr << std::endl << "\treading " << read_size << " bytes into " << buffer_len << " byte buffer (+" << unprocessed_len << ")...";
-      ifs.read((char*)buffer + unprocessed_len, read_size);
-      auto buffer_read = ifs.gcount();
-      std::cerr << std::endl << "\tread " << buffer_read << " bytes.";
-      total_read += buffer_read;
-      //      std::cerr << "\r\tRead " << total_read << " bytes.";
+    bool running = true;
+    if (!safe_mmap_try([&]() {
+			 while (running) {
+			   auto status = JxlDecoderProcessInput(decoder.get());
+			   switch (status) {
+			   case JXL_DEC_ERROR:
+			     throw LibraryError("libjxl", "Decoder error");
 
-      if (JxlDecoderSetInput(decoder.get(), buffer, buffer_read) > 0)
-	throw LibraryError("libjxl", "Could not set decoder input");
+			   case JXL_DEC_NEED_MORE_INPUT:
+			     std::cerr << std::endl << "\tneeds more input...";
+			     break;
 
-      auto status = JxlDecoderProcessInput(decoder.get());
-      switch (status) {
-      case JXL_DEC_ERROR:
-	throw LibraryError("libjxl", "Decoder error");
+			   case JXL_DEC_BASIC_INFO:
+			     if (JxlDecoderGetBasicInfo(decoder.get(), &info) > 0)
+			       throw LibraryError("libjxl", "Could not get basic info");
 
-      case JXL_DEC_NEED_MORE_INPUT:
-	std::cerr << std::endl << "\tneeds more input...";
-	break;
+			     std::cerr << std::endl << "\t" << info.xsize << "×" << info.ysize
+				       << ", " << info.num_color_channels << " channels"
+				       << ", " << info.num_extra_channels << " extra channels"
+				       << ", " << info.bits_per_sample << " bps.";
 
-      case JXL_DEC_BASIC_INFO:
-	if (JxlDecoderGetBasicInfo(decoder.get(), &info) > 0)
-	  throw LibraryError("libjxl", "Could not get basic info");
+			     getformats(info, pixelformat, format);
 
-	std::cerr << std::endl << "\t" << info.xsize << "×" << info.ysize
-		  << ", " << info.num_color_channels << " channels"
-		  << ", " << info.num_extra_channels << " extra channels"
-		  << ", " << info.bits_per_sample << " bps.";
+			     pixelformat.num_channels = info.num_color_channels + info.num_extra_channels;
+			     pixelformat.endianness = JXL_NATIVE_ENDIAN;
+			     pixelformat.align = 0;
 
-	getformats(info, pixelformat, format);
+			     format.set_channels(info.num_color_channels);
+			     format.set_extra_channels(info.num_extra_channels);
+			     format.set_premult_alpha(info.alpha_premultiplied);
 
-	pixelformat.num_channels = info.num_color_channels + info.num_extra_channels;
-	pixelformat.endianness = JXL_NATIVE_ENDIAN;
-	pixelformat.align = 0;
+			     image = std::make_shared<Image>(info.xsize, info.ysize, format);
+			     break;
 
-	format.set_channels(info.num_color_channels);
-	format.set_extra_channels(info.num_extra_channels);
-	format.set_premult_alpha(info.alpha_premultiplied);
+			   case JXL_DEC_COLOR_ENCODING:
+			     std::cerr << std::endl << "\tgot colour encoding...";
 
-	image = std::make_shared<Image>(info.xsize, info.ysize, format);
+			     {
+			       size_t profile_size;
+			       if (JxlDecoderGetICCProfileSize(decoder.get(), &pixelformat,
+							       JXL_COLOR_PROFILE_TARGET_DATA,
+							       &profile_size) > 0)
+				 throw LibraryError("libjxl", "Could not get ICC profile size");
 
-	read_size = 1024;
-	break;
+			       uint8_t *profile_data = new uint8_t[profile_size];
+			       if (JxlDecoderGetColorAsICCProfile(decoder.get(), &pixelformat,
+								  JXL_COLOR_PROFILE_TARGET_DATA,
+								  profile_data, profile_size) > 0)
+				 throw LibraryError("libjxl", "Could not get ICC profile");
 
-      case JXL_DEC_COLOR_ENCODING:
-	std::cerr << std::endl << "\tgot colour encoding...";
+			       auto profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
+			       image->set_profile(profile);
 
-	{
-	  size_t profile_size;
-	  if (JxlDecoderGetICCProfileSize(decoder.get(), &pixelformat,
-					  JXL_COLOR_PROFILE_TARGET_DATA,
-					  &profile_size) > 0)
-	    throw LibraryError("libjxl", "Could not get ICC profile size");
+			       uint8_t *profile_copy = new uint8_t[profile_size];
+			       memcpy(profile_copy, profile_data, profile_size);
+			       dest->set_profile("JPEG XL profile", profile_copy, profile_size);
+			     }
+			     break;
 
-	  uint8_t *profile_data = new uint8_t[profile_size];
-	  if (JxlDecoderGetColorAsICCProfile(decoder.get(), &pixelformat,
-					     JXL_COLOR_PROFILE_TARGET_DATA,
-					     profile_data, profile_size) > 0)
-	    throw LibraryError("libjxl", "Could not get ICC profile");
+			   case JXL_DEC_NEED_IMAGE_OUT_BUFFER:
+			     std::cerr << std::endl << "\tallocating image-out buffer...";
 
-	  auto profile = std::make_shared<CMS::Profile>(profile_data, profile_size);
-	  image->set_profile(profile);
+			     if (JxlDecoderImageOutBufferSize(decoder.get(), &pixelformat, &outbuffer_size) > 0)
+			       throw LibraryError("libjxl", "Could not get image outbuffer size");
 
-	  uint8_t *profile_copy = new uint8_t[profile_size];
-	  memcpy(profile_copy, profile_data, profile_size);
-	  dest->set_profile("JPEG XL profile", profile_copy, profile_size);
-	}
+			     outbuffer = new uint8_t[outbuffer_size];
 
-	read_size = 1048576;
-	break;
+			     if (JxlDecoderSetImageOutBuffer(decoder.get(), &pixelformat, outbuffer, outbuffer_size) > 0)
+			       throw LibraryError("libjxl", "Could not set image outbuffer");
+			     break;
 
-      case JXL_DEC_NEED_IMAGE_OUT_BUFFER:
-	if (JxlDecoderImageOutBufferSize(decoder.get(), &pixelformat, &outbuffer_size) > 0)
-	  throw LibraryError("libjxl", "Could not get image outbuffer size");
+			   case JXL_DEC_FULL_IMAGE:
+			     std::cerr << std::endl << "\tgot full image, copying to our own image object...";
+			     {
+			       uint32_t row_size = info.xsize * (info.num_color_channels + info.num_extra_channels) * info.bits_per_sample >> 3;
+			       for (uint32_t y = 0; y < info.ysize; y++) {
+				 image->check_row_alloc(y);
+				 auto row = image->row(y);
+				 memcpy(row->data(), outbuffer + (y * row_size), row_size);
+			       }
 
-	outbuffer = new uint8_t[outbuffer_size];
+			     }
+			     break;
 
-	if (JxlDecoderSetImageOutBuffer(decoder.get(), &pixelformat, outbuffer, outbuffer_size) > 0)
-	  throw LibraryError("libjxl", "Could not set image outbuffer");
-	break;
+			   case JXL_DEC_SUCCESS:
+			     running = false;
+			     break;
 
-      case JXL_DEC_FULL_IMAGE:
-	{
-	  uint32_t row_size = info.xsize * (info.num_color_channels + info.num_extra_channels) * info.bits_per_sample >> 3;
-	  for (uint32_t y = 0; y < info.ysize; y++) {
-	    auto row = image->row(y);
-	    memcpy(row->data(), outbuffer + (y * row_size), row_size);
-	  }
-	}
-	break;
+			   default:
+			     break;
+			   }
+			 }
+		       }))
+      throw std::runtime_error("SIGBUS while reading mmap'd file.");
 
-      default:
-	break;
-      }
-
-      unprocessed_len = JxlDecoderReleaseInput(decoder.get());
-      processed_len = buffer_len - unprocessed_len;
-      std::cerr << std::endl << "\t" << unprocessed_len << " bytes unprocessed.";
-    }
     std::cerr << std::endl;
 
-    if (buffer != nullptr)
-      delete [] buffer;
+    decoder.reset();
+    delete [] outbuffer;
 
     return image;
   }
