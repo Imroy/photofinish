@@ -24,10 +24,6 @@
 
 namespace PhotoFinish {
 
-  CMS::Format cmsformat(const JxlPixelFormat& pf);
-
   void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat);
-
-  JxlPixelFormat pixelformat(const CMS::Format& format);
 
 }; // namespace PhotoFinish

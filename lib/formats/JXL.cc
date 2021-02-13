@@ -21,52 +21,6 @@
 
 namespace PhotoFinish {
 
-  CMS::Format cmsformat(const JxlPixelFormat& pixelformat) {
-    CMS::Format format;
-
-    switch (pixelformat.num_channels) {
-    case 2:
-      format.set_extra_channels(1);
-    case 1:
-      format.set_channels(1);
-      format.set_colour_model(CMS::ColourModel::Greyscale);
-      break;
-
-    case 4:
-      format.set_extra_channels(1);
-    case 3:
-      format.set_channels(3);
-      format.set_colour_model(CMS::ColourModel::RGB);
-      break;
-
-    default:
-      break;
-    }
-
-    switch (pixelformat.data_type) {
-    case JXL_TYPE_FLOAT:
-      format.set_float();
-      break;
-
-    case JXL_TYPE_UINT8:
-      format.set_8bit();
-      break;
-
-    case JXL_TYPE_UINT16:
-      format.set_16bit();
-      break;
-
-    case JXL_TYPE_UINT32:
-      format.set_32bit();
-      break;
-
-    default:
-      break;
-    }
-
-    return format;
-  }
-
   void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat) {
     switch (info.bits_per_sample) {
     case 8:
@@ -87,32 +41,7 @@ namespace PhotoFinish {
     default:
       throw LibraryError("libjxl", "Unhandled bits_per_sample value");
     }
-  }
 
-  JxlPixelFormat pixelformat(const CMS::Format& format) {
-    JxlPixelFormat pixelformat;
-
-    pixelformat.num_channels = format.total_channels();
-
-    switch (format.bytes_per_channel()) {
-    case 1:
-      pixelformat.data_type = JXL_TYPE_UINT8;
-      break;
-
-    case 2:
-      pixelformat.data_type = JXL_TYPE_UINT16;
-      break;
-
-    case 4:
-      if (format.is_fp())
-	pixelformat.data_type = JXL_TYPE_FLOAT;
-      else
-	pixelformat.data_type = JXL_TYPE_UINT32;
-    }
-
-    pixelformat.align = 0;
-
-    return pixelformat;
   }
 
 }; // namespace PhotoFinish
