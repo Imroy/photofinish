@@ -16,30 +16,18 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "ImageFile.hh"
-#include "Image.hh"
-#include <jxl/encode_cxx.h>
+#pragma once
 
-namespace fs = boost::filesystem;
+#include <jxl/types.h>
+#include <jxl/codestream_header.h>
+#include "CMS.hh"
 
 namespace PhotoFinish {
 
-  JXLwriter::JXLwriter(const fs::path filepath) :
-    ImageWriter(filepath)
-  {}
+  CMS::Format cmsformat(const JxlPixelFormat& pf);
 
-  CMS::Format JXLwriter::preferred_format(CMS::Format format) {
-    if (format.is_half() || format.is_double())
-      format.set_float();
+  void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat);
 
-    if ((format.colour_model() != CMS::ColourModel::Greyscale)
-	&& (format.colour_model() != CMS::ColourModel::RGB))
-      format.set_colour_model(CMS::ColourModel::RGB);
-
-    return format;
-  }
-
-  void JXLwriter::write(Image::ptr img, Destination::ptr dest, bool can_free) {
-  }
+  JxlPixelFormat pixelformat(const CMS::Format& format);
 
 }; // namespace PhotoFinish

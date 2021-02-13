@@ -26,9 +26,6 @@
 #ifdef HAZ_PNG
 #include <png.h>
 #endif
-#ifdef HAZ_JXL
-#include <jxl/decode.h>
-#endif
 
 #include "CMS.hh"
 #include "Image.hh"
@@ -377,9 +374,6 @@ namespace PhotoFinish {
   public:
     JXLreader(const fs::path filepath);
 
-    static CMS::Format cmsformat(const JxlPixelFormat& pf);
-    static void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat);
-
     Image::ptr read(Destination::ptr dest);
   }; // class JXLreader
 
@@ -390,8 +384,6 @@ namespace PhotoFinish {
 
   public:
     JXLwriter(const fs::path filepath);
-
-    static JxlPixelFormat pixelformat(const CMS::Format& format);
 
     CMS::Format preferred_format(CMS::Format format);
 
