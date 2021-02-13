@@ -26,25 +26,6 @@
 #ifdef HAZ_PNG
 #include <png.h>
 #endif
-#ifdef HAZ_JPEG
-#include <jpeglib.h>
-#endif
-#ifdef HAZ_TIFF
-#include <tiffio.h>
-#endif
-#ifdef HAZ_JP2
-#include <openjpeg.h>
-#endif
-#ifdef HAZ_WEBP
-#include <webp/encode.h>
-#include <webp/decode.h>
-#endif
-#ifdef HAZ_FLIF
-#include <flif_dec.h>
-#include <flif_enc.h>
-#endif
-#ifdef HAZ_HEIF
-#endif
 #ifdef HAZ_JXL
 #include <jxl/decode.h>
 #endif

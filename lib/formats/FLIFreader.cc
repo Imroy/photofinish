@@ -17,6 +17,7 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "ImageFile.hh"
+#include <flif_dec.h>
 #include <iostream>
 #include <iomanip>
 

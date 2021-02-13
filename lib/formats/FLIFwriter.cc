@@ -18,6 +18,7 @@
 */
 #include <iostream>
 #include "ImageFile.hh"
+#include <flif_enc.h>
 
 namespace PhotoFinish {
 

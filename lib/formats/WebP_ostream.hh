@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <exiv2/exiv2.hpp>
+#include <webp/encode.h>
 #include "CMS.hh"
 
 namespace PhotoFinish {
