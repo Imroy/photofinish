@@ -339,6 +339,11 @@ namespace CMS {
     return *this;
   }
 
+  Format &Format::set_integer(void) {
+    _format &= FLOAT_MASK;
+    return *this;
+  }
+
   Format &Format::set_half(void) {
     _format &= FLOAT_MASK;
     _format |= FLOAT_SH(1);
@@ -360,6 +365,12 @@ namespace CMS {
     _format |= FLOAT_SH(1);
     _format &= BYTES_MASK;
     _format |= BYTES_SH(0);
+    return *this;
+  }
+
+  Format &Format::set_fp(void) {
+    _format &= FLOAT_MASK;
+    _format |= FLOAT_SH(1);
     return *this;
   }
 

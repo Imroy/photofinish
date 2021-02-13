@@ -258,8 +258,14 @@ namespace CMS {
     //! Is the format integer?
     inline bool is_integer(void) const { return (T_FLOAT(_format) == 0); }
 
+    //! Set to an integer type
+    Format &set_integer(void);
+
     //! Is the format floating point?
     inline bool is_fp(void) const { return (T_FLOAT(_format) == 1); }
+
+    //! Set to a floating point type
+    Format &set_fp(void);
 
     inline bool is_optimised(void) const { return (T_OPTIMIZED(_format) == 1); }
 
@@ -399,6 +405,8 @@ namespace CMS {
     Preserve_k_plane_saturation,
     Preserve_k_plane_absolute_colormetric,
   };
+
+
 
   //! Wrap LCMS2's transform object
   class Transform {
