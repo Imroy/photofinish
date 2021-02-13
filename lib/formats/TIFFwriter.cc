@@ -72,18 +72,17 @@ namespace PhotoFinish {
       bool compression_set = false;
       if (dest->tiff().defined()) {
 	// Note that EXIV2 appears to overwrite the artist and copyright fields with its own information (if it's set)
-	if (dest->tiff().artist().defined())
-	  TIFFcheck(SetField(tiff, TIFFTAG_ARTIST, dest->tiff().artist().get().c_str()));
-	if (dest->tiff().copyright().defined())
-	  TIFFcheck(SetField(tiff, TIFFTAG_COPYRIGHT, dest->tiff().copyright().get().c_str()));
+	if (dest->tiff().artist().length() > 0)
+	  TIFFcheck(SetField(tiff, TIFFTAG_ARTIST, dest->tiff().artist().c_str()));
+	if (dest->tiff().copyright().length() > 0)
+	  TIFFcheck(SetField(tiff, TIFFTAG_COPYRIGHT, dest->tiff().copyright().c_str()));
 
-	if (dest->tiff().compression().defined()) {
-	  std::string compression = dest->tiff().compression().get();
-	  if (boost::iequals(compression, "deflate")) {
+	if (dest->tiff().compression().length() > 0) {
+	  if (boost::iequals(dest->tiff().compression(), "deflate")) {
 	    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_DEFLATE));
 	    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
 	    compression_set = true;
-	  } else if (boost::iequals(compression, "lzw")) {
+	  } else if (boost::iequals(dest->tiff().compression(), "lzw")) {
 	    TIFFcheck(SetField(tiff, TIFFTAG_COMPRESSION, COMPRESSION_LZW));
 	    TIFFcheck(SetField(tiff, TIFFTAG_PREDICTOR, PREDICTOR_HORIZONTAL));
 	    compression_set = true;

@@ -58,7 +58,7 @@ namespace PhotoFinish {
   //! Resize parameters for destination
   class D_resize : public Role_Definable {
   private:
-    definable<std::string> _filter;
+    std::string _filter;
     definable<double> _support;
 
     D_resize(const std::string& f, double s);
@@ -73,7 +73,7 @@ namespace PhotoFinish {
     */
     static inline D_resize lanczos(double r) { return D_resize("lanczos", r); }
 
-    inline definable<std::string> filter(void) const { return _filter; }
+    inline std::string filter(void) const { return _filter; }
     inline definable<double> support(void) const { return _support; }
 
     void read_config(const YAML::Node& node);
@@ -147,8 +147,8 @@ namespace PhotoFinish {
   //! TIFF parameters for destination
   class D_TIFF : public Role_Definable {
   private:
-    definable<std::string> _artist, _copyright;
-    definable<std::string> _compression;
+    std::string _artist, _copyright;
+    std::string _compression;
 
   public:
     //! Empty constructor
@@ -163,13 +163,13 @@ namespace PhotoFinish {
     //! Set values from a map of "variables"
     void add_variables(multihash& vars);
 
-    inline definable<std::string> artist(void) const { return _artist; }
+    inline std::string artist(void) const { return _artist; }
     inline void set_artist(const std::string& a) { _artist = a; set_defined(); }
 
-    inline definable<std::string> copyright(void) const { return _copyright; }
+    inline std::string copyright(void) const { return _copyright; }
     inline void set_copyright(const std::string& c) { _copyright = c; set_defined(); }
 
-    inline definable<std::string> compression(void) const { return _compression; }
+    inline std::string compression(void) const { return _compression; }
     inline void set_compression(const std::string& c) { _compression = c; set_defined(); }
 
     void read_config(const YAML::Node& node);
@@ -179,7 +179,7 @@ namespace PhotoFinish {
   class D_JP2 : public Role_Definable {
   private:
     definable<int> _numresolutions;
-    definable<std::string> _prog_order;
+    std::string _prog_order;
     std::vector<float> _rates, _qualities;
     definable< std::pair<int, int> > _tile_size;
     definable<bool> _reversible;
@@ -194,7 +194,7 @@ namespace PhotoFinish {
     inline definable<int> numresolutions(void) const { return _numresolutions; }
     inline void set_numresolutions(int n) { _numresolutions = n; set_defined(); };
 
-    inline definable<std::string> prog_order(void) const { return _prog_order; }
+    inline std::string prog_order(void) const { return _prog_order; }
     inline void set_prog_order(const std::string& po) { _prog_order = po; set_defined(); }
 
     inline int num_rates(void) const { return _rates.size(); }
@@ -220,7 +220,7 @@ namespace PhotoFinish {
   //! WebP parameters for destination
   class D_WebP : public Role_Definable {
   private:
-    definable<std::string> _preset;
+    std::string _preset;
     definable<bool> _lossless;
     float _quality;			// 0 -> 100
     definable<unsigned char> _method;	// 0 -> 6
@@ -232,7 +232,7 @@ namespace PhotoFinish {
     //! Set values from a map of "variables"
     void add_variables(multihash& vars);
 
-    inline definable<std::string> preset(void) const { return _preset; }
+    inline std::string preset(void) const { return _preset; }
     inline void set_preset(const std::string& p) { _preset = p; }
 
     inline definable<bool> lossless(void) const { return _lossless; }
@@ -253,7 +253,7 @@ namespace PhotoFinish {
   class D_JXR : public Role_Definable {
   private:
     int _imageq, _alphaq;
-    definable<std::string> _overlap;
+    std::string _overlap;
     std::string _subsampling;
     definable<int> _tilesize;
     definable<bool> _progressive;
@@ -271,7 +271,7 @@ namespace PhotoFinish {
     inline int alphaq(void) const { return _alphaq; }
     inline void set_alphaq(int aq) { _alphaq = aq; }
 
-    inline definable<std::string> overlap(void) const { return _overlap; }
+    inline std::string overlap(void) const { return _overlap; }
     inline void set_overlap(const std::string &o) { _overlap = o; }
 
     inline std::string subsampling(void) const { return _subsampling; }
@@ -360,8 +360,8 @@ namespace PhotoFinish {
   //! ICC profile parameters for destination
   class D_profile {
   private:
-    definable<std::string> _name;
-    definable<fs::path> _filepath;
+    std::string _name;
+    fs::path _filepath;
     unsigned char *_data;
     unsigned int _data_size;
 
@@ -385,10 +385,10 @@ namespace PhotoFinish {
     D_profile& operator=(const D_profile& b);
 
     //! Name of the profile
-    inline definable<std::string> name(void) const { return _name; }
+    inline std::string name(void) const { return _name; }
 
     //! File path for reading the profile
-    inline definable<fs::path> filepath(void) const { return _filepath; }
+    inline fs::path filepath(void) const { return _filepath; }
 
     //! Do we have the profile data instead of a file path?
     inline bool has_data(void) const { return _data != nullptr; }

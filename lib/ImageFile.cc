@@ -318,31 +318,30 @@ namespace PhotoFinish {
   }
 
   void ImageWriter::add_variables(Destination::ptr dest, multihash& vars) {
-    std::string format = dest->format().get();
-    if (boost::iequals(format, "jpeg")
-	|| boost::iequals(format, "jpg"))
+    if (boost::iequals(dest->format(), "jpeg")
+	|| boost::iequals(dest->format(), "jpg"))
       const_cast<D_JPEG&>(dest->jpeg()).add_variables(vars);
 
-    if (boost::iequals(format, "tiff")
-	|| boost::iequals(format, "tif"))
+    if (boost::iequals(dest->format(), "tiff")
+	|| boost::iequals(dest->format(), "tif"))
       const_cast<D_TIFF&>(dest->tiff()).add_variables(vars);
 
-    if (boost::iequals(format, "jp2"))
+    if (boost::iequals(dest->format(), "jp2"))
       const_cast<D_JP2&>(dest->jp2()).add_variables(vars);
 
-    if (boost::iequals(format, "webp"))
+    if (boost::iequals(dest->format(), "webp"))
       const_cast<D_WebP&>(dest->webp()).add_variables(vars);
 
-    if (boost::iequals(format, "jxr"))
+    if (boost::iequals(dest->format(), "jxr"))
       const_cast<D_JXR&>(dest->jxr()).add_variables(vars);
 
-    if (boost::iequals(format, "flif"))
+    if (boost::iequals(dest->format(), "flif"))
       const_cast<D_FLIF&>(dest->flif()).add_variables(vars);
 
-    if (boost::iequals(format, "heif"))
+    if (boost::iequals(dest->format(), "heif"))
       const_cast<D_HEIF&>(dest->heif()).add_variables(vars);
 
-    if (boost::iequals(format, "jxl"))
+    if (boost::iequals(dest->format(), "jxl"))
       const_cast<D_JXL&>(dest->jxl()).add_variables(vars);
   }
 

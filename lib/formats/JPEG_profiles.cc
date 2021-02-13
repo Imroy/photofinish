@@ -69,7 +69,7 @@ namespace PhotoFinish {
 	dest->set_profile(profile_name, profile_data, profile_size);
       else
 	dest->set_profile("JPEG APP2", profile_data, profile_size);
-      std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << profile_size << " bytes in " << (int)num_markers << " APP2 markers)" << std::endl;
+      std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << profile_size << " bytes in " << (int)num_markers << " APP2 markers)" << std::endl;
     }
 
     return profile;

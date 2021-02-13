@@ -88,7 +88,7 @@ namespace PhotoFinish {
 
   Kernel1Dvar::ptr Kernel1Dvar::create(const D_resize& dr, double from_start, double from_size, unsigned int from_max, double to_size) {
     Kernel1Dvar::ptr ret;
-    if (!dr.filter().defined()) {
+    if (dr.filter().length()  == 0) {
       ret = std::make_shared<Lanczos1D>(D_resize::lanczos(3.0), from_start, from_size, from_max, to_size);
       return ret;
     }

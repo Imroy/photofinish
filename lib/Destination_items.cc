@@ -172,7 +172,7 @@ namespace PhotoFinish {
   {}
 
   void D_TIFF::add_variables(multihash& vars) {
-    if (!_artist.defined()) {
+    if (_artist.length() == 0) {
       auto vi = vars.find("artist");
       if (vi != vars.end()) {
 	_artist = vi->second[0];
@@ -180,7 +180,7 @@ namespace PhotoFinish {
 	set_defined();
       }
     }
-    if (!_copyright.defined()) {
+    if (_copyright.length() == 0) {
       auto vi = vars.find("copyright");
       if (vi != vars.end()) {
 	_copyright = vi->second[0];
@@ -188,7 +188,7 @@ namespace PhotoFinish {
 	set_defined();
       }
     }
-    if (!_compression.defined()) {
+    if (_compression.length() == 0) {
       auto vi = vars.find("compression");
       if (vi != vars.end()) {
 	_compression = vi->second[0];
@@ -230,7 +230,7 @@ namespace PhotoFinish {
       }
     }
 
-    if (!_prog_order.defined()) {
+    if (_prog_order.length() == 0) {
       auto vi = vars.find("prog_order");
       if (vi != vars.end()) {
 	_prog_order = vi->second[0];
@@ -590,7 +590,7 @@ namespace PhotoFinish {
   }
 
   CMS::Profile::ptr D_profile::profile(void) const {
-    if (_filepath.defined())
+    if (!_filepath.empty())
       return std::make_shared<CMS::Profile>(_filepath);
     if (_data != nullptr)
       return std::make_shared<CMS::Profile>(_data, _data_size);

@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 	    }
 
 	    std::string format = "jpeg";
-	    if (destination->format().defined())
+	    if (destination->format().length() > 0)
 	      format = destination->format();
 	    ImageFilepath outfilepath(destination->dir() / fi.stem(), format);
 	    auto outfile = ImageWriter::open(outfilepath);

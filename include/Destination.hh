@@ -35,17 +35,17 @@ namespace PhotoFinish {
   //! Represents a destination, read from destinations.yml
   class Destination {
   private:
-    definable<std::string> _name;	//! Name of this destination
-    definable<fs::path> _dir;		//! Destination directory
+    std::string _name;		//! Name of this destination
+    fs::path _dir;		//! Destination directory
 
-    definable<double> _size;			//! Size of long edge in inches (yuck)
+    definable<double> _size;	//! Size of long edge in inches (yuck)
 
     D_sharpen _sharpen;
     D_resize _resize;
 
     std::map<std::string, D_target::ptr> _targets;	//! List of targets
 
-    definable<std::string> _format;	//! Output format
+    std::string _format;			//! Output format
 
     definable<int> _depth;			//! Output bit depth
 
@@ -97,9 +97,9 @@ namespace PhotoFinish {
     //! Find the best crop+rescaling frame for an image
     Frame::ptr best_frame(Image::ptr img);
 
-    inline definable<std::string> name(void) const { return _name; }
+    inline std::string name(void) const { return _name; }
 
-    inline const definable<fs::path>& dir(void) const { return _dir; }
+    inline const fs::path& dir(void) const { return _dir; }
 
     inline definable<double> size(void) const { return _size; }
 
@@ -111,7 +111,7 @@ namespace PhotoFinish {
     inline bool has_targets(void) const { return !_targets.empty(); }
     inline const std::map<std::string, D_target::ptr>& targets(void) const { return _targets; }
 
-    inline definable<std::string> format(void) const { return _format; }
+    inline std::string format(void) const { return _format; }
 
     inline definable<int> depth(void) const { return _depth; }
     inline void set_depth(int d) { _depth = d; }

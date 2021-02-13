@@ -60,10 +60,10 @@ namespace PhotoFinish {
       D_WebP d = dest->webp();
       bool need_init = true;
 
-      if (d.preset().defined())
+      if (d.preset().length() > 0)
 	for (auto i : WebP_presets)
-	  if (boost::iequals(i.first, d.preset().get())) {
-	    std::cerr << "\tUsing preset \"" << d.preset().get() << "\", quality=" << d.quality() << "." << std::endl;
+	  if (boost::iequals(i.first, d.preset())) {
+	    std::cerr << "\tUsing preset \"" << d.preset() << "\", quality=" << d.quality() << "." << std::endl;
 	    ok = WebPConfigPreset(&config, i.second, d.quality());
 	    if (!ok)
 	      throw WebPError(ok);

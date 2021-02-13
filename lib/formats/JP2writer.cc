@@ -119,21 +119,20 @@ namespace PhotoFinish {
 	std::cerr << "\tUsing " << d.numresolutions() << " resolutions." << std::endl;
 	parameters.numresolution = d.numresolutions();
       }
-      if (d.prog_order().defined()) {
-	std::string po = d.prog_order().get();
-	if (boost::iequals(po, "lrcp")) {
+      if (d.prog_order().length() > 0) {
+	if (boost::iequals(d.prog_order(), "lrcp")) {
 	  std::cerr << "\tLayer-resolution-component-precinct order." << std::endl;
 	  parameters.prog_order = OPJ_LRCP;
-	} else if (boost::iequals(po, "rlcp")) {
+	} else if (boost::iequals(d.prog_order(), "rlcp")) {
 	  std::cerr << "\tResolution-layer-component-precinct order." << std::endl;
 	  parameters.prog_order = OPJ_RLCP;
-	} else if (boost::iequals(po, "rpcl")) {
+	} else if (boost::iequals(d.prog_order(), "rpcl")) {
 	  std::cerr << "\tResolution-precinct-component-layer order." << std::endl;
 	  parameters.prog_order = OPJ_RPCL;
-	} else if (boost::iequals(po, "pcrl")) {
+	} else if (boost::iequals(d.prog_order(), "pcrl")) {
 	  std::cerr << "\tPrecinct-component-resolution-layer order." << std::endl;
 	  parameters.prog_order = OPJ_PCRL;
-	} else if (boost::iequals(po, "cprl")) {
+	} else if (boost::iequals(d.prog_order(), "cprl")) {
 	  std::cerr << "\tComponent-precinct-resolution-layer order." << std::endl;
 	  parameters.prog_order = OPJ_CPRL;
 	}

@@ -89,7 +89,7 @@ namespace PhotoFinish {
 	    else
 	      dest->set_profile("WebP", profile_data, chunk_size);
 
-	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name().get() << "\" (" << chunk_size << " bytes)." << std::endl;
+	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << chunk_size << " bytes)." << std::endl;
 	  }
 	}
 	if (memcmp(fourcc, "EXIF", 4) == 0) {
