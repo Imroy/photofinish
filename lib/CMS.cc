@@ -28,6 +28,61 @@ namespace fs = boost::filesystem;
 namespace CMS {
 
   /*
+    class ToneCurve
+  */
+
+  ToneCurve::ToneCurve(cmsToneCurve* c, bool own) :
+    _curve(c),
+    _own_data(own)
+  {}
+
+  ToneCurve::ToneCurve() :
+    _curve(nullptr),
+    _own_data(false)
+  {}
+
+  ToneCurve::~ToneCurve() {
+    if (_own_data && (_curve != nullptr))
+      cmsFreeToneCurve(_curve);
+  }
+
+  ToneCurve ToneCurve::dupe(void) const {
+    auto c2 = cmsDupToneCurve(_curve);
+    return ToneCurve(c2, true);
+  }
+
+  ToneCurve ToneCurve::reverse(void) const {
+    auto rev = cmsReverseToneCurve(_curve);
+    return ToneCurve(rev, true);
+  }
+
+  bool ToneCurve::is_multi_segment(void) const {
+    return cmsIsToneCurveMultisegment(_curve);
+  }
+
+  bool ToneCurve::is_linear(void) const {
+    return cmsIsToneCurveLinear(_curve);
+  }
+
+  bool ToneCurve::is_monotonic(void) const {
+    return cmsIsToneCurveMonotonic(_curve);
+  }
+
+  bool ToneCurve::is_descending(void) const {
+    return cmsIsToneCurveDescending(_curve);
+  }
+
+  double ToneCurve::estimate_gamma(double precision) const {
+    return cmsEstimateGamma(_curve, precision);
+  }
+
+  uint32_t ToneCurve::estimated_table_entries(void) const {
+    return cmsGetToneCurveEstimatedTableEntries(_curve);
+  }
+
+
+
+  /*
     class Profile
   */
 

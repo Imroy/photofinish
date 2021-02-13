@@ -25,10 +25,49 @@
 #include <lcms2.h>
 #include <lcms2_plugin.h>
 #include "Exception.hh"
+#include "CMS_containers.hh"
 
 namespace fs = boost::filesystem;
 
 namespace CMS {
+
+  class Profile;
+
+  class ToneCurve {
+  private:
+    cmsToneCurve *_curve;
+    bool _own_data;
+
+    //! Private constructor from a tag
+    ToneCurve(cmsToneCurve* c, bool own = false);
+
+    cmsToneCurve* data(void) const { return _curve; }
+
+    friend class Profile;
+
+  public:
+    //! Empty constructor
+    ToneCurve();
+
+    // TODO: other constructors
+
+    //! Deconstructor
+    ~ToneCurve();
+
+    //! Duplicate a tone curve
+    ToneCurve dupe(void) const;
+
+    ToneCurve reverse(void) const;
+
+    bool is_multi_segment(void) const;
+    bool is_linear(void) const;
+    bool is_monotonic(void) const;
+    bool is_descending(void) const;
+
+    double estimate_gamma(double precision) const;
+    uint32_t estimated_table_entries(void) const;
+
+  }; // class ToneCurve
 
   class Transform;
 
@@ -49,6 +88,29 @@ namespace CMS {
     std::string read_info(cmsInfoType type, std::string language, std::string country) const;
     //! Private method for reading a string tag via the simplified cmsGetProfileInfo function
     std::wstring read_info_wide(cmsInfoType type, std::string language, std::string country) const;
+
+    inline uint32_t _num_tags(void) const { return cmsGetTagCount(_profile); }
+    inline cmsTagSignature _tag(uint32_t n) const { return cmsGetTagSignature(_profile, n); }
+
+    inline bool _has_tag(cmsTagSignature sig) const { return cmsIsTag(_profile, sig); }
+
+    template <typename T>
+    T* _read_tag(cmsTagSignature sig) {
+      void *ret = cmsReadTag(_profile, sig);
+      if (ret == nullptr)
+	throw PhotoFinish::LibraryError("LCMS2", "Could not find tag " + (char)(sig >> 24) + (char)(sig >> 16) + (char)(sig >> 8) + (char)sig);
+
+      return reinterpret_cast<T*>(ret);
+    }
+
+    template <typename T>
+    Profile& _write_tag(cmsTagSignature sig, T* data) {
+      if (!cmsWriteTag(_profile, sig, (void*)data))
+	throw PhotoFinish::LibraryError("LCMS2", "Could not find tag " + (char)(sig >> 24) + (char)(sig >> 16) + (char)(sig >> 8) + (char)sig);
+
+      return *this;
+    }
+
 
     // To allow the static constructors (and anyone else?!?) to use make_shared on the private constructor
     // TODO: Since this is specific to GNU libstdc++, #ifdef's should be used to pull in each platform's version.
@@ -130,6 +192,29 @@ namespace CMS {
 
     void save_to_mem(unsigned char* &dest, unsigned int &size) const;
       
+    // Tags
+#define TAG(S, T, N) inline bool has_##N(void) const { return _has_tag(S); } \
+inline T read_##N(void) { return _read_tag<cms##T>(S); }
+
+    TAG(cmsSigMediaBlackPointTag, CIEXYZ, media_black_point);
+    TAG(cmsSigMediaWhitePointTag, CIEXYZ, media_white_point);
+
+    TAG(cmsSigRedColorantTag, CIEXYZ, red_colourant);
+    TAG(cmsSigGreenColorantTag, CIEXYZ, green_colourant);
+    TAG(cmsSigBlueColorantTag, CIEXYZ, blue_colourant);
+
+    TAG(cmsSigRedMatrixColumnTag, CIEXYZ, red_matrix_column);
+    TAG(cmsSigGreenMatrixColumnTag, CIEXYZ, green_matrix_column);
+    TAG(cmsSigBlueMatrixColumnTag, CIEXYZ, blue_matrix_column);
+
+    TAG(cmsSigRedTRCTag, ToneCurve, red_tone_curve);
+    TAG(cmsSigGreenTRCTag, ToneCurve, green_tone_curve);
+    TAG(cmsSigBlueTRCTag, ToneCurve, blue_tone_curve);
+
+    TAG(cmsSigChromaticityTag, CIExyYTRIPLE, chromaticity);
+
+#undef TAG
+
   }; // class Profile
 
   //! An enum class of LCMS2's colour models
