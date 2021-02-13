@@ -22,6 +22,22 @@
 namespace PhotoFinish {
 
   void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat) {
+    switch (info.num_color_channels) {
+    case 1:
+      cmsformat.set_colour_model(CMS::ColourModel::Greyscale);
+      break;
+
+    case 3:
+      cmsformat.set_colour_model(CMS::ColourModel::RGB);
+      break;
+
+    default:
+      break;
+    }
+
+    cmsformat.set_channels(info.num_color_channels);
+    cmsformat.set_extra_channels(info.num_extra_channels);
+
     switch (info.bits_per_sample) {
     case 8:
       pixelformat.data_type = JXL_TYPE_UINT8;
