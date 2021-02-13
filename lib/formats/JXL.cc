@@ -50,7 +50,11 @@ namespace PhotoFinish {
       break;
 
     case 32:
-      pixelformat.data_type = JXL_TYPE_UINT32;
+      if (info.exponent_bits_per_sample > 0) {
+	pixelformat.data_type = JXL_TYPE_FLOAT;
+	cmsformat.set_fp();
+      } else
+	pixelformat.data_type = JXL_TYPE_UINT32;
       cmsformat.set_32bit();
       break;
 
