@@ -69,4 +69,53 @@ namespace PhotoFinish {
 
   }
 
+  void format_info(const CMS::Format& format, JxlPixelFormat& pixel_format, JxlBasicInfo& info, JxlColorEncoding& encoding) {
+    pixel_format.num_channels = format.channels() + format.extra_channels();
+
+    info.exponent_bits_per_sample = 0;
+    switch (format.bytes_per_channel()) {
+    case 1:
+      info.bits_per_sample = 8;
+      pixel_format.data_type = JXL_TYPE_UINT8;
+      break;
+
+    case 2:
+      info.bits_per_sample = 16;
+      pixel_format.data_type = JXL_TYPE_UINT16;
+      break;
+
+    case 4:
+      info.bits_per_sample = 32;
+      if (format.is_fp()) {
+	info.exponent_bits_per_sample = 11;
+	pixel_format.data_type = JXL_TYPE_FLOAT;
+      } else
+	pixel_format.data_type = JXL_TYPE_UINT32;
+      break;
+
+    default:
+      break;
+    };
+
+    if (format.extra_channels() > 0) {
+      info.alpha_bits = info.bits_per_sample;
+      info.alpha_exponent_bits = info.exponent_bits_per_sample;
+    } else
+      info.alpha_bits = info.alpha_exponent_bits = 0;
+
+    switch (format.colour_model()) {
+    case CMS::ColourModel::Greyscale:
+      encoding.color_space = JXL_COLOR_SPACE_GRAY;
+      break;
+
+    case CMS::ColourModel::RGB:
+      encoding.color_space = JXL_COLOR_SPACE_RGB;
+      break;
+
+    default:
+      encoding.color_space = JXL_COLOR_SPACE_UNKNOWN;
+      break;
+    };
+  }
+
 }; // namespace PhotoFinish

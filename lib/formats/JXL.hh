@@ -20,10 +20,13 @@
 
 #include <jxl/types.h>
 #include <jxl/codestream_header.h>
+#include <jxl/thread_parallel_runner.h>
 #include "CMS.hh"
 
 namespace PhotoFinish {
 
   void getformats(JxlBasicInfo info, JxlPixelFormat& pixelformat, CMS::Format& cmsformat);
+
+  void format_info(const CMS::Format& format, JxlPixelFormat& pixel_format, JxlBasicInfo& info, JxlColorEncoding& encoding);
 
 }; // namespace PhotoFinish
