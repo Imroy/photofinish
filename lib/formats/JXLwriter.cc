@@ -36,6 +36,12 @@ namespace PhotoFinish {
 	&& (format.colour_model() != CMS::ColourModel::RGB))
       format.set_colour_model(CMS::ColourModel::RGB);
 
+    if (format.is_half() || format.is_double())
+      format.set_float();
+
+    format.unset_swapfirst();
+    format.unset_endian16_swap();
+
     return format;
   }
 
