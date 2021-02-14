@@ -68,6 +68,9 @@ void make_preview(Image::ptr orig_image, Destination::ptr orig_dest, Tags::ptr f
   resized_dest->webp().set_method(6);
   resized_dest->jxr().set_quality(75);
   resized_dest->jxr().set_subsampling("420");
+  resized_dest->jxl().set_lossless(false);
+  resized_dest->jxl().set_distance(3);
+  resized_dest->jxl().set_effort(9);
 
   auto frame = std::make_shared<Frame>(orig_image->width() * 0.25, orig_image->height() * 0.25,
 				       0, 0,
@@ -231,6 +234,8 @@ int main(int argc, char* argv[]) {
 	    converted_dest->jxr().set_quality(100);
 	    converted_dest->jxr().set_subsampling("444");
 	    converted_dest->jxr().set_sequential();
+	    converted_dest->jxl().set_lossless();
+	    converted_dest->jxl().set_effort(9);
 
 	    auto converted_file = ImageWriter::open(converted_filepath);
 

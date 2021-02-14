@@ -345,6 +345,9 @@ namespace PhotoFinish {
 
   class D_JXL : public Role_Definable {
   private:
+    bool _lossless;
+    definable<int> _effort;
+    definable<float> _distance;
 
   public:
     //! Empty constructor
@@ -352,6 +355,15 @@ namespace PhotoFinish {
 
     //! Set values from a map of "variables"
     void add_variables(multihash& vars);
+
+    inline bool lossless(void) const { return _lossless; }
+    inline void set_lossless(bool l = true) { _lossless = l; }
+
+    inline definable<int> effort(void) const { return _effort; }
+    inline void set_effort(int e) { _effort = e; }
+
+    inline definable<float> distance(void) const { return _distance; }
+    inline void set_distance(float d) { _distance = d; }
 
     void read_config(const YAML::Node& node);
   }; // class D_JXL

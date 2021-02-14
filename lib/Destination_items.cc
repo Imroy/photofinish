@@ -531,14 +531,51 @@ namespace PhotoFinish {
 
 
 
-  D_JXL::D_JXL()
+  D_JXL::D_JXL() :
+    _lossless(false)
   {}
 
   void D_JXL::add_variables(multihash& vars) {
-    // TODO
+    {
+      auto vi = vars.find("lossless");
+      if (vi != vars.end()) {
+	_lossless = boost::lexical_cast<bool>(vi->second[0]);
+	vars.erase(vi);
+	set_defined();
+      }
+    }
+
+    if (!_effort.defined()) {
+      auto vi = vars.find("effort");
+      if (vi != vars.end()) {
+	_effort = boost::lexical_cast<int>(vi->second[0]);
+	vars.erase(vi);
+	set_defined();
+      }
+    }
+
+    if (!_distance.defined()) {
+      auto vi = vars.find("distance");
+      if (vi != vars.end()) {
+	_distance = boost::lexical_cast<float>(vi->second[0]);
+	vars.erase(vi);
+	set_defined();
+      }
+    }
+
   }
 
   void D_JXL::read_config(const YAML::Node& node) {
+    if (node["lossless"])
+      _lossless = node["lossless"].as<bool>();
+
+    if (node["effort"])
+      _effort = node["effort"].as<int>();
+
+    if (node["distance"])
+      _distance = node["distance"].as<float>();
+
+    set_defined();
   }
 
 
