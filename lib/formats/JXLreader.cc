@@ -95,14 +95,6 @@ namespace PhotoFinish {
 
 			     getformats(info, pixelformat, format);
 
-			     pixelformat.num_channels = info.num_color_channels + info.num_extra_channels;
-			     pixelformat.endianness = JXL_NATIVE_ENDIAN;
-			     pixelformat.align = 0;
-
-			     format.set_channels(info.num_color_channels);
-			     format.set_extra_channels(info.num_extra_channels);
-			     format.set_premult_alpha(info.alpha_premultiplied);
-
 			     image = std::make_shared<Image>(info.xsize, info.ysize, format);
 			     break;
 

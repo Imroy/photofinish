@@ -35,8 +35,13 @@ namespace PhotoFinish {
       break;
     }
 
+    pixelformat.num_channels = info.num_color_channels + info.num_extra_channels;
+    pixelformat.endianness = JXL_NATIVE_ENDIAN;
+    pixelformat.align = 0;
+
     cmsformat.set_channels(info.num_color_channels);
     cmsformat.set_extra_channels(info.num_extra_channels);
+    cmsformat.set_premult_alpha(info.alpha_premultiplied);
 
     switch (info.bits_per_sample) {
     case 8:
