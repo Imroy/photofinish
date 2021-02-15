@@ -197,20 +197,20 @@ namespace PhotoFinish {
 	  if (img->XMPtags().count() > 0) {
 	    std::string xml;
 	    Exiv2::XmpParser::encode(xml, img->XMPtags());
-	    std::cerr << "\tAdding " << (xml.length() + 1) << " bytes of XMP data." << std::endl;
+	    std::cerr << "\tAdding " << format_byte_size(xml.length() + 1) << " of XMP data." << std::endl;
 	    JXRcheck(PKImageEncode_SetXMPMetadata_WMP(encoder, (const unsigned char*)xml.c_str(), xml.length() + 1));
 	  }
 	  /*
 	  if (img->EXIFtags().count() > 0) {
 	    Exiv2::Blob blob;
 	    Exiv2::ExifParser::encode(blob, Exiv2::littleEndian, img->EXIFtags());
-	    std::cerr << "\tAdding " << blob.size() << " bytes of EXIF data." << std::endl;
+	    std::cerr << "\tAdding " << format_byte_size(blob.size()) << " of EXIF data." << std::endl;
 	    JXRcheck(PKImageEncode_SetEXIFMetadata_WMP(encoder, blob.data(), blob.size()));
 	  }
 	  */
 	  if (img->IPTCtags().count() > 0) {
 	    Exiv2::DataBuf buf = Exiv2::IptcParser::encode(img->IPTCtags());
-	    std::cerr << "\tAdding " << buf.size_ << " bytes of IPTC data." << std::endl;
+	    std::cerr << "\tAdding " << format_byte_size(buf.size_) << " of IPTC data." << std::endl;
 	    JXRcheck(PKImageEncode_SetIPTCNAAMetadata_WMP(encoder, buf.pData_, buf.size_));
 	  }
 
@@ -220,7 +220,7 @@ namespace PhotoFinish {
 	    img->profile()->save_to_mem(profile_data, profile_len);
 
 	    if (profile_len > 0) {
-	      std::cerr << "\tAdding " << profile_len << " bytes of ICC colour profile data." << std::endl;
+	      std::cerr << "\tAdding " << format_byte_size(profile_len) << " of ICC colour profile data." << std::endl;
 	      JXRcheck(encoder->SetColorContext(encoder, (unsigned char*)profile_data, profile_len));
 	    }
 	  }

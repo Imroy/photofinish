@@ -30,23 +30,7 @@ namespace PhotoFinish {
   {}
 
   uint32_t flif_read_callback(uint32_t quality, int64_t bytes_read, uint8_t decode_over, void *user_data, void *context) {
-    double mult;
-    std::string unit = "bytes";
-    if (bytes_read > 1099511627776) {
-      mult = 1.0 / 1099511627776;
-      unit = "TiB";
-    } else if (bytes_read > 1073741824) {
-      mult = 1.0 / 1073741824;
-      unit = "GiB";
-    } else if (bytes_read > 1048576) {
-      mult = 1.0 / 1048576;
-      unit = "MiB";
-    } else if (bytes_read > 1024) {
-      mult = 1.0 / 1024;
-      unit = "kiB";
-    }
-
-    std::cerr << "\r\tLoaded " << std::setprecision(2) << std::fixed << (bytes_read * mult) << " " << unit << ", progress=" << (quality * 0.01) << "%  ";
+    std::cerr << "\r\tLoaded " << format_byte_size(bytes_read) << ", progress=" << (quality * 0.01) << "%  ";
     return quality + 1000;
   }
 

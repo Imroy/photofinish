@@ -157,7 +157,7 @@ namespace PhotoFinish {
 	else
 	  dest->set_profile("TIFFTAG_ICCPROFILE", data_copy, profile_len);
 	img->set_profile(profile);
-	std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << profile_len << " bytes)" << std::endl;
+	std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << format_byte_size(profile_len) << ")" << std::endl;
       }
     }
 

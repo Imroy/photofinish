@@ -146,7 +146,7 @@ namespace PhotoFinish {
 	unsigned int profile_len;
 	img->profile()->save_to_mem(profile_data, profile_len);
 	if (profile_len > 0) {
-	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << profile_len << " bytes)." << std::endl;
+	  std::cerr << "\tEmbedding profile \"" << profile_name << "\" (" << format_byte_size(profile_len) << ")." << std::endl;
 #if PNG_LIBPNG_VER < 10500
 	  png_set_iCCP(_png, _info, (png_charp)profile_name.c_str(), 0, (png_charp)profile_data, profile_len);
 #else

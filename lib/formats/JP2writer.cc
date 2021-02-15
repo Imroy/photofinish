@@ -219,7 +219,7 @@ namespace PhotoFinish {
       unsigned int profile_len;
       img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {
-	std::cerr << "\tEmbedding profile (" << profile_len << " bytes)." << std::endl;
+	std::cerr << "\tEmbedding profile (" << format_byte_size(profile_len) << ")." << std::endl;
 	jp2_image->icc_profile_buf = (unsigned char*)profile_data;
 	jp2_image->icc_profile_len = profile_len;
       }

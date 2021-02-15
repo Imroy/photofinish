@@ -157,7 +157,7 @@ namespace PhotoFinish {
       unsigned int profile_len = 0;
       img->profile()->save_to_mem(profile_data, profile_len);
       if (profile_len > 0) {
-	std::cerr << "\tEmbedding profile (" << profile_len << " bytes)." << std::endl;
+	std::cerr << "\tEmbedding profile (" << format_byte_size(profile_len) << ")." << std::endl;
 	TIFFcheck(SetField(tiff, TIFFTAG_ICCPROFILE, profile_len, profile_data));
       }
     }

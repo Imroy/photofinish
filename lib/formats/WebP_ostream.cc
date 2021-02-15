@@ -17,6 +17,7 @@
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <webp/encode.h>
+#include "ImageFile.hh"
 #include "WebP_ostream.hh"
 
 namespace PhotoFinish {
@@ -89,7 +90,7 @@ namespace PhotoFinish {
       write_chunk("VP8X", vp8x, 10);
 
       if (icc_size) {
-	std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
+	std::cerr << "\tInserting ICCP chunk (" << format_byte_size(icc_size) << ")..." << std::endl;
 	write_chunk("ICCP", icc_data, icc_size);
       }
       need_vp8x = false;
@@ -106,16 +107,16 @@ namespace PhotoFinish {
 
   void webp_stream_writer::after_chunk(void) {
     if (memcmp(fourcc, "VP8X", 4) == 0) {
-      std::cerr << "\tInserting ICCP chunk (" << icc_size << " bytes)..." << std::endl;
+      std::cerr << "\tInserting ICCP chunk (" << format_byte_size(icc_size) << ")..." << std::endl;
       write_chunk("ICCP", icc_data, icc_size);
     }
     if ((memcmp(fourcc, "VP8 ", 4) == 0) || (memcmp(fourcc, "VP8L", 4) == 0)) {
       if (exif_size) {
-	std::cerr << "\tInserting EXIF chunk (" << exif_size << " bytes)..." << std::endl;
+	std::cerr << "\tInserting EXIF chunk (" << format_byte_size(exif_size) << ")..." << std::endl;
 	write_chunk("EXIF", exif_data, exif_size);
       }
       if (xmp_size) {
-	std::cerr << "\tInserting XMP chunk (" << xmp_size << " bytes)..." << std::endl;
+	std::cerr << "\tInserting XMP chunk (" << format_byte_size(xmp_size) << ")..." << std::endl;
 	write_chunk("XMP ", xmp_data, xmp_size);
       }
     }
@@ -137,7 +138,7 @@ namespace PhotoFinish {
     // First write the end of any chunk in the buffer
     if (!header_at_start) {
       unsigned int size = min(next_chunk, data_size);
-      std::cerr << "\tWriting " << size << " bytes..." << std::endl;
+      std::cerr << "\tWriting " << format_byte_size(size) << "..." << std::endl;
       stream->write((char*)data, size);
       data += size;
       data_size -= size;
@@ -153,14 +154,14 @@ namespace PhotoFinish {
 
       before_chunk();
 
-      std::cerr << "\tFound chunk: \"" << std::string((char*)fourcc, 4) << "\", " << chunk_size << " bytes." << std::endl;
+      std::cerr << "\tFound chunk: \"" << std::string((char*)fourcc, 4) << "\", " << format_byte_size(chunk_size) << "." << std::endl;
 
       modify_chunk(data);
 
       // Write a whole chunk if we have it
       if (next_chunk < data_size) {
 	unsigned int total_size = 8 + chunk_size + (chunk_size & 0x01);
-	std::cerr << "\tWriting " << total_size << " bytes." << std::endl;
+	std::cerr << "\tWriting " << format_byte_size(total_size) << "." << std::endl;
 	stream->write((char*)data, total_size);
 	data += total_size;
 	data_size -= total_size;
@@ -170,7 +171,7 @@ namespace PhotoFinish {
     }
     // Write the rest of the data
     if (data_size > 0) {
-      std::cerr << "\tWriting " << data_size << " bytes..." << std::endl;
+      std::cerr << "\tWriting " << format_byte_size(data_size) << "..." << std::endl;
       stream->write((char*)data, data_size);
       next_chunk -= data_size;
     }

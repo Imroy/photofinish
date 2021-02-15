@@ -25,6 +25,7 @@
 #include <jpeglib.h>
 #include "CMS.hh"
 #include "Destination.hh"
+#include "ImageFile.hh"
 
 namespace PhotoFinish {
 
@@ -69,7 +70,7 @@ namespace PhotoFinish {
 	dest->set_profile(profile_name, profile_data, profile_size);
       else
 	dest->set_profile("JPEG APP2", profile_data, profile_size);
-      std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << profile_size << " bytes in " << (int)num_markers << " APP2 markers)" << std::endl;
+      std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << format_byte_size(profile_size) << " in " << (int)num_markers << " APP2 markers)" << std::endl;
     }
 
     return profile;
@@ -77,7 +78,7 @@ namespace PhotoFinish {
 
   void jpeg_write_profile(jpeg_compress_struct* cinfo, unsigned char *data, unsigned int size) {
     unsigned char num_markers = ceil(size / 65519.0); // max 65533 bytes in a marker, minus 14 bytes for the ICC overhead
-    std::cerr << "\tEmbedding profile from data (" << size << " bytes, " << (int)num_markers << " markers)." << std::endl;
+    std::cerr << "\tEmbedding profile from data (" << format_byte_size(size) << ", " << (int)num_markers << " markers)." << std::endl;
 
     unsigned int data_left = size;
     for (unsigned char i = 0; i < num_markers; i++) {

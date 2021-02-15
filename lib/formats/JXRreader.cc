@@ -86,7 +86,7 @@ namespace PhotoFinish {
 	  unsigned int profile_size = jxr_metadata_size(decoder, ColorProfile);
 	  if (profile_size > 0) {
 	    unsigned char *profile_data = new unsigned char[profile_size];
-	    std::cerr << "\tLoading ICC profile (" << profile_size << " bytes)..." << std::endl;
+	    std::cerr << "\tLoading ICC profile (" << format_byte_size(profile_size) << ")..." << std::endl;
 	    jxr_metadata_data(decoder, ColorProfile, profile_data);
 	    img->set_profile(std::make_shared<CMS::Profile>(profile_data, profile_size));
 	    delete [] profile_data;
@@ -97,7 +97,7 @@ namespace PhotoFinish {
 	  unsigned int xmp_size = jxr_metadata_size(decoder, XMPMetadata);
 	  if (xmp_size > 0) {
 	    unsigned char *xmp_data = new unsigned char[xmp_size];
-	    std::cerr << "\tLoading XMP metadata (" << xmp_size << " bytes)..." << std::endl;
+	    std::cerr << "\tLoading XMP metadata (" << format_byte_size(xmp_size) << ")..." << std::endl;
 	    jxr_metadata_data(decoder, XMPMetadata, xmp_data);
 	    Exiv2::XmpParser::decode(img->XMPtags(), std::string((char*)xmp_data));
 	    delete [] xmp_data;
@@ -108,7 +108,7 @@ namespace PhotoFinish {
 	  unsigned int exif_size = jxr_metadata_size(decoder, EXIFMetadata);
 	  if (exif_size > 0) {
 	    unsigned char *exif_data = new unsigned char[exif_size];
-	    std::cerr << "\tLoading EXIF metadata (" << exif_size << " bytes)..." << std::endl;
+	    std::cerr << "\tLoading EXIF metadata (" << format_byte_size(exif_size) << ")..." << std::endl;
 	    jxr_metadata_data(decoder, EXIFMetadata, exif_data);
 	    Exiv2::ExifParser::decode(img->EXIFtags(), exif_data, exif_size);
 	    delete [] exif_data;
@@ -119,7 +119,7 @@ namespace PhotoFinish {
 	  unsigned int iptc_size = jxr_metadata_size(decoder, IPTCNAAMetadata);
 	  if (iptc_size > 0) {
 	    unsigned char *iptc_data = new unsigned char[iptc_size];
-	    std::cerr << "\tLoading IPTC metadata (" << iptc_size << " bytes)..." << std::endl;
+	    std::cerr << "\tLoading IPTC metadata (" << format_byte_size(iptc_size) << ")..." << std::endl;
 	    jxr_metadata_data(decoder, IPTCNAAMetadata, iptc_data);
 	    Exiv2::IptcParser::decode(img->IPTCtags(), iptc_data, iptc_size);
 	    delete [] iptc_data;

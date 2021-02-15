@@ -410,4 +410,5 @@ namespace PhotoFinish {
     void write(Image::ptr img, Destination::ptr dest, bool can_free = false);
   }; // class SOLwriter
 
+  std::string format_byte_size(uint64_t bytes);
 }

@@ -16,6 +16,7 @@
 	You should have received a copy of the GNU General Public License
 	along with Photo Finish.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <sstream>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include "ImageFile.hh"
@@ -343,6 +344,25 @@ namespace PhotoFinish {
 
     if (boost::iequals(dest->format(), "jxl"))
       const_cast<D_JXL&>(dest->jxl()).add_variables(vars);
+  }
+
+  std::string format_byte_size(uint64_t bytes) {
+    if (bytes == 1)
+      return "1 byte";
+
+    std::string suffixes[] = { "bytes", "kiB", "MiB", "GiB", "TiB", "PiB", "EiB" };
+    double mult = 1;
+    uint64_t scaled = bytes;
+    int si = 0;
+    while ((scaled > 1024) && (si < 7)) {
+      scaled /= 1024;
+      mult /= 1024;
+      si++;
+    }
+
+    std::ostringstream ss;
+    ss << std::setprecision(2) << std::fixed << (bytes * mult) << " " << suffixes[si];
+    return ss.str();
   }
 
 }

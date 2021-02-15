@@ -68,7 +68,7 @@ namespace PhotoFinish {
 	ifs.read((char*)size_le, 4);
 	chunk_size = read_le32(size_le);
 	next_chunk += 8 + chunk_size + (chunk_size & 0x01);
-	std::cerr << "\tFound \"" << std::string(fourcc, 4) << "\" chunk, " << chunk_size << " bytes long." << std::endl;
+	std::cerr << "\tFound \"" << std::string(fourcc, 4) << "\" chunk, " << format_byte_size(chunk_size) << " long." << std::endl;
 
 	if (memcmp(fourcc, "VP8X", 4) == 0) {
 	  unsigned char flags = ifs.get();
@@ -89,7 +89,7 @@ namespace PhotoFinish {
 	    else
 	      dest->set_profile("WebP", profile_data, chunk_size);
 
-	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << chunk_size << " bytes)." << std::endl;
+	    std::cerr << "\tRead embedded profile \"" << dest->profile()->name() << "\" (" << format_byte_size(chunk_size) << ")." << std::endl;
 	  }
 	}
 	if (memcmp(fourcc, "EXIF", 4) == 0) {
