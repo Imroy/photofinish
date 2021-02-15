@@ -73,8 +73,8 @@ namespace PhotoFinish {
 
     size_t read_size = JxlDecoderSizeHintBasicInfo(decoder.get()), buffer_size = 0;
     uint8_t *buffer = nullptr;
-    std::streamsize total_read = 0;
-    //    std::cerr << "\tRead 0 bytes";
+    std::streamsize total_proc = 0;
+    std::cerr << "\tProcessed 0 bytes";
 
     JxlDecoderStatus status = JXL_DEC_NEED_MORE_INPUT;
     while (status != JXL_DEC_SUCCESS) {
@@ -83,7 +83,6 @@ namespace PhotoFinish {
 	throw LibraryError("libjxl", "Decoder error");
 
       case JXL_DEC_NEED_MORE_INPUT:
-	std::cerr << std::endl << "\tEvent: need more input";
 	if (ifs.eof())
 	  throw LibraryError("libjxl", "Decoder wants more input but file has ended");
 
@@ -92,7 +91,8 @@ namespace PhotoFinish {
 	  if (buffer != nullptr) {
 	    unprocessed_len = JxlDecoderReleaseInput(decoder.get());
 	    processed_len = buffer_size - unprocessed_len;
-	    std::cerr << std::endl << "\t" << processed_len << " bytes processed, " << unprocessed_len << " unprocessed.";
+	    total_proc += processed_len;
+	    std::cerr << "\r\tProcessed " << format_byte_size(total_proc) << "   ";
 	  }
 
 	  uint8_t *old_buffer = buffer;
@@ -100,24 +100,13 @@ namespace PhotoFinish {
 	  buffer = new uint8_t[buffer_size];
 
 	  if (old_buffer != nullptr) {
-	    if (unprocessed_len > 0) {
-	      std::cerr << std::endl << "\tcopying " << unprocessed_len
-			<< " bytes from old buffer into new buffer of "
-			<< buffer_size << " bytes, at the " << processed_len
-			<< " byte mark.";
+	    if (unprocessed_len > 0)
 	      memcpy(buffer, old_buffer + processed_len, unprocessed_len);
-	    }
 	    delete [] old_buffer;
 	  }
 
-	  std::cerr << std::endl << "\treading " << read_size << " bytes into "
-		    << buffer_size << " byte buffer at the " << unprocessed_len
-		    << " byte mark...";
 	  ifs.read((char*)buffer + unprocessed_len, read_size);
 	  auto buffer_read = ifs.gcount();
-	  std::cerr << std::endl << "\tread " << buffer_read << " bytes.";
-	  total_read += buffer_read;
-	  //      std::cerr << "\r\tRead " << total_read << " bytes.";
 
 	  if (JxlDecoderSetInput(decoder.get(), buffer, buffer_read) > 0)
 	    throw LibraryError("libjxl", "Could not set decoder input");
@@ -126,14 +115,13 @@ namespace PhotoFinish {
 	break;
 
       case JXL_DEC_BASIC_INFO:
-	std::cerr << std::endl << "\tEvent: have basic info";
 	if (JxlDecoderGetBasicInfo(decoder.get(), &info) > 0)
 	  throw LibraryError("libjxl", "Could not get basic info");
 
-	std::cerr << std::endl << "\t" << info.xsize << "×" << info.ysize
+	std::cerr << "\r\t" << info.xsize << "×" << info.ysize
 		  << ", " << info.num_color_channels << " channels"
 		  << ", " << info.num_extra_channels << " extra channels"
-		  << ", " << info.bits_per_sample << " bps.";
+		  << ", " << info.bits_per_sample << " bps." << std::endl;
 
 	getformats(info, pixelformat, format);
 
@@ -143,8 +131,6 @@ namespace PhotoFinish {
 	break;
 
       case JXL_DEC_COLOR_ENCODING:
-	std::cerr << std::endl << "\tEvent: have colour encoding";
-
 	{
 	  size_t profile_size;
 	  if (JxlDecoderGetICCProfileSize(decoder.get(), &pixelformat,
@@ -170,8 +156,6 @@ namespace PhotoFinish {
 	break;
 
       case JXL_DEC_NEED_IMAGE_OUT_BUFFER:
-	std::cerr << std::endl << "\tEvent: need image-out buffer";
-
 	if (JxlDecoderImageOutBufferSize(decoder.get(), &pixelformat, &outbuffer_size) > 0)
 	  throw LibraryError("libjxl", "Could not get image outbuffer size");
 
@@ -182,7 +166,6 @@ namespace PhotoFinish {
 	break;
 
       case JXL_DEC_FULL_IMAGE:
-	std::cerr << std::endl << "\tEvent: full frame is decoded";
 	{
 	  uint32_t row_size = info.xsize * (info.num_color_channels + info.num_extra_channels) * info.bits_per_sample >> 3;
 #pragma omp parallel for schedule(dynamic, 1)
@@ -198,7 +181,7 @@ namespace PhotoFinish {
 	continue;
 
       default:
-	std::cerr << std::endl << "\tStatus: " << status;
+	std::cerr << "\r\tStatus: " << status << std::endl;
 	break;
       }
 

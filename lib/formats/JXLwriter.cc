@@ -116,6 +116,8 @@ namespace PhotoFinish {
     uint8_t *buffer = new uint8_t[1048576], *buffer_temp = buffer;
     size_t available = 1048576;
 
+    std::cerr << "\tWrote 0 bytes.";
+
     JxlEncoderStatus status = JXL_ENC_NEED_MORE_OUTPUT;
     while (status != JXL_ENC_SUCCESS) {
       status = JxlEncoderProcessOutput(encoder.get(), &buffer_temp, &available);
@@ -130,7 +132,7 @@ namespace PhotoFinish {
       case JXL_ENC_NEED_MORE_OUTPUT:
 	{
 	  auto written = 1048576 - available;
-	  std::cerr << "\tGot " << written << " bytes.";
+	  std::cerr << "\r\tWrote " << format_byte_size(written) << ".  ";
 	  ofs.write((char*)buffer, written);
 	}
 
@@ -148,7 +150,7 @@ namespace PhotoFinish {
     {
       auto written = 1048576 - available;
       if (written > 0) {
-	std::cerr << "\tGot " << written << " bytes.";
+	std::cerr << "\r\tWrote " << format_byte_size(written) << ".  " << std::endl;
 	ofs.write((char*)buffer, written);
       }
     }
